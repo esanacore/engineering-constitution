@@ -1,0 +1,65 @@
+# AI Workflow
+
+This document defines the required workflow for AI-assisted software development.
+
+## Required Workflow
+
+1. Read AGENTS.md.
+2. Read constitution documents.
+3. Read README.md.
+4. Read TODO.md.
+5. Read CHANGELOG.md.
+6. Understand the task.
+7. Create an implementation plan.
+8. Implement changes.
+9. Update tests.
+10. Update documentation.
+11. Update TODO.md.
+12. Update CHANGELOG.md.
+13. Perform a security review.
+14. Suggest future improvements.
+15. Summarize work.
+
+## Before Beginning Work
+
+Agents must gather enough project context to make safe changes:
+
+- Repository purpose and supported workflows
+- Existing architecture and conventions
+- Current roadmap and known issues
+- Test strategy and available commands
+- Release and changelog expectations
+- Security-sensitive areas
+
+## During Work
+
+Agents should:
+
+- Prefer the existing project style.
+- Keep changes focused on the task.
+- Add or update tests for behavioral changes.
+- Update documentation as part of the implementation.
+- Record discovered work in TODO.md.
+- Avoid unrelated refactors unless required for the task.
+
+## Before Completing Work
+
+Agents must verify:
+
+- The implementation addresses the request.
+- Relevant tests pass or test limitations are reported.
+- Documentation impact has been evaluated.
+- TODO.md reflects newly discovered or completed work.
+- CHANGELOG.md includes user-facing changes when appropriate.
+- Security impact has been reviewed.
+- Future improvements are identified when useful.
+
+## Summary Expectations
+
+Final summaries should include:
+
+- What changed
+- Tests run
+- Documentation updated
+- Security considerations
+- Notable follow-up work

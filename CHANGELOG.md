@@ -1,0 +1,25 @@
+# Changelog
+
+All notable user-facing changes to the Engineering Constitution Framework are documented in this file.
+
+This project follows semantic versioning.
+
+## 1.0.0 - 2026-06-08
+
+### Added
+
+- Added Engineering Constitution Framework v1.0.0.
+- Added AI workflow, testing, documentation, security, architecture, release, and TODO guidance.
+- Added project templates for agent instructions, TODO, changelog, README, and ADRs.
+- Added sample project structure.
+- Added bootstrap script for integrating the constitution into existing Git repositories.
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+- Added security review standards covering validation, secrets, permissions, dependencies, logging, and auditing.
