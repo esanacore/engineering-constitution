@@ -2,6 +2,15 @@
 
 The Engineering Constitution is a reusable framework for AI-assisted software development standards.
 
+It is intended to be the single source of truth for how humans and AI agents should work across your software repositories. Instead of copying long instructions into every project and letting them drift, each project includes this repository as a `constitution/` Git submodule and keeps a small set of local project files beside it.
+
+In practical terms, this repository gives every project:
+
+- Shared engineering principles.
+- Standard AI-agent workflow instructions.
+- Baseline templates for README, TODO, CHANGELOG, AGENTS, Claude, Copilot, and ADR files.
+- A bootstrap script that installs those files into an existing Git repository.
+
 It defines shared expectations for:
 
 - Documentation
@@ -13,6 +22,20 @@ It defines shared expectations for:
 - Observability
 - Release discipline
 - Opportunity discovery
+
+## How It Works
+
+Each project gets:
+
+- `constitution/`: Git submodule pointing to this repository.
+- `AGENTS.md`: Project-specific entry point for AI agents.
+- `CLAUDE.md`: Claude-specific guidance.
+- `COPILOT_INSTRUCTIONS.md`: Copilot-specific guidance.
+- `TODO.md`: Living roadmap.
+- `CHANGELOG.md`: Release history.
+- `docs/adr/`: Architecture Decision Records.
+
+The submodule keeps universal rules centralized. The project-level files keep local context close to the code.
 
 ## Version
 
@@ -34,9 +57,94 @@ See `VERSION`.
 - `examples/sample-project/`: Example project layout.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 
-## Use as a Submodule
+## Quick Start
 
-Add this repository to a project as a submodule:
+Use the bootstrap script for new or existing Git repositories:
+
+```bash
+/path/to/engineering-constitution/scripts/bootstrap.sh /path/to/project <repository-url>
+```
+
+Use `--force` only when you intentionally want to overwrite generated files:
+
+```bash
+/path/to/engineering-constitution/scripts/bootstrap.sh --force /path/to/project <repository-url>
+```
+
+The target project must already be a Git repository.
+
+## Deploy This Constitution Repository
+
+To use this framework across projects, publish this repository somewhere your projects can access it:
+
+```bash
+cd /path/to/engineering-constitution
+git remote add origin <repository-url>
+git push -u origin main
+```
+
+Use that `<repository-url>` when bootstrapping projects.
+
+Example:
+
+```bash
+./scripts/bootstrap.sh ~/Repos/my-app git@github.com:your-org/engineering-constitution.git
+```
+
+## Add to a New Repository
+
+Create or enter a new Git repository:
+
+```bash
+mkdir my-project
+cd my-project
+git init
+```
+
+Bootstrap the constitution:
+
+```bash
+/path/to/engineering-constitution/scripts/bootstrap.sh . <repository-url>
+```
+
+Review and customize:
+
+- `README.md`
+- `TODO.md`
+- `CHANGELOG.md`
+- `docs/adr/0001-record-architecture-decisions.md`
+
+Commit the initialized structure:
+
+```bash
+git add .
+git commit -m "Add engineering constitution"
+```
+
+## Add to an Existing Repository
+
+From this repository, run:
+
+```bash
+./scripts/bootstrap.sh /path/to/existing-project <repository-url>
+```
+
+The script will:
+
+- Add the constitution as a submodule at `constitution/`.
+- Add missing agent and project governance files.
+- Create `docs/adr/`.
+- Skip files that already exist.
+
+After running it:
+
+1. Review skipped files and decide whether to merge template content manually.
+2. Customize generated placeholders.
+3. Commit `.gitmodules`, the `constitution` submodule reference, and generated files.
+
+## Manual Submodule Installation
+
+If you do not want to use the bootstrap script, add this repository to a project as a submodule:
 
 ```bash
 git submodule add <repository-url> constitution
@@ -54,13 +162,7 @@ mkdir -p docs/adr
 cp constitution/templates/ADR.md docs/adr/0001-record-architecture-decisions.md
 ```
 
-## Bootstrap an Existing Repository
-
-From this repository, run:
-
-```bash
-./scripts/bootstrap.sh /path/to/project <repository-url>
-```
+## Bootstrap Script Behavior
 
 The script adds:
 
@@ -70,10 +172,11 @@ The script adds:
 - `COPILOT_INSTRUCTIONS.md`
 - `TODO.md`
 - `CHANGELOG.md`
+- `README.md` if missing
 - `docs/adr/`
-- Starter ADR
+- `docs/adr/0001-record-architecture-decisions.md`
 
-The script will not overwrite existing files unless `--force` is passed.
+By default, the script does not overwrite existing files. Pass `--force` to overwrite generated files from the templates.
 
 ## Update Existing Projects
 
@@ -83,6 +186,15 @@ When universal rules change:
 2. Increment `VERSION`.
 3. Pull latest submodule changes into projects.
 4. Commit updated submodule references.
+
+Example update inside a project:
+
+```bash
+cd /path/to/project
+git submodule update --remote constitution
+git add constitution
+git commit -m "Update engineering constitution"
+```
 
 ## Project Template Structure
 

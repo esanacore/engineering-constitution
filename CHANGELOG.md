@@ -4,6 +4,21 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## Unreleased
+
+### Added
+
+- Added clearer usage documentation for deploying the constitution repository and bootstrapping new or existing repositories.
+- Added maintainer comments to the bootstrap script.
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
 ## 1.0.0 - 2026-06-08
 
 ### Added

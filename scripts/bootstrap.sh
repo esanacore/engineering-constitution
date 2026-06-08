@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Bootstrap an existing Git repository with the Engineering Constitution.
+#
+# The constitution itself is installed as a Git submodule so projects can update
+# universal rules without copying framework files by hand. Local project files
+# are generated from templates and are skipped by default when they already
+# exist, which makes the script safe to run against established repositories.
+
 usage() {
   cat <<'USAGE'
 Usage:
@@ -39,6 +46,8 @@ fi
 project_path=$1
 constitution_url=$2
 
+# Resolve paths from the script location so the command works no matter where it
+# is called from.
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 repo_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
 template_dir="$repo_root/templates"
@@ -53,6 +62,7 @@ if [ ! -d "$project_path/.git" ]; then
   exit 1
 fi
 
+# Normalize the target path before changing directories for git operations.
 project_path=$(CDPATH= cd -- "$project_path" && pwd)
 
 if [ ! -d "$template_dir" ]; then
@@ -64,6 +74,7 @@ copy_file() {
   src=$1
   dest=$2
 
+  # Existing project files are treated as user-owned unless --force is provided.
   if [ -e "$dest" ] && [ "$force" != "true" ]; then
     echo "Skipped existing file: $dest"
     return
@@ -76,6 +87,8 @@ copy_file() {
 
 cd "$project_path"
 
+# The submodule path is intentionally fixed to constitution/ so AGENTS.md and
+# other templates can reference a stable location.
 if [ -e constitution ]; then
   echo "Skipped submodule; path already exists: constitution"
 else
