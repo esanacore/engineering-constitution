@@ -10,6 +10,8 @@ This project follows semantic versioning.
 
 - Added clearer usage documentation for deploying the constitution repository and bootstrapping new or existing repositories.
 - Added maintainer comments to the bootstrap script.
+- Added non-destructive adoption reporting for existing repositories.
+- Added merge-template output for existing files skipped by the bootstrap script.
 
 ### Changed
 

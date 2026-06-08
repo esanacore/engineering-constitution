@@ -135,12 +135,15 @@ The script will:
 - Add missing agent and project governance files.
 - Create `docs/adr/`.
 - Skip files that already exist.
+- Write an adoption report to `.constitution-bootstrap/adoption-report.md`.
+- Copy template versions of skipped files into `.constitution-bootstrap/templates/` so you can merge them manually.
 
 After running it:
 
 1. Review skipped files and decide whether to merge template content manually.
 2. Customize generated placeholders.
-3. Commit `.gitmodules`, the `constitution` submodule reference, and generated files.
+3. Review `.constitution-bootstrap/adoption-report.md` for detected project context and recommended merge steps.
+4. Commit `.gitmodules`, the `constitution` submodule reference, generated files, and any merged documentation changes.
 
 ## Manual Submodule Installation
 
@@ -175,8 +178,19 @@ The script adds:
 - `README.md` if missing
 - `docs/adr/`
 - `docs/adr/0001-record-architecture-decisions.md`
+- `.constitution-bootstrap/adoption-report.md`
+- `.constitution-bootstrap/templates/` for skipped existing files
 
 By default, the script does not overwrite existing files. Pass `--force` to overwrite generated files from the templates.
+
+For existing repositories, the adoption report pulls together useful project context without modifying the original files:
+
+- Existing governance files
+- Files written by the bootstrap script
+- Existing files preserved
+- Detected project signals such as package metadata, Makefiles, Docker files, and GitHub Actions workflows
+- Recommended merge steps
+- Suggested AGENTS.md context
 
 ## Update Existing Projects
 
