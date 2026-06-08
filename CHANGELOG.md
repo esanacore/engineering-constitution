@@ -12,6 +12,7 @@ This project follows semantic versioning.
 - Added maintainer comments to the bootstrap script.
 - Added non-destructive adoption reporting for existing repositories.
 - Added merge-template output for existing files skipped by the bootstrap script.
+- Added bootstrap ingestion from existing backlog and release-note files when initializing missing TODO and changelog files.
 
 ### Changed
 

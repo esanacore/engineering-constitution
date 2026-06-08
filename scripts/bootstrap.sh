@@ -155,6 +155,105 @@ write_list() {
   done
 }
 
+write_generated_todo_from_backlog() {
+  dest="$project_path/TODO.md"
+  backlog="$project_path/COPILOT_TASK_BACKLOG.md"
+
+  if [ ! -f "$backlog" ]; then
+    return 1
+  fi
+
+  if [ -e "$dest" ] && [ "$force" != "true" ]; then
+    return 1
+  fi
+
+  {
+    echo "# TODO"
+    echo
+    echo "This file is the living roadmap for the project."
+    echo
+    echo "It was initialized from \`COPILOT_TASK_BACKLOG.md\` during Engineering Constitution adoption. Keep entries specific, actionable, and current."
+    echo
+    echo "## Features"
+    echo
+    sed -n 's/^### [0-9][0-9]*\. \(.*\)$/- [ ] \1./p' "$backlog"
+    echo
+    echo "## Technical Debt"
+    echo
+    echo "- [ ] Review existing project documentation for technical debt that should be tracked here."
+    echo
+    echo "## Refactoring"
+    echo
+    echo "- [ ] Move refactoring items from \`COPILOT_TASK_BACKLOG.md\` into this section as they are prioritized."
+    echo
+    echo "## Testing"
+    echo
+    echo "- [ ] Move test coverage items from \`COPILOT_TASK_BACKLOG.md\` into this section as they are prioritized."
+    echo
+    echo "## Documentation"
+    echo
+    echo "- [ ] Keep \`COPILOT_TASK_BACKLOG.md\` aligned with this TODO file or retire it after migration."
+    echo
+    echo "## Nice-to-Have"
+    echo
+    echo "- [ ] Move future enhancements from \`COPILOT_TASK_BACKLOG.md\` into this section as they are prioritized."
+  } > "$dest"
+
+  written_files+=("${dest#$project_path/}")
+  echo "Generated TODO.md from COPILOT_TASK_BACKLOG.md"
+  return 0
+}
+
+write_generated_changelog_from_release_notes() {
+  dest="$project_path/CHANGELOG.md"
+  notes=$(find "$project_path" -maxdepth 1 -type f -name 'RELEASE_NOTES*.md' | sort | head -n 1)
+
+  if [ -z "$notes" ]; then
+    return 1
+  fi
+
+  if [ -e "$dest" ] && [ "$force" != "true" ]; then
+    return 1
+  fi
+
+  release_name=$(basename "$notes" .md)
+  release_version=$(printf '%s\n' "$release_name" | sed 's/^RELEASE_NOTES_//; s/^v//')
+
+  if [ -n "$release_version" ] && [ "$release_version" != "$release_name" ]; then
+    release_heading="$release_version - Imported from ${notes#$project_path/}"
+  else
+    release_heading="Imported from ${notes#$project_path/}"
+  fi
+
+  {
+    echo "# Changelog"
+    echo
+    echo "All notable user-facing changes to this project should be documented in this file."
+    echo
+    echo "This project follows semantic versioning."
+    echo
+    echo "## Unreleased"
+    echo
+    echo "### Added"
+    echo
+    echo "### Changed"
+    echo
+    echo "### Fixed"
+    echo
+    echo "### Removed"
+    echo
+    echo "### Security"
+    echo
+    echo "## $release_heading"
+    echo
+    sed '1d; 2{/^$/d;}' "$notes"
+  } > "$dest"
+
+  written_files+=("${dest#$project_path/}")
+  echo "Generated CHANGELOG.md from ${notes#$project_path/}"
+  return 0
+}
+
 generate_adoption_report() {
   report="$bootstrap_dir/adoption-report.md"
 
@@ -210,6 +309,8 @@ generate_adoption_report() {
     detect_file "Dockerfile" "Dockerfile"
     detect_file "docker-compose.yml" "Docker Compose configuration"
     detect_file ".github/workflows" "GitHub Actions workflows"
+    detect_file "COPILOT_TASK_BACKLOG.md" "Existing backlog candidate for TODO.md"
+    detect_file "RELEASE_NOTES_v0.1.0.md" "Existing release notes candidate for CHANGELOG.md"
     detect_make_targets
     echo
     echo "## Recommended Merge Steps"
@@ -250,8 +351,13 @@ fi
 copy_file "$template_dir/AGENTS.md" "$project_path/AGENTS.md"
 copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
 copy_file "$template_dir/COPILOT_INSTRUCTIONS.md" "$project_path/COPILOT_INSTRUCTIONS.md"
-copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
-copy_file "$template_dir/CHANGELOG.md" "$project_path/CHANGELOG.md"
+if ! write_generated_todo_from_backlog; then
+  copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
+fi
+
+if ! write_generated_changelog_from_release_notes; then
+  copy_file "$template_dir/CHANGELOG.md" "$project_path/CHANGELOG.md"
+fi
 
 mkdir -p "$project_path/docs/adr"
 copy_file "$template_dir/ADR.md" "$project_path/docs/adr/0001-record-architecture-decisions.md"

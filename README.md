@@ -192,6 +192,13 @@ For existing repositories, the adoption report pulls together useful project con
 - Recommended merge steps
 - Suggested AGENTS.md context
 
+When possible, the script initializes framework files from existing project content:
+
+- If `TODO.md` is missing and `COPILOT_TASK_BACKLOG.md` exists, `TODO.md` is generated from that backlog instead of using a blank placeholder.
+- If `CHANGELOG.md` is missing and a `RELEASE_NOTES*.md` file exists, `CHANGELOG.md` is generated from those release notes instead of using a blank placeholder.
+
+Existing files are still preserved by default. The generated adoption report and merge templates show what should be reviewed manually.
+
 ## Update Existing Projects
 
 When universal rules change:
