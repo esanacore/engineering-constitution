@@ -8,6 +8,7 @@ Read:
 
 - `CONSTITUTION.md`
 - `AI_WORKFLOW.md`
+- `INTEGRATION.md`
 - `TESTING.md`
 - `DOCUMENTATION.md`
 - `SECURITY.md`

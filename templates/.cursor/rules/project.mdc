@@ -1,0 +1,36 @@
+---
+description: Project engineering standards — applies to all files
+alwaysApply: true
+---
+
+# Project Engineering Rules
+
+This repository follows the [Engineering Constitution](../../constitution/CONSTITUTION.md).
+
+## Before Making Changes
+
+Read:
+
+- `constitution/CONSTITUTION.md` — universal engineering principles
+- `README.md` — project purpose and setup
+- `TODO.md` — roadmap and known issues
+- `CHANGELOG.md` — recent changes
+
+## Standards
+
+- Follow existing code style and project conventions.
+- Add or update tests for all behavior changes.
+- Update documentation when behavior, setup, or architecture changes.
+- Update `TODO.md` with discovered work.
+- Update `CHANGELOG.md` for user-facing changes.
+- Avoid unnecessary dependencies.
+- Review security impact before completing work.
+
+## Project-Specific Rules
+
+<!-- Add project-specific overrides here. These take precedence over the constitution. -->
+<!-- Examples:
+- Always use async/await for I/O operations.
+- Run `npm test` before considering work complete.
+- Document architectural changes in docs/adr/.
+-->

@@ -30,7 +30,8 @@ Each project gets:
 - `constitution/`: Git submodule pointing to this repository.
 - `AGENTS.md`: Project-specific entry point for AI agents.
 - `CLAUDE.md`: Claude-specific guidance.
-- `COPILOT_INSTRUCTIONS.md`: Copilot-specific guidance.
+- `.github/copilot-instructions.md`: GitHub Copilot guidance (auto-loaded by Copilot).
+- `.cursor/rules/project.mdc`: Cursor guidance (auto-loaded by Cursor).
 - `TODO.md`: Living roadmap.
 - `CHANGELOG.md`: Release history.
 - `docs/adr/`: Architecture Decision Records.
@@ -39,7 +40,7 @@ The submodule keeps universal rules centralized. The project-level files keep lo
 
 ## Version
 
-Current version: 1.0.0
+Current version: 1.1.0
 
 See `VERSION`.
 
@@ -47,6 +48,7 @@ See `VERSION`.
 
 - `CONSTITUTION.md`: Authoritative principles and required workflow.
 - `AI_WORKFLOW.md`: Step-by-step AI agent workflow.
+- `INTEGRATION.md`: Submodule workflow, VERSION strategy, agent overrides, and project-specific rules.
 - `TESTING.md`: Testing expectations and reporting standards.
 - `DOCUMENTATION.md`: Documentation requirements and checklists.
 - `SECURITY.md`: Security review standards.
@@ -158,7 +160,10 @@ Then copy or generate the project-level files:
 ```bash
 cp constitution/templates/AGENTS.md AGENTS.md
 cp constitution/templates/CLAUDE.md CLAUDE.md
-cp constitution/templates/COPILOT_INSTRUCTIONS.md COPILOT_INSTRUCTIONS.md
+mkdir -p .github
+cp constitution/templates/.github/copilot-instructions.md .github/copilot-instructions.md
+mkdir -p .cursor/rules
+cp constitution/templates/.cursor/rules/project.mdc .cursor/rules/project.mdc
 cp constitution/templates/TODO.md TODO.md
 cp constitution/templates/CHANGELOG.md CHANGELOG.md
 mkdir -p docs/adr
@@ -172,7 +177,8 @@ The script adds:
 - `constitution` submodule
 - `AGENTS.md`
 - `CLAUDE.md`
-- `COPILOT_INSTRUCTIONS.md`
+- `.github/copilot-instructions.md`
+- `.cursor/rules/project.mdc`
 - `TODO.md`
 - `CHANGELOG.md`
 - `README.md` if missing
@@ -226,7 +232,11 @@ project/
 ├── constitution/
 ├── AGENTS.md
 ├── CLAUDE.md
-├── COPILOT_INSTRUCTIONS.md
+├── .github/
+│   └── copilot-instructions.md
+├── .cursor/
+│   └── rules/
+│       └── project.mdc
 ├── TODO.md
 ├── CHANGELOG.md
 ├── README.md

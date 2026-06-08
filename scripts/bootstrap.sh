@@ -20,7 +20,8 @@ Creates or installs:
   - constitution Git submodule
   - AGENTS.md
   - CLAUDE.md
-  - COPILOT_INSTRUCTIONS.md
+  - .github/copilot-instructions.md
+  - .cursor/rules/project.mdc
   - TODO.md
   - CHANGELOG.md
   - docs/adr/
@@ -283,7 +284,8 @@ generate_adoption_report() {
     status_line "README.md"
     status_line "AGENTS.md"
     status_line "CLAUDE.md"
-    status_line "COPILOT_INSTRUCTIONS.md"
+    status_line ".github/copilot-instructions.md"
+    status_line ".cursor/rules/project.mdc"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
     status_line "docs/adr"
@@ -329,6 +331,7 @@ generate_adoption_report() {
     echo "- Read \`README.md\`, \`TODO.md\`, and \`CHANGELOG.md\` for project context."
     echo "- Update tests, docs, TODO.md, and CHANGELOG.md when relevant."
     echo "- Record major design decisions in \`docs/adr/\`."
+    echo "- See \`constitution/INTEGRATION.md\` for override patterns and update instructions."
   } > "$report"
 
   written_files+=("${report#$project_path/}")
@@ -350,7 +353,8 @@ fi
 
 copy_file "$template_dir/AGENTS.md" "$project_path/AGENTS.md"
 copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
-copy_file "$template_dir/COPILOT_INSTRUCTIONS.md" "$project_path/COPILOT_INSTRUCTIONS.md"
+copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
+copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
 if ! write_generated_todo_from_backlog; then
   copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
 fi

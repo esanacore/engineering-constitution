@@ -1,0 +1,32 @@
+---
+description: Sample project engineering standards — applies to all files
+alwaysApply: true
+---
+
+# Sample Project Engineering Rules
+
+This is the sample project from the Engineering Constitution framework.
+
+It follows the [Engineering Constitution](../../constitution/CONSTITUTION.md).
+
+## Before Making Changes
+
+Read:
+
+- `constitution/CONSTITUTION.md` — universal engineering principles
+- `README.md` — project purpose and setup
+- `TODO.md` — roadmap and known issues
+- `CHANGELOG.md` — recent changes
+
+## Standards
+
+- Follow existing code style and project conventions.
+- Add or update tests for all behavior changes.
+- Update documentation when behavior or setup changes.
+- Update `TODO.md` with discovered work.
+- Update `CHANGELOG.md` for user-facing changes.
+
+## Project-Specific Rules
+
+- This is a sample project. Treat it as an illustrative example only.
+- Do not add real application logic here.

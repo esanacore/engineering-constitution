@@ -21,8 +21,8 @@
 
 ## Documentation
 
-- [ ] Add examples for submodule update workflows.
 - [ ] Add guidance for migrating existing project docs into the constitution structure.
+- [ ] Add language-specific override examples to `INTEGRATION.md`.
 
 ## Nice-to-Have
 

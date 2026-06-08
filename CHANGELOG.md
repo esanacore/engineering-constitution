@@ -8,13 +8,30 @@ This project follows semantic versioning.
 
 ### Added
 
-- Added clearer usage documentation for deploying the constitution repository and bootstrapping new or existing repositories.
-- Added maintainer comments to the bootstrap script.
-- Added non-destructive adoption reporting for existing repositories.
-- Added merge-template output for existing files skipped by the bootstrap script.
-- Added bootstrap ingestion from existing backlog and release-note files when initializing missing TODO and changelog files.
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+## 1.1.0 - 2026-06-08
+
+### Added
+
+- Added `templates/.github/copilot-instructions.md` for GitHub Copilot auto-loading via the standard `.github/` location.
+- Added `templates/.cursor/rules/project.mdc` for Cursor auto-loading with `alwaysApply: true` frontmatter.
+- Added `INTEGRATION.md` documenting agent reading order, project-specific override patterns, VERSION-based update strategy, and project file structure.
+- Updated bootstrap script to install `.github/copilot-instructions.md` and `.cursor/rules/project.mdc` instead of root-level `COPILOT_INSTRUCTIONS.md`.
+- Updated sample project to include `.github/copilot-instructions.md` and `.cursor/rules/project.mdc`.
 
 ### Changed
+
+- `scripts/bootstrap.sh` now creates `.github/copilot-instructions.md` (GitHub Copilot standard location) and `.cursor/rules/project.mdc` (Cursor standard location) instead of the generic root-level `COPILOT_INSTRUCTIONS.md`.
+- README updated to reflect new template files and project structure.
+- AGENTS.md updated to include `INTEGRATION.md` in the required reading list.
+- VERSION bumped to 1.1.0.
 
 ### Fixed
 
