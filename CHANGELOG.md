@@ -4,6 +4,19 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.8.1 - 2026-06-11
+
+### Fixed
+
+- Cleaned up `DevLaunchpad` repository by ignoring `.constitution-bootstrap/` and resetting submodule state.
+- Documented the `version_analyzer.sh` tool in `RELEASES.md`.
+
+## 1.8.0 - 2026-06-11
+
+### Added
+
+- Added `scripts/version_analyzer.sh` to help determine retroactive and proactive Semantic Version bumps based on project history.
+
 ## 1.7.0 - 2026-06-10
 
 ### Added

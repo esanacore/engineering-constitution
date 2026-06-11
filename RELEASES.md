@@ -17,6 +17,17 @@ Every repository must include a root-level `VERSION` file. This file:
 - Is the single source of truth for the project's current state.
 - Must be updated by agents/humans before any release.
 
+## Version Analysis Tool
+
+The framework includes a tool to help determine the correct version based on project history:
+
+```bash
+# Analyze a project directory
+bash constitution/scripts/version_analyzer.sh .
+```
+
+This tool scans Git tags and commit messages for SemVer-aligned prefixes (e.g., `feat:`, `fix:`, `BREAKING CHANGE`) to suggest the next appropriate version bump.
+
 ## CHANGELOG Format
 
 Use these categories:

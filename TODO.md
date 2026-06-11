@@ -2,9 +2,9 @@
 
 ## Features
 
+- [x] Add retroactive version analysis mechanism.
 - [ ] Add language-specific guidance for common stacks.
 - [ ] Add DevOps and infrastructure standards.
-- [ ] Add AI agent scorecards.
 
 ## Technical Debt
 
