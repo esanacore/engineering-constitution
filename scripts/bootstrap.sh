@@ -371,6 +371,8 @@ fi
 
 copy_file "$template_dir/AGENTS.md" "$project_path/AGENTS.md"
 copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
+copy_file "$template_dir/.agent-instructions.md" "$project_path/.agent-instructions.md"
+copy_file "$template_dir/.cursorrules" "$project_path/.cursorrules"
 copy_file "$template_dir/HELP.md" "$project_path/HELP.md"
 copy_file "$template_dir/SECURITY.md" "$project_path/SECURITY.md"
 copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"

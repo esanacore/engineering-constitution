@@ -1,0 +1,9 @@
+# Project Engineering Rules
+
+This repository follows the [Engineering Constitution](constitution/CONSTITUTION.md).
+
+## Required Workflow
+
+1. Read `constitution/CONSTITUTION.md` and `constitution/AI_WORKFLOW.md`.
+2. Follow the project conventions in `AGENTS.md`.
+3. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.

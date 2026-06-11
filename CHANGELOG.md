@@ -4,6 +4,17 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.4.0 - 2026-06-10
+
+### Added
+
+- Added universal agent discoverability files: `.agent-instructions.md` (for Devin, Gemini, etc.) and `.cursorrules` (for Cursor/legacy).
+- Updated `bootstrap.sh` to install these universal entry points by default.
+
+### Changed
+
+- Updated `AGENTS.md` and other instruction files to be more assertive about the constitution's authority.
+
 ## 1.3.0 - 2026-06-10
 
 ### Added

@@ -36,6 +36,8 @@ test_new_project() {
   [ -d "constitution" ] || { echo "FAIL: constitution submodule missing"; exit 1; }
   [ -f "AGENTS.md" ] || { echo "FAIL: AGENTS.md missing"; exit 1; }
   [ -f "CLAUDE.md" ] || { echo "FAIL: CLAUDE.md missing"; exit 1; }
+  [ -f ".agent-instructions.md" ] || { echo "FAIL: .agent-instructions.md missing"; exit 1; }
+  [ -f ".cursorrules" ] || { echo "FAIL: .cursorrules missing"; exit 1; }
   [ -f "HELP.md" ] || { echo "FAIL: HELP.md missing"; exit 1; }
   [ -f "SECURITY.md" ] || { echo "FAIL: SECURITY.md missing"; exit 1; }
   [ -f ".github/copilot-instructions.md" ] || { echo "FAIL: copilot-instructions.md missing"; exit 1; }
