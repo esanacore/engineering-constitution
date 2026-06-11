@@ -2,17 +2,13 @@
 
 Briefly describe what this project does and who it is for.
 
+<!-- CONSTITUTION_START -->
 ## Engineering Constitution
 
-This project follows the Engineering Constitution.
-
-The constitution is included as a Git submodule in:
-
-```text
-constitution/
-```
+This project follows the Engineering Constitution. The constitution is included as a Git submodule in `constitution/`.
 
 AI agents and contributors should read `AGENTS.md` before beginning work.
+<!-- CONSTITUTION_END -->
 
 ## Getting Started
 

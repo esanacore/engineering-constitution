@@ -4,6 +4,13 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.6.1 - 2026-06-10
+
+### Fixed
+
+- Improved `templates/README.md` with explicit `<!-- CONSTITUTION_START -->` markers to prevent documentation pollution during manual merging.
+- Cleaned up `DevLaunchpad` README to remove redundant headers and duplicate description lines.
+
 ## 1.6.0 - 2026-06-10
 
 ### Added
