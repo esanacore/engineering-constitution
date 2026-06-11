@@ -49,6 +49,7 @@ test_new_project() {
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
+  [ -f "VERSION" ] || { echo "FAIL: VERSION missing"; exit 1; }
   [ -f "docs/adr/0001-record-architecture-decisions.md" ] || { echo "FAIL: ADR missing"; exit 1; }
   [ -f "docs/SETUP.md" ] || { echo "FAIL: SETUP.md missing"; exit 1; }
   [ -f "docs/COMMAND_REFERENCE.md" ] || { echo "FAIL: COMMAND_REFERENCE.md missing"; exit 1; }

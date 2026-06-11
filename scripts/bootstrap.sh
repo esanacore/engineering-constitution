@@ -20,12 +20,20 @@ Creates or installs:
   - constitution Git submodule
   - AGENTS.md
   - CLAUDE.md
+  - .agent-instructions.md
+  - .cursorrules
+  - .antigravity/instructions.md
+  - .openhands_instructions
+  - .project-rules.md
+  - SYSTEM_PROMPT.md
+  - CONTRIBUTING.md
   - HELP.md
   - SECURITY.md
   - .github/copilot-instructions.md
   - .cursor/rules/project.mdc
   - TODO.md
   - CHANGELOG.md
+  - VERSION
   - docs/adr/
   - docs/adr/0001-record-architecture-decisions.md
   - docs/SETUP.md
@@ -293,12 +301,20 @@ generate_adoption_report() {
     status_line "README.md"
     status_line "AGENTS.md"
     status_line "CLAUDE.md"
+    status_line ".agent-instructions.md"
+    status_line ".cursorrules"
+    status_line ".antigravity/instructions.md"
+    status_line ".openhands_instructions"
+    status_line ".project-rules.md"
+    status_line "SYSTEM_PROMPT.md"
+    status_line "CONTRIBUTING.md"
     status_line "HELP.md"
     status_line "SECURITY.md"
     status_line ".github/copilot-instructions.md"
     status_line ".cursor/rules/project.mdc"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
+    status_line "VERSION"
     status_line "docs/adr"
     status_line "docs/SETUP.md"
     status_line "docs/COMMAND_REFERENCE.md"
@@ -310,11 +326,11 @@ generate_adoption_report() {
     echo
     echo "## Files Written"
     echo
-    write_list "${written_files[@]}"
+    write_list " ${written_files[@]}"
     echo
     echo "## Existing Files Preserved"
     echo
-    write_list "${skipped_files[@]}"
+    write_list " ${skipped_files[@]}"
     echo
     echo "## Detected Project Signals"
     echo
@@ -390,6 +406,8 @@ fi
 if ! write_generated_changelog_from_release_notes; then
   copy_file "$template_dir/CHANGELOG.md" "$project_path/CHANGELOG.md"
 fi
+
+copy_file "$template_dir/VERSION" "$project_path/VERSION"
 
 mkdir -p "$project_path/docs/adr"
 copy_file "$template_dir/ADR.md" "$project_path/docs/adr/0001-record-architecture-decisions.md"

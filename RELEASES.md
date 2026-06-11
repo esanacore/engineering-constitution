@@ -4,11 +4,18 @@ Release discipline makes change understandable and recoverable.
 
 ## Semantic Versioning
 
-Follow semantic versioning:
+Follow semantic versioning (SemVer) for all repositories:
 
-- MAJOR for incompatible changes
-- MINOR for backward-compatible functionality
-- PATCH for backward-compatible fixes
+- **MAJOR**: Incompatible changes (breaking changes)
+- **MINOR**: Backward-compatible functionality (new features)
+- **PATCH**: Backward-compatible fixes (bug fixes, maintenance)
+
+## The VERSION File
+
+Every repository must include a root-level `VERSION` file. This file:
+- Contains only the version string (e.g., `1.2.3`).
+- Is the single source of truth for the project's current state.
+- Must be updated by agents/humans before any release.
 
 ## CHANGELOG Format
 

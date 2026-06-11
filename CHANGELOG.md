@@ -4,6 +4,15 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.7.0 - 2026-06-10
+
+### Added
+
+- Mandated **Semantic Versioning (SemVer)** for all projects in `CONSTITUTION.md`.
+- Added a standard `VERSION` file template (initialized at `0.1.0`).
+- Updated `bootstrap.sh` to install the `VERSION` file in all repositories by default.
+- Enhanced `RELEASES.md` with explicit instructions for managing the `VERSION` file.
+
 ## 1.6.1 - 2026-06-10
 
 ### Fixed
