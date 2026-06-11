@@ -1,54 +1,19 @@
 # Engineering Constitution
 
-The Engineering Constitution is a reusable framework for AI-assisted software development standards.
+The Engineering Constitution is a reusable framework for AI-assisted software development standards. It is the single source of truth for how humans and AI agents should work across your software repositories.
 
-It is intended to be the single source of truth for how humans and AI agents should work across your software repositories. Instead of copying long instructions into every project and letting them drift, each project includes this repository as a `constitution/` Git submodule and keeps a small set of local project files beside it.
+Each project includes this repository as a `constitution/` Git submodule alongside a small set of local project files, giving every project:
 
-In practical terms, this repository gives every project:
-
-- Shared engineering principles.
-- Standard AI-agent workflow instructions.
-- Baseline templates for README, TODO, CHANGELOG, AGENTS, Claude, Copilot, and ADR files.
-- A bootstrap script that installs those files into an existing Git repository.
-
-It defines shared expectations for:
-
-- Documentation
-- Testing
-- TODO management
-- Security review
-- Architecture decisions
-- Dependency hygiene
-- Observability
-- Release discipline
-- Opportunity discovery
-
-## How It Works
-
-Each project gets:
-
-- `constitution/`: Git submodule pointing to this repository.
-- `AGENTS.md`: Project-specific entry point for AI agents.
-- `CLAUDE.md`: Claude-specific guidance.
-- `.github/copilot-instructions.md`: GitHub Copilot guidance (auto-loaded by Copilot).
-- `.cursor/rules/project.mdc`: Cursor guidance (auto-loaded by Cursor).
-- `TODO.md`: Living roadmap.
-- `CHANGELOG.md`: Release history.
-- `docs/adr/`: Architecture Decision Records.
-
-The submodule keeps universal rules centralized. The project-level files keep local context close to the code.
-
-## Version
-
-Current version: 1.1.0
-
-See `VERSION`.
+- Shared engineering principles
+- Standard AI-agent workflow instructions
+- Baseline templates for README, TODO, CHANGELOG, AGENTS, Claude, Copilot, and ADR files
+- A bootstrap script that installs those files into an existing Git repository
 
 ## Repository Contents
 
-- `CONSTITUTION.md`: Authoritative principles and required workflow.
+- `CONSTITUTION.md`: Authoritative engineering principles.
 - `AI_WORKFLOW.md`: Step-by-step AI agent workflow.
-- `INTEGRATION.md`: Submodule workflow, VERSION strategy, agent overrides, and project-specific rules.
+- `INTEGRATION.md`: Submodule workflow, agent reading order, project-specific overrides, and VERSION update strategy.
 - `TESTING.md`: Testing expectations and reporting standards.
 - `DOCUMENTATION.md`: Documentation requirements and checklists.
 - `SECURITY.md`: Security review standards.
@@ -59,25 +24,17 @@ See `VERSION`.
 - `examples/sample-project/`: Example project layout.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 
-## Quick Start
+## Version
 
-Use the bootstrap script for new or existing Git repositories:
+Current version: 1.1.0
 
-```bash
-/path/to/engineering-constitution/scripts/bootstrap.sh /path/to/project <repository-url>
-```
+See `VERSION`.
 
-Use `--force` only when you intentionally want to overwrite generated files:
+## Getting Started
 
-```bash
-/path/to/engineering-constitution/scripts/bootstrap.sh --force /path/to/project <repository-url>
-```
+### Step 1: Publish This Repository
 
-The target project must already be a Git repository.
-
-## Deploy This Constitution Repository
-
-To use this framework across projects, publish this repository somewhere your projects can access it:
+Publish this repository somewhere your projects can access it:
 
 ```bash
 cd /path/to/engineering-constitution
@@ -85,79 +42,61 @@ git remote add origin <repository-url>
 git push -u origin main
 ```
 
-Use that `<repository-url>` when bootstrapping projects.
+Use that `<repository-url>` in the bootstrap commands below.
 
-Example:
+### Step 2: Bootstrap a Project
+
+Run the bootstrap script to set up the constitution in any Git repository:
 
 ```bash
-./scripts/bootstrap.sh ~/Repos/my-app git@github.com:your-org/engineering-constitution.git
+./scripts/bootstrap.sh /path/to/project <repository-url>
 ```
 
-## Add to a New Repository
+The target project must already be a Git repository. Pass `--force` to overwrite previously generated files:
 
-Create or enter a new Git repository:
+```bash
+./scripts/bootstrap.sh --force /path/to/project <repository-url>
+```
+
+#### New Repository
 
 ```bash
 mkdir my-project
 cd my-project
 git init
+cd /path/to/engineering-constitution
+./scripts/bootstrap.sh /path/to/my-project <repository-url>
 ```
 
-Bootstrap the constitution:
+Customize the generated files (`README.md`, `TODO.md`, `CHANGELOG.md`, `docs/adr/0001-record-architecture-decisions.md`), then commit:
 
 ```bash
-/path/to/engineering-constitution/scripts/bootstrap.sh . <repository-url>
-```
-
-Review and customize:
-
-- `README.md`
-- `TODO.md`
-- `CHANGELOG.md`
-- `docs/adr/0001-record-architecture-decisions.md`
-
-Commit the initialized structure:
-
-```bash
+cd /path/to/my-project
 git add .
 git commit -m "Add engineering constitution"
 ```
 
-## Add to an Existing Repository
-
-From this repository, run:
+#### Existing Repository
 
 ```bash
 ./scripts/bootstrap.sh /path/to/existing-project <repository-url>
 ```
 
-The script will:
-
-- Add the constitution as a submodule at `constitution/`.
-- Add missing agent and project governance files.
-- Create `docs/adr/`.
-- Skip files that already exist.
-- Write an adoption report to `.constitution-bootstrap/adoption-report.md`.
-- Copy template versions of skipped files into `.constitution-bootstrap/templates/` so you can merge them manually.
+The script adds the `constitution` submodule, creates missing governance files, and writes an adoption report to `.constitution-bootstrap/adoption-report.md`. Existing files are never overwritten by default — template copies are placed in `.constitution-bootstrap/templates/` for manual merging.
 
 After running it:
 
-1. Review skipped files and decide whether to merge template content manually.
-2. Customize generated placeholders.
-3. Review `.constitution-bootstrap/adoption-report.md` for detected project context and recommended merge steps.
-4. Commit `.gitmodules`, the `constitution` submodule reference, generated files, and any merged documentation changes.
+1. Review `.constitution-bootstrap/adoption-report.md` for detected project context and recommended merge steps.
+2. Merge any relevant template content into skipped files.
+3. Customize generated placeholders.
+4. Commit `.gitmodules`, the `constitution` submodule reference, generated files, and any merged changes.
 
-## Manual Submodule Installation
+### Manual Installation
 
-If you do not want to use the bootstrap script, add this repository to a project as a submodule:
+If you prefer not to use the bootstrap script:
 
 ```bash
 git submodule add <repository-url> constitution
-```
-
-Then copy or generate the project-level files:
-
-```bash
 cp constitution/templates/AGENTS.md AGENTS.md
 cp constitution/templates/CLAUDE.md CLAUDE.md
 mkdir -p .github
@@ -170,51 +109,12 @@ mkdir -p docs/adr
 cp constitution/templates/ADR.md docs/adr/0001-record-architecture-decisions.md
 ```
 
-## Bootstrap Script Behavior
-
-The script adds:
-
-- `constitution` submodule
-- `AGENTS.md`
-- `CLAUDE.md`
-- `.github/copilot-instructions.md`
-- `.cursor/rules/project.mdc`
-- `TODO.md`
-- `CHANGELOG.md`
-- `README.md` if missing
-- `docs/adr/`
-- `docs/adr/0001-record-architecture-decisions.md`
-- `.constitution-bootstrap/adoption-report.md`
-- `.constitution-bootstrap/templates/` for skipped existing files
-
-By default, the script does not overwrite existing files. Pass `--force` to overwrite generated files from the templates.
-
-For existing repositories, the adoption report pulls together useful project context without modifying the original files:
-
-- Existing governance files
-- Files written by the bootstrap script
-- Existing files preserved
-- Detected project signals such as package metadata, Makefiles, Docker files, and GitHub Actions workflows
-- Recommended merge steps
-- Suggested AGENTS.md context
-
-When possible, the script initializes framework files from existing project content:
-
-- If `TODO.md` is missing and `COPILOT_TASK_BACKLOG.md` exists, `TODO.md` is generated from that backlog instead of using a blank placeholder.
-- If `CHANGELOG.md` is missing and a `RELEASE_NOTES*.md` file exists, `CHANGELOG.md` is generated from those release notes instead of using a blank placeholder.
-
-Existing files are still preserved by default. The generated adoption report and merge templates show what should be reviewed manually.
-
-## Update Existing Projects
+## Updating Projects
 
 When universal rules change:
 
-1. Update this repository.
-2. Increment `VERSION`.
-3. Pull latest submodule changes into projects.
-4. Commit updated submodule references.
-
-Example update inside a project:
+1. Update this repository and increment `VERSION`.
+2. Pull the updated submodule into each project:
 
 ```bash
 cd /path/to/project
@@ -223,24 +123,4 @@ git add constitution
 git commit -m "Update engineering constitution"
 ```
 
-## Project Template Structure
-
-Every project should eventually contain:
-
-```text
-project/
-├── constitution/
-├── AGENTS.md
-├── CLAUDE.md
-├── .github/
-│   └── copilot-instructions.md
-├── .cursor/
-│   └── rules/
-│       └── project.mdc
-├── TODO.md
-├── CHANGELOG.md
-├── README.md
-├── docs/
-│   └── adr/
-└── src/
-```
+See `INTEGRATION.md` for version checking, template diffing, and project file structure.

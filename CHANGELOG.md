@@ -10,6 +10,9 @@ This project follows semantic versioning.
 
 ### Changed
 
+- Rewrote README.md to eliminate repetitive install sections and clarify setup flow.
+- Removed duplicate "Required Workflow" list and "Repository Integration Strategy" from CONSTITUTION.md; both are now covered in AI_WORKFLOW.md and README.md/INTEGRATION.md.
+
 ### Fixed
 
 ### Removed

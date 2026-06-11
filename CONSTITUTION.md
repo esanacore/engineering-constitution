@@ -149,45 +149,7 @@ Document findings in TODO.md.
 
 ## Required Workflow
 
-1. Read AGENTS.md.
-2. Read constitution documents.
-3. Read README.md.
-4. Read TODO.md.
-5. Read CHANGELOG.md.
-6. Understand the task.
-7. Create an implementation plan.
-8. Implement changes.
-9. Update tests.
-10. Update documentation.
-11. Update TODO.md.
-12. Update CHANGELOG.md.
-13. Perform a security review.
-14. Suggest future improvements.
-15. Summarize work.
-
-## Repository Integration Strategy
-
-The engineering-constitution repository should be included in projects as a Git submodule:
-
-```bash
-git submodule add <repository-url> constitution
-```
-
-This provides a single source of truth.
-
-When universal rules change:
-
-1. Update the engineering-constitution repository.
-2. Increment VERSION.
-3. Pull latest submodule changes into projects.
-4. Commit updated submodule reference.
-
-Benefits:
-
-- One authoritative location
-- Consistent standards
-- Easy updates
-- Full version history
+See `AI_WORKFLOW.md` for the complete step-by-step workflow.
 
 ## Future Roadmap
 
