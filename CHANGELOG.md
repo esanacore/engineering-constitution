@@ -4,12 +4,17 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
-## Unreleased
+## 1.2.0 - 2026-06-10
 
 ### Added
 
+- Added automated test suite for `scripts/bootstrap.sh` in `scripts/test_bootstrap.sh`.
+- Added migration guidance for existing project documentation to `DOCUMENTATION.md`.
+- Added language-specific override examples (Node.js/TypeScript, Python/FastAPI) to `INTEGRATION.md`.
+
 ### Changed
 
+- Updated `scripts/bootstrap.sh` to allow the `file` protocol for git submodules, supporting local repository sources.
 - Rewrote README.md to eliminate repetitive install sections and clarify setup flow.
 - Removed duplicate "Required Workflow" list and "Repository Integration Strategy" from CONSTITUTION.md; both are now covered in AI_WORKFLOW.md and README.md/INTEGRATION.md.
 

@@ -16,13 +16,13 @@
 
 ## Testing
 
-- [ ] Add automated tests for `scripts/bootstrap.sh`.
+- [x] Add automated tests for `scripts/bootstrap.sh`.
 - [ ] Add compliance checks that verify required files exist in integrated repositories.
 
 ## Documentation
 
-- [ ] Add guidance for migrating existing project docs into the constitution structure.
-- [ ] Add language-specific override examples to `INTEGRATION.md`.
+- [x] Add guidance for migrating existing project docs into the constitution structure.
+- [x] Add language-specific override examples to `INTEGRATION.md`.
 
 ## Nice-to-Have
 

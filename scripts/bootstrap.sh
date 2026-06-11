@@ -347,7 +347,7 @@ mkdir -p "$bootstrap_dir/templates"
 if [ -e constitution ]; then
   echo "Skipped submodule; path already exists: constitution"
 else
-  git submodule add "$constitution_url" constitution
+  git -c protocol.file.allow=always submodule add "$constitution_url" constitution
   echo "Added constitution submodule: $constitution_url"
 fi
 

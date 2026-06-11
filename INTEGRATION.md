@@ -62,6 +62,33 @@ In `.github/copilot-instructions.md`, add a `## Project-Specific Rules` section 
 
 The same pattern applies to `AGENTS.md`, `CLAUDE.md`, and `.cursor/rules/project.mdc`.
 
+## Language-Specific Examples
+
+### Node.js / TypeScript
+
+In your project-specific rules, consider adding:
+
+```markdown
+- Use TypeScript with strict mode enabled.
+- Prefer functional components and hooks for React code.
+- Use `zod` for input validation.
+- All new API endpoints must be documented in `openapi.yaml`.
+- Run `npm run lint` and `npm test` before every commit.
+```
+
+### Python / FastAPI
+
+In your project-specific rules, consider adding:
+
+```markdown
+- Use Python 3.11+.
+- Use Pydantic v2 for data modeling.
+- Follow PEP 8 style guidelines.
+- Use `pytest` for all tests.
+- All service methods must include docstrings following the Google style.
+- Run `ruff check .` for linting.
+```
+
 ## VERSION-Based Update Strategy
 
 The `constitution/VERSION` file records the constitution version the project is currently pinned to. Projects pin the constitution at a specific commit via the submodule reference.
