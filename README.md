@@ -13,7 +13,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 
 - `CONSTITUTION.md`: Authoritative engineering principles.
 - `AI_WORKFLOW.md`: Step-by-step AI agent workflow.
-- `INTEGRATION.md`: Agent reading order, project-specific overrides, and VERSION update strategy.
+- `INTEGRATION.md`: Submodule workflow, agent reading order, project-specific overrides, and VERSION update strategy.
 - `TESTING.md`: Testing expectations and reporting standards.
 - `DOCUMENTATION.md`: Documentation requirements and checklists.
 - `SECURITY.md`: Security review standards.
@@ -61,7 +61,9 @@ The target project must already be a Git repository. Pass `--force` to overwrite
 #### New Repository
 
 ```bash
-mkdir my-project && cd my-project && git init
+mkdir my-project
+cd my-project
+git init
 cd /path/to/engineering-constitution
 ./scripts/bootstrap.sh /path/to/my-project <repository-url>
 ```
