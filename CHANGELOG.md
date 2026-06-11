@@ -4,6 +4,18 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.3.0 - 2026-06-10
+
+### Added
+
+- Added new standard documentation templates: `HELP.md`, `SECURITY.md`, `docs/SETUP.md`, `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, `docs/ARCHITECTURE.md`, `docs/AGENT_PROMPTS.md`, `docs/AGENT_HANDOFF.md`, and `docs/OPERATIONS.md`.
+- Updated `bootstrap.sh` to automatically install these new templates in all repositories.
+- Updated `DOCUMENTATION.md` to reflect the expanded documentation requirements.
+
+### Changed
+
+- `bootstrap.sh` now creates the `docs/` directory and populates it with standard templates by default.
+
 ## 1.2.0 - 2026-06-10
 
 ### Added

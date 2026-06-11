@@ -16,19 +16,24 @@ Documentation should be:
 Every repository should include:
 
 - README.md
+- HELP.md
 - CHANGELOG.md
 - TODO.md
+- SECURITY.md
 
 ## Strongly Encouraged
 
-Repositories should also consider:
+Repositories should also include:
 
-- docs/
+- docs/SETUP.md
+- docs/COMMAND_REFERENCE.md
+- docs/TROUBLESHOOTING.md
+- docs/ARCHITECTURE.md
 - docs/adr/
-- Architecture documentation
+- docs/AGENT_PROMPTS.md
+- docs/AGENT_HANDOFF.md
+- docs/OPERATIONS.md
 - API documentation
-- Deployment documentation
-- Operations runbooks
 - Wiki content when appropriate
 
 ## Documentation Review Checklist

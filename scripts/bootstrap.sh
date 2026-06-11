@@ -20,12 +20,21 @@ Creates or installs:
   - constitution Git submodule
   - AGENTS.md
   - CLAUDE.md
+  - HELP.md
+  - SECURITY.md
   - .github/copilot-instructions.md
   - .cursor/rules/project.mdc
   - TODO.md
   - CHANGELOG.md
   - docs/adr/
   - docs/adr/0001-record-architecture-decisions.md
+  - docs/SETUP.md
+  - docs/COMMAND_REFERENCE.md
+  - docs/TROUBLESHOOTING.md
+  - docs/AGENT_PROMPTS.md
+  - docs/AGENT_HANDOFF.md
+  - docs/OPERATIONS.md
+  - docs/ARCHITECTURE.md
   - .constitution-bootstrap/adoption-report.md
   - .constitution-bootstrap/templates/ for skipped existing files
 
@@ -284,11 +293,20 @@ generate_adoption_report() {
     status_line "README.md"
     status_line "AGENTS.md"
     status_line "CLAUDE.md"
+    status_line "HELP.md"
+    status_line "SECURITY.md"
     status_line ".github/copilot-instructions.md"
     status_line ".cursor/rules/project.mdc"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
     status_line "docs/adr"
+    status_line "docs/SETUP.md"
+    status_line "docs/COMMAND_REFERENCE.md"
+    status_line "docs/TROUBLESHOOTING.md"
+    status_line "docs/AGENT_PROMPTS.md"
+    status_line "docs/AGENT_HANDOFF.md"
+    status_line "docs/OPERATIONS.md"
+    status_line "docs/ARCHITECTURE.md"
     echo
     echo "## Files Written"
     echo
@@ -353,6 +371,8 @@ fi
 
 copy_file "$template_dir/AGENTS.md" "$project_path/AGENTS.md"
 copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
+copy_file "$template_dir/HELP.md" "$project_path/HELP.md"
+copy_file "$template_dir/SECURITY.md" "$project_path/SECURITY.md"
 copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
 copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
 if ! write_generated_todo_from_backlog; then
@@ -365,6 +385,14 @@ fi
 
 mkdir -p "$project_path/docs/adr"
 copy_file "$template_dir/ADR.md" "$project_path/docs/adr/0001-record-architecture-decisions.md"
+
+copy_file "$template_dir/docs/SETUP.md" "$project_path/docs/SETUP.md"
+copy_file "$template_dir/docs/COMMAND_REFERENCE.md" "$project_path/docs/COMMAND_REFERENCE.md"
+copy_file "$template_dir/docs/TROUBLESHOOTING.md" "$project_path/docs/TROUBLESHOOTING.md"
+copy_file "$template_dir/docs/AGENT_PROMPTS.md" "$project_path/docs/AGENT_PROMPTS.md"
+copy_file "$template_dir/docs/AGENT_HANDOFF.md" "$project_path/docs/AGENT_HANDOFF.md"
+copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
+copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
 
 if [ ! -e "$project_path/README.md" ]; then
   copy_file "$template_dir/README.md" "$project_path/README.md"

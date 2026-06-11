@@ -36,11 +36,20 @@ test_new_project() {
   [ -d "constitution" ] || { echo "FAIL: constitution submodule missing"; exit 1; }
   [ -f "AGENTS.md" ] || { echo "FAIL: AGENTS.md missing"; exit 1; }
   [ -f "CLAUDE.md" ] || { echo "FAIL: CLAUDE.md missing"; exit 1; }
+  [ -f "HELP.md" ] || { echo "FAIL: HELP.md missing"; exit 1; }
+  [ -f "SECURITY.md" ] || { echo "FAIL: SECURITY.md missing"; exit 1; }
   [ -f ".github/copilot-instructions.md" ] || { echo "FAIL: copilot-instructions.md missing"; exit 1; }
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
   [ -f "docs/adr/0001-record-architecture-decisions.md" ] || { echo "FAIL: ADR missing"; exit 1; }
+  [ -f "docs/SETUP.md" ] || { echo "FAIL: SETUP.md missing"; exit 1; }
+  [ -f "docs/COMMAND_REFERENCE.md" ] || { echo "FAIL: COMMAND_REFERENCE.md missing"; exit 1; }
+  [ -f "docs/TROUBLESHOOTING.md" ] || { echo "FAIL: TROUBLESHOOTING.md missing"; exit 1; }
+  [ -f "docs/AGENT_PROMPTS.md" ] || { echo "FAIL: AGENT_PROMPTS.md missing"; exit 1; }
+  [ -f "docs/AGENT_HANDOFF.md" ] || { echo "FAIL: AGENT_HANDOFF.md missing"; exit 1; }
+  [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
+  [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }
 
   echo "SUCCESS: New project bootstrap verified."
