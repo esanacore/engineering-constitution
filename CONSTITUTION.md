@@ -1,6 +1,6 @@
 # Engineering Constitution Framework
 
-Version: 1.4.0
+Version: 1.6.0
 
 ## Purpose
 

@@ -4,6 +4,24 @@ All notable user-facing changes to the Engineering Constitution Framework are do
 
 This project follows semantic versioning.
 
+## 1.6.0 - 2026-06-10
+
+### Added
+
+- Added generic fallback and open-source agent bridge files: `.project-rules.md`, `.openhands_instructions`, and `SYSTEM_PROMPT.md`.
+- Updated `bootstrap.sh` to install these files by default, completing the "Universal Instruction Bridge".
+
+## 1.5.0 - 2026-06-10
+
+### Added
+
+- Added expanded universal discoverability: `.antigravity/instructions.md` (for Antigravity 2.0) and `CONTRIBUTING.md` (standard agent/human onboarding).
+- Updated `bootstrap.sh` to install these new bridge files by default.
+
+### Changed
+
+- Renamed the "Universal Agent Discoverability" strategy to the "Universal Instruction Bridge" to reflect its multi-tool coverage.
+
 ## 1.4.0 - 2026-06-10
 
 ### Added
