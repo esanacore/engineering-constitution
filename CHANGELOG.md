@@ -4,6 +4,13 @@ All notable user-facing changes to Eric's Engineering Constitution Framework are
 
 This project follows semantic versioning.
 
+## Unreleased
+
+### Added
+
+- Added optional product requirements and MVP backlog documentation guidance.
+- Added `docs/PRODUCT_REQUIREMENTS.md` and `docs/MVP_BACKLOG.md` templates for product-facing repositories.
+
 ## 1.9.0 - 2026-06-11
 
 ### Changed

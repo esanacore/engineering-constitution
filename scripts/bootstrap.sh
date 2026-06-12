@@ -41,6 +41,8 @@ Creates or installs:
   - docs/TROUBLESHOOTING.md
   - docs/AGENT_PROMPTS.md
   - docs/AGENT_HANDOFF.md
+  - docs/PRODUCT_REQUIREMENTS.md
+  - docs/MVP_BACKLOG.md
   - docs/OPERATIONS.md
   - docs/ARCHITECTURE.md
   - .constitution-bootstrap/adoption-report.md
@@ -321,6 +323,8 @@ generate_adoption_report() {
     status_line "docs/TROUBLESHOOTING.md"
     status_line "docs/AGENT_PROMPTS.md"
     status_line "docs/AGENT_HANDOFF.md"
+    status_line "docs/PRODUCT_REQUIREMENTS.md"
+    status_line "docs/MVP_BACKLOG.md"
     status_line "docs/OPERATIONS.md"
     status_line "docs/ARCHITECTURE.md"
     echo
@@ -417,6 +421,8 @@ copy_file "$template_dir/docs/COMMAND_REFERENCE.md" "$project_path/docs/COMMAND_
 copy_file "$template_dir/docs/TROUBLESHOOTING.md" "$project_path/docs/TROUBLESHOOTING.md"
 copy_file "$template_dir/docs/AGENT_PROMPTS.md" "$project_path/docs/AGENT_PROMPTS.md"
 copy_file "$template_dir/docs/AGENT_HANDOFF.md" "$project_path/docs/AGENT_HANDOFF.md"
+copy_file "$template_dir/docs/PRODUCT_REQUIREMENTS.md" "$project_path/docs/PRODUCT_REQUIREMENTS.md"
+copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md"
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
 

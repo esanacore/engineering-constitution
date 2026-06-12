@@ -21,6 +21,8 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
 - `templates/`: Files to copy into projects.
+- `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
+- `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `examples/sample-project/`: Example project layout.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 

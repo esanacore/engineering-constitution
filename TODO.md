@@ -23,6 +23,7 @@
 
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
+- [x] Add optional product requirements and MVP backlog templates for product-facing repositories.
 
 ## Nice-to-Have
 

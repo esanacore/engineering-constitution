@@ -38,6 +38,8 @@ make test
 - Roadmap: `TODO.md`
 - Changelog: `CHANGELOG.md`
 - Architecture decisions: `docs/adr/`
+- Product requirements: `docs/PRODUCT_REQUIREMENTS.md` when applicable
+- MVP backlog: `docs/MVP_BACKLOG.md` when applicable
 
 ## Contributing
 

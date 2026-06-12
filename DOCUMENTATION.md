@@ -32,6 +32,8 @@ Repositories should also include:
 - docs/adr/
 - docs/AGENT_PROMPTS.md
 - docs/AGENT_HANDOFF.md
+- docs/PRODUCT_REQUIREMENTS.md for product-facing applications
+- docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
 - API documentation
 - Wiki content when appropriate
@@ -44,6 +46,8 @@ For each meaningful change, review whether updates are needed for:
 - CHANGELOG.md
 - TODO.md
 - Architecture documentation
+- Product requirements
+- MVP or delivery backlog
 - API documentation
 - Deployment documentation
 - Configuration documentation
@@ -75,6 +79,27 @@ CHANGELOG.md should capture user-facing changes using release categories:
 ## TODO Expectations
 
 TODO.md is the living roadmap. It should reflect the best current understanding of remaining work.
+
+## Product Requirements Expectations
+
+Product-facing repositories should include `docs/PRODUCT_REQUIREMENTS.md` when implementation needs a clear contract between product intent and engineering work.
+
+Product requirements should define:
+
+- Functional requirements.
+- Non-functional requirements.
+- Requirement priority or level.
+- Explicit non-goals.
+- Acceptance criteria or validation expectations.
+
+## MVP Backlog Expectations
+
+Early-stage products and prototypes should include `docs/MVP_BACKLOG.md` when the delivery plan needs more structure than the general `TODO.md`.
+
+Use:
+
+- `TODO.md` for the living cross-project roadmap, technical debt, refactoring, testing gaps, and documentation work.
+- `docs/MVP_BACKLOG.md` for milestone-based delivery slices tied to the current MVP or Version 1.
 
 ## Migrating Existing Documentation
 
