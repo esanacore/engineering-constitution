@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-This sample project follows the Engineering Constitution.
+This sample project follows Eric's Engineering Constitution.
 
 Use these files as context:
 

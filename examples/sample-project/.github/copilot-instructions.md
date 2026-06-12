@@ -1,8 +1,8 @@
 # Copilot Instructions
 
-This is the sample project from the Engineering Constitution framework.
+This is the sample project from Eric's Engineering Constitution framework.
 
-It follows the [Engineering Constitution](constitution/CONSTITUTION.md).
+It follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md).
 
 ## Before Making Changes
 

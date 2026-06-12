@@ -1,16 +1,10 @@
 # Sample Project
 
-This sample shows the expected project structure after integrating the Engineering Constitution.
+<!-- CONSTITUTION_START -->
+[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](constitution/CONSTITUTION.md)
+<!-- CONSTITUTION_END -->
 
-## Engineering Constitution
-
-The constitution should be included as a Git submodule in:
-
-```text
-constitution/
-```
-
-In this sample directory, `constitution/README.md` is a placeholder so the directory appears in source control.
+This sample shows the expected project structure after integrating Eric's Engineering Constitution.
 
 ## Required Files
 

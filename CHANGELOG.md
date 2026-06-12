@@ -1,8 +1,16 @@
 # Changelog
 
-All notable user-facing changes to the Engineering Constitution Framework are documented in this file.
+All notable user-facing changes to Eric's Engineering Constitution Framework are documented in this file.
 
 This project follows semantic versioning.
+
+## 1.9.0 - 2026-06-11
+
+### Changed
+
+- Rebranded the framework to **Eric's Engineering Constitution**.
+- Updated all documentation, templates, and scripts to reflect the new name.
+- Simplified `README.md` templates by replacing the dedicated "Engineering Constitution" section with a minimal badge/link at the top of the file.
 
 ## 1.8.1 - 2026-06-11
 
@@ -121,7 +129,7 @@ This project follows semantic versioning.
 
 ### Added
 
-- Added Engineering Constitution Framework v1.0.0.
+- Added Eric's Engineering Constitution Framework v1.0.0.
 - Added AI workflow, testing, documentation, security, architecture, release, and TODO guidance.
 - Added project templates for agent instructions, TODO, changelog, README, and ADRs.
 - Added sample project structure.

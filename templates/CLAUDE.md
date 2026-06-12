@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This repository follows the Engineering Constitution.
+This repository follows Eric's Engineering Constitution.
 
 ## Required Reading
 

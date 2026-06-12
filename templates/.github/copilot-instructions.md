@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-This repository follows the [Engineering Constitution](constitution/CONSTITUTION.md).
+This repository follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md).
 
 ## Before Making Changes
 

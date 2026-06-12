@@ -78,7 +78,7 @@ TODO.md is the living roadmap. It should reflect the best current understanding 
 
 ## Migrating Existing Documentation
 
-When adopting the Engineering Constitution in an existing repository, follow these steps to migrate your documentation:
+When adopting Eric's Engineering Constitution in an existing repository, follow these steps to migrate your documentation:
 
 1. **Audit Existing Files**: Identify your current `README.md`, `CHANGELOG`, `CONTRIBUTING`, and any design documents.
 2. **Merge with Templates**: Use the copies in `.constitution-bootstrap/templates/` to merge constitution standards into your existing files.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Bootstrap an existing Git repository with the Engineering Constitution.
+# Bootstrap an existing Git repository with Eric's Engineering Constitution.
 #
 # The constitution itself is installed as a Git submodule so projects can update
 # universal rules without copying framework files by hand. Local project files
@@ -14,7 +14,7 @@ Usage:
   bootstrap.sh [--force] <project-path> <constitution-repository-url>
 
 Description:
-  Initialize an existing Git repository with the Engineering Constitution.
+  Initialize an existing Git repository with Eric's Engineering Constitution.
 
 Creates or installs:
   - constitution Git submodule
@@ -190,7 +190,7 @@ write_generated_todo_from_backlog() {
     echo
     echo "This file is the living roadmap for the project."
     echo
-    echo "It was initialized from \`COPILOT_TASK_BACKLOG.md\` during Engineering Constitution adoption. Keep entries specific, actionable, and current."
+    echo "It was initialized from \`COPILOT_TASK_BACKLOG.md\` during Eric's Engineering Constitution adoption. Keep entries specific, actionable, and current."
     echo
     echo "## Features"
     echo
@@ -282,7 +282,7 @@ generate_adoption_report() {
   project_name=$(first_heading "$project_path/README.md")
 
   {
-    echo "# Engineering Constitution Adoption Report"
+    echo "# Eric's Engineering Constitution Adoption Report"
     echo
     echo "Project: $project_name"
     echo
@@ -292,7 +292,7 @@ generate_adoption_report() {
     echo
     echo "## What Happened"
     echo
-    echo "The bootstrap script installed the Engineering Constitution in a non-destructive mode."
+    echo "The bootstrap script installed Eric's Engineering Constitution in a non-destructive mode."
     echo
     echo "Existing project files were not overwritten. When a target file already existed, the matching constitution template was copied into \`.constitution-bootstrap/templates/\` so maintainers can compare and merge manually."
     echo
@@ -352,7 +352,7 @@ generate_adoption_report() {
     echo "## Recommended Merge Steps"
     echo
     echo "1. Compare existing files with templates in \`.constitution-bootstrap/templates/\`."
-    echo "2. Merge relevant Engineering Constitution sections into existing project files."
+    echo "2. Merge relevant Eric's Engineering Constitution sections into existing project files."
     echo "3. Customize generated placeholders in TODO.md, CHANGELOG.md, README.md, and ADRs."
     echo "4. Commit \`.gitmodules\`, the \`constitution\` submodule reference, generated files, and any merged documentation changes."
     echo "5. Keep or remove \`.constitution-bootstrap/\` depending on whether the adoption report is useful to the project."

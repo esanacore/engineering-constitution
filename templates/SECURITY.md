@@ -1,6 +1,6 @@
 # Project Security
 
-This project follows the [Engineering Constitution Security Standards](constitution/SECURITY.md).
+This project follows [Eric's Engineering Constitution Security Standards](constitution/SECURITY.md).
 
 ## Local Security Concerns
 

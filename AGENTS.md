@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This repository is the authoritative Engineering Constitution Framework.
+This repository is Eric's Engineering Constitution Framework.
 
 ## Before Beginning Work
 

@@ -1,6 +1,6 @@
 # Integration Guide
 
-This guide explains how AI agents should read and apply the Engineering Constitution, how project-specific rules override universal rules, and how to keep projects up to date as the constitution evolves.
+This guide explains how AI agents should read and apply Eric's Engineering Constitution, how project-specific rules override universal rules, and how to keep projects up to date as the constitution evolves.
 
 For setup instructions, see [README.md](README.md).
 
@@ -107,7 +107,7 @@ git submodule update --remote constitution
 cat constitution/VERSION        # confirm expected version
 cat constitution/CHANGELOG.md   # review what changed
 git add constitution
-git commit -m "Update engineering constitution to $(cat constitution/VERSION)"
+git commit -m "Update Eric's engineering constitution to $(cat constitution/VERSION)"
 ```
 
 ### Reviewing Template Changes

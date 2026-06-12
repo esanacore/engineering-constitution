@@ -1,14 +1,10 @@
 # Project Name
 
-Briefly describe what this project does and who it is for.
-
 <!-- CONSTITUTION_START -->
-## Engineering Constitution
-
-This project follows the Engineering Constitution. The constitution is included as a Git submodule in `constitution/`.
-
-AI agents and contributors should read `AGENTS.md` before beginning work.
+[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](constitution/CONSTITUTION.md)
 <!-- CONSTITUTION_END -->
+
+Briefly describe what this project does and who it is for.
 
 ## Getting Started
 

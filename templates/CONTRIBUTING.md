@@ -1,6 +1,6 @@
 # Contributing to this Project
 
-Thank you for contributing! This project follows the [Engineering Constitution](constitution/CONSTITUTION.md).
+Thank you for contributing! This project follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md).
 
 ## For Humans
 

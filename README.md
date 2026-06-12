@@ -1,6 +1,6 @@
-# Engineering Constitution
+# Eric's Engineering Constitution
 
-The Engineering Constitution is a reusable framework for AI-assisted software development standards. It is the single source of truth for how humans and AI agents should work across your software repositories.
+Eric's Engineering Constitution is a reusable framework for AI-assisted software development standards. It is the single source of truth for how humans and AI agents should work across your software repositories.
 
 Each project includes this repository as a `constitution/` Git submodule alongside a small set of local project files, giving every project:
 
@@ -73,7 +73,7 @@ Customize the generated files (`README.md`, `TODO.md`, `CHANGELOG.md`, `docs/adr
 ```bash
 cd /path/to/my-project
 git add .
-git commit -m "Add engineering constitution"
+git commit -m "Add Eric's engineering constitution"
 ```
 
 #### Existing Repository
@@ -120,7 +120,7 @@ When universal rules change:
 cd /path/to/project
 git submodule update --remote constitution
 git add constitution
-git commit -m "Update engineering constitution"
+git commit -m "Update Eric's engineering constitution"
 ```
 
 See `INTEGRATION.md` for version checking, template diffing, and project file structure.

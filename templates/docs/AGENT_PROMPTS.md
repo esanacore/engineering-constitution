@@ -5,7 +5,7 @@ This document provides copyable prompts to help humans interact effectively with
 ## Task Planning
 
 ```text
-Review the current TODO.md and ARCHITECTURE.md. I want to implement [Feature X]. Create a step-by-step implementation plan that follows our Engineering Constitution.
+Review the current TODO.md and ARCHITECTURE.md. I want to implement [Feature X]. Create a step-by-step implementation plan that follows Eric's Engineering Constitution.
 ```
 
 ## Bug Investigation
