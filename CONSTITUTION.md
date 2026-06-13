@@ -127,13 +127,30 @@ New systems should consider:
 
 Systems should be observable by design.
 
-## Principle 9: Release Discipline
+## Principle 9: Operations and Infrastructure Discipline
+
+Operational changes should be:
+
+- Documented
+- Reviewable
+- Observable
+- Recoverable
+
+Projects should define:
+
+- Environment expectations
+- CI/CD validation paths
+- Rollback guidance
+- Backup and restore expectations
+- Incident response ownership
+
+## Principle 10: Release Discipline
 
 User-facing changes should be reflected in CHANGELOG.md.
 
 Agents should identify release notes when appropriate.
 
-## Principle 10: Opportunity Discovery
+## Principle 11: Opportunity Discovery
 
 Agents should not merely complete assigned work.
 
@@ -157,8 +174,6 @@ Potential future additions:
 
 - Coding standards
 - Language-specific guidance
-- DevOps standards
-- Infrastructure standards
 - AI agent scorecards
 - Quality metrics
 - Repository health dashboards

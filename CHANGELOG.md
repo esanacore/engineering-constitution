@@ -10,6 +10,25 @@ This project follows semantic versioning.
 
 - Added optional product requirements and MVP backlog documentation guidance.
 - Added `docs/PRODUCT_REQUIREMENTS.md` and `docs/MVP_BACKLOG.md` templates for product-facing repositories.
+- Added `OPERATIONS.md` as the framework-level source of operations and infrastructure standards.
+
+### Changed
+
+- Updated `CONSTITUTION.md`, `AI_WORKFLOW.md`, `DOCUMENTATION.md`, and `AGENTS.md` to make operational guidance part of the standard review path.
+- Updated the sample project and operations template to reflect the new standards.
+- Corrected the README version display to match `VERSION`.
+
+## 1.10.0 - 2026-06-12
+
+### Added
+
+- Added framework-level operations and infrastructure standards in `OPERATIONS.md`.
+
+### Changed
+
+- Promoted operations review into the Constitution workflow and documentation expectations.
+- Updated the operations template and sample project to match the new guidance.
+- Corrected the README version display to match `VERSION`.
 
 ## 1.9.0 - 2026-06-11
 

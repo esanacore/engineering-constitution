@@ -38,6 +38,18 @@ Repositories should also include:
 - API documentation
 - Wiki content when appropriate
 
+## Operations Documentation Expectations
+
+Projects with deployments, services, scheduled jobs, or operator workflows should maintain `docs/OPERATIONS.md`.
+
+That document should cover:
+
+- deployment or release procedure
+- monitoring, metrics, and alert locations
+- backup and restore expectations
+- rollback guidance
+- incident response notes
+
 ## Documentation Review Checklist
 
 For each meaningful change, review whether updates are needed for:

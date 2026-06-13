@@ -11,6 +11,7 @@ Read:
 - `constitution/TESTING.md`
 - `constitution/DOCUMENTATION.md`
 - `constitution/SECURITY.md`
+- `constitution/OPERATIONS.md` when the task affects deployment, CI/CD, infrastructure, or runbooks
 - `constitution/ARCHITECTURE.md`
 - `constitution/RELEASES.md`
 - `constitution/TODO_GUIDELINES.md`

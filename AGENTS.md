@@ -12,6 +12,7 @@ Read:
 - `TESTING.md`
 - `DOCUMENTATION.md`
 - `SECURITY.md`
+- `OPERATIONS.md`
 - `ARCHITECTURE.md`
 - `RELEASES.md`
 - `TODO_GUIDELINES.md`
