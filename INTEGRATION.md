@@ -17,7 +17,7 @@ For setup instructions, see [README.md](README.md).
 
 Agents follow the workflow in `constitution/AI_WORKFLOW.md` and the principles in `constitution/CONSTITUTION.md` for every task. When there is a conflict between a universal rule and a project-specific rule, the project-specific rule wins.
 
-Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/rules/project.mdc`) load automatically for each respective agent. They point to the constitution and add any project-level context the agent needs.
+Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/rules/project.mdc`, `.goosehints`) load automatically for each respective agent. They point to the constitution and add any project-level context the agent needs.
 
 ## Project-Specific Rules and Overrides
 
@@ -31,6 +31,7 @@ The constitution provides universal defaults. Each project can override or exten
 | Claude Code | `CLAUDE.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Cursor | `.cursor/rules/project.mdc` |
+| Goose / Goosetown | `.goosehints` |
 
 ### What to Override
 
@@ -61,6 +62,34 @@ In `.github/copilot-instructions.md`, add a `## Project-Specific Rules` section 
 ```
 
 The same pattern applies to `AGENTS.md`, `CLAUDE.md`, and `.cursor/rules/project.mdc`.
+
+## Goose and Goosetown
+
+[Goose](https://github.com/aaif-goose/goose) is an extensible AI agent, and [goosetown](https://github.com/aaif-goose/goosetown) orchestrates flocks of goose agents (researchers, workers, writers, reviewers) to build software in parallel. Because goosetown wraps the goose CLI, supporting goose automatically extends the constitution to goosetown's multi-agent runs.
+
+### Hints File
+
+The bootstrap script installs `.goosehints` in the project root. Goose loads this file automatically and applies the constitution's reading order and standards to every task. Add project-specific rules to `.goosehints` (or to `AGENTS.md`) the same way as for any other agent.
+
+For goosetown specifically, the hints file instructs every agent in the flock — including the adversarial reviewers — to check changes against `constitution/TESTING.md`, `constitution/SECURITY.md`, and `constitution/DOCUMENTATION.md` before approving.
+
+### MCP Extension (optional)
+
+The constitution ships an MCP server at `constitution/mcp-server/`. Registering it as a goose stdio extension lets agents read constitution documents as resources and run the `validate_project_structure` tool.
+
+Add it to your goose configuration (`~/.config/goose/config.yaml`):
+
+```yaml
+extensions:
+  engineering-constitution:
+    type: stdio
+    cmd: node
+    args:
+      - constitution/mcp-server/index.js
+    enabled: true
+```
+
+Or interactively, run `goose configure`, choose **Add Extension → Command-line Extension**, and use `node constitution/mcp-server/index.js`. Run `npm install` in `constitution/mcp-server/` first so the SDK dependency is available.
 
 ## Language-Specific Examples
 
@@ -137,6 +166,7 @@ project/
 ├── .cursor/
 │   └── rules/
 │       └── project.mdc                   ← Cursor rules
+├── .goosehints                            ← Goose / Goosetown hints
 ├── TODO.md                                ← Living roadmap
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation
