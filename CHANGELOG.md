@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added `README.preview.md` with a cleaner, outcome-first README draft that improves scannability, includes a concise key-document table, and preserves accurate bootstrap, version, and adoption badge details for review before replacing the root `README.md`.
+
 ## 1.14.0 - 2026-06-13
 
 ### Added
