@@ -13,6 +13,7 @@ This sample shows the expected project structure after integrating Eric's Engine
 - `COPILOT_INSTRUCTIONS.md`
 - `TODO.md`
 - `CHANGELOG.md`
+- `docs/OPERATIONS.md`
 - `docs/adr/`
 - `src/`
 

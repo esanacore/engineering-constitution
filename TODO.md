@@ -4,7 +4,7 @@
 
 - [x] Add retroactive version analysis mechanism.
 - [ ] Add language-specific guidance for common stacks.
-- [ ] Add DevOps and infrastructure standards.
+- [x] Add DevOps and infrastructure standards.
 
 ## Technical Debt
 
@@ -24,6 +24,7 @@
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.
+- [ ] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service.
 
 ## Nice-to-Have
 

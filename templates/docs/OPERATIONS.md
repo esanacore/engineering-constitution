@@ -4,7 +4,10 @@ This guide covers operational procedures, runbooks, and safe execution practices
 
 ## Deployment
 
-<!-- How to deploy the project to production or staging -->
+- **Environments**: <!-- List local / staging / production and their purposes -->
+- **Deployment Procedure**: <!-- How to deploy the project to production or staging -->
+- **Approvals / Gates**: <!-- Required approvals, checks, or promotion gates -->
+- **Rollback**: <!-- How to undo a deployment safely -->
 
 ## Monitoring & Observability
 
@@ -15,11 +18,12 @@ This guide covers operational procedures, runbooks, and safe execution practices
 ## Safe Operations
 
 - **Backup/Restore**: <!-- Procedure for data backup -->
-- **Rollback**: <!-- How to undo a deployment -->
 - **Maintenance Mode**: <!-- How to enable/disable -->
+- **Stateful Changes**: <!-- Any migration, data-change, or destructive-step notes -->
 
 ## Incident Response
 
 1. Identify the impact.
-2. <!-- Add project-specific steps -->
-3. Communicate with stakeholders.
+2. Check dashboards, logs, and recent deploy history.
+3. Execute rollback or mitigation steps if needed.
+4. Communicate with stakeholders.

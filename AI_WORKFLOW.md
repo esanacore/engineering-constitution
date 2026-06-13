@@ -9,17 +9,18 @@ This document defines the required workflow for AI-assisted software development
 3. Read README.md.
 4. Read TODO.md.
 5. Read CHANGELOG.md.
-6. Understand the task.
-7. Create an implementation plan.
-8. Implement changes.
-9. Update tests.
-10. Update documentation.
-11. Update TODO.md.
-12. Update CHANGELOG.md.
-13. Perform a security review.
-14. Suggest future improvements.
-15. Summarize work.
-16. Clean up Git state (branches, worktrees).
+6. Read OPERATIONS.md when the task affects infrastructure, CI/CD, deployment, or runbooks.
+7. Understand the task.
+8. Create an implementation plan.
+9. Implement changes.
+10. Update tests.
+11. Update documentation.
+12. Update TODO.md.
+13. Update CHANGELOG.md.
+14. Perform a security review.
+15. Suggest future improvements.
+16. Summarize work.
+17. Clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 

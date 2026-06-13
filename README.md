@@ -17,6 +17,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `TESTING.md`: Testing expectations and reporting standards.
 - `DOCUMENTATION.md`: Documentation requirements and checklists.
 - `SECURITY.md`: Security review standards.
+- `OPERATIONS.md`: Operations and infrastructure standards.
 - `ARCHITECTURE.md`: Architecture and ADR expectations.
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
@@ -28,7 +29,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.10.0
 
 See `VERSION`.
 
