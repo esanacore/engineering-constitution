@@ -6,6 +6,12 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.14.0 - 2026-06-13
+
+### Added
+
+- Added an "Example Traceability Flow" section to `INTEGRATION.md` showing the concrete path from a product requirement ID through the traceability matrix, test plan coverage gaps, the verifying test, and a TODO follow-up. Salvaged from the abandoned `codex/constitution-traceability-docs` branch (the obsolete README version edit it also carried was dropped).
+
 ## 1.13.0 - 2026-06-13
 
 ### Added
