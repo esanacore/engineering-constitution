@@ -19,6 +19,7 @@ This document defines the required workflow for AI-assisted software development
 13. Perform a security review.
 14. Suggest future improvements.
 15. Summarize work.
+16. Clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 
@@ -53,6 +54,7 @@ Agents must verify:
 - CHANGELOG.md includes user-facing changes when appropriate.
 - Security impact has been reviewed.
 - Future improvements are identified when useful.
+- Git environment is clean (temporary branches removed, worktrees deleted, no untracked files like node_modules accidentally staged).
 
 ## Summary Expectations
 
