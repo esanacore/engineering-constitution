@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.9.0
+Version: 1.12.0
 
 ## Purpose
 
@@ -33,6 +33,8 @@ Review:
 
 A task is not complete until documentation impact has been evaluated.
 
+Product-facing repositories should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
+
 ## Principle 2: Testing Is Required
 
 All new functionality should include automated tests.
@@ -45,6 +47,8 @@ Agents should:
 - Update tests for changed behavior
 - Repair broken tests
 - Avoid reducing coverage
+
+Coverage should be evaluated continuously against declared targets, and coverage gaps should be analyzed and recorded rather than hidden behind an aggregate percentage. Tests should trace to requirement identifiers where those exist. See `TESTING.md`.
 
 Testability is a design requirement.
 

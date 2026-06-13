@@ -21,6 +21,8 @@ Before completing work:
 
 - Confirm the requested change is implemented.
 - Add or update relevant tests.
+- Evaluate coverage against targets and record any gaps.
+- Update requirements traceability for product-facing repositories.
 - Update documentation when needed.
 - Update TODO.md with discovered or completed work.
 - Update CHANGELOG.md for user-facing changes.

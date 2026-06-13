@@ -33,6 +33,8 @@ Repositories should also include:
 - docs/AGENT_PROMPTS.md
 - docs/AGENT_HANDOFF.md
 - docs/PRODUCT_REQUIREMENTS.md for product-facing applications
+- docs/REQUIREMENTS_TRACEABILITY.md for product-facing applications
+- docs/TEST_PLAN.md for repositories with automated tests
 - docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
 - API documentation
@@ -59,6 +61,8 @@ For each meaningful change, review whether updates are needed for:
 - TODO.md
 - Architecture documentation
 - Product requirements
+- Requirements traceability matrix
+- Test plan and coverage records
 - MVP or delivery backlog
 - API documentation
 - Deployment documentation
@@ -104,22 +108,27 @@ Product requirements should define:
 - Explicit non-goals.
 - Acceptance criteria or validation expectations.
 
-## MVP Backlog Expectations
+### Requirement Identifiers
 
-Early-stage products and prototypes should include `docs/MVP_BACKLOG.md` when the delivery plan needs more structure than the general `TODO.md`.
+Each requirement should carry a stable, unique identifier so it can be referenced from tests, commits, and the traceability matrix.
 
-Use:
+- Use a short, typed prefix and a zero-padded number, for example `FR-001` for functional requirements and `NFR-001` for non-functional requirements.
+- Identifiers are stable: once assigned, an ID is never reused for a different requirement, even after the original is removed or superseded.
+- Acceptance criteria for a requirement may carry sub-identifiers, for example `FR-001-AC-1`.
 
-- `TODO.md` for the living cross-project roadmap, technical debt, refactoring, testing gaps, and documentation work.
-- `docs/MVP_BACKLOG.md` for milestone-based delivery slices tied to the current MVP or Version 1.
+### Acceptance Criteria
 
-## Migrating Existing Documentation
+Every `MUST` and `SHOULD` requirement should state explicit, verifiable acceptance criteria. Acceptance criteria describe the observable condition that confirms the requirement is met, written so that a test can check them.
 
-When adopting Eric's Engineering Constitution in an existing repository, follow these steps to migrate your documentation:
+## Requirements Traceability
 
-1. **Audit Existing Files**: Identify your current `README.md`, `CHANGELOG`, `CONTRIBUTING`, and any design documents.
-2. **Merge with Templates**: Use the copies in `.constitution-bootstrap/templates/` to merge constitution standards into your existing files.
-3. **Migrate Backlogs**: If you have a separate task list (e.g., `BACKLOG.md`), move active items into the appropriate sections of the new `TODO.md`.
-4. **Initialize ADRs**: Move existing architectural decisions into `docs/adr/` using the ADR template. If decisions were only documented in PRs or Slack, consider creating "retroactive" ADRs for the most critical ones.
-5. **Update Agent Instructions**: Ensure your `AGENTS.md` and tool-specific instruction files point to any legacy documentation that hasn't been migrated yet.
-6. **Retire Old Files**: Once content is successfully moved and verified, delete the old files to maintain a single source of truth.
+Product-facing repositories should maintain `docs/REQUIREMENTS_TRACEABILITY.md`: a matrix that links each requirement to its evidence of completion.
+
+The traceability matrix should map, for each requirement ID:
+
+- The requirement description and level.
+- Its acceptance criteria.
+- The tests that verify it.
+- Its current verification status (for example, Not Started, In Progress, Verified).
+
+The matrix is a living document: update it in the same change that adds, modifies, or verifies a requirement. A requirement with no verifying test is a coverage gap and should be recorded in the `docs/TEST_PLAN.md` gap log and tracked in `TODO.md` under Testing.

@@ -3,6 +3,7 @@
 ## Features
 
 - [x] Add retroactive version analysis mechanism.
+- [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
 - [ ] Add language-specific guidance for common stacks.
 - [x] Add DevOps and infrastructure standards.
 
@@ -17,7 +18,9 @@
 ## Testing
 
 - [x] Add automated tests for `scripts/bootstrap.sh`.
+- [x] Add continuous coverage evaluation and gap-analysis guidance to `TESTING.md`.
 - [ ] Add compliance checks that verify required files exist in integrated repositories.
+- [ ] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix.
 
 ## Documentation
 

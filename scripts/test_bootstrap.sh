@@ -56,9 +56,22 @@ test_new_project() {
   [ -f "docs/TROUBLESHOOTING.md" ] || { echo "FAIL: TROUBLESHOOTING.md missing"; exit 1; }
   [ -f "docs/AGENT_PROMPTS.md" ] || { echo "FAIL: AGENT_PROMPTS.md missing"; exit 1; }
   [ -f "docs/AGENT_HANDOFF.md" ] || { echo "FAIL: AGENT_HANDOFF.md missing"; exit 1; }
+  [ -f "docs/PRODUCT_REQUIREMENTS.md" ] || { echo "FAIL: PRODUCT_REQUIREMENTS.md missing"; exit 1; }
+  [ -f "docs/REQUIREMENTS_TRACEABILITY.md" ] || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing"; exit 1; }
+  [ -f "docs/TEST_PLAN.md" ] || { echo "FAIL: TEST_PLAN.md missing"; exit 1; }
+  [ -f "docs/MVP_BACKLOG.md" ] || { echo "FAIL: MVP_BACKLOG.md missing"; exit 1; }
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }
+
+  # Verify requirement traceability wiring
+  grep -q "FR-001" docs/PRODUCT_REQUIREMENTS.md || { echo "FAIL: PRODUCT_REQUIREMENTS.md missing requirement IDs"; exit 1; }
+  grep -q "Requirements Traceability Matrix" docs/REQUIREMENTS_TRACEABILITY.md || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing matrix heading"; exit 1; }
+  grep -q "Coverage Gap Log" docs/TEST_PLAN.md || { echo "FAIL: TEST_PLAN.md missing coverage gap log"; exit 1; }
+
+  # Verify the standardized constitution badge is present
+  grep -q "CONSTITUTION_START" README.md || { echo "FAIL: README.md missing constitution badge markers"; exit 1; }
+  grep -q "Eric's Engineering Constitution" README.md || { echo "FAIL: README.md missing constitution badge"; exit 1; }
 
   echo "SUCCESS: New project bootstrap verified."
 }
@@ -71,7 +84,7 @@ test_existing_files_preservation() {
   git init -q
   git config user.email "test@example.com"
   git config user.name "Test User"
-  
+
   echo "# Original README" > README.md
   echo "# Original TODO" > TODO.md
   git add .
@@ -87,7 +100,64 @@ test_existing_files_preservation() {
   [ -f ".constitution-bootstrap/templates/README.md" ] || { echo "FAIL: README.md merge template missing"; exit 1; }
   [ -f ".constitution-bootstrap/templates/TODO.md" ] || { echo "FAIL: TODO.md merge template missing"; exit 1; }
 
+  # The badge is added even though the README content was preserved
+  grep -q "CONSTITUTION_START" README.md || { echo "FAIL: badge not injected into preserved README.md"; exit 1; }
+
   echo "SUCCESS: Existing files preservation verified."
+}
+
+test_badge_injection() {
+  echo "Testing constitution badge injection..."
+  project_path="$test_dir/badge-project"
+  mkdir -p "$project_path"
+  cd "$project_path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+
+  printf '# My Project\n\nSome description.\n' > README.md
+  git add .
+  git commit -m "Initial files"
+
+  "$bootstrap_script" "$project_path" "$constitution_url"
+
+  # Badge is inserted after the first heading, original content preserved
+  grep -q "My Project" README.md || { echo "FAIL: original README content lost"; exit 1; }
+  grep -q "Some description." README.md || { echo "FAIL: original README content lost"; exit 1; }
+  grep -q "CONSTITUTION_START" README.md || { echo "FAIL: badge markers not added"; exit 1; }
+  grep -q "Eric's Engineering Constitution" README.md || { echo "FAIL: badge not added"; exit 1; }
+
+  # The badge appears directly under the heading
+  head -n 3 README.md | grep -q "CONSTITUTION_START" || { echo "FAIL: badge not placed under heading"; exit 1; }
+
+  # Re-running bootstrap must not duplicate the badge (idempotency)
+  "$bootstrap_script" "$project_path" "$constitution_url"
+  count=$(grep -c "CONSTITUTION_START" README.md)
+  [ "$count" -eq 1 ] || { echo "FAIL: badge duplicated on re-run (found $count)"; exit 1; }
+
+  echo "SUCCESS: Badge injection verified."
+}
+
+test_badge_no_heading() {
+  echo "Testing badge injection with no heading..."
+  project_path="$test_dir/badge-noheading-project"
+  mkdir -p "$project_path"
+  cd "$project_path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+
+  printf 'Just a plain description with no heading.\n' > README.md
+  git add .
+  git commit -m "Initial files"
+
+  "$bootstrap_script" "$project_path" "$constitution_url"
+
+  # Badge prepended when there is no heading, original content preserved
+  head -n 1 README.md | grep -q "CONSTITUTION_START" || { echo "FAIL: badge not prepended when no heading"; exit 1; }
+  grep -q "plain description" README.md || { echo "FAIL: original README content lost"; exit 1; }
+
+  echo "SUCCESS: Badge injection without heading verified."
 }
 
 test_force_overwrite() {
@@ -98,7 +168,7 @@ test_force_overwrite() {
   git init -q
   git config user.email "test@example.com"
   git config user.name "Test User"
-  
+
   echo "# Original TODO" > TODO.md
   git add .
   git commit -m "Initial files"
@@ -120,11 +190,11 @@ test_migration_from_backlog() {
   git init -q
   git config user.email "test@example.com"
   git config user.name "Test User"
-  
-  cat <<'EOF' > COPILOT_TASK_BACKLOG.md
+
+  cat <<'BACKLOG_EOF' > COPILOT_TASK_BACKLOG.md
 ### 1. Fix the flux capacitor
 ### 2. Update the flux pulse
-EOF
+BACKLOG_EOF
   git add .
   git commit -m "Initial backlog"
 
@@ -140,6 +210,8 @@ EOF
 # Run tests
 test_new_project
 test_existing_files_preservation
+test_badge_injection
+test_badge_no_heading
 test_force_overwrite
 test_migration_from_backlog
 

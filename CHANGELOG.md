@@ -6,28 +6,48 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.12.0 - 2026-06-13
+
 ### Added
 
-- Added optional product requirements and MVP backlog documentation guidance.
-- Added `docs/PRODUCT_REQUIREMENTS.md` and `docs/MVP_BACKLOG.md` templates for product-facing repositories.
-- Added `OPERATIONS.md` as the framework-level source of operations and infrastructure standards.
+- Standardized the "Eric's Engineering Constitution" adoption badge as part of the framework. `scripts/bootstrap.sh` now adds or refreshes the badge in every adopted repository's `README.md`, including existing READMEs that are otherwise preserved.
+- Added idempotent badge handling using stable `<!-- CONSTITUTION_START -->` / `<!-- CONSTITUTION_END -->` markers: the badge is inserted after the first heading (or prepended when there is no heading), refreshed in place on re-runs, and never duplicated.
+- Added a "Files Updated In Place" section to the bootstrap adoption report so badge updates to existing files are recorded.
+- Added `scripts/test_bootstrap.sh` coverage for badge injection, idempotency, and the no-heading case.
 
 ### Changed
 
-- Updated `CONSTITUTION.md`, `AI_WORKFLOW.md`, `DOCUMENTATION.md`, and `AGENTS.md` to make operational guidance part of the standard review path.
-- Updated the sample project and operations template to reflect the new standards.
-- Corrected the README version display to match `VERSION`.
+- The README badge link is derived from the bootstrap source URL when it is a public Git URL, falling back to the canonical repository otherwise.
+
+## 1.11.0 - 2026-06-13
+
+### Added
+
+- Added continuous coverage evaluation, coverage targets, and coverage gap analysis guidance to `TESTING.md`.
+- Added requirements traceability guidance to `DOCUMENTATION.md`, including stable requirement identifiers and explicit acceptance criteria.
+- Added `docs/TEST_PLAN.md` template with coverage targets, a continuous coverage record, and a coverage gap log.
+- Added `docs/REQUIREMENTS_TRACEABILITY.md` template providing a requirement-to-test traceability matrix.
+
+### Changed
+
+- `docs/PRODUCT_REQUIREMENTS.md` template now uses numbered requirement IDs (`FR-`/`NFR-`), per-requirement acceptance criteria, and links to the traceability matrix.
+- Strengthened `CONSTITUTION.md` Principles 1 and 2 to require requirements traceability and continuous coverage evaluation.
+- Added coverage-gap and traceability steps to `AI_WORKFLOW.md` and the `CLAUDE.md` completion checklists.
+- `scripts/bootstrap.sh` now installs the test plan and requirements traceability templates.
 
 ## 1.10.0 - 2026-06-12
 
 ### Added
 
 - Added framework-level operations and infrastructure standards in `OPERATIONS.md`.
+- Added optional product requirements and MVP backlog documentation guidance.
+- Added `docs/PRODUCT_REQUIREMENTS.md` and `docs/MVP_BACKLOG.md` templates for product-facing repositories.
 
 ### Changed
 
 - Promoted operations review into the Constitution workflow and documentation expectations.
-- Updated the operations template and sample project to match the new guidance.
+- Updated `CONSTITUTION.md`, `AI_WORKFLOW.md`, `DOCUMENTATION.md`, and `AGENTS.md` to make operational guidance part of the standard review path.
+- Updated the sample project and operations template to reflect the new standards.
 - Corrected the README version display to match `VERSION`.
 
 ## 1.9.0 - 2026-06-11

@@ -7,6 +7,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - Shared engineering principles
 - Standard AI-agent workflow instructions
 - Baseline templates for README, TODO, CHANGELOG, AGENTS, Claude, Copilot, and ADR files
+- A standardized "Eric's Engineering Constitution" adoption badge in the README
 - A bootstrap script that installs those files into an existing Git repository
 
 ## Repository Contents
@@ -29,7 +30,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 
 ## Version
 
-Current version: 1.10.0
+Current version: 1.12.0
 
 See `VERSION`.
 
@@ -94,6 +95,18 @@ After running it:
 3. Customize generated placeholders.
 4. Commit `.gitmodules`, the `constitution` submodule reference, generated files, and any merged changes.
 
+### Adoption Badge
+
+Every repository the bootstrap script touches gets a standardized adoption badge in its `README.md`:
+
+```markdown
+<!-- CONSTITUTION_START -->
+[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](https://github.com/esanacore/engineering-constitution)
+<!-- CONSTITUTION_END -->
+```
+
+The badge is managed between the `CONSTITUTION_START` / `CONSTITUTION_END` markers, so it is added to existing READMEs (after the first heading), refreshed in place when the constitution is updated, and never duplicated on re-runs. The badge link points at the bootstrap source when it is a public Git URL and falls back to the canonical repository otherwise.
+
 ### Manual Installation
 
 If you prefer not to use the bootstrap script:
@@ -102,28 +115,3 @@ If you prefer not to use the bootstrap script:
 git submodule add <repository-url> constitution
 cp constitution/templates/AGENTS.md AGENTS.md
 cp constitution/templates/CLAUDE.md CLAUDE.md
-mkdir -p .github
-cp constitution/templates/.github/copilot-instructions.md .github/copilot-instructions.md
-mkdir -p .cursor/rules
-cp constitution/templates/.cursor/rules/project.mdc .cursor/rules/project.mdc
-cp constitution/templates/TODO.md TODO.md
-cp constitution/templates/CHANGELOG.md CHANGELOG.md
-mkdir -p docs/adr
-cp constitution/templates/ADR.md docs/adr/0001-record-architecture-decisions.md
-```
-
-## Updating Projects
-
-When universal rules change:
-
-1. Update this repository and increment `VERSION`.
-2. Pull the updated submodule into each project:
-
-```bash
-cd /path/to/project
-git submodule update --remote constitution
-git add constitution
-git commit -m "Update Eric's engineering constitution"
-```
-
-See `INTEGRATION.md` for version checking, template diffing, and project file structure.

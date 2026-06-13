@@ -34,6 +34,7 @@ Creates or installs:
   - TODO.md
   - CHANGELOG.md
   - VERSION
+  - Eric's Engineering Constitution badge in README.md
   - docs/adr/
   - docs/adr/0001-record-architecture-decisions.md
   - docs/SETUP.md
@@ -42,6 +43,8 @@ Creates or installs:
   - docs/AGENT_PROMPTS.md
   - docs/AGENT_HANDOFF.md
   - docs/PRODUCT_REQUIREMENTS.md
+  - docs/REQUIREMENTS_TRACEABILITY.md
+  - docs/TEST_PLAN.md
   - docs/MVP_BACKLOG.md
   - docs/OPERATIONS.md
   - docs/ARCHITECTURE.md
@@ -76,6 +79,11 @@ template_dir="$repo_root/templates"
 bootstrap_dir=""
 skipped_files=()
 written_files=()
+modified_files=()
+
+# Canonical home of Eric's Engineering Constitution. Used for the README badge
+# link when the bootstrap source is a local path rather than a public URL.
+constitution_repo_url="https://github.com/esanacore/engineering-constitution"
 
 if [ ! -d "$project_path" ]; then
   echo "Project path does not exist: $project_path" >&2
@@ -114,6 +122,88 @@ copy_file() {
   cp "$src" "$dest"
   written_files+=("${dest#$project_path/}")
   echo "Wrote: $dest"
+}
+
+# Resolve the URL the README badge should link to. Prefer the bootstrap source
+# when it is a public Git URL; otherwise fall back to the canonical repository so
+# local-path sources (used in tests) still produce a working link.
+badge_link() {
+  case "$constitution_url" in
+    https://*|http://*)
+      printf '%s' "${constitution_url%.git}"
+      ;;
+    *)
+      printf '%s' "$constitution_repo_url"
+      ;;
+  esac
+}
+
+# The single source of truth for the badge markup. Kept in sync with
+# templates/README.md so freshly generated and existing READMEs match.
+readme_badge_line() {
+  printf "[![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%%20Engineering%%20Constitution-Adopted-blue)](%s)" "$(badge_link)"
+}
+
+# Add or refresh the constitution badge in the project README. The badge lives
+# between stable HTML comment markers so this is idempotent: re-running bootstrap
+# never duplicates the badge, and the link is refreshed in place. When the README
+# has no markers yet, the badge is inserted just after the first level-one
+# heading, or prepended if the file has no heading.
+ensure_readme_badge() {
+  readme="$project_path/README.md"
+
+  if [ ! -f "$readme" ]; then
+    return 0
+  fi
+
+  badge=$(readme_badge_line)
+  tmp=$(mktemp)
+
+  if grep -q "CONSTITUTION_START" "$readme"; then
+    awk -v badge="$badge" '
+      /<!-- CONSTITUTION_START -->/ {
+        print "<!-- CONSTITUTION_START -->"
+        print badge
+        print "<!-- CONSTITUTION_END -->"
+        skip = 1
+        next
+      }
+      /<!-- CONSTITUTION_END -->/ { skip = 0; next }
+      skip != 1 { print }
+    ' "$readme" > "$tmp"
+    mv "$tmp" "$readme"
+    modified_files+=("README.md")
+    echo "Refreshed Eric's Engineering Constitution badge in README.md"
+    return 0
+  fi
+
+  awk -v badge="$badge" '
+    BEGIN { inserted = 0 }
+    {
+      print
+      if (inserted == 0 && $0 ~ /^# /) {
+        print ""
+        print "<!-- CONSTITUTION_START -->"
+        print badge
+        print "<!-- CONSTITUTION_END -->"
+        inserted = 1
+      }
+    }
+  ' "$readme" > "$tmp"
+
+  if ! grep -q "CONSTITUTION_START" "$tmp"; then
+    {
+      echo "<!-- CONSTITUTION_START -->"
+      printf '%s\n' "$badge"
+      echo "<!-- CONSTITUTION_END -->"
+      echo
+      cat "$readme"
+    } > "$tmp"
+  fi
+
+  mv "$tmp" "$readme"
+  modified_files+=("README.md")
+  echo "Added Eric's Engineering Constitution badge to README.md"
 }
 
 first_heading() {
@@ -324,6 +414,8 @@ generate_adoption_report() {
     status_line "docs/AGENT_PROMPTS.md"
     status_line "docs/AGENT_HANDOFF.md"
     status_line "docs/PRODUCT_REQUIREMENTS.md"
+    status_line "docs/REQUIREMENTS_TRACEABILITY.md"
+    status_line "docs/TEST_PLAN.md"
     status_line "docs/MVP_BACKLOG.md"
     status_line "docs/OPERATIONS.md"
     status_line "docs/ARCHITECTURE.md"
@@ -335,6 +427,16 @@ generate_adoption_report() {
     echo "## Existing Files Preserved"
     echo
     write_list " ${skipped_files[@]}"
+    echo
+    echo "## Files Updated In Place"
+    echo
+    if [ "${#modified_files[@]}" -eq 0 ]; then
+      echo "- None"
+    else
+      for item in "${modified_files[@]}"; do
+        echo "- \`$item\`"
+      done
+    fi
     echo
     echo "## Detected Project Signals"
     echo
@@ -422,6 +524,8 @@ copy_file "$template_dir/docs/TROUBLESHOOTING.md" "$project_path/docs/TROUBLESHO
 copy_file "$template_dir/docs/AGENT_PROMPTS.md" "$project_path/docs/AGENT_PROMPTS.md"
 copy_file "$template_dir/docs/AGENT_HANDOFF.md" "$project_path/docs/AGENT_HANDOFF.md"
 copy_file "$template_dir/docs/PRODUCT_REQUIREMENTS.md" "$project_path/docs/PRODUCT_REQUIREMENTS.md"
+copy_file "$template_dir/docs/REQUIREMENTS_TRACEABILITY.md" "$project_path/docs/REQUIREMENTS_TRACEABILITY.md"
+copy_file "$template_dir/docs/TEST_PLAN.md" "$project_path/docs/TEST_PLAN.md"
 copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md"
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
@@ -436,6 +540,10 @@ else
   cp "$template_dir/README.md" "$bootstrap_dir/templates/README.md"
   echo "Wrote merge template: $bootstrap_dir/templates/README.md"
 fi
+
+# Standardize the adoption badge across every repository, including existing
+# READMEs that were preserved above.
+ensure_readme_badge
 
 generate_adoption_report
 

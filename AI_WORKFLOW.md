@@ -14,13 +14,15 @@ This document defines the required workflow for AI-assisted software development
 8. Create an implementation plan.
 9. Implement changes.
 10. Update tests.
-11. Update documentation.
-12. Update TODO.md.
-13. Update CHANGELOG.md.
-14. Perform a security review.
-15. Suggest future improvements.
-16. Summarize work.
-17. Clean up Git state (branches, worktrees).
+11. Evaluate coverage and analyze gaps.
+12. Update requirements traceability for product-facing repositories.
+13. Update documentation.
+14. Update TODO.md.
+15. Update CHANGELOG.md.
+16. Perform a security review.
+17. Suggest future improvements.
+18. Summarize work.
+19. Clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 
@@ -50,6 +52,8 @@ Agents must verify:
 
 - The implementation addresses the request.
 - Relevant tests pass or test limitations are reported.
+- Coverage was evaluated against declared targets and any gaps were recorded.
+- Requirements traceability is updated for product-facing repositories.
 - Documentation impact has been evaluated.
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.
