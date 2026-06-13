@@ -24,6 +24,7 @@ Creates or installs:
   - .cursorrules
   - .antigravity/instructions.md
   - .openhands_instructions
+  - .goosehints
   - .project-rules.md
   - SYSTEM_PROMPT.md
   - CONTRIBUTING.md
@@ -397,6 +398,7 @@ generate_adoption_report() {
     status_line ".cursorrules"
     status_line ".antigravity/instructions.md"
     status_line ".openhands_instructions"
+    status_line ".goosehints"
     status_line ".project-rules.md"
     status_line "SYSTEM_PROMPT.md"
     status_line "CONTRIBUTING.md"
@@ -498,6 +500,7 @@ copy_file "$template_dir/.cursorrules" "$project_path/.cursorrules"
 mkdir -p "$project_path/.antigravity"
 copy_file "$template_dir/.antigravity/instructions.md" "$project_path/.antigravity/instructions.md"
 copy_file "$template_dir/.openhands_instructions" "$project_path/.openhands_instructions"
+copy_file "$template_dir/.goosehints" "$project_path/.goosehints"
 copy_file "$template_dir/.project-rules.md" "$project_path/.project-rules.md"
 copy_file "$template_dir/SYSTEM_PROMPT.md" "$project_path/SYSTEM_PROMPT.md"
 copy_file "$template_dir/CONTRIBUTING.md" "$project_path/CONTRIBUTING.md"

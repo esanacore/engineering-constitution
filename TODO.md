@@ -6,6 +6,7 @@
 - [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
 - [ ] Add language-specific guidance for common stacks.
 - [x] Add DevOps and infrastructure standards.
+- [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).
 
 ## Technical Debt
 

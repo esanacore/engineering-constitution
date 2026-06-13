@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.13.0 - 2026-06-13
+
+### Added
+
+- Added Goose / Goosetown integration. `scripts/bootstrap.sh` now installs a `.goosehints` bridge file in every adopted repository so the [goose](https://github.com/aaif-goose/goose) agent — and the [goosetown](https://github.com/aaif-goose/goosetown) multi-agent orchestrator that wraps it — apply the constitution's reading order and standards on every task.
+- Added a "Goose and Goosetown" section to `INTEGRATION.md` covering the `.goosehints` hints file, multi-agent reviewer expectations, and how to register the constitution MCP server (`mcp-server/`) as a goose stdio extension.
+- Added `.goosehints` coverage to `scripts/test_bootstrap.sh`.
+
+### Changed
+
+- Added Goose / Goosetown to the agent override table, the auto-loading tool-file list, and the project file structure tree in `INTEGRATION.md`.
+
 ## 1.12.0 - 2026-06-13
 
 ### Added

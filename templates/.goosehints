@@ -1,0 +1,28 @@
+# Goose Hints — Eric's Engineering Constitution
+
+This repository follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md). Apply it on every task, including when goose runs under a multi-agent orchestrator such as goosetown.
+
+## Required Reading
+
+Before making changes, read:
+
+1. `constitution/CONSTITUTION.md` — Universal Principles.
+2. `constitution/AI_WORKFLOW.md` — Required step-by-step workflow.
+3. `AGENTS.md` — Project-specific rules and overrides.
+4. `README.md`, `TODO.md`, `CHANGELOG.md` — Project context.
+
+## Standards
+
+- Follow the workflow in `constitution/AI_WORKFLOW.md` for every task.
+- Add or update tests for behavioral changes; evaluate coverage and record gaps.
+- Update `TODO.md` and `CHANGELOG.md` as part of every change.
+- Record major design decisions in `docs/adr/`.
+- Review security impact before completing work.
+
+## Multi-Agent Orchestration (goosetown)
+
+When goose agents run in parallel, every researcher, worker, writer, and reviewer is bound by this constitution. Reviewers must check changes against `constitution/TESTING.md`, `constitution/SECURITY.md`, and `constitution/DOCUMENTATION.md` before approving, and the project-specific rules in `AGENTS.md` win over universal defaults.
+
+## MCP Extension
+
+The constitution ships an MCP server at `constitution/mcp-server/`. Register it as a goose stdio extension to load the constitution documents as resources and to validate project structure. See the "Goose and Goosetown" section of `constitution/INTEGRATION.md` for setup.

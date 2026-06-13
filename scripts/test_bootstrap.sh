@@ -40,6 +40,7 @@ test_new_project() {
   [ -f ".cursorrules" ] || { echo "FAIL: .cursorrules missing"; exit 1; }
   [ -f ".antigravity/instructions.md" ] || { echo "FAIL: .antigravity/instructions.md missing"; exit 1; }
   [ -f ".openhands_instructions" ] || { echo "FAIL: .openhands_instructions missing"; exit 1; }
+  [ -f ".goosehints" ] || { echo "FAIL: .goosehints missing"; exit 1; }
   [ -f ".project-rules.md" ] || { echo "FAIL: .project-rules.md missing"; exit 1; }
   [ -f "SYSTEM_PROMPT.md" ] || { echo "FAIL: SYSTEM_PROMPT.md missing"; exit 1; }
   [ -f "CONTRIBUTING.md" ] || { echo "FAIL: CONTRIBUTING.md missing"; exit 1; }
