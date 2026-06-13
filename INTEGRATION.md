@@ -152,6 +152,26 @@ diff .cursor/rules/project.mdc constitution/templates/.cursor/rules/project.mdc
 
 Merge any relevant changes manually, keeping your project-specific rules intact.
 
+## Example Traceability Flow
+
+For product-facing repositories, keep one visible path from product intent to automated verification:
+
+1. Add a stable requirement ID and acceptance criteria in `docs/PRODUCT_REQUIREMENTS.md`.
+2. Mirror that ID in `docs/REQUIREMENTS_TRACEABILITY.md` with its current verification status.
+3. Record repository-wide coverage targets and uncovered gaps in `docs/TEST_PLAN.md`.
+4. Reference the requirement ID in the verifying automated test name, comment, or tag.
+5. When a gap remains open, add a matching follow-up item in `TODO.md` under Testing.
+
+Example:
+
+```text
+docs/PRODUCT_REQUIREMENTS.md      FR-012  Generate automation-blueprint.md
+docs/REQUIREMENTS_TRACEABILITY.md FR-012  Partial  Tests pending
+docs/TEST_PLAN.md                 GAP-003 Missing generator coverage
+tests/test_processor_sop.py       FR-012  SOP artifact regression coverage
+TODO.md                           Add explicit tests once generator exists
+```
+
 ## Project File Structure
 
 Every project using this constitution should eventually contain:
