@@ -1,0 +1,65 @@
+name: Constitution Version Check
+
+# Fails the build when this repository's pinned `constitution/` submodule is
+# behind the latest tagged release of Eric's Engineering Constitution. Runs on
+# every pull request and push to the default branch, plus a daily schedule so
+# drift is caught even when no one is opening PRs.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  version-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Verify constitution submodule is at the latest release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ ! -e constitution/.git ]; then
+            echo "::error::No 'constitution/' submodule found. This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+          cd constitution
+          git fetch --tags --force --quiet origin
+
+          latest_tag=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            echo "::warning::The constitution repository has no version tags yet; skipping the version gate."
+            exit 0
+          fi
+
+          pinned=$(git rev-parse HEAD)
+          latest=$(git rev-list -n 1 "$latest_tag")
+          pinned_version=$(git show HEAD:VERSION 2>/dev/null | tr -d '[:space:]' || echo "unknown")
+          latest_version=$(git show "$latest_tag:VERSION" 2>/dev/null | tr -d '[:space:]' || echo "$latest_tag")
+
+          if [ "$pinned" = "$latest" ]; then
+            echo "Constitution is up to date (version $pinned_version, tag $latest_tag)."
+            exit 0
+          fi
+
+          if git merge-base --is-ancestor "$pinned" "$latest"; then
+            echo "::error::Constitution submodule is BEHIND. Pinned version is $pinned_version; latest release is $latest_version ($latest_tag)."
+            echo "Update with: git submodule update --remote constitution && git add constitution && git commit -m \"Update constitution to $latest_version\""
+            exit 1
+          fi
+
+          echo "::warning::Constitution submodule ($pinned_version) is ahead of or has diverged from the latest release tag $latest_tag ($latest_version). Not failing the build."
+          exit 0

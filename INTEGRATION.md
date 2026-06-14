@@ -152,6 +152,41 @@ diff .cursor/rules/project.mdc constitution/templates/.cursor/rules/project.mdc
 
 Merge any relevant changes manually, keeping your project-specific rules intact.
 
+## Keeping Adopters On the Latest Version Automatically
+
+Manual `git submodule update --remote` works, but it relies on someone
+remembering to run it in every repository. To guarantee that adopting
+repositories stay on the latest release, the framework ships three layers that
+`scripts/bootstrap.sh` installs into every project:
+
+1. **Auto-update pull requests** — `.github/dependabot.yml` (using the
+   `gitsubmodule` ecosystem) makes GitHub open a pull request whenever the
+   `constitution/` submodule falls behind the branch it tracks. The submodule
+   moves forward without anyone running git commands by hand.
+2. **A CI version gate** — `.github/workflows/constitution-version.yml` runs on
+   every pull request, on pushes to the default branch, and on a daily schedule.
+   It fetches the constitution's release tags and **fails the build** when the
+   pinned submodule is behind the latest `v*` tag. This is the layer that
+   enforces "latest at all times": a repository cannot stay green while stale.
+3. **A fleet audit** — `scripts/audit_adopters.sh <parent-dir>` (in the
+   constitution repository) scans every repository under one or more parent
+   directories and reports which are `CURRENT`, `BEHIND`, or
+   `AHEAD/DIVERGED`. It exits non-zero when any repository is behind, so it can
+   also drive a centralized cron job.
+
+```bash
+# One-shot snapshot across all your checked-out repositories:
+bash constitution/scripts/audit_adopters.sh --fetch ~/code ~/work
+```
+
+The CI gate compares against the latest **release tag**, not every commit on
+`main`, so in-progress constitution work does not turn every adopter red — only
+tagged releases do. See `constitution/RELEASES.md` for the tagging rule.
+
+If a repository already has its own `.github/dependabot.yml`, the bootstrap
+script preserves it and writes the constitution version to
+`.constitution-bootstrap/templates/` for manual merging.
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:

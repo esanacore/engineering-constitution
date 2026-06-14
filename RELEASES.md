@@ -28,6 +28,22 @@ bash constitution/scripts/version_analyzer.sh .
 
 This tool scans Git tags and commit messages for SemVer-aligned prefixes (e.g., `feat:`, `fix:`, `BREAKING CHANGE`) to suggest the next appropriate version bump.
 
+## Git Tags
+
+Every release of this framework must be tagged in Git as `vMAJOR.MINOR.PATCH`
+(for example, `v1.15.0`) on the commit that updates `VERSION` and `CHANGELOG.md`.
+
+Tags are the machine-comparable record of releases. Adopting repositories and
+the `constitution-version-check` CI workflow compare a project's pinned
+`constitution/` submodule against the **latest release tag**, so a release is
+not considered shippable to adopters until it is tagged.
+
+```bash
+# After VERSION and CHANGELOG.md are updated and merged to main:
+git tag -a "v$(cat VERSION)" -m "Release $(cat VERSION)"
+git push origin "v$(cat VERSION)"
+```
+
 ## CHANGELOG Format
 
 Use these categories:

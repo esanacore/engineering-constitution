@@ -6,6 +6,22 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.15.0 - 2026-06-13
+
+### Added
+
+- Added automated constitution version enforcement so adopting repositories stay on the latest release. `scripts/bootstrap.sh` now installs two templates into every project:
+  - `.github/workflows/constitution-version.yml` — a CI gate that runs on pull requests, pushes to the default branch, and a daily schedule, and **fails the build** when the pinned `constitution/` submodule is behind the latest `v*` release tag.
+  - `.github/dependabot.yml` — a `gitsubmodule` Dependabot configuration that opens a pull request whenever the constitution submodule falls behind, scoped to the `constitution` submodule.
+- Added `scripts/audit_adopters.sh`, a fleet audit that scans parent directories and reports each adopting repository as `CURRENT`, `BEHIND`, or `AHEAD/DIVERGED`, exiting non-zero when any repository is behind so it can drive a centralized check.
+- Added `scripts/test_audit_adopters.sh` covering the current, behind, and non-adopter cases and the script's exit status.
+- Added a "Keeping Adopters On the Latest Version Automatically" section to `INTEGRATION.md` describing the auto-update, CI gate, and audit layers.
+
+### Changed
+
+- Added a "Git Tags" rule to `RELEASES.md` requiring every release to be tagged `vMAJOR.MINOR.PATCH`; the CI gate and audit script compare adopters against the latest release tag.
+- `scripts/test_bootstrap.sh` now verifies the Dependabot config and version-check workflow are installed.
+
 ## 1.14.0 - 2026-06-13
 
 ### Added

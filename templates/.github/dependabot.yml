@@ -1,0 +1,19 @@
+version: 2
+
+# Keeps the `constitution/` submodule current by opening a pull request whenever
+# Eric's Engineering Constitution advances on the branch the submodule tracks.
+# Paired with .github/workflows/constitution-version.yml, which fails the build
+# until that pull request is merged.
+updates:
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "constitution"
+    labels:
+      - "constitution"
+    # Scope updates to the constitution submodule so repositories with other
+    # submodules are not churned by this configuration.
+    allow:
+      - dependency-name: "constitution"
