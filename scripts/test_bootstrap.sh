@@ -47,6 +47,8 @@ test_new_project() {
   [ -f "HELP.md" ] || { echo "FAIL: HELP.md missing"; exit 1; }
   [ -f "SECURITY.md" ] || { echo "FAIL: SECURITY.md missing"; exit 1; }
   [ -f ".github/copilot-instructions.md" ] || { echo "FAIL: copilot-instructions.md missing"; exit 1; }
+  [ -f ".github/dependabot.yml" ] || { echo "FAIL: dependabot.yml missing"; exit 1; }
+  [ -f ".github/workflows/constitution-version.yml" ] || { echo "FAIL: constitution-version.yml workflow missing"; exit 1; }
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }

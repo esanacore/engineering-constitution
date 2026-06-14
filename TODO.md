@@ -7,10 +7,11 @@
 - [ ] Add language-specific guidance for common stacks.
 - [x] Add DevOps and infrastructure standards.
 - [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).
+- [x] Add automated constitution version enforcement (Dependabot auto-PRs, CI version gate, `audit_adopters.sh`).
 
 ## Technical Debt
 
-- [ ] Define a repeatable release process for framework updates.
+- [ ] Define a repeatable release process for framework updates (now includes the `vX.Y.Z` Git tag step in `RELEASES.md`).
 
 ## Refactoring
 
@@ -33,5 +34,5 @@
 ## Nice-to-Have
 
 - [ ] Add repository health dashboards.
-- [ ] Add CI/CD enforcement examples.
+- [x] Add CI/CD enforcement examples.
 - [ ] Add AI-generated release planning guidance.

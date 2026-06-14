@@ -31,6 +31,8 @@ Creates or installs:
   - HELP.md
   - SECURITY.md
   - .github/copilot-instructions.md
+  - .github/dependabot.yml
+  - .github/workflows/constitution-version.yml
   - .cursor/rules/project.mdc
   - TODO.md
   - CHANGELOG.md
@@ -405,6 +407,8 @@ generate_adoption_report() {
     status_line "HELP.md"
     status_line "SECURITY.md"
     status_line ".github/copilot-instructions.md"
+    status_line ".github/dependabot.yml"
+    status_line ".github/workflows/constitution-version.yml"
     status_line ".cursor/rules/project.mdc"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
@@ -507,6 +511,8 @@ copy_file "$template_dir/CONTRIBUTING.md" "$project_path/CONTRIBUTING.md"
 copy_file "$template_dir/HELP.md" "$project_path/HELP.md"
 copy_file "$template_dir/SECURITY.md" "$project_path/SECURITY.md"
 copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
+copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependabot.yml"
+copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_path/.github/workflows/constitution-version.yml"
 copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
 if ! write_generated_todo_from_backlog; then
   copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
