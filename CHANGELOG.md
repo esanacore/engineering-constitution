@@ -20,7 +20,7 @@ This project follows semantic versioning.
 ### Changed
 
 - Enriched `templates/ADR.md` with a `Proposed → Accepted → Superseded/Deprecated` status lifecycle, a `Relationships` field (`extends` / `supersedes` / `related`), and a `Promotion Criteria` section for `Proposed` ADRs. Updated `CONSTITUTION.md` Principle 6 and the sample-project ADR to match.
-- Corrected the stale `CONSTITUTION.md` version header (was `1.12.0`) to track the released `VERSION`.
+- Corrected the stale `CONSTITUTION.md` version header (was `1.12.0`) and the `README.md` version display to track the released `VERSION`.
 
 ## 1.15.0 - 2026-06-13
 
