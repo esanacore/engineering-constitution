@@ -54,3 +54,11 @@ An aggregate coverage percentage hides which behavior is untested. Coverage gaps
 
 - Record known untested behavior in the `docs/TEST_PLAN.md` gap log, with a risk level and a follow-up item in `TODO.md` under Testing.
 - For product-facing repositories, any requirement ID with no verifying test is a coverage gap; reconcile gaps against `docs/REQUIREMENTS_TRACEABILITY.md`.
+
+## Governance Tooling Must Be Tested
+
+Scripts that enforce the standards — coverage gates, requirements-traceability checkers, version gates, bootstrap and audit scripts — are themselves code, and a silent bug in them removes the protection they appear to provide. Treat governance tooling as production code:
+
+- Give every reference checker or gate unit tests, including **negative cases** that prove it fails when it should.
+- A traceability checker must have a test proving a missing system-layer ID (for example, `FR-007`) is still detected when a same-numbered ID from another layer (for example, `BB-FR-007`) is present. Pattern matchers that are not anchored on both sides pass this case incorrectly; see the ID-grammar guidance in `DOCUMENTATION.md`.
+- A checker that can only pass is worse than no checker, because it advertises a guarantee it does not deliver.

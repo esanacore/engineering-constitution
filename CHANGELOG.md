@@ -6,6 +6,22 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.16.0 - 2026-06-24
+
+### Added
+
+- Added a **Threat Modeling Triggers** section to `SECURITY.md` enumerating concrete changes that mandate a threat model (new egress path, new auth/authz surface, new data leaving the boundary, new trust-sensitive dependency, new untrusted-input sink). Added a matching checklist item to `templates/SECURITY.md` so adopters inherit the trigger.
+- Added a **Toolchain Parity** standard to `OPERATIONS.md` requiring repositories to pin their toolchain, declare minimum tool versions, and provide a fast prerequisite check (for example, `make doctor`) that fails fast with a clear message. Enriched `templates/docs/SETUP.md` with a "Verify Prerequisites" step.
+- Added a **Binary Assets and Images** section to `DOCUMENTATION.md`: render-inline images are committed as normal web-optimized blobs (large originals go to LFS), with a `.gitattributes` LFS override and explicit verification (`git lfs ls-files` / `git lfs fsck`) before a push is considered complete.
+- Added a **Governance Tooling Must Be Tested** section to `TESTING.md` requiring reference checkers and gates to ship unit tests including negative cases, with the traceability-checker substring-collision case called out.
+- Added a **Requirement ID Grammars Must Not Collide** subsection and a dedicated **Architecture Decision Records** section to `DOCUMENTATION.md` documenting the ADR status lifecycle, relationships, and promotion criteria.
+- Added a **Repository Settings Checklist** to `INTEGRATION.md` (enable "Automatically delete head branches", default-branch protection, Dependabot submodule PRs); the bootstrap adoption report now recommends these settings.
+
+### Changed
+
+- Enriched `templates/ADR.md` with a `Proposed → Accepted → Superseded/Deprecated` status lifecycle, a `Relationships` field (`extends` / `supersedes` / `related`), and a `Promotion Criteria` section for `Proposed` ADRs. Updated `CONSTITUTION.md` Principle 6 and the sample-project ADR to match.
+- Corrected the stale `CONSTITUTION.md` version header (was `1.12.0`) to track the released `VERSION`.
+
 ## 1.15.0 - 2026-06-13
 
 ### Added

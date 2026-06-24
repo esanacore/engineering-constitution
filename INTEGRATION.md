@@ -187,6 +187,14 @@ If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
 `.constitution-bootstrap/templates/` for manual merging.
 
+## Repository Settings Checklist
+
+Some hygiene is enforced by host-side repository settings, not by files in the repo. When adopting the constitution, configure these once on the hosting platform (for example, GitHub repository settings):
+
+- **Enable "Automatically delete head branches."** After a pull request merges, the host deletes the merged feature branch server-side. This keeps `origin/*` free of stale merged branches regardless of whether a contributor or agent has permission to push branch deletions.
+- **Protect the default branch** with required status checks (including the constitution version gate) and required review.
+- **Enable Dependabot / submodule update PRs** so the pinned `constitution/` submodule stays current (the bootstrap script installs `.github/dependabot.yml`).
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:

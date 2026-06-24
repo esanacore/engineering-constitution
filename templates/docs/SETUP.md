@@ -4,7 +4,17 @@ This guide describes how to set up your local environment and run the project fo
 
 ## Prerequisites
 
-<!-- List required runtimes, tools, and versions (e.g., Node.js 20+, Python 3.12) -->
+<!-- List required runtimes, tools, and versions (e.g., Node.js 20+, Python 3.12, git-lfs) -->
+
+Pin the toolchain in a canonical file (for example, `.python-version`, `.tool-versions`, or `.nvmrc`) so every clone uses the same versions.
+
+## Verify Prerequisites
+
+Run the prerequisite check before installing. It should fail fast and name exactly what is missing (interpreter version, `git-lfs`, initialized submodules).
+
+```bash
+# e.g., make doctor
+```
 
 ## Installation
 

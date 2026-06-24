@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.12.0
+Version: 1.16.0
 
 ## Purpose
 
@@ -106,6 +106,8 @@ Create ADRs for:
 - Infrastructure changes
 - Major design changes
 - Security decisions
+
+ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecated`), record their relationships to other ADRs (`extends`, `supersedes`, `related`), and state explicit promotion criteria while `Proposed`. See `DOCUMENTATION.md`.
 
 ## Principle 7: Dependency Hygiene
 

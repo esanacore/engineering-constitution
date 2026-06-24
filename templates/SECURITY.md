@@ -14,3 +14,4 @@ This project follows [Eric's Engineering Constitution Security Standards](consti
 - [ ] Dependencies are audited for vulnerabilities.
 - [ ] Inputs are validated at boundaries.
 - [ ] Logs do not contain secrets or PII.
+- [ ] A threat model was produced if the change hit any trigger in the constitution's [Threat Modeling Triggers](constitution/SECURITY.md) (new egress path, new auth/authz surface, new data leaving the boundary, or new trust-sensitive dependency).
