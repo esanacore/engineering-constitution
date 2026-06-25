@@ -4,6 +4,12 @@ Status: Accepted
 
 Date: 2026-06-08
 
+## Relationships
+
+- Extends: none
+- Supersedes: none
+- Related: none
+
 ## Context
 
 The project needs a consistent way to document major technical decisions.

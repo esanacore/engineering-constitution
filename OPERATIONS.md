@@ -21,6 +21,16 @@ Apply these standards to:
 - Avoid undocumented "special" environments that only one person understands.
 - Keep environment-specific configuration explicit and version controlled where possible.
 
+## Toolchain Parity
+
+A change that passes in CI but breaks for a contributor or agent on a fresh clone wastes time and erodes trust in the checks. The local toolchain should match what CI assumes. Each repository should:
+
+- **Pin its toolchain** in a canonical, machine-readable place (for example, `.python-version`, `.tool-versions`, `.nvmrc`, or an `engines` field) rather than relying on whatever interpreter happens to be on `PATH`.
+- **Declare minimum tool versions** (interpreter, package manager, `git-lfs`, container runtime) in one canonical location, not scattered across docs.
+- **Provide a fast prerequisite check** — a `make doctor` target, a setup script, or a SessionStart hook — that verifies the interpreter version, required tools (including `git-lfs` when binary assets are used), and that submodules are initialized, then **fails fast with a clear message** naming exactly what to install.
+
+The goal: a fresh clone on a compliant machine either passes the prerequisite check or tells the contributor precisely what is missing — before they hit a confusing failure deeper in the build.
+
 ## Change Management
 
 - Infrastructure changes should be reviewed with the same rigor as application code.

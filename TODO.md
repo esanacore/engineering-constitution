@@ -12,6 +12,7 @@
 ## Technical Debt
 
 - [ ] Define a repeatable release process for framework updates (now includes the `vX.Y.Z` Git tag step in `RELEASES.md`).
+- [ ] Cut the first `vX.Y.Z` release tag on `main`. The version-gate/audit machinery is built but no `v*` tag exists yet, so adopters' `constitution-version-check` gate still skips instead of enforcing. Tagging a release (for example `v1.16.0`) transitions it to actively passing/failing.
 
 ## Refactoring
 
@@ -22,7 +23,7 @@
 - [x] Add automated tests for `scripts/bootstrap.sh`.
 - [x] Add continuous coverage evaluation and gap-analysis guidance to `TESTING.md`.
 - [ ] Add compliance checks that verify required files exist in integrated repositories.
-- [ ] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix.
+- [ ] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix. Ship it with negative-case unit tests (per the "Governance Tooling Must Be Tested" standard in `TESTING.md`), including the substring-collision case where a layered ID like `BB-FR-007` must not satisfy a check for system `FR-007`.
 
 ## Documentation
 

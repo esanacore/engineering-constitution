@@ -30,7 +30,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 
 ## Version
 
-Current version: 1.15.0
+Current version: 1.16.0
 
 See `VERSION`.
 

@@ -468,6 +468,7 @@ generate_adoption_report() {
     echo "3. Customize generated placeholders in TODO.md, CHANGELOG.md, README.md, and ADRs."
     echo "4. Commit \`.gitmodules\`, the \`constitution\` submodule reference, generated files, and any merged documentation changes."
     echo "5. Keep or remove \`.constitution-bootstrap/\` depending on whether the adoption report is useful to the project."
+    echo "6. In the hosting platform settings, enable \"Automatically delete head branches\" and branch protection on the default branch. See \`constitution/INTEGRATION.md\` (Repository Settings Checklist)."
     echo
     echo "## Suggested Agent Context"
     echo
