@@ -27,10 +27,11 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `examples/sample-project/`: Example project layout.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
+- `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 
 ## Version
 
-Current version: 1.16.0
+Current version: 1.17.0
 
 See `VERSION`.
 

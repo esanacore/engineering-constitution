@@ -215,6 +215,26 @@ tests/test_processor_sop.py       FR-012  SOP artifact regression coverage
 TODO.md                           Add explicit tests once generator exists
 ```
 
+### Verifying the Flow Automatically
+
+The framework ships `scripts/check_traceability.sh`, available through the
+`constitution/` submodule, to confirm that every requirement ID declared in the
+product requirements file has a verifying-test entry in the matrix. It matches
+IDs by exact cell value, so a layered ID (for example `BB-FR-012`) never
+satisfies a check for the system-layer `FR-012`.
+
+```bash
+# Defaults to docs/PRODUCT_REQUIREMENTS.md and docs/REQUIREMENTS_TRACEABILITY.md
+bash constitution/scripts/check_traceability.sh
+
+# Or pass explicit paths
+bash constitution/scripts/check_traceability.sh docs/PRODUCT_REQUIREMENTS.md docs/REQUIREMENTS_TRACEABILITY.md
+```
+
+It exits non-zero when any requirement has no matrix row or only a gap entry, so
+product-facing repositories can run it locally or wire it into CI as a gate
+alongside the constitution version check.
+
 ## Project File Structure
 
 Every project using this constitution should eventually contain:

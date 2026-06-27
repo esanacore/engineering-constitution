@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.17.0 - 2026-06-27
+
+### Added
+
+- Added `scripts/check_traceability.sh`, a reference requirements-traceability checker that confirms every requirement ID declared in `docs/PRODUCT_REQUIREMENTS.md` has a non-empty verifying-test entry in `docs/REQUIREMENTS_TRACEABILITY.md`. It matches IDs by exact matrix-cell value (never by substring) so a layered ID such as `BB-FR-007` cannot satisfy a check for the system-layer `FR-007`, parses each table by its own header columns so an unrelated table (for example the Coverage Summary) is not read as requirements, and exits non-zero when any requirement is missing a row or has only a gap entry. Adopters run it through the `constitution/` submodule.
+- Added `scripts/test_check_traceability.sh` with positive and negative cases per the "Governance Tooling Must Be Tested" standard, including the `BB-FR-007` / `FR-007` substring-collision case, gap-marker and unfilled-placeholder detection, the layered-ID independence case, multi-table parsing, and usage errors.
+
+### Changed
+
+- Pointed the "Governance Tooling Must Be Tested" standard in `TESTING.md` at the shipped `scripts/check_traceability.sh` as the worked reference implementation.
+- Added a "Verifying the Flow Automatically" subsection to the `INTEGRATION.md` traceability flow describing how to run the checker through the submodule and gate CI on it.
+
 ## 1.16.0 - 2026-06-24
 
 ### Added

@@ -23,7 +23,8 @@
 - [x] Add automated tests for `scripts/bootstrap.sh`.
 - [x] Add continuous coverage evaluation and gap-analysis guidance to `TESTING.md`.
 - [ ] Add compliance checks that verify required files exist in integrated repositories.
-- [ ] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix. Ship it with negative-case unit tests (per the "Governance Tooling Must Be Tested" standard in `TESTING.md`), including the substring-collision case where a layered ID like `BB-FR-007` must not satisfy a check for system `FR-007`.
+- [x] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix. Ship it with negative-case unit tests (per the "Governance Tooling Must Be Tested" standard in `TESTING.md`), including the substring-collision case where a layered ID like `BB-FR-007` must not satisfy a check for system `FR-007`. Implemented as `scripts/check_traceability.sh` with `scripts/test_check_traceability.sh`.
+- [ ] Ship a CI workflow template that runs `scripts/check_traceability.sh` as a gate for product-facing repositories (alongside the existing constitution version-check workflow), so traceability is enforced and not only available on demand.
 
 ## Documentation
 
