@@ -222,6 +222,13 @@ Run it against an adopting project, not against this constitution source
 repository — the source repository keeps its documents at the root and has no
 `constitution/` submodule, so it is intentionally not a self-compliant target.
 
+`scripts/bootstrap.sh` installs `.github/workflows/constitution-compliance.yml`
+into every adopted repository, which runs both this compliance check and the
+traceability check (the latter only when the product-facing documents exist) on
+pull requests, pushes to the default branch, and a daily schedule. This is the
+CI gate that turns the two checkers from on-demand tools into enforced ones,
+alongside the version gate described above.
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:

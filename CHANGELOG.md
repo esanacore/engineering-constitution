@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.19.0 - 2026-06-27
+
+### Added
+
+- Added `templates/.github/workflows/constitution-compliance.yml`, a CI gate that `scripts/bootstrap.sh` now installs into every adopted repository. It runs `constitution/scripts/check_compliance.sh` to confirm the required governance files are present and `constitution/scripts/check_traceability.sh` to confirm every declared requirement has a verifying test (the traceability step runs only when `docs/PRODUCT_REQUIREMENTS.md` and `docs/REQUIREMENTS_TRACEABILITY.md` exist, so non-product repositories are not forced to maintain them). Runs on pull requests, pushes to the default branch, and a daily schedule. This turns the two checkers from on-demand tools into enforced gates, alongside the existing version gate.
+
+### Changed
+
+- `scripts/bootstrap.sh` installs the compliance workflow and records it in the adoption report; `scripts/test_bootstrap.sh` verifies it is installed.
+- Documented the compliance gate workflow in the `INTEGRATION.md` "Verifying Adoption Compliance" section.
+
 ## 1.18.0 - 2026-06-27
 
 ### Added

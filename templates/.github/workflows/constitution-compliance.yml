@@ -1,0 +1,56 @@
+name: Constitution Compliance
+
+# Gates the build on the constitution's governance checkers, which ship in the
+# pinned `constitution/` submodule:
+#   - check_compliance.sh   — the repository carries the required governance files.
+#   - check_traceability.sh — every declared requirement has a verifying test.
+#
+# The traceability check runs only when the product-facing documents exist, so
+# non-product repositories are not forced to maintain them. Runs on every pull
+# request and push to the default branch, plus a daily schedule so drift is
+# caught even when no one is opening PRs.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compliance-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_compliance.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the compliance checker). This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+      - name: Verify required governance files are present
+        shell: bash
+        run: bash constitution/scripts/check_compliance.sh .
+
+      - name: Verify requirements traceability (product-facing repositories)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f docs/PRODUCT_REQUIREMENTS.md ] && [ -f docs/REQUIREMENTS_TRACEABILITY.md ]; then
+            bash constitution/scripts/check_traceability.sh \
+              docs/PRODUCT_REQUIREMENTS.md docs/REQUIREMENTS_TRACEABILITY.md
+          else
+            echo "::notice::No product requirements/traceability documents found; skipping the traceability gate."
+          fi
