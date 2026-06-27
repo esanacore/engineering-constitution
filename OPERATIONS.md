@@ -91,3 +91,7 @@ Projects with meaningful runtime or deployment behavior should maintain `docs/OP
 - backup and restore steps
 - rollback guidance
 - incident contacts or escalation notes
+
+Start from the blank template in `templates/docs/OPERATIONS.md`. For a fully
+worked reference — every section filled in for a concrete deployed service — see
+`examples/OPERATIONS.example.md`.

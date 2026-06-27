@@ -52,6 +52,10 @@ That document should cover:
 - rollback guidance
 - incident response notes
 
+`examples/OPERATIONS.example.md` is a fully worked runbook for a fictional
+deployed service that fills in every one of these sections; use it as a model
+when populating `docs/OPERATIONS.md`.
+
 ## Binary Assets and Images
 
 Documentation often depends on images, diagrams, and other binary assets. Handle them so they render reliably and large originals stay out of the main history.

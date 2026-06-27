@@ -31,7 +31,7 @@
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.
-- [ ] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service.
+- [x] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service. Added `examples/OPERATIONS.example.md` (a worked runbook for the fictional "Orders API" service), referenced from `OPERATIONS.md`, `DOCUMENTATION.md`, the blank template, and `README.md`.
 
 ## Nice-to-Have
 

@@ -6,6 +6,16 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.20.0 - 2026-06-27
+
+### Added
+
+- Added `examples/OPERATIONS.example.md`, a fully worked `docs/OPERATIONS.md` runbook for a fictional deployed service ("Orders API"). It fills in every section the blank template leaves as a placeholder — environments and promotion path, toolchain prerequisites, deployment procedure with approvals and rollback, monitoring/alert thresholds, backup and restore (with a restore drill), maintenance mode, expand/contract migrations, secrets and rotation, dependency failure behavior, and an incident-response runbook with severities, on-call, and common runbooks.
+
+### Changed
+
+- Referenced the worked operations example from `OPERATIONS.md`, `DOCUMENTATION.md`, the blank `templates/docs/OPERATIONS.md`, and the `README.md` repository contents so adopters can find a complete model when populating their own runbook.
+
 ## 1.19.0 - 2026-06-27
 
 ### Added
