@@ -6,6 +6,51 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.20.0 - 2026-06-27
+
+### Added
+
+- Added `examples/OPERATIONS.example.md`, a fully worked `docs/OPERATIONS.md` runbook for a fictional deployed service ("Orders API"). It fills in every section the blank template leaves as a placeholder — environments and promotion path, toolchain prerequisites, deployment procedure with approvals and rollback, monitoring/alert thresholds, backup and restore (with a restore drill), maintenance mode, expand/contract migrations, secrets and rotation, dependency failure behavior, and an incident-response runbook with severities, on-call, and common runbooks.
+
+### Changed
+
+- Referenced the worked operations example from `OPERATIONS.md`, `DOCUMENTATION.md`, the blank `templates/docs/OPERATIONS.md`, and the `README.md` repository contents so adopters can find a complete model when populating their own runbook.
+
+## 1.19.0 - 2026-06-27
+
+### Added
+
+- Added `templates/.github/workflows/constitution-compliance.yml`, a CI gate that `scripts/bootstrap.sh` now installs into every adopted repository. It runs `constitution/scripts/check_compliance.sh` to confirm the required governance files are present and `constitution/scripts/check_traceability.sh` to confirm every declared requirement has a verifying test (the traceability step runs only when `docs/PRODUCT_REQUIREMENTS.md` and `docs/REQUIREMENTS_TRACEABILITY.md` exist, so non-product repositories are not forced to maintain them). Runs on pull requests, pushes to the default branch, and a daily schedule. This turns the two checkers from on-demand tools into enforced gates, alongside the existing version gate.
+
+### Changed
+
+- `scripts/bootstrap.sh` installs the compliance workflow and records it in the adoption report; `scripts/test_bootstrap.sh` verifies it is installed.
+- Documented the compliance gate workflow in the `INTEGRATION.md` "Verifying Adoption Compliance" section.
+
+## 1.18.0 - 2026-06-27
+
+### Added
+
+- Added `scripts/check_compliance.sh`, a reference checker that verifies an adopting repository carries the governance files the constitution expects. It checks three tiers — required (the `DOCUMENTATION.md` "Required Files" plus the adoption markers `AGENTS.md`, `CLAUDE.md`, `VERSION`, and the `constitution/` submodule), recommended (the "Strongly Encouraged" files), and product-facing (`docs/PRODUCT_REQUIREMENTS.md`, `docs/REQUIREMENTS_TRACEABILITY.md`) — and exits non-zero on a missing required file. `--strict` promotes recommended gaps to failures and `--product` promotes product-facing gaps to failures. Adopters run it from their repository root through the `constitution/` submodule.
+- Added `scripts/test_check_compliance.sh` with positive and negative cases per the "Governance Tooling Must Be Tested" standard, including a missing required file, a missing `constitution/` submodule directory, recommended-tier warn-vs-strict behavior, product-facing warn-vs-`--product` behavior, and usage errors.
+
+### Changed
+
+- Added a "Verifying Adoption Compliance" section to `INTEGRATION.md` describing how to run the compliance checker through the submodule and noting that the constitution source repository is intentionally not a self-compliant target.
+- Noted the compliance checker alongside the traceability checker in the `TESTING.md` "Governance Tooling Must Be Tested" standard.
+
+## 1.17.0 - 2026-06-27
+
+### Added
+
+- Added `scripts/check_traceability.sh`, a reference requirements-traceability checker that confirms every requirement ID declared in `docs/PRODUCT_REQUIREMENTS.md` has a non-empty verifying-test entry in `docs/REQUIREMENTS_TRACEABILITY.md`. It matches IDs by exact matrix-cell value (never by substring) so a layered ID such as `BB-FR-007` cannot satisfy a check for the system-layer `FR-007`, parses each table by its own header columns so an unrelated table (for example the Coverage Summary) is not read as requirements, and exits non-zero when any requirement is missing a row or has only a gap entry. Adopters run it through the `constitution/` submodule.
+- Added `scripts/test_check_traceability.sh` with positive and negative cases per the "Governance Tooling Must Be Tested" standard, including the `BB-FR-007` / `FR-007` substring-collision case, gap-marker and unfilled-placeholder detection, the layered-ID independence case, multi-table parsing, and usage errors.
+
+### Changed
+
+- Pointed the "Governance Tooling Must Be Tested" standard in `TESTING.md` at the shipped `scripts/check_traceability.sh` as the worked reference implementation.
+- Added a "Verifying the Flow Automatically" subsection to the `INTEGRATION.md` traceability flow describing how to run the checker through the submodule and gate CI on it.
+
 ## 1.16.0 - 2026-06-24
 
 ### Added

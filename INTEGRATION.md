@@ -195,6 +195,40 @@ Some hygiene is enforced by host-side repository settings, not by files in the r
 - **Protect the default branch** with required status checks (including the constitution version gate) and required review.
 - **Enable Dependabot / submodule update PRs** so the pinned `constitution/` submodule stays current (the bootstrap script installs `.github/dependabot.yml`).
 
+## Verifying Adoption Compliance
+
+`scripts/audit_adopters.sh` answers "is the submodule current?"; the companion
+`scripts/check_compliance.sh` answers "does this repository actually carry the
+governance files the constitution expects?" Run it from an **adopting**
+repository's root through the submodule:
+
+```bash
+# Defaults to the current directory; checks required, recommended, and
+# product-facing files.
+bash constitution/scripts/check_compliance.sh
+
+# Treat recommended files as required, or enforce the product-facing docs:
+bash constitution/scripts/check_compliance.sh --strict
+bash constitution/scripts/check_compliance.sh --product
+```
+
+It exits non-zero when a required file (or, in the matching strict mode, a
+recommended or product-facing file) is missing, so it can run locally or as a CI
+gate. Required entries are the constitution's mandated files plus the adoption
+markers (`AGENTS.md`, `CLAUDE.md`, `VERSION`, and the `constitution/` submodule);
+recommended and product-facing entries are reported as warnings by default.
+
+Run it against an adopting project, not against this constitution source
+repository — the source repository keeps its documents at the root and has no
+`constitution/` submodule, so it is intentionally not a self-compliant target.
+
+`scripts/bootstrap.sh` installs `.github/workflows/constitution-compliance.yml`
+into every adopted repository, which runs both this compliance check and the
+traceability check (the latter only when the product-facing documents exist) on
+pull requests, pushes to the default branch, and a daily schedule. This is the
+CI gate that turns the two checkers from on-demand tools into enforced ones,
+alongside the version gate described above.
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:
@@ -214,6 +248,26 @@ docs/TEST_PLAN.md                 GAP-003 Missing generator coverage
 tests/test_processor_sop.py       FR-012  SOP artifact regression coverage
 TODO.md                           Add explicit tests once generator exists
 ```
+
+### Verifying the Flow Automatically
+
+The framework ships `scripts/check_traceability.sh`, available through the
+`constitution/` submodule, to confirm that every requirement ID declared in the
+product requirements file has a verifying-test entry in the matrix. It matches
+IDs by exact cell value, so a layered ID (for example `BB-FR-012`) never
+satisfies a check for the system-layer `FR-012`.
+
+```bash
+# Defaults to docs/PRODUCT_REQUIREMENTS.md and docs/REQUIREMENTS_TRACEABILITY.md
+bash constitution/scripts/check_traceability.sh
+
+# Or pass explicit paths
+bash constitution/scripts/check_traceability.sh docs/PRODUCT_REQUIREMENTS.md docs/REQUIREMENTS_TRACEABILITY.md
+```
+
+It exits non-zero when any requirement has no matrix row or only a gap entry, so
+product-facing repositories can run it locally or wire it into CI as a gate
+alongside the constitution version check.
 
 ## Project File Structure
 

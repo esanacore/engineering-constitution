@@ -22,15 +22,16 @@
 
 - [x] Add automated tests for `scripts/bootstrap.sh`.
 - [x] Add continuous coverage evaluation and gap-analysis guidance to `TESTING.md`.
-- [ ] Add compliance checks that verify required files exist in integrated repositories.
-- [ ] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix. Ship it with negative-case unit tests (per the "Governance Tooling Must Be Tested" standard in `TESTING.md`), including the substring-collision case where a layered ID like `BB-FR-007` must not satisfy a check for system `FR-007`.
+- [x] Add compliance checks that verify required files exist in integrated repositories. Implemented as `scripts/check_compliance.sh` with `scripts/test_check_compliance.sh` (required / recommended / product-facing tiers, `--strict` and `--product` modes).
+- [x] Add an automated check that every requirement ID has a verifying test entry in the traceability matrix. Ship it with negative-case unit tests (per the "Governance Tooling Must Be Tested" standard in `TESTING.md`), including the substring-collision case where a layered ID like `BB-FR-007` must not satisfy a check for system `FR-007`. Implemented as `scripts/check_traceability.sh` with `scripts/test_check_traceability.sh`.
+- [x] Ship a CI workflow template that runs `scripts/check_traceability.sh` as a gate for product-facing repositories (alongside the existing constitution version-check workflow), so traceability is enforced and not only available on demand. Implemented as `templates/.github/workflows/constitution-compliance.yml`, which also runs `scripts/check_compliance.sh`; installed by `scripts/bootstrap.sh` and covered by `scripts/test_bootstrap.sh`.
 
 ## Documentation
 
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.
-- [ ] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service.
+- [x] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service. Added `examples/OPERATIONS.example.md` (a worked runbook for the fictional "Orders API" service), referenced from `OPERATIONS.md`, `DOCUMENTATION.md`, the blank template, and `README.md`.
 
 ## Nice-to-Have
 

@@ -2,6 +2,10 @@
 
 This guide covers operational procedures, runbooks, and safe execution practices.
 
+<!-- For a fully worked example with every section filled in for a deployed
+service, see the constitution's examples/OPERATIONS.example.md. -->
+
+
 ## Deployment
 
 - **Environments**: <!-- List local / staging / production and their purposes -->
