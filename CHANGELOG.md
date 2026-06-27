@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.18.0 - 2026-06-27
+
+### Added
+
+- Added `scripts/check_compliance.sh`, a reference checker that verifies an adopting repository carries the governance files the constitution expects. It checks three tiers — required (the `DOCUMENTATION.md` "Required Files" plus the adoption markers `AGENTS.md`, `CLAUDE.md`, `VERSION`, and the `constitution/` submodule), recommended (the "Strongly Encouraged" files), and product-facing (`docs/PRODUCT_REQUIREMENTS.md`, `docs/REQUIREMENTS_TRACEABILITY.md`) — and exits non-zero on a missing required file. `--strict` promotes recommended gaps to failures and `--product` promotes product-facing gaps to failures. Adopters run it from their repository root through the `constitution/` submodule.
+- Added `scripts/test_check_compliance.sh` with positive and negative cases per the "Governance Tooling Must Be Tested" standard, including a missing required file, a missing `constitution/` submodule directory, recommended-tier warn-vs-strict behavior, product-facing warn-vs-`--product` behavior, and usage errors.
+
+### Changed
+
+- Added a "Verifying Adoption Compliance" section to `INTEGRATION.md` describing how to run the compliance checker through the submodule and noting that the constitution source repository is intentionally not a self-compliant target.
+- Noted the compliance checker alongside the traceability checker in the `TESTING.md` "Governance Tooling Must Be Tested" standard.
+
 ## 1.17.0 - 2026-06-27
 
 ### Added

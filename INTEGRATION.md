@@ -195,6 +195,33 @@ Some hygiene is enforced by host-side repository settings, not by files in the r
 - **Protect the default branch** with required status checks (including the constitution version gate) and required review.
 - **Enable Dependabot / submodule update PRs** so the pinned `constitution/` submodule stays current (the bootstrap script installs `.github/dependabot.yml`).
 
+## Verifying Adoption Compliance
+
+`scripts/audit_adopters.sh` answers "is the submodule current?"; the companion
+`scripts/check_compliance.sh` answers "does this repository actually carry the
+governance files the constitution expects?" Run it from an **adopting**
+repository's root through the submodule:
+
+```bash
+# Defaults to the current directory; checks required, recommended, and
+# product-facing files.
+bash constitution/scripts/check_compliance.sh
+
+# Treat recommended files as required, or enforce the product-facing docs:
+bash constitution/scripts/check_compliance.sh --strict
+bash constitution/scripts/check_compliance.sh --product
+```
+
+It exits non-zero when a required file (or, in the matching strict mode, a
+recommended or product-facing file) is missing, so it can run locally or as a CI
+gate. Required entries are the constitution's mandated files plus the adoption
+markers (`AGENTS.md`, `CLAUDE.md`, `VERSION`, and the `constitution/` submodule);
+recommended and product-facing entries are reported as warnings by default.
+
+Run it against an adopting project, not against this constitution source
+repository — the source repository keeps its documents at the root and has no
+`constitution/` submodule, so it is intentionally not a self-compliant target.
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:

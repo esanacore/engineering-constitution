@@ -64,3 +64,5 @@ Scripts that enforce the standards — coverage gates, requirements-traceability
 - A checker that can only pass is worse than no checker, because it advertises a guarantee it does not deliver.
 
 The framework ships a reference traceability checker, `scripts/check_traceability.sh`, that adopters can run through the `constitution/` submodule. It confirms that every requirement ID declared in `docs/PRODUCT_REQUIREMENTS.md` has a non-empty verifying-test entry in `docs/REQUIREMENTS_TRACEABILITY.md`, matching IDs by exact cell value so a layered ID never satisfies a system-layer ID. Its own negative-case suite (`scripts/test_check_traceability.sh`) includes the `BB-FR-007` / `FR-007` collision case described above. Use it as the worked example of this standard.
+
+The framework also ships `scripts/check_compliance.sh`, which verifies an adopting repository carries the required governance files, with negative-case tests (`scripts/test_check_compliance.sh`) proving it fails on a missing required file and honors its strict modes.

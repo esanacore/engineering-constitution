@@ -28,10 +28,11 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `examples/sample-project/`: Example project layout.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
+- `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
 
 ## Version
 
-Current version: 1.17.0
+Current version: 1.18.0
 
 See `VERSION`.
 
