@@ -6,6 +6,14 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added `scripts/test_release_docs.sh`, a regression check that fails when the published version references in `README.md`, `CONSTITUTION.md`, and `wiki/Home.md` drift from the root `VERSION` file.
+
+### Fixed
+
+- Corrected the stale `1.20.0` version references in `README.md` and `wiki/Home.md` to match the released framework version `1.22.0`.
+
 ## 1.22.0 - 2026-06-27
 
 ### Added
