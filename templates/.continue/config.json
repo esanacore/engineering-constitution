@@ -1,0 +1,3 @@
+{
+  "systemMessage": "This repository follows Eric's Engineering Constitution. Before making changes, read AGENTS.md, constitution/CONSTITUTION.md, constitution/AI_WORKFLOW.md, README.md, TODO.md, and CHANGELOG.md. Follow the workflow in constitution/AI_WORKFLOW.md for every task. Add or update tests for behavioral changes. Update documentation, TODO.md, and CHANGELOG.md as part of every change. Review security impact before completing work."
+}

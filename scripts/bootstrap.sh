@@ -35,6 +35,11 @@ Creates or installs:
   - .github/workflows/constitution-version.yml
   - .github/workflows/constitution-compliance.yml
   - .cursor/rules/project.mdc
+  - .continue/config.json
+  - .aider.conf.yml
+  - .aiderignore
+  - .pre-commit-config.yaml
+  - .devcontainer/devcontainer.json
   - TODO.md
   - CHANGELOG.md
   - VERSION
@@ -412,6 +417,11 @@ generate_adoption_report() {
     status_line ".github/workflows/constitution-version.yml"
     status_line ".github/workflows/constitution-compliance.yml"
     status_line ".cursor/rules/project.mdc"
+    status_line ".continue/config.json"
+    status_line ".aider.conf.yml"
+    status_line ".aiderignore"
+    status_line ".pre-commit-config.yaml"
+    status_line ".devcontainer/devcontainer.json"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
     status_line "VERSION"
@@ -472,6 +482,20 @@ generate_adoption_report() {
     echo "5. Keep or remove \`.constitution-bootstrap/\` depending on whether the adoption report is useful to the project."
     echo "6. In the hosting platform settings, enable \"Automatically delete head branches\" and branch protection on the default branch. See \`constitution/INTEGRATION.md\` (Repository Settings Checklist)."
     echo
+    echo "## Recommended Tool Setup"
+    echo
+    echo "Run these once after completing the merge steps above:"
+    echo
+    echo "**In Claude Code:**"
+    echo "- \`/setup-gbrain\` — Initialize the gstack project brain for persistent memory across sessions."
+    echo "- \`/setup-deploy\` — Configure deployment targets if this project has a deployment pipeline."
+    echo
+    echo "**In your terminal:**"
+    echo "- \`pip install pre-commit && pre-commit install\` — Activate the pre-commit hooks installed at \`.pre-commit-config.yaml\`."
+    echo "- \`npm install\` in \`constitution/mcp-server/\` — Prepare the constitution MCP server dependency if you plan to register it with Goose or Claude Code."
+    echo
+    echo "See \`constitution/INTEGRATION.md\` for full setup details: gstack skills, gbrain initialization, Continue.dev, Aider, devcontainer, and MCP server registration."
+    echo
     echo "## Suggested Agent Context"
     echo
     echo "Add or verify these instructions in AGENTS.md:"
@@ -518,6 +542,13 @@ copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependab
 copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_path/.github/workflows/constitution-version.yml"
 copy_file "$template_dir/.github/workflows/constitution-compliance.yml" "$project_path/.github/workflows/constitution-compliance.yml"
 copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
+mkdir -p "$project_path/.continue"
+copy_file "$template_dir/.continue/config.json" "$project_path/.continue/config.json"
+copy_file "$template_dir/.aider.conf.yml" "$project_path/.aider.conf.yml"
+copy_file "$template_dir/.aiderignore" "$project_path/.aiderignore"
+copy_file "$template_dir/.pre-commit-config.yaml" "$project_path/.pre-commit-config.yaml"
+mkdir -p "$project_path/.devcontainer"
+copy_file "$template_dir/.devcontainer/devcontainer.json" "$project_path/.devcontainer/devcontainer.json"
 if ! write_generated_todo_from_backlog; then
   copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
 fi

@@ -6,6 +6,37 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.22.0 - 2026-06-27
+
+### Added
+
+- Added Continue.dev template at `templates/.continue/config.json`. The bootstrap script installs it into every adopted repository, setting a system message that loads the constitution reading order and workflow for in-editor AI sessions.
+- Added Aider templates: `templates/.aider.conf.yml` (disables auto-commits, loads constitution files as read-only context) and `templates/.aiderignore` (prevents aider from modifying the read-only `constitution/` submodule). Both are installed by `scripts/bootstrap.sh`.
+- Added `templates/.pre-commit-config.yaml` with a language-agnostic baseline of pre-commit hooks (trailing whitespace, end-of-file fixer, YAML/JSON syntax checking, merge-conflict marker detection, large-file guard, and private-key detection). Installed by `scripts/bootstrap.sh`.
+- Added `templates/.devcontainer/devcontainer.json` providing a reproducible Ubuntu 24.04 development container with Node.js, Git, and VS Code extensions for Copilot and Continue.dev. Runs `git submodule update --init --recursive` on container creation so the constitution submodule is always ready. Installed by `scripts/bootstrap.sh`.
+- Added Continue.dev and Aider to the "Override Locations by Agent" table in `INTEGRATION.md`.
+- Added dedicated sections to `INTEGRATION.md` for Continue.dev, Aider, Pre-Commit Hooks, and Devcontainer, each covering configuration, customization examples, and language-specific override patterns.
+- Added "Migrating Existing Repositories to New Framework Versions" section to `INTEGRATION.md` with a five-step checklist (read changelog → diff templates → copy new files → run new tool-setup steps → commit) so existing adopters can pick up new framework features after merging a Dependabot constitution update PR.
+- Updated the Project File Structure diagram in `INTEGRATION.md` to include the new files.
+
+### Changed
+
+- `scripts/bootstrap.sh` now installs `.continue/config.json`, `.aider.conf.yml`, `.aiderignore`, `.pre-commit-config.yaml`, and `.devcontainer/devcontainer.json`, and reports their status in the adoption report.
+- Adoption report "Recommended Tool Setup" section now includes the pre-commit activation command and MCP server prep step alongside the existing gstack instructions.
+- `INTEGRATION.md` "Application" paragraph updated to name the full set of tool-specific files that load automatically.
+
+## 1.21.0 - 2026-06-27
+
+### Added
+
+- Added gstack and gbrain setup to the framework. `templates/CLAUDE.md` now includes a `## gstack` section with the full skills list and the rule to always use `/browse` for web browsing instead of `mcp__claude-in-chrome__*` tools. This section propagates to every adopted repository via `scripts/bootstrap.sh`, so all projects inherit gstack conventions automatically.
+- Added a "gstack and gbrain" section to `INTEGRATION.md` covering installation, gbrain initialization via `/setup-gbrain`, the required browser-automation conventions, the skill reference table, and goosetown integration guidance.
+- Added a "Recommended Tool Setup" section to the `scripts/bootstrap.sh` adoption report, instructing adopters to run `/setup-gbrain` and `/setup-deploy` in Claude Code after completing the merge steps.
+
+### Changed
+
+- `AI_WORKFLOW.md` "During Work" section now explicitly requires using the `/browse` gstack skill for all web browsing and prohibits direct `mcp__claude-in-chrome__*` tool calls.
+
 ## 1.20.0 - 2026-06-27
 
 ### Added

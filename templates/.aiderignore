@@ -1,0 +1,2 @@
+# Prevent aider from modifying the read-only constitution submodule.
+constitution/

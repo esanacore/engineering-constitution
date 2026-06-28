@@ -1,0 +1,15 @@
+# Eric's Engineering Constitution — Aider configuration.
+# Add project-specific settings below.
+# See constitution/INTEGRATION.md for override guidance.
+
+# Follow the constitution workflow; never auto-commit.
+auto-commits: false
+
+# Load constitution files as read-only context on every session.
+read:
+  - AGENTS.md
+  - constitution/CONSTITUTION.md
+  - constitution/AI_WORKFLOW.md
+  - README.md
+  - TODO.md
+  - CHANGELOG.md

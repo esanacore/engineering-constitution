@@ -17,7 +17,7 @@ For setup instructions, see [README.md](README.md).
 
 Agents follow the workflow in `constitution/AI_WORKFLOW.md` and the principles in `constitution/CONSTITUTION.md` for every task. When there is a conflict between a universal rule and a project-specific rule, the project-specific rule wins.
 
-Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/rules/project.mdc`, `.goosehints`) load automatically for each respective agent. They point to the constitution and add any project-level context the agent needs.
+Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/rules/project.mdc`, `.goosehints`, `.continue/config.json`, `.aider.conf.yml`) load automatically for each respective agent. They point to the constitution and add any project-level context the agent needs.
 
 ## Project-Specific Rules and Overrides
 
@@ -32,6 +32,8 @@ The constitution provides universal defaults. Each project can override or exten
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Cursor | `.cursor/rules/project.mdc` |
 | Goose / Goosetown | `.goosehints` |
+| Continue.dev | `.continue/config.json` |
+| Aider | `.aider.conf.yml` |
 
 ### What to Override
 
@@ -90,6 +92,125 @@ extensions:
 ```
 
 Or interactively, run `goose configure`, choose **Add Extension → Command-line Extension**, and use `node constitution/mcp-server/index.js`. Run `npm install` in `constitution/mcp-server/` first so the SDK dependency is available.
+
+## gstack and gbrain
+
+gstack is a browser automation and AI skill toolkit for Claude Code. It ships a library of slash-command skills — `/browse`, `/qa`, `/design-review`, `/ship`, `/review`, `/document-release`, and more — that Claude Code invokes directly. gbrain is gstack's persistent project-memory layer; once initialized in a repository, Claude Code can store and recall project context across sessions.
+
+### Installing gstack
+
+Install gstack globally following the gstack installation guide for your platform. Once installed, its skills appear automatically in Claude Code.
+
+### Initializing gbrain
+
+After bootstrapping a new project, run `/setup-gbrain` once inside Claude Code from the project root:
+
+```
+/setup-gbrain
+```
+
+This creates the project-level memory infrastructure that gstack uses to persist context across Claude Code sessions. Re-running it is safe.
+
+### Required gstack Conventions
+
+Every adopted repository must follow these conventions, enforced by `CLAUDE.md`:
+
+- **Use `/browse` for all web browsing.** Never call `mcp__claude-in-chrome__*` tools directly — gstack wraps them with safety guardrails and session management.
+- Use gstack skills whenever a skill covers the task:
+
+| Task | Skill |
+|---|---|
+| Browse a web page | `/browse` |
+| Full QA run | `/qa` |
+| Visual / design review | `/design-review` |
+| Ship a change | `/ship` |
+| Review a GitHub PR | `/review` |
+| Configure deployment | `/setup-deploy` |
+| Post-ship release docs | `/document-release` |
+| Generate missing docs | `/document-generate` |
+| Investigate a problem | `/investigate` |
+
+### Integration with Goosetown
+
+Goosetown worker agents can invoke gstack skills the same way Claude Code does. Add gstack skill calls to worker prompts to enable browser-based research, QA, and deployment steps within multi-agent pipelines. Every goosetown agent is bound by the `.goosehints` file, which already instructs agents to follow this constitution; add a `## gstack` section to `.goosehints` with any project-specific gstack conventions.
+
+## Continue.dev
+
+[Continue.dev](https://continue.dev) is an open-source AI coding assistant for VS Code and JetBrains. The bootstrap script installs `.continue/config.json` in the project root. Continue loads this file automatically and applies the constitution's system message to every in-editor AI session.
+
+### Customizing Continue.dev
+
+Add project-specific context to `.continue/config.json` by extending the `systemMessage` field:
+
+```json
+{
+  "systemMessage": "This repository follows Eric's Engineering Constitution ... Use Python 3.12 with type hints. Run `make test` before marking work complete."
+}
+```
+
+The same override principles from the "Project-Specific Rules" section apply — keep the constitution baseline and append project rules.
+
+## Aider
+
+[Aider](https://aider.chat) is an AI pair-programming CLI. The bootstrap script installs `.aider.conf.yml` (which loads constitution files as read-only context and disables auto-commits to match the constitution workflow) and `.aiderignore` (which prevents aider from modifying the read-only `constitution/` submodule).
+
+### Customizing Aider
+
+Add project-specific options to `.aider.conf.yml`:
+
+```yaml
+# Language model override:
+model: claude-opus-4-8
+
+# Additional read-only context files:
+read:
+  - docs/ARCHITECTURE.md
+  - docs/SETUP.md
+```
+
+## Pre-Commit Hooks
+
+The bootstrap script installs `.pre-commit-config.yaml` with a universal baseline of hooks (trailing whitespace, end-of-file fixer, YAML/JSON syntax, merge-conflict markers, large-file guard, and private-key detection). Activate them once after bootstrapping:
+
+```bash
+pip install pre-commit && pre-commit install
+```
+
+### Adding Language-Specific Hooks
+
+Append language hooks below the universal set. For example, for Python:
+
+```yaml
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+      - id: ruff-format
+```
+
+For Node.js:
+
+```yaml
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.57.0
+    hooks:
+      - id: eslint
+```
+
+## Devcontainer
+
+The bootstrap script installs `.devcontainer/devcontainer.json` with a base Ubuntu 24.04 image, Node.js, Git, and VS Code extensions for Copilot and Continue.dev pre-installed. Opening the repository in VS Code or GitHub Codespaces will prompt to reopen in the container, giving every contributor (and any cloud agent) an identical, reproducible development environment.
+
+Customize the base image and features for your stack. For example, for Python:
+
+```json
+{
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.12" },
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+}
+```
 
 ## Language-Specific Examples
 
@@ -187,6 +308,67 @@ If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
 `.constitution-bootstrap/templates/` for manual merging.
 
+## Migrating Existing Repositories to New Framework Versions
+
+When Dependabot opens a constitution submodule update PR, merging it bumps the submodule pointer but does **not** automatically update your local project files (like `CLAUDE.md`, `.goosehints`, or any newly added templates). After merging, follow this checklist to pick up everything the new version ships.
+
+### Step 1 — Read the changelog
+
+```bash
+cat constitution/CHANGELOG.md
+```
+
+The changelog describes every template that changed and every new file the version adds. Read it before diffing.
+
+### Step 2 — Diff changed templates
+
+Compare each template the changelog mentions against your local copy:
+
+```bash
+diff CLAUDE.md constitution/templates/CLAUDE.md
+diff AGENTS.md constitution/templates/AGENTS.md
+diff .goosehints constitution/templates/.goosehints
+diff .github/copilot-instructions.md constitution/templates/.github/copilot-instructions.md
+diff .cursor/rules/project.mdc constitution/templates/.cursor/rules/project.mdc
+diff .continue/config.json constitution/templates/.continue/config.json
+diff .aider.conf.yml constitution/templates/.aider.conf.yml
+diff .pre-commit-config.yaml constitution/templates/.pre-commit-config.yaml
+```
+
+Merge relevant sections manually, keeping your project-specific rules intact. The project-specific rule always wins over the universal default.
+
+### Step 3 — Copy new template files
+
+When the changelog adds a file your repository does not yet have, copy it directly:
+
+```bash
+# Example: picking up a new template file added in a framework update
+cp constitution/templates/.devcontainer/devcontainer.json .devcontainer/devcontainer.json
+```
+
+Or re-run bootstrap with `--force` on specific files you want to regenerate, then restore your project-specific content.
+
+### Step 4 — Run new tool-setup steps
+
+When the changelog adds a new tool integration (like gbrain or pre-commit), run its one-time setup:
+
+| New integration | One-time setup |
+|---|---|
+| gstack / gbrain | `/setup-gbrain` in Claude Code |
+| pre-commit hooks | `pip install pre-commit && pre-commit install` |
+| Devcontainer | Reopen in container in VS Code / Codespaces |
+| MCP server | `npm install` in `constitution/mcp-server/`, then register (see "Goose and Goosetown") |
+
+### Step 5 — Commit and push
+
+```bash
+git add constitution CLAUDE.md .goosehints  # add whichever files changed
+git commit -m "Migrate to Eric's Engineering Constitution $(cat constitution/VERSION)"
+git push
+```
+
+The CI version gate will turn green once the submodule pointer and your local templates are consistent.
+
 ## Repository Settings Checklist
 
 Some hygiene is enforced by host-side repository settings, not by files in the repo. When adopting the constitution, configure these once on the hosting platform (for example, GitHub repository settings):
@@ -277,13 +459,20 @@ Every project using this constitution should eventually contain:
 project/
 ├── constitution/                          ← Git submodule (universal rules, read-only)
 ├── AGENTS.md                              ← Agent entry point (project rules + pointer to constitution)
-├── CLAUDE.md                              ← Claude Code rules
+├── CLAUDE.md                              ← Claude Code rules (includes gstack skill list)
 ├── .github/
 │   └── copilot-instructions.md           ← GitHub Copilot rules
 ├── .cursor/
 │   └── rules/
 │       └── project.mdc                   ← Cursor rules
+├── .continue/
+│   └── config.json                       ← Continue.dev system message
 ├── .goosehints                            ← Goose / Goosetown hints
+├── .aider.conf.yml                        ← Aider config (read-only context + no auto-commits)
+├── .aiderignore                           ← Prevents aider from touching constitution/
+├── .pre-commit-config.yaml               ← Pre-commit hooks (lint, format, secret detection)
+├── .devcontainer/
+│   └── devcontainer.json                 ← Reproducible dev environment
 ├── TODO.md                                ← Living roadmap
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation

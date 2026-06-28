@@ -45,6 +45,7 @@ Agents should:
 - Update documentation as part of the implementation.
 - Record discovered work in TODO.md.
 - Avoid unrelated refactors unless required for the task.
+- Use the `/browse` gstack skill for all web browsing; never call `mcp__claude-in-chrome__*` tools directly.
 
 ## Before Completing Work
 
