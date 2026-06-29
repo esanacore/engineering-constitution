@@ -5,6 +5,7 @@
 - [x] Add retroactive version analysis mechanism.
 - [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
 - [ ] Add language-specific guidance for common stacks.
+- [x] Harden the release process in `RELEASES.md` with an ordered "Cutting a Release" gate (bump every version reference, tag, publish GitHub Release). Shipped in 1.24.0 after the README banner and tags lagged across 1.21.0–1.23.0.
 - [x] Add GoF design-pattern guidance (the two maxims plus a curated subset of patterns) to `ARCHITECTURE.md`, building on the SOLID + Dependency Rule design principles. Shipped in 1.23.0 alongside the design principles.
 - [x] Add DevOps and infrastructure standards.
 - [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).

@@ -6,6 +6,13 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.24.0 - 2026-06-28
+
+### Changed
+
+- Rewrote the release checklist in `RELEASES.md` into an ordered, concrete "Cutting a Release" gate that explicitly covers bumping every in-repo version reference (the `README.md` "Current version" line and `CONSTITUTION.md` header), with a grep step to catch stragglers. Addresses a recurring miss where the README version banner lagged the released `VERSION` across the 1.21.0–1.23.0 releases.
+- Added a "Publishing a GitHub Release" section to `RELEASES.md` clarifying that a Git tag and a GitHub Release are distinct, and documenting the `gh release create … --latest` step that publishes human-facing notes from the version's CHANGELOG section. The framework's earlier releases were tagged inconsistently and never published as Releases.
+
 ## 1.23.0 - 2026-06-28
 
 ### Added

@@ -84,13 +84,51 @@ Agents should:
 - Mention migration steps when required.
 - Avoid adding noisy entries for purely internal changes unless useful.
 
-## Release Review Checklist
+## Publishing a GitHub Release
 
-Before release:
+A Git tag and a GitHub Release are not the same thing. The tag is the
+machine-comparable record (see above); a Release is the human-facing notes page
+that GitHub surfaces as "Latest release" on the repository home and Releases tab.
+A bare tag does **not** create a Release.
 
-- Version updated where applicable
-- CHANGELOG.md updated
-- Tests passing
-- Documentation updated
-- Security-sensitive changes reviewed
-- Migration notes included when required
+After the tag is pushed, publish a matching Release whose notes come from the
+version's `CHANGELOG.md` section, and mark the newest version as latest:
+
+```bash
+# Extract this version's CHANGELOG section into notes, then publish:
+gh release create "v$(cat VERSION)" \
+  --title "v$(cat VERSION)" \
+  --notes-file <changelog-section> \
+  --latest
+```
+
+## Cutting a Release
+
+Run these steps in order. Each one has been skipped in practice, so treat the
+list as a gate, not a suggestion — a release is not done until every box is checked.
+
+1. **Bump `VERSION`** to the new `MAJOR.MINOR.PATCH`. This is the source of truth.
+2. **Update every in-repo version reference** so none lag behind `VERSION`.
+   - The `README.md` "Current version" line.
+   - Any embedded version string in the project's primary doc (for this
+     framework, `CONSTITUTION.md`'s `Version:` header).
+   - Grep for the previous version string to catch stragglers:
+     `grep -rn "$(previous version)" --include='*.md' .`
+3. **Update `CHANGELOG.md`** with a dated section for the new version under the
+   correct categories.
+4. **Update `TODO.md`** — mark shipped items done, record discovered follow-ups.
+5. **Run tests** and confirm they pass.
+6. **Commit** the version bump, changelog, and doc updates together.
+7. **Tag** the commit `vMAJOR.MINOR.PATCH` and push the tag (see *Git Tags*).
+8. **Publish the GitHub Release** from the changelog section, marked `--latest`
+   (see *Publishing a GitHub Release*).
+
+### Pre-release Review
+
+Before cutting, confirm:
+
+- CHANGELOG.md updated and accurate.
+- Tests passing.
+- Documentation updated.
+- Security-sensitive changes reviewed.
+- Migration notes included when required.
