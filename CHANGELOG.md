@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.23.0 - 2026-06-28
+
+### Added
+
+- Added a "Design Principles" section to `ARCHITECTURE.md` codifying the SOLID principles (SRP, OCP, LSP, ISP, DIP) and the Dependency Rule as pragmatic guardrails. Each principle is stated as a one-line rule with a concrete code smell and an actionable guardrail, drawing on Robert C. Martin's *Clean Architecture* (2017). The section emphasizes applying principles where they reduce real coupling rather than as ceremony.
+- Added a "Design Patterns" subsection to `ARCHITECTURE.md` covering the two governing maxims from the Gang of Four's *Design Patterns* (1994) — "program to an interface" and "favor composition over inheritance" — plus a curated subset of high-leverage patterns (Factory, Adapter, Decorator, Facade, Strategy, Observer, Command, Template Method) with guidance on when to reach for each and an anti-pattern guardrail against premature or decorative pattern use.
+
+### Changed
+
+- `CONSTITUTION.md` Principle 6 (Architecture Awareness) now points to the SOLID principles and Dependency Rule in `ARCHITECTURE.md` for code-level structure guidance.
+
 ## 1.22.0 - 2026-06-27
 
 ### Added

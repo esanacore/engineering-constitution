@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.22.0
+Version: 1.23.0
 
 ## Purpose
 
@@ -108,6 +108,8 @@ Create ADRs for:
 - Security decisions
 
 ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecated`), record their relationships to other ADRs (`extends`, `supersedes`, `related`), and state explicit promotion criteria while `Proposed`. See `DOCUMENTATION.md`.
+
+Code-level structure should follow the SOLID principles and the Dependency Rule, applied as pragmatic guardrails rather than ceremony. See `ARCHITECTURE.md`.
 
 ## Principle 7: Dependency Hygiene
 
