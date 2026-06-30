@@ -58,6 +58,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_check_traceability.sh`
 - `scripts/test_check_compliance.sh`
 - `scripts/test_audit_adopters.sh`
+- `scripts/test_release_docs.sh`
 
 ## Templates and examples
 
@@ -81,12 +82,13 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.20.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.22.0`. Recent releases have focused on:
 
 - Compliance checking and CI gates
 - Requirements traceability enforcement
 - Automated constitution version drift detection for adopters
 - Worked operations documentation examples
+- Editor/tooling bootstrap support for Continue.dev, Aider, pre-commit, and devcontainers
 
 ## See also
 
