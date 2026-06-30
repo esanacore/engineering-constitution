@@ -6,12 +6,12 @@ This repository follows Eric's Engineering Constitution.
 
 Use these files as primary context:
 
-- `constitution/CONSTITUTION.md`
-- `constitution/AI_WORKFLOW.md`
-- `constitution/TESTING.md`
-- `constitution/DOCUMENTATION.md`
-- `constitution/SECURITY.md`
-- `constitution/ARCHITECTURE.md`
+- `CONSTITUTION.md`
+- `AI_WORKFLOW.md`
+- `TESTING.md`
+- `DOCUMENTATION.md`
+- `SECURITY.md`
+- `ARCHITECTURE.md`
 - `README.md`
 - `TODO.md`
 - `CHANGELOG.md`

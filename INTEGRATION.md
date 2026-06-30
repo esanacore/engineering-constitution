@@ -30,6 +30,7 @@ The constitution provides universal defaults. Each project can override or exten
 | Any / Generic | `AGENTS.md` |
 | Claude Code | `CLAUDE.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
+| GitHub Copilot custom agent (Solon) | `.github/agents/solon.agent.md` |
 | Cursor | `.cursor/rules/project.mdc` |
 | Goose / Goosetown | `.goosehints` |
 | Continue.dev | `.continue/config.json` |
@@ -64,6 +65,35 @@ In `.github/copilot-instructions.md`, add a `## Project-Specific Rules` section 
 ```
 
 The same pattern applies to `AGENTS.md`, `CLAUDE.md`, and `.cursor/rules/project.mdc`.
+
+## GitHub Copilot Custom Agent (Solon)
+
+In addition to the repository-wide `.github/copilot-instructions.md`, the
+bootstrap script installs a named GitHub Copilot **custom agent** at
+`.github/agents/solon.agent.md`. **Solon** is a constitution-aware persona that
+reviews and guides changes against the constitution's principles and workflow.
+
+Custom agents are Markdown files with YAML frontmatter (`name`, `description`,
+optional `model` and `tools`) stored under `.github/agents/`. They require
+Visual Studio 2026 version 18.4 or later (or a current Copilot client that
+supports custom agents).
+
+### Using Solon
+
+- In Copilot Chat, type `@Solon` followed by your request (for example,
+  `@Solon Review my changes against the constitution`), or select **Solon** from
+  the agent-picker dropdown.
+- To make Solon available across **all** your projects regardless of which repo
+  is open, copy the file to the user-level location `%USERPROFILE%/.github/agents/`
+  (configurable under **Tools > Options > GitHub > Copilot**).
+
+### Customizing Solon
+
+Edit the Markdown body of `.github/agents/solon.agent.md` to add project-specific
+review rules, or adjust the `tools` array to match the tool names available in
+your Copilot client (click the **Tools** icon in Copilot Chat to see them). Tool
+names can vary across Copilot platforms, so verify them before relying on the
+agent in CI-adjacent workflows.
 
 ## Goose and Goosetown
 
@@ -268,6 +298,7 @@ After a constitution update, check whether your local project files need to be r
 diff AGENTS.md constitution/templates/AGENTS.md
 diff CLAUDE.md constitution/templates/CLAUDE.md
 diff .github/copilot-instructions.md constitution/templates/.github/copilot-instructions.md
+diff .github/agents/solon.agent.md constitution/templates/.github/agents/solon.agent.md
 diff .cursor/rules/project.mdc constitution/templates/.cursor/rules/project.mdc
 ```
 
@@ -329,6 +360,7 @@ diff CLAUDE.md constitution/templates/CLAUDE.md
 diff AGENTS.md constitution/templates/AGENTS.md
 diff .goosehints constitution/templates/.goosehints
 diff .github/copilot-instructions.md constitution/templates/.github/copilot-instructions.md
+diff .github/agents/solon.agent.md constitution/templates/.github/agents/solon.agent.md
 diff .cursor/rules/project.mdc constitution/templates/.cursor/rules/project.mdc
 diff .continue/config.json constitution/templates/.continue/config.json
 diff .aider.conf.yml constitution/templates/.aider.conf.yml
@@ -461,7 +493,9 @@ project/
 ├── AGENTS.md                              ← Agent entry point (project rules + pointer to constitution)
 ├── CLAUDE.md                              ← Claude Code rules (includes gstack skill list)
 ├── .github/
-│   └── copilot-instructions.md           ← GitHub Copilot rules
+│   ├── copilot-instructions.md           ← GitHub Copilot rules
+│   └── agents/
+│       └── solon.agent.md                ← Copilot custom agent (Visual Studio 2026)
 ├── .cursor/
 │   └── rules/
 │       └── project.mdc                   ← Cursor rules

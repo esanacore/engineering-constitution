@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.25.0 - 2026-06-29
+
+### Added
+
+- Added a GitHub Copilot **custom agent**, "Solon", at `.github/agents/solon.agent.md` (and the adopter template `templates/.github/agents/solon.agent.md`). Solon is a constitution-aware persona for GitHub Copilot in Visual Studio 2026 (v18.4+) that reviews and guides changes against the constitution's principles and required workflow, distinguishing must-fix violations from opportunities to record in `TODO.md`. The bootstrap script now installs it into adopting repositories, and `scripts/test_bootstrap.sh` asserts its presence.
+- Added a "GitHub Copilot Custom Agent (Solon)" section to `INTEGRATION.md` covering invocation (`@Solon` or the agent picker), the user-level `%USERPROFILE%/.github/agents/` location for cross-project use, and customization. Added Solon to the "Override Locations by Agent" table, the Project File Structure diagram, and the migration/update diff checklists.
+
+### Fixed
+
+- Corrected the context-file paths in the root `COPILOT_INSTRUCTIONS.md`, which pointed at a non-existent `constitution/` subdirectory. In this framework repository the constitution documents live at the repository root (as `AGENTS.md` already referenced them), so the `constitution/` prefix resolved to nothing. Adopter templates under `templates/` are unaffected — they correctly use the `constitution/` submodule prefix.
+
 ## 1.24.0 - 2026-06-28
 
 ### Changed

@@ -31,6 +31,7 @@ Creates or installs:
   - HELP.md
   - SECURITY.md
   - .github/copilot-instructions.md
+  - .github/agents/solon.agent.md
   - .github/dependabot.yml
   - .github/workflows/constitution-version.yml
   - .github/workflows/constitution-compliance.yml
@@ -413,6 +414,7 @@ generate_adoption_report() {
     status_line "HELP.md"
     status_line "SECURITY.md"
     status_line ".github/copilot-instructions.md"
+    status_line ".github/agents/solon.agent.md"
     status_line ".github/dependabot.yml"
     status_line ".github/workflows/constitution-version.yml"
     status_line ".github/workflows/constitution-compliance.yml"
@@ -538,6 +540,8 @@ copy_file "$template_dir/CONTRIBUTING.md" "$project_path/CONTRIBUTING.md"
 copy_file "$template_dir/HELP.md" "$project_path/HELP.md"
 copy_file "$template_dir/SECURITY.md" "$project_path/SECURITY.md"
 copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
+mkdir -p "$project_path/.github/agents"
+copy_file "$template_dir/.github/agents/solon.agent.md" "$project_path/.github/agents/solon.agent.md"
 copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependabot.yml"
 copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_path/.github/workflows/constitution-version.yml"
 copy_file "$template_dir/.github/workflows/constitution-compliance.yml" "$project_path/.github/workflows/constitution-compliance.yml"
