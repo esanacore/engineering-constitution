@@ -11,6 +11,10 @@ Documentation should be:
 - Actionable
 - Version controlled
 
+Template placeholders do not count as finished documentation. A file copied
+from the constitution must be customized or trimmed until it describes the real
+repository instead of the example/template state.
+
 ## Required Files
 
 Every repository should include:
@@ -81,6 +85,9 @@ For each meaningful change, review whether updates are needed for:
 - Configuration documentation
 - Troubleshooting guidance
 - Wiki content
+
+Also verify that any adopted template files no longer contain placeholder text
+such as `<add here>`, example commands, or HTML comment prompts.
 
 ## README Expectations
 

@@ -134,6 +134,14 @@ product_files=(
   docs/REQUIREMENTS_TRACEABILITY.md
 )
 
+contains_placeholder_content() {
+  local file=$1
+
+  grep -Eq \
+    '(<add here>|<command>|<YYYY-MM-DD>|<untested behavior>|<requirement description>|describe the observable condition|Briefly describe the product, target users, and current release goal|# e.g., make doctor|<!--)' \
+    "$file"
+}
+
 required_missing=0
 recommended_missing=0
 product_missing=0
@@ -155,7 +163,16 @@ echo
 echo "Recommended:"
 for f in "${recommended[@]}"; do
   if [ -e "$root/$f" ]; then
-    echo "  OK       $f"
+    if [ -f "$root/$f" ] && contains_placeholder_content "$root/$f"; then
+      if [ "$strict" = "true" ]; then
+        echo "  MISSING  $f (recommended placeholder, --strict)"
+      else
+        echo "  WARN     $f (recommended placeholder)"
+      fi
+      recommended_missing=$((recommended_missing + 1))
+    else
+      echo "  OK       $f"
+    fi
   else
     if [ "$strict" = "true" ]; then
       echo "  MISSING  $f (recommended, --strict)"
@@ -174,7 +191,16 @@ else
 fi
 for f in "${product_files[@]}"; do
   if [ -e "$root/$f" ]; then
-    echo "  OK       $f"
+    if [ -f "$root/$f" ] && contains_placeholder_content "$root/$f"; then
+      if [ "$product" = "true" ]; then
+        echo "  MISSING  $f (product placeholder, --product)"
+      else
+        echo "  WARN     $f (product placeholder)"
+      fi
+      product_missing=$((product_missing + 1))
+    else
+      echo "  OK       $f"
+    fi
   else
     if [ "$product" = "true" ]; then
       echo "  MISSING  $f (product, --product)"

@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.26.0 - 2026-06-29
+
+### Added
+
+- Added placeholder-content detection to `scripts/check_compliance.sh`, so repositories no longer pass compliance with copied template text still sitting in recommended or product-facing governance docs.
+- Added `scripts/test_check_compliance_placeholders.sh` covering recommended and product-facing placeholder failures.
+
+### Changed
+
+- Clarified in `DOCUMENTATION.md` that copied template placeholders do not count as finished documentation and should be customized or removed before a repository is considered aligned.
+
 ## 1.25.0 - 2026-06-29
 
 ### Added
