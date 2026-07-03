@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.28.0 - 2026-07-03
+
+### Added
+
+- Added `sources/`, a drop-in location for book and reference sources (PDF/EPUB/DOCX/MD/TXT) that feed the constitution the same way *Clean Architecture* and *Design Patterns* already do, without absorbing new influence ad hoc. Raw files live in `sources/raw/` and are gitignored (copyright, repo bloat); distilled summaries live in `sources/summaries/` and are tracked, mirroring each raw file's relative path.
+- Added `scripts/check_source_summaries.sh`, a governance-tooling script (`scan` / `record`) that hashes files under `sources/raw/` against `sources/manifest.tsv` to report `NEW`, `CHANGED`, `SUMMARY_MISSING`, `OK`, and `ORPHANED SUMMARY` entries, plus `scripts/test_check_source_summaries.sh` covering all five states and the negative case where `record` refuses to run before a summary exists (per `TESTING.md`, "Governance Tooling Must Be Tested").
+- Added `KNOWLEDGE_SOURCES.md` documenting the drop-in workflow and the summary template (Title, Author, Processed date, Why This Matters, Key Takeaways, Where It Could Apply).
+- `mcp-server/index.js` now dynamically lists every file under `sources/summaries/` as a `constitution://source-summary/<relative-path>` resource at request time, alongside the existing static constitution-document resources, so MCP-connected agents can pull in distilled source knowledge without reading the filesystem directly.
+
 ## 1.27.0 - 2026-07-02
 
 ### Added

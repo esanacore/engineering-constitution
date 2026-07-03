@@ -1,1 +1,7 @@
 node_modules/
+
+# Raw dropped book sources (PDF/EPUB/DOCX/etc.) are never committed — only
+# their generated summaries and the manifest are tracked. See
+# KNOWLEDGE_SOURCES.md.
+/sources/raw/*
+!/sources/raw/.gitkeep
