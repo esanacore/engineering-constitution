@@ -82,8 +82,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.26.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.27.0`. Recent releases have focused on:
 
+- Requiring agents to evaluate whether accumulated work should trigger a release, not just update `CHANGELOG.md`'s `Unreleased` section indefinitely (`AI_WORKFLOW.md`, `CONSTITUTION.md` Principle 10)
 - SOLID principles, the Dependency Rule, and GoF design-pattern guidance in `ARCHITECTURE.md`
 - A hardened, ordered release-cutting process in `RELEASES.md`
 - A GitHub Copilot custom agent ("Solon") for Visual Studio

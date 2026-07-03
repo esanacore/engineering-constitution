@@ -12,6 +12,7 @@
 - [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).
 - [x] Add automated constitution version enforcement (Dependabot auto-PRs, CI version gate, `audit_adopters.sh`).
 - [x] Require agents to review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work before starting, and to merge (or open a PR for) completed work before deleting its branch — never delete a branch/worktree the agent didn't create without human confirmation. Shipped in 1.26.0 in `AI_WORKFLOW.md`, prompted by an adopting repo where an agent found unmerged branches, some owned by separate automated processes, only during end-of-task cleanup.
+- [x] Require agents to evaluate whether accumulated work should trigger a release, not just update `CHANGELOG.md`'s `Unreleased` section indefinitely. Shipped in 1.27.0 in `AI_WORKFLOW.md`'s Required Workflow and completion checklist, plus a `CONSTITUTION.md` Principle 10 pointer — prompted by an adopting repo that sat at `VERSION 0.1.0` with zero tags/releases across 12+ merged PRs.
 
 ## Technical Debt
 

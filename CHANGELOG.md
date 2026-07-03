@@ -6,6 +6,8 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.27.0 - 2026-07-02
+
 ### Added
 
 - `AI_WORKFLOW.md`'s Required Workflow now includes an explicit step to evaluate whether accumulated work should trigger a release (bump `VERSION`, tag, publish) rather than leaving user-facing changes sitting in `CHANGELOG.md`'s `Unreleased` section indefinitely, plus a matching "Before Completing Work" checklist item. Prompted by an adopting repository (AI Process Engineer) whose entire multi-month history sat unreleased — every session dutifully updated `CHANGELOG.md` but nothing ever prompted an agent to actually run the Cutting a Release process from `RELEASES.md`.
