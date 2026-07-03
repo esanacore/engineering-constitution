@@ -6,6 +6,14 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added a "review non-default branches, worktrees, and open pull requests" step to `AI_WORKFLOW.md`'s Required Workflow and "Before Beginning Work" checklist, so agents check for related or conflicting in-progress work before starting rather than discovering it during cleanup.
+
+### Changed
+
+- Strengthened the Git-cleanup guidance in `AI_WORKFLOW.md`: completed work must be merged (or have an open pull request) before its branch is deleted, and agents must not delete branches or worktrees they did not create without a human confirming they're safe to remove — they may belong to another in-progress session or automation.
+
 ## 1.26.0 - 2026-07-01
 
 ### Added
