@@ -10,19 +10,20 @@ This document defines the required workflow for AI-assisted software development
 4. Read TODO.md.
 5. Read CHANGELOG.md.
 6. Read OPERATIONS.md when the task affects infrastructure, CI/CD, deployment, or runbooks.
-7. Understand the task.
-8. Create an implementation plan.
-9. Implement changes.
-10. Update tests.
-11. Evaluate coverage and analyze gaps.
-12. Update requirements traceability for product-facing repositories.
-13. Update documentation.
-14. Update TODO.md.
-15. Update CHANGELOG.md.
-16. Perform a security review.
-17. Suggest future improvements.
-18. Summarize work.
-19. Clean up Git state (branches, worktrees).
+7. Review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work.
+8. Understand the task.
+9. Create an implementation plan.
+10. Implement changes.
+11. Update tests.
+12. Evaluate coverage and analyze gaps.
+13. Update requirements traceability for product-facing repositories.
+14. Update documentation.
+15. Update TODO.md.
+16. Update CHANGELOG.md.
+17. Perform a security review.
+18. Suggest future improvements.
+19. Summarize work.
+20. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 
@@ -34,6 +35,7 @@ Agents must gather enough project context to make safe changes:
 - Test strategy and available commands
 - Release and changelog expectations
 - Security-sensitive areas
+- Non-default branches, worktrees, and open pull requests that may overlap with, duplicate, or conflict with this task
 
 ## During Work
 
@@ -60,7 +62,8 @@ Agents must verify:
 - CHANGELOG.md includes user-facing changes when appropriate.
 - Security impact has been reviewed.
 - Future improvements are identified when useful.
-- Git environment is clean (temporary branches removed, worktrees deleted, no untracked files like node_modules accidentally staged).
+- Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
+- Git environment is clean: branches and worktrees created for this task are removed after merging (or after the agent confirms they are no longer needed); branches or worktrees the agent did not create are left alone unless a human confirms they are safe to remove, since they may belong to another in-progress session or automation; no untracked files (e.g. `node_modules`) are accidentally staged.
 
 ## Summary Expectations
 
