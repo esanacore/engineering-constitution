@@ -426,6 +426,18 @@ bash constitution/scripts/check_compliance.sh --strict
 bash constitution/scripts/check_compliance.sh --product
 ```
 
+To catch stale adoption metadata after a Constitution bump, run the version
+alignment checker as well:
+
+```bash
+bash constitution/scripts/check_version_alignment.sh
+```
+
+It compares `constitution/VERSION` to the optional repository-level
+`CONSTITUTION_VERSION` file and scans common governance files (README, agent
+instructions, setup/index docs, and `docs/governance/*.md`) for stale semantic
+version references on Constitution-related lines.
+
 It exits non-zero when a required file (or, in the matching strict mode, a
 recommended or product-facing file) is missing, so it can run locally or as a CI
 gate. Required entries are the constitution's mandated files plus the adoption

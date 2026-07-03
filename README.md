@@ -22,6 +22,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `ARCHITECTURE.md`: Architecture and ADR expectations.
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
+- `KNOWLEDGE_SOURCES.md`: How to drop in book/reference sources and turn them into agent-consumable summaries via `sources/`.
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
@@ -30,10 +31,11 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
+- `scripts/check_version_alignment.sh`: Reference checker that verifies adopter-facing Constitution version references match the pinned `constitution/VERSION`.
 
 ## Version
 
-Current version: 1.26.0
+Current version: 1.29.0
 
 See `VERSION`.
 

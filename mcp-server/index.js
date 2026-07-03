@@ -47,21 +47,74 @@ const RESOURCES = [
   },
 ];
 
+const SOURCE_SUMMARY_URI_PREFIX = "constitution://source-summary/";
+const SUMMARIES_ROOT = path.join(CONSTITUTION_ROOT, "sources", "summaries");
+
+// Recursively list every .md file under SUMMARIES_ROOT, returned as
+// forward-slash relative paths. New summaries appear without redeploying
+// because this walks the filesystem at request time. See KNOWLEDGE_SOURCES.md.
+async function listSourceSummaries(dir = SUMMARIES_ROOT, prefix = "") {
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+
+  const results = [];
+  for (const entry of entries) {
+    const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      results.push(...(await listSourceSummaries(path.join(dir, entry.name), relPath)));
+    } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".md")) {
+      results.push(relPath);
+    }
+  }
+  return results;
+}
+
 server.setRequestHandler(ListResourcesRequestSchema, async () => {
+  const summaryPaths = await listSourceSummaries();
+  const summaryResources = summaryPaths.map((relPath) => ({
+    uri: `${SOURCE_SUMMARY_URI_PREFIX}${relPath}`,
+    name: `Source Summary: ${relPath}`,
+    description: `Distilled summary of a knowledge source (${relPath})`,
+    mimeType: "text/markdown",
+  }));
+
   return {
-    resources: RESOURCES.map((r) => ({
-      uri: r.uri,
-      name: r.name,
-      description: r.description,
-      mimeType: "text/markdown",
-    })),
+    resources: [
+      ...RESOURCES.map((r) => ({
+        uri: r.uri,
+        name: r.name,
+        description: r.description,
+        mimeType: "text/markdown",
+      })),
+      ...summaryResources,
+    ],
   };
 });
 
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const resource = RESOURCES.find((r) => r.uri === request.params.uri);
+  const { uri } = request.params;
+
+  if (uri.startsWith(SOURCE_SUMMARY_URI_PREFIX)) {
+    const relPath = uri.slice(SOURCE_SUMMARY_URI_PREFIX.length);
+    const content = await fs.readFile(path.join(SUMMARIES_ROOT, relPath), "utf-8");
+    return {
+      contents: [
+        {
+          uri,
+          mimeType: "text/markdown",
+          text: content,
+        },
+      ],
+    };
+  }
+
+  const resource = RESOURCES.find((r) => r.uri === uri);
   if (!resource) {
-    throw new Error(`Resource not found: \${request.params.uri}`);
+    throw new Error(`Resource not found: \${uri}`);
   }
 
   const content = await fs.readFile(path.join(CONSTITUTION_ROOT, resource.path), "utf-8");

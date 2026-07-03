@@ -6,7 +6,7 @@ This project follows semantic versioning.
 
 ## Unreleased
 
-## 1.26.0 - 2026-06-29
+## 1.29.0 - 2026-07-03
 
 ### Added
 
@@ -16,6 +16,38 @@ This project follows semantic versioning.
 ### Changed
 
 - Clarified in `DOCUMENTATION.md` that copied template placeholders do not count as finished documentation and should be customized or removed before a repository is considered aligned.
+
+## 1.28.0 - 2026-07-03
+
+### Added
+
+- Added `sources/`, a drop-in location for book and reference sources (PDF/EPUB/DOCX/MD/TXT) that feed the constitution the same way *Clean Architecture* and *Design Patterns* already do, without absorbing new influence ad hoc. Raw files live in `sources/raw/` and are gitignored (copyright, repo bloat); distilled summaries live in `sources/summaries/` and are tracked, mirroring each raw file's relative path.
+- Added `scripts/check_source_summaries.sh`, a governance-tooling script (`scan` / `record`) that hashes files under `sources/raw/` against `sources/manifest.tsv` to report `NEW`, `CHANGED`, `SUMMARY_MISSING`, `OK`, and `ORPHANED SUMMARY` entries, plus `scripts/test_check_source_summaries.sh` covering all five states and the negative case where `record` refuses to run before a summary exists (per `TESTING.md`, "Governance Tooling Must Be Tested").
+- Added `KNOWLEDGE_SOURCES.md` documenting the drop-in workflow and the summary template (Title, Author, Processed date, Why This Matters, Key Takeaways, Where It Could Apply).
+- `mcp-server/index.js` now dynamically lists every file under `sources/summaries/` as a `constitution://source-summary/<relative-path>` resource at request time, alongside the existing static constitution-document resources, so MCP-connected agents can pull in distilled source knowledge without reading the filesystem directly.
+
+## 1.27.0 - 2026-07-02
+
+### Added
+
+- `AI_WORKFLOW.md`'s Required Workflow now includes an explicit step to evaluate whether accumulated work should trigger a release (bump `VERSION`, tag, publish) rather than leaving user-facing changes sitting in `CHANGELOG.md`'s `Unreleased` section indefinitely, plus a matching "Before Completing Work" checklist item. Prompted by an adopting repository (AI Process Engineer) whose entire multi-month history sat unreleased — every session dutifully updated `CHANGELOG.md` but nothing ever prompted an agent to actually run the Cutting a Release process from `RELEASES.md`.
+
+### Changed
+
+- `CONSTITUTION.md` Principle 10 (Release Discipline) now points to `AI_WORKFLOW.md` and `RELEASES.md` for the release-cadence process, mirroring how Principle 6 (Architecture Awareness) points to `ARCHITECTURE.md`.
+
+## 1.26.0 - 2026-07-02
+
+### Added
+
+- Added `scripts/check_version_alignment.sh`, a governance checker adopters can run through the `constitution/` submodule to verify that their pinned `constitution/VERSION`, optional `CONSTITUTION_VERSION` file, and common adoption/governance docs do not drift apart. This catches a recurring stewardship failure mode where a repo updates the submodule pointer but leaves stale "Engineering Constitution version X.Y.Z" text behind in README, agent instructions, or adoption notes.
+- Added `scripts/test_check_version_alignment.sh` with negative-case coverage for a mismatched `CONSTITUTION_VERSION`, a stale governance-document reference, a missing `constitution/VERSION`, and usage errors.
+- Added a "review non-default branches, worktrees, and open pull requests" step to `AI_WORKFLOW.md`'s Required Workflow and "Before Beginning Work" checklist, so agents check for related or conflicting in-progress work before starting rather than discovering it during cleanup.
+
+### Changed
+
+- Documented the new version-alignment checker in `README.md`, `INTEGRATION.md`, and `TESTING.md` so adopters know when to run it alongside the existing compliance and traceability checks.
+- Strengthened the Git-cleanup guidance in `AI_WORKFLOW.md`: completed work must be merged (or have an open pull request) before its branch is deleted, and agents must not delete branches or worktrees they did not create without a human confirming they're safe to remove — they may belong to another in-progress session or automation.
 
 ## 1.25.0 - 2026-06-29
 
