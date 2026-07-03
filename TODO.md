@@ -11,11 +11,12 @@
 - [x] Add DevOps and infrastructure standards.
 - [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).
 - [x] Add automated constitution version enforcement (Dependabot auto-PRs, CI version gate, `audit_adopters.sh`).
+- [x] Require agents to review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work before starting, and to merge (or open a PR for) completed work before deleting its branch — never delete a branch/worktree the agent didn't create without human confirmation. Shipped in 1.26.0 in `AI_WORKFLOW.md`, prompted by an adopting repo where an agent found unmerged branches, some owned by separate automated processes, only during end-of-task cleanup.
 
 ## Technical Debt
 
-- [ ] Define a repeatable release process for framework updates (now includes the `vX.Y.Z` Git tag step in `RELEASES.md`).
-- [ ] Cut the first `vX.Y.Z` release tag on `main`. The version-gate/audit machinery is built but no `v*` tag exists yet, so adopters' `constitution-version-check` gate still skips instead of enforcing. Tagging a release (for example `v1.16.0`) transitions it to actively passing/failing.
+- [x] Define a repeatable release process for framework updates. Shipped in 1.24.0 as the ordered "Cutting a Release" gate in `RELEASES.md` (see the Features entry above).
+- [x] Cut the first `vX.Y.Z` release tag on `main`. Stale: releases have been tagged since v1.20.0, and the `constitution-version-check` gate is actively enforcing against the latest tag.
 - [x] Add a checker that catches stale adopter-facing Constitution version references after a submodule bump. Shipped in 1.26.0 as `scripts/check_version_alignment.sh` with negative-case tests.
 
 ## Refactoring
