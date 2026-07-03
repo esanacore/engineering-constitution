@@ -20,10 +20,11 @@ This document defines the required workflow for AI-assisted software development
 14. Update documentation.
 15. Update TODO.md.
 16. Update CHANGELOG.md.
-17. Perform a security review.
-18. Suggest future improvements.
-19. Summarize work.
-20. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
+17. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
+18. Perform a security review.
+19. Suggest future improvements.
+20. Summarize work.
+21. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 
@@ -60,6 +61,7 @@ Agents must verify:
 - Documentation impact has been evaluated.
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.
+- Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.
 - Security impact has been reviewed.
 - Future improvements are identified when useful.
 - Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
