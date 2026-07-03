@@ -82,14 +82,12 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.27.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.28.0`. Recent releases have focused on:
 
+- A `sources/` drop-in location for book/reference sources with change detection and distilled summaries, surfaced to agents via the MCP server (`check_source_summaries.sh`, `KNOWLEDGE_SOURCES.md`, `mcp-server/index.js`)
 - Requiring agents to evaluate whether accumulated work should trigger a release, not just update `CHANGELOG.md`'s `Unreleased` section indefinitely (`AI_WORKFLOW.md`, `CONSTITUTION.md` Principle 10)
-- SOLID principles, the Dependency Rule, and GoF design-pattern guidance in `ARCHITECTURE.md`
-- A hardened, ordered release-cutting process in `RELEASES.md`
-- A GitHub Copilot custom agent ("Solon") for Visual Studio
-- A checker that catches stale adopter-facing version references after a submodule bump (`check_version_alignment.sh`)
 - Required review of other branches, worktrees, and open pull requests before starting work, and merge-before-delete Git cleanup discipline, in `AI_WORKFLOW.md`
+- A checker that catches stale adopter-facing version references after a submodule bump (`check_version_alignment.sh`)
 - Compliance checking and CI gates
 - Requirements traceability enforcement
 - Automated constitution version drift detection for adopters
