@@ -68,3 +68,5 @@ The framework ships a reference traceability checker, `scripts/check_traceabilit
 The framework also ships `scripts/check_compliance.sh`, which verifies an adopting repository carries the required governance files, with negative-case tests (`scripts/test_check_compliance.sh`) proving it fails on a missing required file and honors its strict modes.
 
 The framework also ships `scripts/check_source_summaries.sh`, which detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries (`sources/summaries/`); see `KNOWLEDGE_SOURCES.md`. Its negative-case tests (`scripts/test_check_source_summaries.sh`) prove a file with no manifest entry is reported `NEW` rather than silently passing, and that `record` refuses to mark a source processed until its summary has actually been written.
+
+The framework also ships `scripts/check_version_alignment.sh`, which verifies that adopter-facing files do not drift away from the actual pinned `constitution/VERSION`. Its companion tests (`scripts/test_check_version_alignment.sh`) cover both a mismatched `CONSTITUTION_VERSION` file and a stale governance-document reference.

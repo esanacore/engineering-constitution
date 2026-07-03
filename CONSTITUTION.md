@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.26.0
+Version: 1.28.0
 
 ## Purpose
 
@@ -157,6 +157,8 @@ Projects should define:
 User-facing changes should be reflected in CHANGELOG.md.
 
 Agents should identify release notes when appropriate.
+
+Accumulated user-facing changes should not sit unreleased indefinitely — cut a release (bump `VERSION`, tag, publish) once they build up, following the Required Workflow and RELEASES.md's Cutting a Release process. See `AI_WORKFLOW.md` and `RELEASES.md`.
 
 ## Principle 11: Opportunity Discovery
 
