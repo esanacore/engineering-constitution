@@ -11,6 +11,7 @@
 - [x] Add DevOps and infrastructure standards.
 - [x] Add Goose / Goosetown agent integration (`.goosehints` + MCP extension guidance).
 - [x] Add automated constitution version enforcement (Dependabot auto-PRs, CI version gate, `audit_adopters.sh`).
+- [x] Add a `sources/` drop-in location for book/reference sources with change detection and distilled summaries, surfaced to agents via the MCP server. Shipped in 1.26.0 as `scripts/check_source_summaries.sh` (`scan`/`record`), `KNOWLEDGE_SOURCES.md`, and dynamic `constitution://source-summary/*` resources in `mcp-server/index.js`.
 
 ## Technical Debt
 
@@ -41,3 +42,4 @@
 - [ ] Add repository health dashboards.
 - [x] Add CI/CD enforcement examples.
 - [ ] Add AI-generated release planning guidance.
+- [ ] Consider a `--json` output mode for `scripts/check_source_summaries.sh` if another tool ever needs to consume its scan results programmatically.
