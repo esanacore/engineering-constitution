@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.26.0 - 2026-07-01
+
+### Added
+
+- Added `scripts/check_version_alignment.sh`, a governance checker adopters can run through the `constitution/` submodule to verify that their pinned `constitution/VERSION`, optional `CONSTITUTION_VERSION` file, and common adoption/governance docs do not drift apart. This catches a recurring stewardship failure mode where a repo updates the submodule pointer but leaves stale "Engineering Constitution version X.Y.Z" text behind in README, agent instructions, or adoption notes.
+- Added `scripts/test_check_version_alignment.sh` with negative-case coverage for a mismatched `CONSTITUTION_VERSION`, a stale governance-document reference, a missing `constitution/VERSION`, and usage errors.
+
+### Changed
+
+- Documented the new version-alignment checker in `README.md`, `INTEGRATION.md`, and `TESTING.md` so adopters know when to run it alongside the existing compliance and traceability checks.
+
 ## 1.25.0 - 2026-06-29
 
 ### Added

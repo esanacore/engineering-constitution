@@ -16,6 +16,7 @@
 
 - [ ] Define a repeatable release process for framework updates (now includes the `vX.Y.Z` Git tag step in `RELEASES.md`).
 - [ ] Cut the first `vX.Y.Z` release tag on `main`. The version-gate/audit machinery is built but no `v*` tag exists yet, so adopters' `constitution-version-check` gate still skips instead of enforcing. Tagging a release (for example `v1.16.0`) transitions it to actively passing/failing.
+- [x] Add a checker that catches stale adopter-facing Constitution version references after a submodule bump. Shipped in 1.26.0 as `scripts/check_version_alignment.sh` with negative-case tests.
 
 ## Refactoring
 
