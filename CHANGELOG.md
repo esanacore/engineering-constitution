@@ -6,9 +6,21 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.30.0 - 2026-07-04
+
 ### Added
 
 - Added a small worked demo to `sources/` — `raw/example/sample-source.md` and its matching `summaries/example/sample-source.md`, already recorded in `manifest.tsv` — so `scripts/check_source_summaries.sh scan` reports something real (`OK`) immediately after cloning instead of an empty, unexplained directory. Added `sources/README.md` and a gitignore-excepted `sources/raw/README.md` pointing back to `KNOWLEDGE_SOURCES.md` so the workflow is discoverable from a file browser alone.
+- Added `scripts/run_declared_tests.sh`, which extracts and runs the "Full suite" command an adopting repository declares in `docs/TEST_PLAN.md`, so "run all automated tests" is enforced in CI instead of depending on an agent remembering to run them. A declared command that fails always fails this checker, with or without `--strict` — `--strict` only governs the "nothing declared yet" case. Added `scripts/test_run_declared_tests.sh` covering both.
+- Added `scripts/check_doc_freshness.sh`, a blunt CI tripwire that flags a pull request changing source files without touching `README.md`/`CHANGELOG.md`, with an ignore list for docs/lockfiles/dotfiles. Added `scripts/test_check_doc_freshness.sh`, including the case proving the ignore list actually suppresses false positives rather than flagging everything.
+- Added two CI workflow templates, installed by `scripts/bootstrap.sh` alongside the existing compliance/version gates: `constitution-tests.yml` (runs `run_declared_tests.sh` on push/PR) and `constitution-doc-freshness.yml` (runs `check_doc_freshness.sh` on PRs). Both warn by default; `--strict` opts a repository in once it's actually compliant, matching the existing `check_compliance.sh`/`check_traceability.sh` rollout contract.
+- Added a "CI Enforcement" section to `TESTING.md` describing all four CI gates and their shared warn/`--strict` contract.
+
+### Changed
+
+- `DOCUMENTATION.md` gets a dedicated "Current Capabilities" section (promoted out of a single README-expectations bullet): every project needs a living, accurate "what can it do today?" answer, updated in the same change that adds/changes/removes functionality, not deferred to a separate documentation pass. `CONSTITUTION.md` Principle 1 and `AI_WORKFLOW.md`'s documentation step and completion checklist now call this out explicitly by name instead of folding it into generic "update documentation" language.
+- `AI_WORKFLOW.md` strengthens the test-writing and documentation steps: add as many automated tests across the pyramid as a change genuinely calls for, run `run_declared_tests.sh` locally before calling work done, and keep README's features list current — with CI's new gates as the backstop, not the reason to skip verifying locally.
+- `INTEGRATION.md` documents the two new CI workflows alongside the existing compliance/version-gate sections.
 
 ### Fixed
 

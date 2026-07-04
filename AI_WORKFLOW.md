@@ -14,10 +14,10 @@ This document defines the required workflow for AI-assisted software development
 8. Understand the task.
 9. Create an implementation plan.
 10. Implement changes.
-11. Update tests.
+11. Update tests. Add as many automated tests as the change genuinely calls for across the pyramid (unit, integration, end-to-end, regression) rather than the minimum that makes a check pass — see TESTING.md. Update `docs/TEST_PLAN.md`'s "Full suite" command if it changed, and run `bash constitution/scripts/run_declared_tests.sh .` locally before considering the work done.
 12. Evaluate coverage and analyze gaps.
 13. Update requirements traceability for product-facing repositories.
-14. Update documentation.
+14. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
 15. Update TODO.md.
 16. Update CHANGELOG.md.
 17. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
@@ -44,8 +44,8 @@ Agents should:
 
 - Prefer the existing project style.
 - Keep changes focused on the task.
-- Add or update tests for behavioral changes.
-- Update documentation as part of the implementation.
+- Add or update tests for behavioral changes, across as many of unit/integration/e2e/regression as genuinely apply — CI's `constitution-tests.yml` workflow runs whatever is declared, but only what's declared.
+- Update documentation as part of the implementation, including README.md's current-features list (see DOCUMENTATION.md's "README Expectations") — CI's `constitution-doc-freshness.yml` workflow is a blunt tripwire for this, not a substitute for actually doing it.
 - Record discovered work in TODO.md.
 - Avoid unrelated refactors unless required for the task.
 - Use the `/browse` gstack skill for all web browsing; never call `mcp__claude-in-chrome__*` tools directly.
@@ -55,10 +55,10 @@ Agents should:
 Agents must verify:
 
 - The implementation addresses the request.
-- Relevant tests pass or test limitations are reported.
+- Relevant tests pass or test limitations are reported. Where CI enforces this (`constitution-tests.yml`, `constitution-doc-freshness.yml`; see TESTING.md's "CI Enforcement"), treat it as the backstop, not the reason to skip verifying locally first.
 - Coverage was evaluated against declared targets and any gaps were recorded.
 - Requirements traceability is updated for product-facing repositories.
-- Documentation impact has been evaluated.
+- Documentation impact has been evaluated, including whether README.md's current features/capabilities list still answers "what can it do today?" — not just whether the task was doc-focused.
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.
 - Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.

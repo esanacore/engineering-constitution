@@ -70,3 +70,18 @@ The framework also ships `scripts/check_compliance.sh`, which verifies an adopti
 The framework also ships `scripts/check_source_summaries.sh`, which detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries (`sources/summaries/`); see `KNOWLEDGE_SOURCES.md`. Its negative-case tests (`scripts/test_check_source_summaries.sh`) prove a file with no manifest entry is reported `NEW` rather than silently passing, and that `record` refuses to mark a source processed until its summary has actually been written.
 
 The framework also ships `scripts/check_version_alignment.sh`, which verifies that adopter-facing files do not drift away from the actual pinned `constitution/VERSION`. Its companion tests (`scripts/test_check_version_alignment.sh`) cover both a mismatched `CONSTITUTION_VERSION` file and a stale governance-document reference.
+
+The framework also ships `scripts/run_declared_tests.sh`, which extracts the "Full suite" command an adopter declares in `docs/TEST_PLAN.md` and runs it, so "run all automated tests" is enforced in CI rather than left to an agent remembering to run them locally. Its negative-case tests (`scripts/test_run_declared_tests.sh`) prove a missing or still-placeholder command warns by default and fails under `--strict`, and — the more important guarantee — that a *declared* command which fails always fails this checker, with or without `--strict`. A checker that only enforces the "did you declare something" case and not the "does the declared thing actually pass" case would let broken tests through unnoticed.
+
+The framework also ships `scripts/check_doc_freshness.sh`, a CI Enforcement tripwire (below) that flags a pull request changing source files without touching `README.md`/`CHANGELOG.md`. It is intentionally blunt, not smart change detection — pure refactors and test-only changes will sometimes trip it too, which is why it warns by default rather than failing. Its tests (`scripts/test_check_doc_freshness.sh`) prove both directions: a real doc-worthy change with no doc update is flagged, and changes limited to the ignore list (`docs/**`, lockfiles, etc.) are correctly *not* flagged even under `--strict` — a checker whose ignore list silently does nothing would just be noise with extra steps.
+
+## CI Enforcement
+
+Governance checkers are only as strong as the CI wiring around them. The framework ships CI workflow templates (installed by `scripts/bootstrap.sh` into `.github/workflows/`) for every checker above:
+
+- `constitution-compliance.yml` — required-file presence (`check_compliance.sh`) and requirements traceability (`check_traceability.sh`).
+- `constitution-version.yml` — the pinned `constitution/` submodule is current.
+- `constitution-tests.yml` — runs the project's own declared test suite (`run_declared_tests.sh`) on every push and pull request. The constitution cannot know a project's language or runtime, so adopters add their own setup step before the test-run step; see the template's comments.
+- `constitution-doc-freshness.yml` — the doc-freshness tripwire (`check_doc_freshness.sh`) on pull requests.
+
+All four follow the same rollout contract: **warn by default, `--strict` to fail.** A newly bootstrapped or newly updated repository should never go instantly red because it hasn't caught up to a new rule yet — adopters opt into `--strict` per checker, per repository, once they've confirmed it's actually compliant. The one exception is `run_declared_tests.sh`: once a real test command is declared, running it and failing on its failure is never optional, regardless of `--strict` — `--strict` only governs the "nothing declared yet" case.

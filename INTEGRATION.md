@@ -455,6 +455,28 @@ pull requests, pushes to the default branch, and a daily schedule. This is the
 CI gate that turns the two checkers from on-demand tools into enforced ones,
 alongside the version gate described above.
 
+## Running the Adopter's Own Tests and Catching Doc Drift
+
+Two more CI gates round out the enforcement layer, both installed by
+`scripts/bootstrap.sh` and both following the same warn-by-default,
+`--strict`-to-fail contract as the checkers above (see `TESTING.md`'s "CI
+Enforcement" section for the full rationale):
+
+- **`.github/workflows/constitution-tests.yml`** runs
+  `constitution/scripts/run_declared_tests.sh`, which extracts and runs the
+  "Full suite" command declared in `docs/TEST_PLAN.md`'s "How to Run Tests"
+  section. The constitution can't know a project's language or runtime, so
+  the template leaves a clearly marked spot for the adopter's own setup step
+  (`actions/setup-node`, `actions/setup-python`, etc.) before the test-run
+  step. Once a real command is declared, a failure there always fails the
+  build — `--strict` only changes what happens when nothing is declared yet.
+- **`.github/workflows/constitution-doc-freshness.yml`** runs
+  `constitution/scripts/check_doc_freshness.sh` on pull requests, flagging a
+  diff that changes source files without touching `README.md` or
+  `CHANGELOG.md`. It's a blunt tripwire, not smart change detection — expect
+  occasional false positives on pure refactors, which is exactly why it warns
+  by default instead of failing.
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:

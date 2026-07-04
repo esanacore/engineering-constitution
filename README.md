@@ -32,10 +32,12 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
 - `scripts/check_version_alignment.sh`: Reference checker that verifies adopter-facing Constitution version references match the pinned `constitution/VERSION`.
+- `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
+- `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
 
 ## Version
 
-Current version: 1.29.0
+Current version: 1.30.0
 
 See `VERSION`.
 

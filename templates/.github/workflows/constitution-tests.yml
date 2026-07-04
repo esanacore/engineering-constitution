@@ -1,0 +1,54 @@
+name: Constitution Test Runner
+
+# Runs the test command this repository declares in docs/TEST_PLAN.md's
+# "How to Run Tests" section (the "Full suite" line), via the constitution's
+# scripts/run_declared_tests.sh, which ships in the pinned `constitution/`
+# submodule.
+#
+# The constitution is language/stack-agnostic, so it cannot know how to set up
+# your runtime. Add your own setup step (actions/setup-node, actions/setup-python,
+# actions/setup-go, etc.) BEFORE the "Run declared test command" step below,
+# and install dependencies there too.
+#
+# Runs in default (non-strict) mode: if docs/TEST_PLAN.md has not been filled
+# in yet, this warns instead of failing, so adopting this template doesn't
+# immediately break CI. Once your "Full suite" command is real, add --strict
+# to the run_declared_tests.sh invocation below to also fail when nothing is
+# declared — a declared command that fails is ALWAYS enforced regardless of
+# --strict.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  test-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/run_declared_tests.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the test runner). This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+      # TODO: add your language/runtime setup + dependency install here.
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "20"
+      # - run: npm ci
+
+      - name: Run declared test command
+        shell: bash
+        run: bash constitution/scripts/run_declared_tests.sh .

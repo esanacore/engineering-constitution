@@ -94,12 +94,34 @@ such as `<add here>`, example commands, or HTML comment prompts.
 README.md should explain:
 
 - What the project does
+- Its current features/capabilities — see "Current Capabilities" below
 - Who it is for
 - How to install or set it up
 - How to run it
 - How to test it
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
+
+## Current Capabilities
+
+Every project that grows over time needs a living, accurate answer to "what
+can it do today?" This is a standing requirement, not a one-time README
+section written at v0.1 and left to go stale — it decays fastest precisely
+when a project is expanding fastest, which is exactly when it matters most to
+a new contributor or an AI agent orienting itself.
+
+- README.md must carry a current features/capabilities list. Update it in
+  the **same change** that adds, changes, or removes user-facing
+  functionality — not deferred to a separate "documentation pass" that may
+  never happen.
+- This applies to any adopting repository, not only product-facing ones:
+  internal tools, libraries, and CLIs all accumulate capability over time and
+  all need this answer kept current.
+- `TESTING.md`'s "CI Enforcement" section describes `check_doc_freshness.sh`,
+  a blunt tripwire that flags a pull request changing source files without
+  touching README.md/CHANGELOG.md. It can only verify the file was *touched*,
+  never that the content is actually accurate — treat it as a backstop for
+  the mechanical case, never as the standard itself.
 
 ## CHANGELOG Expectations
 

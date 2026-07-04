@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.29.0
+Version: 1.30.0
 
 ## Purpose
 
@@ -24,7 +24,7 @@ All changes must consider documentation impact.
 
 Review:
 
-- README.md
+- README.md, including its current features/capabilities list — an ever-expanding project's "what can it do today?" answer is never optional and decays fastest exactly when the project is growing fastest. See `DOCUMENTATION.md`'s "Current Capabilities" section.
 - CHANGELOG.md
 - Architecture documentation
 - API documentation

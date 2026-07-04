@@ -1,0 +1,47 @@
+name: Constitution Doc Freshness
+
+# Flags a pull request that changes source files but never touches README.md
+# or CHANGELOG.md, via the constitution's scripts/check_doc_freshness.sh,
+# which ships in the pinned `constitution/` submodule.
+#
+# This is a blunt tripwire, not smart change detection: pure refactors and
+# test-only changes will sometimes trip it too. Runs in default (non-strict)
+# mode, which warns instead of failing. Add --strict to the
+# check_doc_freshness.sh invocation below once you've confirmed the signal is
+# useful for this repository rather than noisy.
+#
+# Pull-request only: unlike the other constitution CI checks, this one needs a
+# base/head diff, so it doesn't run on pushes to the default branch.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  doc-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules and full history
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_doc_freshness.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the doc-freshness checker). This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+      - name: Check documentation freshness
+        shell: bash
+        run: |
+          bash constitution/scripts/check_doc_freshness.sh \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head "${{ github.sha }}" \
+            .
