@@ -8,6 +8,7 @@ This project follows semantic versioning.
 
 ### Added
 
+- Added a "What It Can Do Today" section to `DOCUMENTATION.md`'s README Expectations, recommending that progressively-expanding projects (prototypes, internal tools, anything without a formal release cadence) keep a README section listing only shipped capabilities, separate from roadmap/TODO content. Added the matching section to `templates/README.md` so new bootstraps get it by default. Prompted by an adopting repository (mFi mPower Pro Toolkit) that wanted this pattern after using it informally across several sessions.
 - Added a small worked demo to `sources/` — `raw/example/sample-source.md` and its matching `summaries/example/sample-source.md`, already recorded in `manifest.tsv` — so `scripts/check_source_summaries.sh scan` reports something real (`OK`) immediately after cloning instead of an empty, unexplained directory. Added `sources/README.md` and a gitignore-excepted `sources/raw/README.md` pointing back to `KNOWLEDGE_SOURCES.md` so the workflow is discoverable from a file browser alone.
 
 ### Fixed

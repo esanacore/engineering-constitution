@@ -101,6 +101,20 @@ README.md should explain:
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
 
+### "What It Can Do Today" Section
+
+Projects that grow incrementally — where features land in small slices over many sessions — should maintain a "What It Can Do Today" (or similarly named) section in README.md that lists only shipped, working capabilities.
+
+This section exists to separate two things that otherwise blur together in a fast-moving README: what the project actually does right now, and what it is planned to do eventually. Aspirational features, in-progress work, and roadmap items belong in TODO.md or a roadmap doc, not in this section.
+
+Keep it:
+
+- Scoped to capabilities a user could exercise today, not partial or planned ones.
+- Updated in the same change that ships a new capability, alongside the other Documentation Review Checklist items.
+- A cross-reference, not a duplicate: point to TODO.md or a roadmap doc for what's planned rather than restating it.
+
+This section is most valuable for prototypes, internal tools, and other projects without a formal release cadence, where "check the README" is how a reader learns what's real. Projects that already ship versioned releases with detailed CHANGELOG entries may find the CHANGELOG sufficient and can treat this section as optional.
+
 ## CHANGELOG Expectations
 
 CHANGELOG.md should capture user-facing changes using release categories:
