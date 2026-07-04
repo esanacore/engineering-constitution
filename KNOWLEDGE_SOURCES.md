@@ -21,6 +21,21 @@ files into Git history and keeps the repository small. Only the hash manifest
 and the distilled summaries are tracked, so anyone can see what has been
 evaluated and why without needing the original file.
 
+`sources/README.md` and `sources/raw/README.md` are small tracked pointers
+back to this document, so the workflow is discoverable straight from a file
+browser without already knowing this file exists. A `README.md` (or
+`readme.markdown`/`readme.txt`) left in `raw/` is deliberately invisible to
+the scanner and to `record` — it's documentation, not a source.
+
+## Try It First
+
+`sources/raw/example/sample-source.md` and its matching
+`sources/summaries/example/sample-source.md` are a tiny worked demo, already
+recorded in `manifest.tsv`. Running `scan` right after cloning reports it as
+`OK` — that's the demo, not a bug. Read the summary file to see the template
+filled in, then delete both `example/` folders once you've dropped in your
+first real source (or leave them; they don't interfere with anything).
+
 ## Workflow
 
 1. Drop a file (or several) into `sources/raw/`. Subdirectories are fine and

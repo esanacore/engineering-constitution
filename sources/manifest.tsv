@@ -1,3 +1,4 @@
 # path	sha256	summary	processed_at
 # Managed by scripts/check_source_summaries.sh. Do not edit by hand except to
 # delete a stale row after removing both the raw file and its summary.
+example/sample-source.md	30bbc02ef763a3e2092c7bb2a7ae58c0eb63ffbe67d6fc2ad4aa09a9bebfe7f1	example/sample-source.md	2026-07-04

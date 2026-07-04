@@ -59,6 +59,15 @@ is_recognized_extension() {
   return 1
 }
 
+# READMEs left in raw/ (e.g. sources/raw/README.md, dropped there to guide
+# users) are documentation, not a source to summarize, even though .md is a
+# recognized extension.
+is_readme() {
+  local base
+  base=$(basename -- "$1" | tr '[:upper:]' '[:lower:]')
+  [ "$base" = "readme.md" ] || [ "$base" = "readme.markdown" ] || [ "$base" = "readme.txt" ]
+}
+
 sha256_of() {
   sha256sum "$1" | awk '{print $1}'
 }
@@ -105,6 +114,7 @@ cmd_scan() {
 
   for file in "${files[@]}"; do
     is_recognized_extension "$file" || continue
+    is_readme "$file" && continue
     local relpath=${file#"$raw_dir"/}
     local hash row summary_rel summary_path
     hash=$(sha256_of "$file")
@@ -165,6 +175,11 @@ cmd_record() {
 
   if [ ! -f "$raw_path" ]; then
     echo "No such raw file: $raw_path" >&2
+    return 1
+  fi
+
+  if is_readme "$raw_path"; then
+    echo "$raw_path is a README, not a source to record." >&2
     return 1
   fi
 

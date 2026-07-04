@@ -169,5 +169,28 @@ echo "$output"
 [ "$status" -eq 2 ] || { echo "FAIL(9): expected exit 2 for unknown subcommand, got $status"; exit 1; }
 echo "SUCCESS(9): unknown subcommand fails with usage error."
 
+# ---------------------------------------------------------------------------
+# 10. A README left in raw/ (to guide users where to drop files) is not
+#     treated as a source, even though .md is a recognized extension, and
+#     `record` refuses to record one.
+# ---------------------------------------------------------------------------
+root="$test_dir/10"
+make_root "$root"
+echo "drop your files here" > "$root/raw/README.md"
+echo "book contents" > "$root/raw/book.md"
+
+run_check scan "$root"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(10): expected exit 1 (book.md is NEW), got $status"; exit 1; }
+echo "$output" | grep -q "README.md" && { echo "FAIL(10): README.md should not be reported at all"; exit 1; }
+echo "$output" | grep -q "NEW              book.md" || { echo "FAIL(10): book.md not reported NEW"; exit 1; }
+echo "$output" | grep -q "Pending: 1 " || { echo "FAIL(10): expected exactly one pending entry, got: $output"; exit 1; }
+
+run_check record README.md "$root"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(10): expected record to refuse a README, got $status"; exit 1; }
+echo "$output" | grep -qi "not a source to record" || { echo "FAIL(10): record did not explain why it refused the README"; exit 1; }
+echo "SUCCESS(10): a README in raw/ is invisible to scan and record refuses to process it."
+
 echo
 echo "All check_source_summaries.sh tests passed."

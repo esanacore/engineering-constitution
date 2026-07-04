@@ -5,3 +5,9 @@ node_modules/
 # KNOWLEDGE_SOURCES.md.
 /sources/raw/*
 !/sources/raw/.gitkeep
+!/sources/raw/README.md
+
+# Exception: a tiny worked demo fixture, tracked so the workflow is obvious
+# out of the box. Safe to delete once you've dropped in a real source.
+!/sources/raw/example/
+!/sources/raw/example/sample-source.md

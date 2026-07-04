@@ -6,6 +6,14 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added a small worked demo to `sources/` — `raw/example/sample-source.md` and its matching `summaries/example/sample-source.md`, already recorded in `manifest.tsv` — so `scripts/check_source_summaries.sh scan` reports something real (`OK`) immediately after cloning instead of an empty, unexplained directory. Added `sources/README.md` and a gitignore-excepted `sources/raw/README.md` pointing back to `KNOWLEDGE_SOURCES.md` so the workflow is discoverable from a file browser alone.
+
+### Fixed
+
+- `scripts/check_source_summaries.sh` no longer treats a `README.md` (or `readme.markdown`/`readme.txt`) left in `sources/raw/` as a pending source, even though `.md` is a recognized extension — it's documentation, not something to summarize. `record` also refuses to record one. Caught while adding the `sources/raw/README.md` pointer above, which `scan` was reporting as a false `NEW` entry before this fix. Covered by a new negative-case test in `scripts/test_check_source_summaries.sh`.
+
 ## 1.29.0 - 2026-07-03
 
 ### Added
