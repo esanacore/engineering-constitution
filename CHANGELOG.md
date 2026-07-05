@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added `scripts/check_release_tag_alignment.sh`, a source-repo checker that verifies the released `VERSION`, the matching `v<VERSION>` tag, and `HEAD` all stay aligned. This catches the specific failure mode where framework changes are merged and versioned but the release tag is never cut, leaving adopter audits and version gates stuck on the previous release.
+- Added `scripts/test_check_release_tag_alignment.sh` covering the aligned case plus missing-tag, tag-off-HEAD, latest-tag-mismatch, and usage-error failures.
+
+### Changed
+
+- `RELEASES.md` now tells maintainers to run `scripts/check_release_tag_alignment.sh` immediately after tagging, so release follow-through is checked with the same rigor as the document-version guardrails.
+
 ## 1.30.0 - 2026-07-04
 
 ### Added

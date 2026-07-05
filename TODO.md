@@ -22,6 +22,7 @@
 - [x] Define a repeatable release process for framework updates. Shipped in 1.24.0 as the ordered "Cutting a Release" gate in `RELEASES.md` (see the Features entry above).
 - [x] Cut the first `vX.Y.Z` release tag on `main`. Stale: releases have been tagged since v1.20.0, and the `constitution-version-check` gate is actively enforcing against the latest tag.
 - [x] Add a checker that catches stale adopter-facing Constitution version references after a submodule bump. Shipped in 1.26.0 as `scripts/check_version_alignment.sh` with negative-case tests.
+- [ ] Consider wiring `scripts/check_release_tag_alignment.sh` into a post-tag release helper or operational checklist automation, so the framework's own release tag cannot lag `VERSION` unnoticed after merge.
 
 ## Refactoring
 
@@ -37,6 +38,7 @@
 - [x] Ship a CI workflow template that runs `scripts/check_traceability.sh` as a gate for product-facing repositories (alongside the existing constitution version-check workflow), so traceability is enforced and not only available on demand. Implemented as `templates/.github/workflows/constitution-compliance.yml`, which also runs `scripts/check_compliance.sh`; installed by `scripts/bootstrap.sh` and covered by `scripts/test_bootstrap.sh`.
 - [x] Ship a CI workflow template that runs an adopting repository's own declared test suite, not just constitution governance checks. Implemented as `templates/.github/workflows/constitution-tests.yml` running `scripts/run_declared_tests.sh` with `scripts/test_run_declared_tests.sh` (5 cases, including that a declared failing command always fails regardless of `--strict`); installed by `scripts/bootstrap.sh` and covered by `scripts/test_bootstrap.sh`.
 - [x] Ship a CI workflow template that flags pull requests changing source without touching README/CHANGELOG. Implemented as `templates/.github/workflows/constitution-doc-freshness.yml` running `scripts/check_doc_freshness.sh` with `scripts/test_check_doc_freshness.sh` (4 cases, including that the docs/lockfile ignore list actually suppresses false positives); installed by `scripts/bootstrap.sh` and covered by `scripts/test_bootstrap.sh`.
+- [x] Add a checker that verifies the constitution source repo's `VERSION`, release tag, and `HEAD` stay aligned. Implemented as `scripts/check_release_tag_alignment.sh` with `scripts/test_check_release_tag_alignment.sh`, prompted by `VERSION 1.30.0` landing on `main` while the latest tag still sat at `v1.29.0`.
 
 ## Documentation
 
