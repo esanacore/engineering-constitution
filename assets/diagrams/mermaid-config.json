@@ -15,6 +15,9 @@
   "flowchart": {
     "htmlLabels": false,
     "curve": "linear",
-    "padding": 20
+    "padding": 24,
+    "nodeSpacing": 45,
+    "rankSpacing": 65,
+    "diagramPadding": 24
   }
 }

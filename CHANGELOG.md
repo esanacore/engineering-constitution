@@ -20,7 +20,7 @@ This project follows semantic versioning.
 ### Fixed
 
 - `README.md`'s "How It Works" diagram no longer falls back to raw Mermaid source text when viewed in GitHub's native iOS/Android apps. It's now a pre-rendered SVG (`assets/diagrams/how-it-works.svg`) embedded as a normal image, with the editable Mermaid source and regeneration instructions kept alongside it in `assets/diagrams/`.
-- Redesigned that same diagram: mermaid's default theme (clashing yellow cluster backgrounds, saturated purple nodes) is replaced with a muted custom theme, a feedback-loop edge that tangled under auto-layout is removed in favor of a one-directional flow, and the layout switched from wide/short (`LR`) to tall/narrow (`TD`) so the embedded image scales up and stays legible on a phone-width column instead of shrinking its text. `ARCHITECTURE.md`'s "Visual Architecture" policy and `assets/diagrams/README.md` document these choices (muted theme, linear edges, acyclic layout, TD over LR) for future diagrams.
+- Redesigned that same diagram: mermaid's default theme (clashing yellow cluster backgrounds, saturated purple nodes) is replaced with a muted custom theme, a feedback-loop edge that tangled under auto-layout is removed in favor of a one-directional flow, the layout switched from wide/short (`LR`) to tall/narrow (`TD`) so the embedded image scales up and stays legible on a phone-width column instead of shrinking its text, and node/rank/diagram spacing increased (`nodeSpacing`, `rankSpacing`, `diagramPadding` in `mermaid-config.json`) so it no longer reads as cramped. `ARCHITECTURE.md`'s "Visual Architecture" policy and `assets/diagrams/README.md` document these choices for future diagrams.
 
 ### Added
 
