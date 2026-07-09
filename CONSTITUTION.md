@@ -111,7 +111,7 @@ ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecate
 
 Code-level structure should follow the SOLID principles and the Dependency Rule, applied as pragmatic guardrails rather than ceremony. See `ARCHITECTURE.md`.
 
-Every README.md should include a visual project-structure tree, and non-trivial systems should include a component or flow diagram (Mermaid by default), kept current in the same change that changes the structure. See `ARCHITECTURE.md`'s "Visual Architecture" section.
+Every README.md should include a visual project-structure tree and, whenever possible, at least one infographic — a component or flow diagram (Mermaid by default) — not just prose. This is the default, not an exception for complex systems. Keep both current in the same change that changes the structure. See `ARCHITECTURE.md`'s "Visual Architecture" section.
 
 ## Principle 7: Dependency Hygiene
 

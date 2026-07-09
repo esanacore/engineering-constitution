@@ -165,17 +165,25 @@ Architecture documentation should describe:
 
 Prose descriptions of structure are easy to skim past and quick to go stale.
 Every repository's README.md should also carry a visual answer to "how is this
-put together," not only a written one:
+put together," not only a written one. **Include at least one infographic —
+a diagram, not just prose or a bullet list — in the README whenever possible.**
+This is the default expectation, not a special case reserved for large or
+multi-service systems. The only repositories that can skip the diagram are
+genuinely single-file or trivial-structure ones where a diagram would add
+nothing a directory tree doesn't already say; when in doubt, include one.
 
 - **A project structure section**: a fenced `text` code block containing a
   directory tree of the repository's top-level layout, annotated with a short
   comment per entry explaining what lives there. This is the fastest
   orientation tool for a new contributor or an AI agent — faster than reading
   `ls` output or a wall of bullets.
-- **A component or flow diagram** for any system with more than one moving
-  part: multiple services, a non-trivial data flow, an integration/adoption
-  flow, or a request lifecycle worth seeing at a glance. A single box-and-line
-  diagram often replaces a paragraph of prose.
+- **A component or flow diagram**: a visual infographic — boxes, arrows,
+  swimlanes — of how the pieces fit together: components and their
+  connections, a data or request flow, a deployment topology, or (for a
+  framework/tooling repository with no runtime components) an adoption or
+  integration flow. Almost every repository has at least one of these worth
+  drawing; a single box-and-line diagram usually replaces a paragraph of prose
+  and is read where the prose gets skipped.
 
 Use [Mermaid](https://mermaid.js.org/) for these diagrams by default. It is
 plain text (diffable in pull requests, no binary asset to keep in sync), needs
