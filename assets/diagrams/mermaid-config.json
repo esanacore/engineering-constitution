@@ -1,5 +1,20 @@
 {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryColor": "#fcfcfb",
+    "primaryBorderColor": "#c3c2b7",
+    "primaryTextColor": "#0b0b0b",
+    "lineColor": "#52514e",
+    "clusterBkg": "#fcfcfb",
+    "clusterBorder": "#c3c2b7",
+    "edgeLabelBackground": "#ffffff",
+    "fontFamily": "system-ui, -apple-system, Segoe UI, sans-serif",
+    "fontSize": "16px"
+  },
   "flowchart": {
-    "htmlLabels": false
+    "htmlLabels": false,
+    "curve": "linear",
+    "padding": 20
   }
 }

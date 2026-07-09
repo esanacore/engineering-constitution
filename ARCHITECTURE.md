@@ -202,6 +202,22 @@ displays on every client, apps included. Diagrams deeper in the docs (for
 example `docs/ARCHITECTURE.md`'s Component Diagram) are read in a browser far
 more often and can stay as plain fenced Mermaid blocks.
 
+A rendered diagram still needs to actually look good, not just render:
+mermaid's default theme (bright yellow cluster backgrounds, saturated purple
+node fills, curvy bezier edges) reads as cluttered, and a graph with a
+feedback loop back into an earlier node tangles visibly under mermaid's
+automatic layout even when every individual edge is intentional. Favor a
+muted custom theme (light tinted node fills, gray hairline borders/lines,
+`curve: linear` for straight edges) and a one-directional acyclic layout;
+push any true feedback relationship (for example "CI keeps X updated") into
+the surrounding prose instead of forcing a loop-back arrow into the diagram.
+Prefer a tall/narrow (`flowchart TD`) layout over a wide/short one (`LR`) for
+anything embedded in a README: the image is scaled to the reader's column
+width, so a wide diagram shrinks its text toward illegibility on a phone
+while a tall one scales up and stays readable. `assets/diagrams/README.md`
+in this repository documents the worked rendering setup (theme, curve,
+layout choice) behind its own README diagram.
+
 `docs/ARCHITECTURE.md`'s "Component Diagram" section (see
 `templates/docs/ARCHITECTURE.md`) is where the Mermaid source for a project's
 architecture lives; the README should link to it rather than duplicate it, but

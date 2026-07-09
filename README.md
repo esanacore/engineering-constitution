@@ -165,3 +165,32 @@ If you prefer not to use the bootstrap script:
 git submodule add <repository-url> constitution
 cp constitution/templates/AGENTS.md AGENTS.md
 cp constitution/templates/CLAUDE.md CLAUDE.md
+# ...and so on for the other template files; see scripts/bootstrap.sh for the full list
+```
+
+## Adding Reference Sources to the Constitution
+
+The constitution deliberately draws on named authoritative sources (see
+`ARCHITECTURE.md`'s citations of *Clean Architecture* and *Design Patterns*)
+rather than absorbing influence ad hoc. `sources/` is the drop-in location for
+new books, papers, or long-form articles that could inform a future change,
+and `KNOWLEDGE_SOURCES.md` is the full reference for this workflow — this is
+the short version, for working in your own clone of this repository:
+
+1. Drop the file (PDF/EPUB/DOCX/MD/TXT) into `sources/raw/` — gitignored, so
+   it's never committed.
+2. Run `bash scripts/check_source_summaries.sh scan` to see what's `NEW` or
+   `CHANGED` and needs a summary.
+3. Read the source and write a distilled summary at the mirrored path under
+   `sources/summaries/`, following the template in `KNOWLEDGE_SOURCES.md`
+   (Why This Matters, Key Takeaways, Where It Could Apply).
+4. Mark it processed: `bash scripts/check_source_summaries.sh record
+   <relative-path>`. This refuses to run until the summary actually exists.
+5. **Promote the insight, if warranted.** Writing a summary does not itself
+   change any constitution document — that's intentional, so influence is
+   evaluated deliberately instead of absorbed automatically. If a summary's
+   "Where It Could Apply" section points to a real gap, make a separate,
+   normal edit to the relevant document (`CONSTITUTION.md`, `ARCHITECTURE.md`,
+   `TESTING.md`, etc.), then update `CHANGELOG.md` and `TODO.md` per this
+   repository's own Completion Checklist and cut a release per `RELEASES.md`
+   once user-facing changes accumulate.

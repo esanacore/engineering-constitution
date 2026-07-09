@@ -20,6 +20,11 @@ This project follows semantic versioning.
 ### Fixed
 
 - `README.md`'s "How It Works" diagram no longer falls back to raw Mermaid source text when viewed in GitHub's native iOS/Android apps. It's now a pre-rendered SVG (`assets/diagrams/how-it-works.svg`) embedded as a normal image, with the editable Mermaid source and regeneration instructions kept alongside it in `assets/diagrams/`.
+- Redesigned that same diagram: mermaid's default theme (clashing yellow cluster backgrounds, saturated purple nodes) is replaced with a muted custom theme, a feedback-loop edge that tangled under auto-layout is removed in favor of a one-directional flow, and the layout switched from wide/short (`LR`) to tall/narrow (`TD`) so the embedded image scales up and stays legible on a phone-width column instead of shrinking its text. `ARCHITECTURE.md`'s "Visual Architecture" policy and `assets/diagrams/README.md` document these choices (muted theme, linear edges, acyclic layout, TD over LR) for future diagrams.
+
+### Added
+
+- Added an "Adding Reference Sources to the Constitution" section to `README.md`: a short, self-contained walkthrough of the `sources/` workflow (drop a file in `sources/raw/`, `scan`, write a summary, `record`) plus the deliberate, separately-reviewed step of promoting a summary's insight into an actual constitution document. The full reference remains `KNOWLEDGE_SOURCES.md`; this closes the gap where that workflow was only reachable via a one-line pointer in "Repository Contents." Also fixed the "Manual Installation" section's code fence, which was left unclosed, silently swallowing everything after it.
 
 ## 1.30.0 - 2026-07-04
 
