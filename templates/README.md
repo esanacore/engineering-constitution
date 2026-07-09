@@ -33,6 +33,24 @@ Document how to run tests.
 make test
 ```
 
+## Project Structure
+
+<!--
+  A directory tree of the top-level layout, annotated with a short comment
+  per entry. See the engineering-constitution repository's own README.md for
+  a worked example. Update this in the same change that changes the layout.
+-->
+
+```text
+project/
+├── src/          ← Core logic
+├── tests/        ← Automated tests
+├── docs/         ← Supplemental documentation, including ARCHITECTURE.md
+└── constitution/ ← Universal engineering rules (git submodule)
+```
+
+For a component or data-flow diagram, see `docs/ARCHITECTURE.md`.
+
 ## Documentation
 
 - Roadmap: `TODO.md`

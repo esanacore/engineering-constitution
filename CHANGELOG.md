@@ -8,6 +8,7 @@ This project follows semantic versioning.
 
 ### Added
 
+- Added a "Visual Architecture" policy to `ARCHITECTURE.md` requiring every README.md to carry a directory-tree project structure section and, for non-trivial systems, a Mermaid component/flow diagram, kept current the same way as the existing "Current Capabilities" requirement. `CONSTITUTION.md` Principle 6 and `DOCUMENTATION.md`'s README Expectations now point to it. `templates/README.md` gained a "Project Structure" tree placeholder and `templates/docs/ARCHITECTURE.md`'s Component Diagram section gained a worked Mermaid example, so adopting repositories start with the pattern instead of a bare comment. This repository's own `README.md` was updated with a real "Project Structure" tree and a "How It Works" Mermaid diagram of the adoption flow, serving as the worked example the policy points to.
 - Added `scripts/check_release_tag_alignment.sh`, a source-repo checker that verifies the released `VERSION`, the matching `v<VERSION>` tag, and `HEAD` all stay aligned. This catches the specific failure mode where framework changes are merged and versioned but the release tag is never cut, leaving adopter audits and version gates stuck on the previous release.
 - Added `scripts/test_check_release_tag_alignment.sh` covering the aligned case plus missing-tag, tag-off-HEAD, latest-tag-mismatch, and usage-error failures.
 

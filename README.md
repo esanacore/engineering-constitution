@@ -36,6 +36,68 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
 
+## Project Structure
+
+```text
+engineering-constitution/
+├── CONSTITUTION.md                       ← Authoritative engineering principles (start here)
+├── AI_WORKFLOW.md                        ← Required step-by-step AI agent workflow
+├── INTEGRATION.md                        ← Submodule workflow, agent reading order, multi-tool setup
+├── TESTING.md                            ← Testing expectations, coverage, CI enforcement
+├── DOCUMENTATION.md                      ← Documentation requirements and README/CHANGELOG standards
+├── SECURITY.md                           ← Security review standards
+├── OPERATIONS.md                         ← Operations and infrastructure standards
+├── ARCHITECTURE.md                       ← Architecture, ADR, and visual-diagram expectations
+├── RELEASES.md                           ← Versioning, changelog, and release-cutting standards
+├── TODO_GUIDELINES.md                    ← TODO.md structure and maintenance rules
+├── KNOWLEDGE_SOURCES.md                  ← How to drop in reference sources under sources/
+├── VERSION                               ← Single source of truth for the framework's version
+├── README.md / TODO.md / CHANGELOG.md    ← This repository's own governance docs
+├── AGENTS.md, CLAUDE.md, COPILOT_INSTRUCTIONS.md, ...  ← This repo's own agent instructions
+│
+├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
+│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, ADR, ...)
+│   └── .github/
+│       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness)
+│       └── agents/                       ← Solon, the Copilot custom agent
+│
+├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
+├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
+├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
+├── mcp-server/                           ← MCP server exposing constitution docs/sources as resources
+└── wiki/                                 ← Wiki content (Home.md)
+```
+
+`INTEGRATION.md`'s "Project File Structure" section shows the mirror image of this: what an **adopting** project looks like once it pulls this repository in as a `constitution/` submodule.
+
+## How It Works
+
+```mermaid
+flowchart LR
+    subgraph Source["engineering-constitution (this repo)"]
+        C[CONSTITUTION.md + AI_WORKFLOW.md + policy docs]
+        T[templates/]
+        S[scripts/bootstrap.sh]
+    end
+
+    subgraph Project["Adopting project"]
+        Sub["constitution/ git submodule"]
+        Local["AGENTS.md, CLAUDE.md,\n.cursor/rules, .goosehints, ..."]
+        Agent[AI agent / human contributor]
+        Gates["CI gates:\nversion • compliance • tests • doc-freshness"]
+    end
+
+    S -->|installs templates + submodule| Project
+    C -.->|pinned via submodule| Sub
+    T -->|copied once, customized locally| Local
+    Sub --> Local
+    Local -->|reading order| Agent
+    Agent -->|follows CONSTITUTION.md + AI_WORKFLOW.md| Gates
+    Gates -.->|Dependabot / version-check keep Sub current| Sub
+```
+
+Every adopting project pulls this repository in as a read-only `constitution/` submodule, layers a small set of local files on top (agent entry points, tool-specific rule files, CI workflows), and lets AI agents and CI gates enforce the same standards documented here — see `INTEGRATION.md` for the full reading order and multi-tool setup.
+
 ## Version
 
 Current version: 1.30.0

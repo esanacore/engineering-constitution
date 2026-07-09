@@ -101,6 +101,7 @@ README.md should explain:
 - How to test it
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
+- Its project structure and, for non-trivial systems, a component/flow diagram — see `ARCHITECTURE.md`'s "Visual Architecture" section
 
 ## Current Capabilities
 
