@@ -15,6 +15,11 @@ This project follows semantic versioning.
 ### Changed
 
 - `RELEASES.md` now tells maintainers to run `scripts/check_release_tag_alignment.sh` immediately after tagging, so release follow-through is checked with the same rigor as the document-version guardrails.
+- `ARCHITECTURE.md`'s "Visual Architecture" policy and `DOCUMENTATION.md`'s "Binary Assets and Images" section now document that GitHub's native mobile apps do not render `mermaid` fenced code blocks (only github.com in a browser does, with no fix on GitHub's roadmap), and prescribe committing a README's primary Mermaid diagram as both `.mmd` source and a pre-rendered SVG image so it displays on every client.
+
+### Fixed
+
+- `README.md`'s "How It Works" diagram no longer falls back to raw Mermaid source text when viewed in GitHub's native iOS/Android apps. It's now a pre-rendered SVG (`assets/diagrams/how-it-works.svg`) embedded as a normal image, with the editable Mermaid source and regeneration instructions kept alongside it in `assets/diagrams/`.
 
 ## 1.30.0 - 2026-07-04
 

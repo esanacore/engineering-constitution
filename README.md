@@ -72,31 +72,11 @@ engineering-constitution/
 
 ## How It Works
 
-```mermaid
-flowchart LR
-    subgraph Source["engineering-constitution (this repo)"]
-        C[CONSTITUTION.md + AI_WORKFLOW.md + policy docs]
-        T[templates/]
-        S[scripts/bootstrap.sh]
-    end
-
-    subgraph Project["Adopting project"]
-        Sub["constitution/ git submodule"]
-        Local["AGENTS.md, CLAUDE.md,\n.cursor/rules, .goosehints, ..."]
-        Agent[AI agent / human contributor]
-        Gates["CI gates:\nversion • compliance • tests • doc-freshness"]
-    end
-
-    S -->|installs templates + submodule| Project
-    C -.->|pinned via submodule| Sub
-    T -->|copied once, customized locally| Local
-    Sub --> Local
-    Local -->|reading order| Agent
-    Agent -->|follows CONSTITUTION.md + AI_WORKFLOW.md| Gates
-    Gates -.->|Dependabot / version-check keep Sub current| Sub
-```
+![How It Works: engineering-constitution adoption flow](assets/diagrams/how-it-works.svg)
 
 Every adopting project pulls this repository in as a read-only `constitution/` submodule, layers a small set of local files on top (agent entry points, tool-specific rule files, CI workflows), and lets AI agents and CI gates enforce the same standards documented here — see `INTEGRATION.md` for the full reading order and multi-tool setup.
+
+Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.md` to regenerate the SVG after editing it). It's a pre-rendered image rather than a live `mermaid` code block because GitHub's native mobile apps don't render Mermaid — only github.com in a browser does.
 
 ## Version
 

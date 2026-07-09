@@ -43,6 +43,7 @@
 ## Documentation
 
 - [x] Add a "Visual Architecture" policy requiring a project-structure tree and, whenever possible, at least one infographic (a Mermaid component/flow diagram) in every README.md as the default rather than an exception for non-trivial systems, and apply it to this repository's own README.md as the worked example. Implemented in `ARCHITECTURE.md` (new "Visual Architecture" section), `CONSTITUTION.md` Principle 6, `DOCUMENTATION.md`'s README Expectations, `templates/README.md`, and `templates/docs/ARCHITECTURE.md`.
+- [x] Fix README.md's "How It Works" diagram not rendering in GitHub's native mobile apps (they show raw Mermaid source instead, unlike github.com in a browser). Replaced the live `mermaid` fence with a pre-rendered SVG image, kept in sync with its `.mmd` source under `assets/diagrams/`. Documented the pattern in `ARCHITECTURE.md`'s "Visual Architecture" section and `DOCUMENTATION.md`'s "Binary Assets and Images" section so other repositories adopt the same fix for their hero diagrams.
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.

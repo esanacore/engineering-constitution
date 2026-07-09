@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph Source["engineering-constitution (this repo)"]
+        C[CONSTITUTION.md + AI_WORKFLOW.md + policy docs]
+        T[templates/]
+        S[scripts/bootstrap.sh]
+    end
+
+    subgraph Project["Adopting project"]
+        Sub[constitution/ git submodule]
+        Local[AGENTS.md, CLAUDE.md, .cursor/rules, .goosehints, ...]
+        Agent[AI agent or human contributor]
+        Gates[CI gates: version, compliance, tests, doc-freshness]
+    end
+
+    S -->|installs templates + submodule| Sub
+    C -.->|pinned via submodule| Sub
+    T -->|copied once, customized locally| Local
+    Sub --> Local
+    Local -->|reading order| Agent
+    Agent -->|follows CONSTITUTION.md + AI_WORKFLOW.md| Gates
+    Gates -.->|Dependabot / version-check keep Sub current| Sub

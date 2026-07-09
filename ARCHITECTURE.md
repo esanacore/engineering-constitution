@@ -188,15 +188,27 @@ nothing a directory tree doesn't already say; when in doubt, include one.
 Use [Mermaid](https://mermaid.js.org/) for these diagrams by default. It is
 plain text (diffable in pull requests, no binary asset to keep in sync), needs
 no external tool or build step, and renders natively in GitHub's and GitLab's
-Markdown preview. Reach for a linked image only when a diagram genuinely needs
-something Mermaid cannot express.
+web Markdown preview (desktop or mobile browser).
+
+**GitHub's native mobile apps (iOS/Android) do not render `mermaid` fenced
+code blocks** — they show the raw source text instead, with no fix on
+GitHub's roadmap as of this writing. This matters specifically for a README's
+primary/hero diagram, since that's the one most likely to be read on a phone.
+For that diagram: keep the Mermaid `.mmd` source in the repository for
+diffability and editing, but also render it ahead of time to a static SVG (or
+PNG) and commit that image, embedding the image in the README with standard
+Markdown image syntax rather than a live `mermaid` fence — this way it
+displays on every client, apps included. Diagrams deeper in the docs (for
+example `docs/ARCHITECTURE.md`'s Component Diagram) are read in a browser far
+more often and can stay as plain fenced Mermaid blocks.
 
 `docs/ARCHITECTURE.md`'s "Component Diagram" section (see
 `templates/docs/ARCHITECTURE.md`) is where the Mermaid source for a project's
 architecture lives; the README should link to it rather than duplicate it, but
 may inline a smaller high-level diagram directly for a reader who never leaves
 the README. This repository's own `README.md` ("Project Structure" and "How It
-Works" sections) is a worked example of both patterns applied to a
+Works" sections) and `assets/diagrams/` are a worked example of both
+patterns — including the pre-rendered-image pattern — applied to a
 non-service, framework-shaped repository.
 
 Like the "Current Capabilities" README requirement in `DOCUMENTATION.md`,
