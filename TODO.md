@@ -42,6 +42,7 @@
 
 ## Documentation
 
+- [x] Add a "Visual Architecture" policy requiring a project-structure tree and (for non-trivial systems) a Mermaid component/flow diagram in every README.md, and apply it to this repository's own README.md as the worked example. Implemented in `ARCHITECTURE.md` (new "Visual Architecture" section), `CONSTITUTION.md` Principle 6, `DOCUMENTATION.md`'s README Expectations, `templates/README.md`, and `templates/docs/ARCHITECTURE.md`.
 - [x] Add guidance for migrating existing project docs into the constitution structure.
 - [x] Add language-specific override examples to `INTEGRATION.md`.
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.

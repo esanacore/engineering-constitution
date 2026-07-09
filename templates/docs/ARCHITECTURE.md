@@ -8,7 +8,18 @@ This document provides a high-level overview of how this project is wired and or
 
 ## Component Diagram
 
-<!-- Consider adding a Mermaid diagram or link to an image -->
+<!--
+  Add a Mermaid diagram (default choice: plain text, diffable, renders
+  natively on GitHub/GitLab) showing major components and how they connect.
+  Only a linked image if Mermaid genuinely cannot express it. Example:
+
+  ```mermaid
+  flowchart LR
+      Client --> API[API Service]
+      API --> DB[(Database)]
+      API --> Queue[Message Queue]
+  ```
+-->
 
 ## Data Flow
 

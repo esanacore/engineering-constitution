@@ -161,6 +161,40 @@ Architecture documentation should describe:
 - Operational concerns
 - Security-sensitive areas
 
+## Visual Architecture
+
+Prose descriptions of structure are easy to skim past and quick to go stale.
+Every repository's README.md should also carry a visual answer to "how is this
+put together," not only a written one:
+
+- **A project structure section**: a fenced `text` code block containing a
+  directory tree of the repository's top-level layout, annotated with a short
+  comment per entry explaining what lives there. This is the fastest
+  orientation tool for a new contributor or an AI agent — faster than reading
+  `ls` output or a wall of bullets.
+- **A component or flow diagram** for any system with more than one moving
+  part: multiple services, a non-trivial data flow, an integration/adoption
+  flow, or a request lifecycle worth seeing at a glance. A single box-and-line
+  diagram often replaces a paragraph of prose.
+
+Use [Mermaid](https://mermaid.js.org/) for these diagrams by default. It is
+plain text (diffable in pull requests, no binary asset to keep in sync), needs
+no external tool or build step, and renders natively in GitHub's and GitLab's
+Markdown preview. Reach for a linked image only when a diagram genuinely needs
+something Mermaid cannot express.
+
+`docs/ARCHITECTURE.md`'s "Component Diagram" section (see
+`templates/docs/ARCHITECTURE.md`) is where the Mermaid source for a project's
+architecture lives; the README should link to it rather than duplicate it, but
+may inline a smaller high-level diagram directly for a reader who never leaves
+the README. This repository's own `README.md` ("Project Structure" and "How It
+Works" sections) is a worked example of both patterns applied to a
+non-service, framework-shaped repository.
+
+Like the "Current Capabilities" README requirement in `DOCUMENTATION.md`,
+these are living artifacts: update the tree and diagrams in the same change
+that changes the structure they describe, not in a deferred documentation pass.
+
 ## Maintenance
 
 Architecture documentation should be updated when:
