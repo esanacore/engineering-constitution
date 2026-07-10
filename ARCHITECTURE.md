@@ -165,30 +165,66 @@ Architecture documentation should describe:
 
 Prose descriptions of structure are easy to skim past and quick to go stale.
 Every repository's README.md should also carry a visual answer to "how is this
-put together," not only a written one:
+put together," not only a written one. **Include at least one infographic —
+a diagram, not just prose or a bullet list — in the README whenever possible.**
+This is the default expectation, not a special case reserved for large or
+multi-service systems. The only repositories that can skip the diagram are
+genuinely single-file or trivial-structure ones where a diagram would add
+nothing a directory tree doesn't already say; when in doubt, include one.
 
 - **A project structure section**: a fenced `text` code block containing a
   directory tree of the repository's top-level layout, annotated with a short
   comment per entry explaining what lives there. This is the fastest
   orientation tool for a new contributor or an AI agent — faster than reading
   `ls` output or a wall of bullets.
-- **A component or flow diagram** for any system with more than one moving
-  part: multiple services, a non-trivial data flow, an integration/adoption
-  flow, or a request lifecycle worth seeing at a glance. A single box-and-line
-  diagram often replaces a paragraph of prose.
+- **A component or flow diagram**: a visual infographic — boxes, arrows,
+  swimlanes — of how the pieces fit together: components and their
+  connections, a data or request flow, a deployment topology, or (for a
+  framework/tooling repository with no runtime components) an adoption or
+  integration flow. Almost every repository has at least one of these worth
+  drawing; a single box-and-line diagram usually replaces a paragraph of prose
+  and is read where the prose gets skipped.
 
 Use [Mermaid](https://mermaid.js.org/) for these diagrams by default. It is
 plain text (diffable in pull requests, no binary asset to keep in sync), needs
 no external tool or build step, and renders natively in GitHub's and GitLab's
-Markdown preview. Reach for a linked image only when a diagram genuinely needs
-something Mermaid cannot express.
+web Markdown preview (desktop or mobile browser).
+
+**GitHub's native mobile apps (iOS/Android) do not render `mermaid` fenced
+code blocks** — they show the raw source text instead, with no fix on
+GitHub's roadmap as of this writing. This matters specifically for a README's
+primary/hero diagram, since that's the one most likely to be read on a phone.
+For that diagram: keep the Mermaid `.mmd` source in the repository for
+diffability and editing, but also render it ahead of time to a static SVG (or
+PNG) and commit that image, embedding the image in the README with standard
+Markdown image syntax rather than a live `mermaid` fence — this way it
+displays on every client, apps included. Diagrams deeper in the docs (for
+example `docs/ARCHITECTURE.md`'s Component Diagram) are read in a browser far
+more often and can stay as plain fenced Mermaid blocks.
+
+A rendered diagram still needs to actually look good, not just render:
+mermaid's default theme (bright yellow cluster backgrounds, saturated purple
+node fills, curvy bezier edges) reads as cluttered, and a graph with a
+feedback loop back into an earlier node tangles visibly under mermaid's
+automatic layout even when every individual edge is intentional. Favor a
+muted custom theme (light tinted node fills, gray hairline borders/lines,
+`curve: linear` for straight edges) and a one-directional acyclic layout;
+push any true feedback relationship (for example "CI keeps X updated") into
+the surrounding prose instead of forcing a loop-back arrow into the diagram.
+Prefer a tall/narrow (`flowchart TD`) layout over a wide/short one (`LR`) for
+anything embedded in a README: the image is scaled to the reader's column
+width, so a wide diagram shrinks its text toward illegibility on a phone
+while a tall one scales up and stays readable. `assets/diagrams/README.md`
+in this repository documents the worked rendering setup (theme, curve,
+layout choice) behind its own README diagram.
 
 `docs/ARCHITECTURE.md`'s "Component Diagram" section (see
 `templates/docs/ARCHITECTURE.md`) is where the Mermaid source for a project's
 architecture lives; the README should link to it rather than duplicate it, but
 may inline a smaller high-level diagram directly for a reader who never leaves
 the README. This repository's own `README.md` ("Project Structure" and "How It
-Works" sections) is a worked example of both patterns applied to a
+Works" sections) and `assets/diagrams/` are a worked example of both
+patterns — including the pre-rendered-image pattern — applied to a
 non-service, framework-shaped repository.
 
 Like the "Current Capabilities" README requirement in `DOCUMENTATION.md`,

@@ -67,6 +67,7 @@ Documentation often depends on images, diagrams, and other binary assets. Handle
 - **Images that must render inline in Markdown** (README screenshots, concept art, badges) are committed as **normal, web-optimized blobs** — reasonably small files committed directly to Git. Large originals, source files (for example, `.psd`, `.fig`, raw exports), and high-resolution masters belong in Git LFS.
 - When a repository uses Git LFS, add a `.gitattributes` override so the inline, web-optimized copies are **excluded** from LFS and stored as normal blobs. Inline images stored in LFS can fail to render on hosted Git platforms because of private-repo or LFS-bandwidth limits.
 - **Verify LFS objects actually uploaded** before declaring a push complete. A pushed LFS pointer with a missing object looks fine locally but breaks for everyone else. Check with `git lfs ls-files` and `git lfs fsck`, and confirm inline images render in the hosted view.
+- **A README's primary Mermaid diagram should be committed as both source and a rendered image**: the `.mmd` source for diffability, plus a pre-rendered SVG/PNG embedded via normal Markdown image syntax so it displays on clients that don't execute Mermaid (notably GitHub's native mobile apps — see `ARCHITECTURE.md`'s "Visual Architecture" section). Keep both files together (for example under `assets/diagrams/`) and regenerate the image whenever the source changes.
 
 ## Documentation Review Checklist
 
@@ -101,7 +102,7 @@ README.md should explain:
 - How to test it
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
-- Its project structure and, for non-trivial systems, a component/flow diagram — see `ARCHITECTURE.md`'s "Visual Architecture" section
+- Its project structure, plus at least one infographic (component or flow diagram) whenever possible — this is the default, not only for non-trivial systems; see `ARCHITECTURE.md`'s "Visual Architecture" section
 
 ## Current Capabilities
 

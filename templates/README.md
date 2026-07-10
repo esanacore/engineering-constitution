@@ -49,7 +49,7 @@ project/
 └── constitution/ ← Universal engineering rules (git submodule)
 ```
 
-For a component or data-flow diagram, see `docs/ARCHITECTURE.md`.
+Add at least one infographic (a component or data-flow diagram) whenever possible — see `docs/ARCHITECTURE.md`'s Component Diagram section for the Mermaid source, and inline a smaller version here if it helps a reader who never leaves the README.
 
 ## Documentation
 
