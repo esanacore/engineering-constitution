@@ -15,10 +15,12 @@ Read:
 - `README.md` — project purpose and setup
 - `TODO.md` — roadmap and known issues
 - `CHANGELOG.md` — recent changes
+- `docs/SESSION_PLAN.md` — check for a previous interrupted session before implementing
 
 ## Standards
 
 - Follow existing code style and project conventions.
+- Write or update `docs/SESSION_PLAN.md` before beginning implementation; clear or archive it when the session completes.
 - Add or update tests for all behavior changes.
 - Update documentation when behavior, setup, or architecture changes.
 - Update `TODO.md` with discovered work.

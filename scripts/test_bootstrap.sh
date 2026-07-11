@@ -69,6 +69,7 @@ test_new_project() {
   [ -f "docs/TEST_PLAN.md" ] || { echo "FAIL: TEST_PLAN.md missing"; exit 1; }
   [ -f "docs/MVP_BACKLOG.md" ] || { echo "FAIL: MVP_BACKLOG.md missing"; exit 1; }
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
+  [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }
 

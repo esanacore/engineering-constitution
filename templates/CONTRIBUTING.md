@@ -21,10 +21,11 @@ Before starting, you MUST read:
 - `AGENTS.md` (Project-Specific Rules)
 
 ### 2. Operational Standards
+- **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there before implementing.
 - **Testing**: Every change requires updated or new automated tests.
 - **Documentation**: Update `README.md`, `CHANGELOG.md`, and `TODO.md` for every task.
 - **Security**: Perform a security review of your changes.
-- **Handoff**: Record your progress in `docs/AGENT_HANDOFF.md` at the end of your session.
+- **Handoff**: Record your progress in `docs/AGENT_HANDOFF.md` at the end of your session, and clear or archive `docs/SESSION_PLAN.md`.
 
 ## Getting Help
 
