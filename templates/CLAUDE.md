@@ -17,6 +17,34 @@ Before making changes, read:
 
 ## gstack
 
+This project uses [gstack](https://github.com/garrytan/gstack) for AI-assisted
+workflows. Verify it's installed before relying on any skill below:
+
+```bash
+test -d ~/.claude/skills/gstack/bin && echo "GSTACK_OK" || echo "GSTACK_MISSING"
+```
+
+If `GSTACK_MISSING`, install it (requires [Bun](https://bun.sh) v1.0+ — install
+with `curl -fsSL https://bun.sh/install | bash` first if `bun --version` fails):
+
+```bash
+git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
+cd ~/.claude/skills/gstack && ./setup
+```
+
+On a Linux distro Playwright doesn't officially recognize yet (its browser
+install fails with `Playwright does not support chromium on <distro>-x64`),
+`/browse` and other browser-driving skills need one more step — a same-family
+fallback build still works:
+
+```bash
+cd ~/.claude/skills/gstack/browse
+PLAYWRIGHT_HOST_PLATFORM_OVERRIDE=ubuntu24.04-x64 bunx playwright install chromium chromium-headless-shell
+```
+
+(Swap `ubuntu24.04-x64` for the newest Ubuntu Playwright's installer actually
+lists as supported at the time — check the error message it prints.)
+
 - Use the `/browse` skill from gstack for **all** web browsing.
 - **Never** use `mcp__claude-in-chrome__*` tools.
 - Run `/setup-gbrain` once in this repository to initialize the project brain.

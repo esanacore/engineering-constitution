@@ -99,6 +99,24 @@ agent in CI-adjacent workflows.
 
 [Goose](https://github.com/aaif-goose/goose) is an extensible AI agent, and [goosetown](https://github.com/aaif-goose/goosetown) orchestrates flocks of goose agents (researchers, workers, writers, reviewers) to build software in parallel. Because goosetown wraps the goose CLI, supporting goose automatically extends the constitution to goosetown's multi-agent runs.
 
+Both repos live under the `aaif-goose` GitHub org (renamed from `block`;
+old `block/...` URLs still redirect, but their own READMEs haven't all been
+updated — use `aaif-goose/...` directly). Neither ships with an adopting
+repo or with this framework; install them on the machine that will run them:
+
+```bash
+# goose CLI (required by goosetown too)
+curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash
+
+# goosetown (multi-agent orchestration), requires goose v1.25.0+
+git clone https://github.com/aaif-goose/goosetown.git
+cd goosetown && ./goose
+```
+
+`templates/.goosehints` (installed into every adopting repo by
+`scripts/bootstrap.sh`) carries this same install block so agents that read
+it can self-diagnose a missing install rather than silently failing.
+
 ### Hints File
 
 The bootstrap script installs `.goosehints` in the project root. Goose loads this file automatically and applies the constitution's reading order and standards to every task. Add project-specific rules to `.goosehints` (or to `AGENTS.md`) the same way as for any other agent.
@@ -125,11 +143,40 @@ Or interactively, run `goose configure`, choose **Add Extension → Command-line
 
 ## gstack and gbrain
 
-gstack is a browser automation and AI skill toolkit for Claude Code. It ships a library of slash-command skills — `/browse`, `/qa`, `/design-review`, `/ship`, `/review`, `/document-release`, and more — that Claude Code invokes directly. gbrain is gstack's persistent project-memory layer; once initialized in a repository, Claude Code can store and recall project context across sessions.
+[gstack](https://github.com/garrytan/gstack) (Garry Tan, MIT license) is a browser automation and AI skill toolkit for Claude Code. It ships a library of slash-command skills — `/browse`, `/qa`, `/design-review`, `/ship`, `/review`, `/document-release`, and more — that Claude Code invokes directly. gbrain is gstack's persistent project-memory layer; once initialized in a repository, Claude Code can store and recall project context across sessions.
 
 ### Installing gstack
 
-Install gstack globally following the gstack installation guide for your platform. Once installed, its skills appear automatically in Claude Code.
+Requires [Bun](https://bun.sh) v1.0+ (`curl -fsSL https://bun.sh/install | bash` if `bun --version` fails) and Git.
+
+```bash
+git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
+cd ~/.claude/skills/gstack && ./setup
+```
+
+Once installed, its skills appear automatically in Claude Code — no restart
+observed to be necessary, but if a freshly-installed skill doesn't show up,
+start a new session.
+
+For repos this framework bootstraps, `templates/CLAUDE.md` already carries
+an install-verification block (`test -d ~/.claude/skills/gstack/bin`) plus
+this same install command, so an agent working in an adopted repo can
+self-install rather than silently skipping `/browse` and friends.
+
+**Known gap on very new Linux distros**: gstack's `./setup` downloads a
+Playwright-managed Chromium for `/browse` and other browser-driving skills.
+If your distro is newer than Playwright has added to its support matrix,
+that download fails with `Playwright does not support chromium on
+<distro>-x64`. Work around it with a same-family fallback build:
+
+```bash
+cd ~/.claude/skills/gstack/browse
+PLAYWRIGHT_HOST_PLATFORM_OVERRIDE=ubuntu24.04-x64 bunx playwright install chromium chromium-headless-shell
+```
+
+Adjust the override to whatever LTS Playwright's own error message says it
+does support — this is a Playwright-support-matrix lag, not a gstack bug,
+so the right target version will change over time.
 
 ### Initializing gbrain
 

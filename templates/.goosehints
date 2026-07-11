@@ -2,6 +2,31 @@
 
 This repository follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md). Apply it on every task, including when goose runs under a multi-agent orchestrator such as goosetown.
 
+## Installing goose and goosetown
+
+Neither ships with this repository — both are separate CLI tools you run
+this repo's work through, not something Claude Code (or any single-file
+hint like this one) can install on their own. If `goose --version` fails:
+
+```bash
+# goose CLI (org is aaif-goose, formerly published under block/)
+curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash
+```
+
+For multi-agent orchestration (a flock of goose delegates working in
+parallel — researchers, workers, writers, reviewers):
+
+```bash
+git clone https://github.com/aaif-goose/goosetown.git
+cd goosetown && ./goose
+```
+
+goosetown requires goose v1.25.0+ already installed. See
+[aaif-goose/goose](https://github.com/aaif-goose/goose) and
+[aaif-goose/goosetown](https://github.com/aaif-goose/goosetown) for full
+docs — their own READMEs still say `block/...` in places (pre-rename;
+GitHub redirects it, but clone the `aaif-goose/...` URL directly).
+
 ## Required Reading
 
 Before making changes, read:

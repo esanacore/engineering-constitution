@@ -80,7 +80,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.30.0
+Current version: 1.31.0
 
 See `VERSION`.
 

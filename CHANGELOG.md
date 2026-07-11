@@ -6,8 +6,11 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.31.0 - 2026-07-11
+
 ### Added
 
+- `templates/CLAUDE.md` and `templates/.goosehints` now carry real, verified install instructions for gstack (`garrytan/gstack`, requires Bun) and goose/goosetown (`aaif-goose` org, renamed from `block`) instead of only naming the tools and skill lists. `INTEGRATION.md`'s "gstack and gbrain" and "Goose and Goosetown" sections gained the same concrete commands, plus a documented workaround (`PLAYWRIGHT_HOST_PLATFORM_OVERRIDE`) for gstack's browser install failing on Linux distros newer than Playwright's support matrix. Previously an agent following these docs literally had no path to actually install anything — "follow the installation guide for your platform" pointed nowhere.
 - Added a "Visual Architecture" policy to `ARCHITECTURE.md` requiring every README.md to carry a directory-tree project structure section and, **whenever possible**, at least one infographic — a Mermaid component/flow diagram — as the default expectation rather than an exception reserved for complex systems, kept current the same way as the existing "Current Capabilities" requirement. `CONSTITUTION.md` Principle 6 and `DOCUMENTATION.md`'s README Expectations now point to it. `templates/README.md` gained a "Project Structure" tree placeholder plus an explicit prompt to add an infographic, and `templates/docs/ARCHITECTURE.md`'s Component Diagram section gained a worked Mermaid example, so adopting repositories start with the pattern instead of a bare comment. This repository's own `README.md` carries a real "Project Structure" tree and a "How It Works" Mermaid diagram of the adoption flow, serving as the worked example the policy points to.
 - Added `scripts/check_release_tag_alignment.sh`, a source-repo checker that verifies the released `VERSION`, the matching `v<VERSION>` tag, and `HEAD` all stay aligned. This catches the specific failure mode where framework changes are merged and versioned but the release tag is never cut, leaving adopter audits and version gates stuck on the previous release.
 - Added `scripts/test_check_release_tag_alignment.sh` covering the aligned case plus missing-tag, tag-off-HEAD, latest-tag-mismatch, and usage-error failures.
@@ -19,6 +22,7 @@ This project follows semantic versioning.
 
 ### Fixed
 
+- `scripts/run_declared_tests.sh` and seven other scripts under `scripts/` had lost their executable bit (likely a checkout/tooling artifact, not a deliberate change — all other scripts are invoked via `bash scripts/foo.sh` throughout this repo and its own test suite, which masked the issue everywhere except `test_run_declared_tests.sh`'s one direct-execution test path). Restored `+x` on all of them.
 - `README.md`'s "How It Works" diagram no longer falls back to raw Mermaid source text when viewed in GitHub's native iOS/Android apps. It's now a pre-rendered SVG (`assets/diagrams/how-it-works.svg`) embedded as a normal image, with the editable Mermaid source and regeneration instructions kept alongside it in `assets/diagrams/`.
 - Redesigned that same diagram: mermaid's default theme (clashing yellow cluster backgrounds, saturated purple nodes) is replaced with a muted custom theme, a feedback-loop edge that tangled under auto-layout is removed in favor of a one-directional flow, the layout switched from wide/short (`LR`) to tall/narrow (`TD`) so the embedded image scales up and stays legible on a phone-width column instead of shrinking its text, and node/rank/diagram spacing increased (`nodeSpacing`, `rankSpacing`, `diagramPadding` in `mermaid-config.json`) so it no longer reads as cramped. `ARCHITECTURE.md`'s "Visual Architecture" policy and `assets/diagrams/README.md` document these choices for future diagrams.
 
