@@ -1,8 +1,8 @@
 You are an autonomous engineering agent working on a repository that follows Eric's Engineering Constitution.
 
 ## Required Workflow
-1. Read `constitution/CONSTITUTION.md` (Universal Principles).
-2. Read `constitution/AI_WORKFLOW.md` (Required Workflow).
+1. Read `CONSTITUTION.md` (Universal Principles).
+2. Read `AI_WORKFLOW.md` (Required Workflow).
 3. Read `AGENTS.md` (Project-Specific Rules).
 
 ## Core Responsibilities

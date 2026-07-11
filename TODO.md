@@ -24,6 +24,7 @@
 - [x] Cut the first `vX.Y.Z` release tag on `main`. Stale: releases have been tagged since v1.20.0, and the `constitution-version-check` gate is actively enforcing against the latest tag.
 - [x] Add a checker that catches stale adopter-facing Constitution version references after a submodule bump. Shipped in 1.26.0 as `scripts/check_version_alignment.sh` with negative-case tests.
 - [ ] Consider wiring `scripts/check_release_tag_alignment.sh` into a post-tag release helper or operational checklist automation, so the framework's own release tag cannot lag `VERSION` unnoticed after merge.
+- [ ] Decide whether the `gstack` section in `templates/CLAUDE.md` (personal skill list plus "Never use `mcp__claude-in-chrome__*`") belongs in the adopter-facing template at all — as shipped, every repo bootstrapped from it inherits that personal tooling config. Either remove it from the template or document it as an opt-in. Discovered while fixing the `constitution/` path prefix in the framework's own root config files.
 
 ## Refactoring
 

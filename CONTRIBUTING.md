@@ -1,6 +1,6 @@
 # Contributing to this Project
 
-Thank you for contributing! This project follows [Eric's Engineering Constitution](constitution/CONSTITUTION.md).
+Thank you for contributing! This project follows [Eric's Engineering Constitution](CONSTITUTION.md).
 
 ## For Humans
 
@@ -16,8 +16,8 @@ This repository is "agent-first." You are expected to operate autonomously while
 
 ### 1. Mandatory Reading
 Before starting, you MUST read:
-- `constitution/CONSTITUTION.md` (Universal Principles)
-- `constitution/AI_WORKFLOW.md` (Required Workflow)
+- `CONSTITUTION.md` (Universal Principles)
+- `AI_WORKFLOW.md` (Required Workflow)
 - `AGENTS.md` (Project-Specific Rules)
 
 ### 2. Operational Standards
