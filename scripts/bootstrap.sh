@@ -37,6 +37,7 @@ Creates or installs:
   - .github/workflows/constitution-compliance.yml
   - .github/workflows/constitution-tests.yml
   - .github/workflows/constitution-doc-freshness.yml
+  - .github/workflows/constitution-secrets.yml
   - .cursor/rules/project.mdc
   - .continue/config.json
   - .aider.conf.yml
@@ -422,6 +423,7 @@ generate_adoption_report() {
     status_line ".github/workflows/constitution-compliance.yml"
     status_line ".github/workflows/constitution-tests.yml"
     status_line ".github/workflows/constitution-doc-freshness.yml"
+    status_line ".github/workflows/constitution-secrets.yml"
     status_line ".cursor/rules/project.mdc"
     status_line ".continue/config.json"
     status_line ".aider.conf.yml"
@@ -497,7 +499,7 @@ generate_adoption_report() {
     echo "- \`/setup-deploy\` — Configure deployment targets if this project has a deployment pipeline."
     echo
     echo "**In your terminal:**"
-    echo "- \`pip install pre-commit && pre-commit install\` — Activate the pre-commit hooks installed at \`.pre-commit-config.yaml\`."
+    echo "- \`pip install pre-commit && pre-commit install && pre-commit install --hook-type pre-push\` — Activate the pre-commit hooks installed at \`.pre-commit-config.yaml\`, including the pre-push secrets sweep (\`constitution/scripts/check_secrets.sh\`)."
     echo "- \`npm install\` in \`constitution/mcp-server/\` — Prepare the constitution MCP server dependency if you plan to register it with Goose or Claude Code."
     echo
     echo "See \`constitution/INTEGRATION.md\` for full setup details: gstack skills, gbrain initialization, Continue.dev, Aider, devcontainer, and MCP server registration."
@@ -551,6 +553,7 @@ copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_p
 copy_file "$template_dir/.github/workflows/constitution-compliance.yml" "$project_path/.github/workflows/constitution-compliance.yml"
 copy_file "$template_dir/.github/workflows/constitution-tests.yml" "$project_path/.github/workflows/constitution-tests.yml"
 copy_file "$template_dir/.github/workflows/constitution-doc-freshness.yml" "$project_path/.github/workflows/constitution-doc-freshness.yml"
+copy_file "$template_dir/.github/workflows/constitution-secrets.yml" "$project_path/.github/workflows/constitution-secrets.yml"
 copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
 mkdir -p "$project_path/.continue"
 copy_file "$template_dir/.continue/config.json" "$project_path/.continue/config.json"

@@ -40,6 +40,46 @@ Use appropriate secret storage for:
 - Private keys
 - Production credentials
 
+### Secrets Sweep
+
+Sweeping the entire project for secrets that should be gitignored is a
+standard practice for every repository that adopts this constitution, not an
+optional extra. The framework ships a reference checker,
+`scripts/check_secrets.sh`, that adopters run through the `constitution/`
+submodule:
+
+```bash
+bash constitution/scripts/check_secrets.sh
+```
+
+It checks tracked files *and* untracked-but-not-gitignored files (so a
+secret sitting in the working tree is caught before an accidental
+`git add -A`, not only after it's committed) for:
+
+- Filenames shaped like credentials (`.env`, `id_rsa`, `*.pem`, `*.key`,
+  `*.p12`, `credentials.json`, service-account JSON, `.netrc`,
+  `terraform.tfstate`, ...).
+- High-confidence secret patterns in file content (AWS access keys, GitHub
+  and Slack tokens, PEM private key blocks, Google and Stripe API keys).
+
+A real hit always fails the check, with or without `--strict`. It also
+reports (warn by default, `--strict` to fail) whether `.gitignore` already
+covers the known secret-file patterns above, so a gap can be closed before it
+becomes a real leak.
+
+`scripts/bootstrap.sh` wires this in two ways so it runs before a secret ever
+reaches a remote:
+
+- A pre-push `pre-commit` hook (`.pre-commit-config.yaml`), so it runs
+  locally before every `git push`.
+- `.github/workflows/constitution-secrets.yml`, a CI backstop for anyone who
+  skipped the local hook.
+
+This is a zero-dependency baseline (bash and Git only) with a curated,
+high-confidence pattern set — it is intentionally not exhaustive. Projects
+handling unusually sensitive credentials should still consider a dedicated
+scanner (for example gitleaks or trufflehog) for deeper coverage.
+
 ## Permissions
 
 Apply least privilege:

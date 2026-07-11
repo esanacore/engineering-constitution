@@ -51,12 +51,22 @@ Checks whether an adopting repository includes the governance files the constitu
 - **Recommended** files such as `docs/SETUP.md`, `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, `docs/OPERATIONS.md`, and `docs/TEST_PLAN.md`
 - **Product-facing** files such as `docs/PRODUCT_REQUIREMENTS.md` and `docs/REQUIREMENTS_TRACEABILITY.md`
 
+### `scripts/check_secrets.sh`
+Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote:
+
+- **Filenames** shaped like credentials — `.env`, `id_rsa`, `*.pem`, `*.key`, `*.p12`, `credentials.json`, service-account JSON, `.netrc`, `terraform.tfstate`, and similar
+- **Content patterns** with high confidence — AWS access keys, GitHub/Slack tokens, PEM private key blocks, Google/Stripe API keys
+- **`.gitignore` coverage** of the filename patterns above (warn by default, `--strict` to fail)
+
+A real hit (filename or content) always fails, with or without `--strict`. It is a zero-dependency (bash + Git only) baseline, not a replacement for a dedicated scanner like gitleaks or trufflehog on projects with unusually sensitive credentials. `scripts/bootstrap.sh` wires it in twice: a `pre-push`-stage `pre-commit` hook and the `constitution-secrets.yml` CI workflow.
+
 ### Test coverage for governance tooling
 The repository tests the bootstrap and checker scripts with shell-based regression suites including negative cases:
 
 - `scripts/test_bootstrap.sh`
 - `scripts/test_check_traceability.sh`
 - `scripts/test_check_compliance.sh`
+- `scripts/test_check_secrets.sh`
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 
@@ -91,6 +101,7 @@ The current framework version in `README.md` and `CONSTITUTION.md` is `1.31.0`. 
 - Requiring agents to evaluate whether accumulated work should trigger a release, not just update `CHANGELOG.md`'s `Unreleased` section indefinitely (`AI_WORKFLOW.md`, `CONSTITUTION.md` Principle 10)
 - Required review of other branches, worktrees, and open pull requests before starting work, and merge-before-delete Git cleanup discipline, in `AI_WORKFLOW.md`
 - A checker that catches stale adopter-facing version references after a submodule bump (`check_version_alignment.sh`)
+- A zero-dependency secrets sweep, enforced both locally (pre-push hook) and in CI, so a credential-shaped file or high-confidence secret pattern never reaches a remote (`check_secrets.sh`, `constitution-secrets.yml`)
 - Compliance checking and CI gates
 - Requirements traceability enforcement
 - Automated constitution version drift detection for adopters
