@@ -18,6 +18,38 @@ target_script="$script_dir/setup-machine.sh"
 test_dir=$(mktemp -d)
 echo "Running tests in: $test_dir"
 
+# The fixture-install tests below sandbox PATH down to a fake-bin directory
+# plus "just enough real system tools to actually run the target script and
+# its git clone / curl calls" -- deliberately excluding whatever directories
+# might hold a real, already-installed gstack/goose on the machine running
+# this suite, so the fixtures are proven to do the real work rather than
+# silently finding a pre-existing install. Hardcoding a fixed path like
+# /usr/bin:/bin for that "just enough" allowance breaks on Windows Git Bash /
+# MSYS2, where these tools are split across multiple directories instead (git
+# and curl under /mingw64/bin, but bash/env -- needed for every script's
+# `#!/usr/bin/env bash` shebang -- under /usr/bin) -- resolve their real
+# locations instead of assuming a single Linux-style directory holds them all.
+system_tools_path=$(
+  { dirname "$(command -v git)"; dirname "$(command -v curl)"; \
+    dirname "$(command -v bash)"; dirname "$(command -v env)"; } \
+    | sort -u | paste -sd: -
+)
+
+# Build a file:// URL curl can actually open for an absolute local path. A
+# plain "file://$path" only works when curl consumes POSIX paths directly;
+# on Windows Git Bash / MSYS2, curl is normally a native Windows build that
+# needs a Windows-style path instead ("curl: (37) Could not open file" is
+# the failure this works around). Prefer cygpath -m (forward-slash mixed
+# path, e.g. C:/Users/...) when available; fall back to the raw path.
+file_url() {
+  local path=$1
+  if command -v cygpath >/dev/null 2>&1; then
+    printf 'file:///%s' "$(cygpath -m "$path")"
+  else
+    printf 'file://%s' "$path"
+  fi
+}
+
 cleanup() {
   rm -rf "$test_dir"
 }
@@ -195,7 +227,7 @@ test_skip_flags() {
   local goosetown_dir="$sandbox/goosetown-missing"
 
   set +e
-  out=$(PATH="$sandbox/empty-bin:/usr/bin:/bin" \
+  out=$(PATH="$sandbox/empty-bin:$system_tools_path" \
         GSTACK_DIR="$gstack_dir" \
         GOOSETOWN_DIR="$goosetown_dir" \
         "$target_script" --skip-bun --skip-gstack --skip-goose --skip-goosetown 2>&1)
@@ -219,7 +251,7 @@ test_gstack_requires_bun() {
   local gstack_dir="$sandbox/gstack"
 
   set +e
-  out=$(PATH="$sandbox/empty-bin:/usr/bin:/bin" \
+  out=$(PATH="$sandbox/empty-bin:$system_tools_path" \
         GSTACK_DIR="$gstack_dir" \
         "$target_script" --skip-bun --skip-goose --skip-goosetown 2>&1)
   status=$?
@@ -251,11 +283,11 @@ test_real_install_paths_via_fixtures() {
   local goosetown_dir="$sandbox/install/goosetown"
 
   set +e
-  out=$(PATH="$sandbox/fake-bin:/usr/bin:/bin" \
+  out=$(PATH="$sandbox/fake-bin:$system_tools_path" \
         GSTACK_DIR="$gstack_dir" \
         GOOSETOWN_DIR="$goosetown_dir" \
         GSTACK_REPO_URL="$gstack_repo" \
-        GOOSE_INSTALLER_URL="file://$goose_installer" \
+        GOOSE_INSTALLER_URL="$(file_url "$goose_installer")" \
         GOOSETOWN_REPO_URL="$goosetown_repo" \
         "$target_script" --skip-bun 2>&1)
   status=$?
@@ -283,7 +315,7 @@ test_playwright_fallback_retry() {
   local gstack_dir="$sandbox/install/gstack"
 
   set +e
-  out=$(PATH="$sandbox/fake-bin:/usr/bin:/bin" \
+  out=$(PATH="$sandbox/fake-bin:$system_tools_path" \
         GSTACK_DIR="$gstack_dir" \
         GSTACK_REPO_URL="$gstack_repo" \
         PLAYWRIGHT_FALLBACK_PLATFORM="fakefallback99-x64" \

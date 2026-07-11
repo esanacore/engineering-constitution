@@ -25,6 +25,10 @@ This project follows semantic versioning.
 - `scripts/bootstrap.sh` now installs `docs/SESSION_PLAN.md` and reports its status in the adoption report.
 - `templates/CLAUDE.md`'s "gstack" section is now explicitly marked optional ("gstack (Optional — delete this section if unused)"), with a preamble clarifying gstack is a third-party skill suite, not a constitution requirement, and instructing adopters without it to delete the whole section. Previously every bootstrapped repo inherited a personal tooling mandate (use `/browse` for all web browsing, never use `mcp__claude-in-chrome__*`) with no indication it was optional.
 
+### Fixed
+
+- `scripts/test_setup_machine.sh`'s "real install paths against local fixtures" case failed on Windows Git Bash / MSYS2, from two separate portability bugs: a hardcoded `PATH=".../fake-bin:/usr/bin:/bin"` assumed `git`/`curl`/`bash`/`env` all live under `/usr/bin` or `/bin`, which doesn't hold on this platform (git and curl live under `/mingw64/bin` instead) — fixed by resolving each tool's real directory via `command -v` rather than hardcoding a Linux-style path. Separately, `GOOSE_INSTALLER_URL="file://$path"` passed a POSIX-style path to curl, but curl here is a native Windows build that needs a Windows-style path in `file://` URLs (`curl: (37) Could not open file`) — fixed with a `file_url()` helper that converts via `cygpath -m` when available.
+
 ## 1.32.0 - 2026-07-11
 
 ### Added
