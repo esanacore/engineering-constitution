@@ -27,6 +27,8 @@ guide only when neither exists.
 | C# | [Microsoft C# coding conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) | XML doc comments (`///`) | |
 | Rust | [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/) + `rustfmt` | [rustdoc](https://doc.rust-lang.org/rustdoc/) (`///`) | |
 | Shell | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) | Comment header per script, per `shellcheck` conventions | This repository's own `scripts/*.sh` follow this guide. |
+| C++ | [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) | [Doxygen](https://www.doxygen.nl/manual/docblocks.html) (`/** ... */`) | No single vendor/standards-body guide exists; Google's is the most widely adopted outside embedded/kernel work. |
+| C | [Linux kernel coding style](https://www.kernel.org/doc/html/latest/process/coding-style.html) | [Doxygen](https://www.doxygen.nl/manual/docblocks.html) (`/** ... */`) | No vendor-official guide exists for C at large; the kernel style is the most widely recognized reference. For embedded/safety-critical work, prefer the project's MISRA C guidelines instead. |
 
 ## Workflow
 
