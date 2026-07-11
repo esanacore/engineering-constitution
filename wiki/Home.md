@@ -91,13 +91,14 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 
 The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprotocol/sdk`. It exposes:
 
-- Resources for the core constitution, AI workflow, and testing standards
+- Resources for the core constitution, AI workflow, testing standards, code style, and the style guide registry
 - A `validate_project_structure` tool that checks whether a target project contains `AGENTS.md`, `CHANGELOG.md`, `TODO.md`, and `VERSION`
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.32.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.33.0`. Recent releases have focused on:
 
+- `CONSTITUTION.md` Principle 12 (Industry-Standard Code Conventions): code style, comments, docstrings, and diagrams follow the official, canonical style guide for the language/platform in use, backed by a new `CODE_STYLE.md` and a tracked `sources/STYLE_GUIDES.md` registry living alongside the book/paper digestion workflow
 - `scripts/setup-machine.sh`: a one-time, per-machine installer for gstack/goose/goosetown, deliberately kept separate from `scripts/bootstrap.sh` so repository bootstrapping never gains a side effect of installing global developer tooling
 - Real, concrete install instructions for gstack and goose/goosetown in `templates/CLAUDE.md`, `templates/.goosehints`, and `INTEGRATION.md` — previously these named the tools and skill lists but never said how to actually get them, so an agent following the docs literally had no path to install anything
 - CI enforcement that runs an adopting repository's own declared test suite and flags documentation drift, not just constitution governance-file presence (`run_declared_tests.sh`, `check_doc_freshness.sh`, `constitution-tests.yml`, `constitution-doc-freshness.yml`)

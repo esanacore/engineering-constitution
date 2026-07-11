@@ -10,6 +10,9 @@ the full workflow.
   relative path.
 - `manifest.tsv` — Tracked. The hash ledger `scripts/check_source_summaries.sh`
   uses to detect new or changed files.
+- `STYLE_GUIDES.md` — Tracked. A registry of official, canonical style guide
+  URLs and docstring conventions per language/platform — see
+  [`../CODE_STYLE.md`](../CODE_STYLE.md).
 
 `raw/example/` and `summaries/example/` are a small worked demo showing the
 whole loop already wired up — read `summaries/example/sample-source.md` for

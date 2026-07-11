@@ -11,6 +11,7 @@ Before making changes, read:
 - `constitution/TESTING.md`
 - `constitution/DOCUMENTATION.md`
 - `constitution/SECURITY.md`
+- `constitution/CODE_STYLE.md`
 - `README.md`
 - `TODO.md`
 - `CHANGELOG.md`

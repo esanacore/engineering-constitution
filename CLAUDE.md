@@ -11,6 +11,7 @@ Before making changes, read:
 - `TESTING.md`
 - `DOCUMENTATION.md`
 - `SECURITY.md`
+- `CODE_STYLE.md`
 - `README.md`
 - `TODO.md`
 - `CHANGELOG.md`

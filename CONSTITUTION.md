@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.32.0
+Version: 1.33.0
 
 ## Purpose
 
@@ -178,6 +178,23 @@ Agents should identify:
 
 Document findings in TODO.md.
 
+## Principle 12: Industry-Standard Code Conventions
+
+Code style, comments, docstrings, and technical diagrams should follow the
+official, canonical style guide published by the language or platform owner
+rather than an ad hoc, project-invented convention.
+
+For example, Kotlin/Android code follows
+[developer.android.com's Kotlin style guide](https://developer.android.com/kotlin/style-guide).
+
+Docstring and comment *format* follows the platform's canonical convention
+(KDoc, Javadoc, PEP 257/Google-style docstrings, JSDoc, Go doc comments, and
+so on); this governs form, not when to write a comment — the existing
+"why, not what" comment-content policy is unchanged.
+
+See `CODE_STYLE.md` for the full principle and `sources/STYLE_GUIDES.md` for
+the maintained registry of canonical style guides by language/platform.
+
 ## Required Workflow
 
 See `AI_WORKFLOW.md` for the complete step-by-step workflow.
@@ -186,8 +203,6 @@ See `AI_WORKFLOW.md` for the complete step-by-step workflow.
 
 Potential future additions:
 
-- Coding standards
-- Language-specific guidance
 - AI agent scorecards
 - Quality metrics
 - Repository health dashboards
