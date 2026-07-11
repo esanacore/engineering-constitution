@@ -35,6 +35,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_release_tag_alignment.sh`: Source-repo checker that verifies `VERSION`, the matching `v<VERSION>` tag, and `HEAD` stay aligned after a release.
 - `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
+- `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
 
 ## Project Structure
 

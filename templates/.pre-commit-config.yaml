@@ -1,6 +1,11 @@
 # Pre-commit hooks for code quality.
-# Install : pip install pre-commit && pre-commit install
+# Install : pip install pre-commit && pre-commit install && pre-commit install --hook-type pre-push
 # Run once: pre-commit run --all-files
+#
+# The second `install` above is required for the constitution-secrets hook
+# below to actually run: it is bound to the pre-push stage (a full-tree
+# secrets sweep on every commit is unnecessary; before every push is enough),
+# and pre-commit does not install pre-push hooks unless asked to.
 #
 # Add language-specific hooks below the universal set.
 # See constitution/INTEGRATION.md for language-specific examples.
@@ -15,3 +20,12 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
       - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: constitution-secrets-sweep
+        name: Constitution secrets sweep
+        description: Sweep the project for secrets that should be gitignored before pushing (constitution/scripts/check_secrets.sh).
+        entry: bash constitution/scripts/check_secrets.sh .
+        language: system
+        pass_filenames: false
+        stages: [pre-push]

@@ -1,5 +1,30 @@
 node_modules/
 
+# Secrets that should never be committed. See SECURITY.md's "Secrets Sweep"
+# and scripts/check_secrets.sh, which checks this list is present.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.ppk
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+credentials.json
+*serviceaccount*.json
+*service-account*.json
+.netrc
+terraform.tfstate
+terraform.tfstate.backup
+
 # Raw dropped book sources (PDF/EPUB/DOCX/etc.) are never committed — only
 # their generated summaries and the manifest are tracked. See
 # KNOWLEDGE_SOURCES.md.

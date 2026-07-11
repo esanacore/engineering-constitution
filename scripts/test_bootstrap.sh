@@ -53,6 +53,7 @@ test_new_project() {
   [ -f ".github/workflows/constitution-compliance.yml" ] || { echo "FAIL: constitution-compliance.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-tests.yml" ] || { echo "FAIL: constitution-tests.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-doc-freshness.yml" ] || { echo "FAIL: constitution-doc-freshness.yml workflow missing"; exit 1; }
+  [ -f ".github/workflows/constitution-secrets.yml" ] || { echo "FAIL: constitution-secrets.yml workflow missing"; exit 1; }
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }

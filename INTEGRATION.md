@@ -477,6 +477,31 @@ Enforcement" section for the full rationale):
   occasional false positives on pure refactors, which is exactly why it warns
   by default instead of failing.
 
+## Sweeping for Secrets Before They're Pushed
+
+`.github/workflows/constitution-secrets.yml` runs
+`constitution/scripts/check_secrets.sh` on every push and pull request, plus a
+daily schedule. Unlike the checkers above, a real hit here **always** fails
+the build, with or without `--strict` — `--strict` only governs the separate
+`.gitignore`-coverage recommendation (see `SECURITY.md`'s "Secrets Sweep"
+section for what it looks for).
+
+CI is the backstop, not the first line of defense: `scripts/bootstrap.sh`
+also installs a local `pre-commit` hook bound to the `pre-push` stage
+(`.pre-commit-config.yaml`), so the same sweep runs before every `git push`
+from a machine that has run:
+
+```bash
+pip install pre-commit && pre-commit install && pre-commit install --hook-type pre-push
+```
+
+Run the sweep manually at any time with:
+
+```bash
+bash constitution/scripts/check_secrets.sh
+bash constitution/scripts/check_secrets.sh --strict   # also enforce .gitignore coverage
+```
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:
