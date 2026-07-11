@@ -10,8 +10,8 @@ This file provides help for humans and AI agents working on this project.
 
 ## For AI Agents
 
-- **Entry Point**: Read `AGENTS.md` and `constitution/CONSTITUTION.md`.
-- **Workflow**: Follow `constitution/AI_WORKFLOW.md`.
+- **Entry Point**: Read `AGENTS.md` and `CONSTITUTION.md`.
+- **Workflow**: Follow `AI_WORKFLOW.md`.
 - **Command Help**: See `docs/COMMAND_REFERENCE.md`.
 - **Troubleshooting**: See `docs/TROUBLESHOOTING.md`.
 - **Handoffs**: If you are finishing a session, see `docs/AGENT_HANDOFF.md`.

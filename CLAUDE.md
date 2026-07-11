@@ -6,11 +6,11 @@ This repository follows Eric's Engineering Constitution.
 
 Before making changes, read:
 
-- `constitution/CONSTITUTION.md`
-- `constitution/AI_WORKFLOW.md`
-- `constitution/TESTING.md`
-- `constitution/DOCUMENTATION.md`
-- `constitution/SECURITY.md`
+- `CONSTITUTION.md`
+- `AI_WORKFLOW.md`
+- `TESTING.md`
+- `DOCUMENTATION.md`
+- `SECURITY.md`
 - `README.md`
 - `TODO.md`
 - `CHANGELOG.md`
