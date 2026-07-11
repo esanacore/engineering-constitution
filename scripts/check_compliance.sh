@@ -48,7 +48,8 @@ Tiers:
                 AGENTS.md, CLAUDE.md, VERSION, constitution/ (submodule).
   Recommended   docs/SETUP.md, docs/COMMAND_REFERENCE.md, docs/TROUBLESHOOTING.md,
                 docs/ARCHITECTURE.md, docs/adr/, docs/AGENT_PROMPTS.md,
-                docs/AGENT_HANDOFF.md, docs/OPERATIONS.md, docs/TEST_PLAN.md.
+                docs/AGENT_HANDOFF.md, docs/OPERATIONS.md, docs/TEST_PLAN.md,
+                docs/SESSION_PLAN.md.
   Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md.
 USAGE
 }
@@ -126,7 +127,17 @@ recommended=(
   docs/AGENT_HANDOFF.md
   docs/OPERATIONS.md
   docs/TEST_PLAN.md
+  docs/SESSION_PLAN.md
 )
+
+# docs/SESSION_PLAN.md is deliberately placeholder-shaped between sessions
+# (DOCUMENTATION.md "Session Planning": cleared or archived once a session's
+# outcomes are captured elsewhere) -- unlike every other recommended file,
+# its placeholder content does not indicate neglect, so it is exempted from
+# the placeholder check below and only checked for existence.
+recommended_skip_placeholder_check() {
+  [ "$1" = "docs/SESSION_PLAN.md" ]
+}
 
 # Required only for product-facing repositories.
 product_files=(
@@ -163,7 +174,7 @@ echo
 echo "Recommended:"
 for f in "${recommended[@]}"; do
   if [ -e "$root/$f" ]; then
-    if [ -f "$root/$f" ] && contains_placeholder_content "$root/$f"; then
+    if [ -f "$root/$f" ] && ! recommended_skip_placeholder_check "$f" && contains_placeholder_content "$root/$f"; then
       if [ "$strict" = "true" ]; then
         echo "  MISSING  $f (recommended placeholder, --strict)"
       else

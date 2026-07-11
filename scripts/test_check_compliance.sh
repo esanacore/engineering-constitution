@@ -28,6 +28,7 @@ make_compliant_repo() {
   done
   for f in SETUP.md COMMAND_REFERENCE.md TROUBLESHOOTING.md ARCHITECTURE.md \
            AGENT_PROMPTS.md AGENT_HANDOFF.md OPERATIONS.md TEST_PLAN.md \
+           SESSION_PLAN.md \
            PRODUCT_REQUIREMENTS.md REQUIREMENTS_TRACEABILITY.md; do
     echo "placeholder" > "$dest/docs/$f"
   done
@@ -52,6 +53,8 @@ run_check "$repo"
 echo "$output"
 [ "$status" -eq 0 ] || { echo "FAIL(1): expected exit 0 for compliant repo, got $status"; exit 1; }
 echo "$output" | grep -q "Required missing: 0;" || { echo "FAIL(1): expected zero required missing"; exit 1; }
+echo "$output" | grep -q "recommended missing: 0;" || { echo "FAIL(1): expected zero recommended missing"; exit 1; }
+echo "$output" | grep -q "OK       docs/SESSION_PLAN.md" || { echo "FAIL(1): docs/SESSION_PLAN.md not reported OK"; exit 1; }
 echo "SUCCESS(1): fully compliant repository passes."
 
 # ---------------------------------------------------------------------------

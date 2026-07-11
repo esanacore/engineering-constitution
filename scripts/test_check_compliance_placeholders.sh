@@ -87,4 +87,30 @@ product_strict_output=$(cat "$PRODUCT_OUT")
 assert_contains "$product_strict_output" "MISSING  docs/PRODUCT_REQUIREMENTS.md (product placeholder, --product)"
 assert_contains "$product_strict_output" "MISSING  docs/REQUIREMENTS_TRACEABILITY.md (product placeholder, --product)"
 
+# docs/SESSION_PLAN.md is deliberately placeholder-shaped between sessions
+# (it's cleared/overwritten at the start of each one), unlike every other
+# recommended file where placeholder content means "never customized" -- so
+# it must be exempt from this check even when full of <!-- --> comments.
+session_plan_repo="$TMPDIR/session-plan-placeholder"
+make_repo "$session_plan_repo"
+cat > "$session_plan_repo/docs/SESSION_PLAN.md" <<'EOF'
+# Session Plan
+
+## Goal
+
+<!-- What does this session aim to accomplish? Be specific. -->
+EOF
+
+session_plan_output=$("$CHECK_SCRIPT" "$session_plan_repo")
+assert_contains "$session_plan_output" "OK       docs/SESSION_PLAN.md"
+if [[ "$session_plan_output" == *"docs/SESSION_PLAN.md (recommended placeholder)"* ]]; then
+  echo "FAIL: docs/SESSION_PLAN.md should not be flagged as a placeholder" >&2
+  exit 1
+fi
+
+if ! "$CHECK_SCRIPT" --strict "$session_plan_repo" >/dev/null 2>&1; then
+  echo "FAIL: --strict should not fail on docs/SESSION_PLAN.md placeholder content" >&2
+  exit 1
+fi
+
 echo "PASS: placeholder documentation is flagged correctly"

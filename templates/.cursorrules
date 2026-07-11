@@ -5,5 +5,6 @@ This repository follows [Eric's Engineering Constitution](constitution/CONSTITUT
 ## Required Workflow
 
 1. Read `constitution/CONSTITUTION.md` and `constitution/AI_WORKFLOW.md`.
-2. Follow the project conventions in `AGENTS.md`.
-3. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.
+2. Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
+3. Follow the project conventions in `AGENTS.md`.
+4. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.

@@ -14,6 +14,9 @@ This project follows semantic versioning.
 - Added `docs/SESSION_PLAN.md` to the Strongly Encouraged files list in `DOCUMENTATION.md`.
 - Added session plan awareness to every agent instruction template: `templates/AGENTS.md`, `templates/CLAUDE.md`, `templates/.goosehints`, `templates/.github/copilot-instructions.md`, `templates/COPILOT_INSTRUCTIONS.md`, `templates/.agent-instructions.md`, and `templates/.openhands_instructions`.
 - Added a pointer from `templates/docs/AGENT_HANDOFF.md` to `docs/SESSION_PLAN.md` so the next agent checks intent-before-work alongside state-after-work.
+- Extended session plan awareness to the remaining agent-instruction templates that were missed in the initial rollout: `templates/.cursorrules`, `templates/.cursor/rules/project.mdc`, `templates/.continue/config.json`, `templates/.aider.conf.yml` (which now auto-loads `docs/SESSION_PLAN.md` as context), `templates/.project-rules.md`, `templates/SYSTEM_PROMPT.md`, `templates/CONTRIBUTING.md`, and `templates/HELP.md` — closing the gap where roughly half of `INTEGRATION.md`'s named tool-specific override files didn't know about the workflow step.
+- Added `docs/SESSION_PLAN.md` to `scripts/check_compliance.sh`'s recommended-files list, matching `DOCUMENTATION.md`'s Strongly Encouraged list, with a dedicated exemption from the placeholder-content check: unlike every other recommended doc, `docs/SESSION_PLAN.md` is *designed* to sit in placeholder form between sessions (it's cleared/overwritten each time), so flagging that as neglect would be a permanent false positive. Covered by a new negative-case test in `scripts/test_check_compliance_placeholders.sh`.
+- Added `docs/SESSION_PLAN.md` to `scripts/test_bootstrap.sh`'s installed-file assertions, so bootstrap's own test suite actually proves the file gets installed, matching every other file `scripts/bootstrap.sh` installs.
 
 ### Changed
 
