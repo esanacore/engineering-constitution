@@ -11,21 +11,24 @@ This document defines the required workflow for AI-assisted software development
 5. Read CHANGELOG.md.
 6. Read OPERATIONS.md when the task affects infrastructure, CI/CD, deployment, or runbooks.
 7. Review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work.
-8. Understand the task.
-9. Create an implementation plan.
-10. Implement changes.
-11. Update tests. Add as many automated tests as the change genuinely calls for across the pyramid (unit, integration, end-to-end, regression) rather than the minimum that makes a check pass — see TESTING.md. Update `docs/TEST_PLAN.md`'s "Full suite" command if it changed, and run `bash constitution/scripts/run_declared_tests.sh .` locally before considering the work done.
-12. Evaluate coverage and analyze gaps.
-13. Update requirements traceability for product-facing repositories.
-14. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
-15. Update TODO.md.
-16. Update CHANGELOG.md.
-17. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
-18. Perform a security review.
-19. Suggest future improvements.
-20. Summarize work.
-21. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
-22. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
+8. Check `docs/SESSION_PLAN.md` for an existing plan from a previous interrupted session. If one exists, review it for resumption context.
+9. Understand the task.
+10. Write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks — before any implementation starts. This is the crash-recovery record: if the session is interrupted, the next agent or human reads this file to understand what was planned and where work stopped. Update the Resumption Notes section as work progresses.
+11. Create an implementation plan.
+12. Implement changes.
+13. Update tests. Add as many automated tests as the change genuinely calls for across the pyramid (unit, integration, end-to-end, regression) rather than the minimum that makes a check pass — see TESTING.md. Update `docs/TEST_PLAN.md`'s "Full suite" command if it changed, and run `bash constitution/scripts/run_declared_tests.sh .` locally before considering the work done.
+14. Evaluate coverage and analyze gaps.
+15. Update requirements traceability for product-facing repositories.
+16. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
+17. Update TODO.md.
+18. Update CHANGELOG.md.
+19. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
+20. Perform a security review.
+21. Suggest future improvements.
+22. Clear or archive `docs/SESSION_PLAN.md` — the session's outcomes should be captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md` before the plan is cleared.
+23. Summarize work.
+24. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
+25. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
 
 ## Before Beginning Work
 
@@ -38,6 +41,7 @@ Agents must gather enough project context to make safe changes:
 - Release and changelog expectations
 - Security-sensitive areas
 - Non-default branches, worktrees, and open pull requests that may overlap with, duplicate, or conflict with this task
+- An existing `docs/SESSION_PLAN.md` from a previous interrupted session, which may contain resumption notes and context about partially completed work
 
 ## During Work
 
@@ -51,6 +55,7 @@ Agents should:
 - Never commit or push a real secret, credential, or credential-shaped file — sweep with `constitution/scripts/check_secrets.sh` before pushing (see SECURITY.md's "Secrets Sweep"); CI's `constitution-secrets.yml` workflow is the backstop, not the reason to skip the local sweep.
 - Avoid unrelated refactors unless required for the task.
 - Use the `/browse` gstack skill for all web browsing; never call `mcp__claude-in-chrome__*` tools directly.
+- Keep `docs/SESSION_PLAN.md`'s Resumption Notes current as work progresses, so the plan stays useful if the session is interrupted before completing.
 
 ## Before Completing Work
 
@@ -66,6 +71,7 @@ Agents must verify:
 - Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.
 - Security impact has been reviewed, including a secrets sweep (`constitution/scripts/check_secrets.sh`) before pushing.
 - Future improvements are identified when useful.
+- `docs/SESSION_PLAN.md` has been cleared or archived — the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`.
 - Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
 - Git environment is clean: branches and worktrees created for this task are removed after merging (or after the agent confirms they are no longer needed); branches or worktrees the agent did not create are left alone unless a human confirms they are safe to remove, since they may belong to another in-progress session or automation; no untracked files (e.g. `node_modules`) are accidentally staged.
 

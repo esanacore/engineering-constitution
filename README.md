@@ -26,6 +26,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
+- `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
@@ -58,7 +59,7 @@ engineering-constitution/
 ├── AGENTS.md, CLAUDE.md, COPILOT_INSTRUCTIONS.md, ...  ← This repo's own agent instructions
 │
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
-│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, ADR, ...)
+│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, ADR, ...)
 │   └── .github/
 │       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness)
 │       └── agents/                       ← Solon, the Copilot custom agent

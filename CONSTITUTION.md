@@ -33,6 +33,8 @@ Review:
 
 A task is not complete until documentation impact has been evaluated.
 
+Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended.
+
 Product-facing repositories should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
 
 ## Principle 2: Testing Is Required

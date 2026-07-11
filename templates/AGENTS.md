@@ -21,6 +21,8 @@ Read:
 
 ## Required Work Habits
 
+- Check `docs/SESSION_PLAN.md` for an existing plan from a crashed previous session.
+- Write or update `docs/SESSION_PLAN.md` before beginning implementation.
 - Understand the task before changing files.
 - Create an implementation plan for non-trivial work.
 - Follow existing project conventions.

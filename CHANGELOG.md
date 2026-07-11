@@ -6,6 +6,21 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added `templates/docs/SESSION_PLAN.md`, a crash-recovery session planning template that agents write before implementation begins. It documents the session's goals, approach, files expected to change, and risks, so if a session is interrupted, the next agent or human can resume without guessing what was intended. The file is overwritten at the start of each session; previous session outcomes should be captured in `docs/AGENT_HANDOFF.md` or commit messages first.
+- Added three new steps to `AI_WORKFLOW.md`'s Required Workflow: check for an existing session plan from a previous interrupted session (step 8), write or update `docs/SESSION_PLAN.md` before implementation (step 10), and clear or archive the plan before completing work (step 22). Added corresponding bullets to the Before Beginning Work, During Work, and Before Completing Work sections.
+- Added a "Session Planning" section to `DOCUMENTATION.md` explaining the purpose and lifecycle of `docs/SESSION_PLAN.md` and its relationship to `docs/AGENT_HANDOFF.md` as complementary bookends of a session lifecycle.
+- Added `docs/SESSION_PLAN.md` to the Strongly Encouraged files list in `DOCUMENTATION.md`.
+- Added session plan awareness to every agent instruction template: `templates/AGENTS.md`, `templates/CLAUDE.md`, `templates/.goosehints`, `templates/.github/copilot-instructions.md`, `templates/COPILOT_INSTRUCTIONS.md`, `templates/.agent-instructions.md`, and `templates/.openhands_instructions`.
+- Added a pointer from `templates/docs/AGENT_HANDOFF.md` to `docs/SESSION_PLAN.md` so the next agent checks intent-before-work alongside state-after-work.
+
+### Changed
+
+- `CONSTITUTION.md` Principle 1 (Documentation Is Part of the Deliverable) now explicitly states that planned work should be documented before implementation begins, pointing to `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`.
+- `INTEGRATION.md` now describes the session plan in its "How Agents Should Read and Apply the Constitution" section and includes `docs/SESSION_PLAN.md` in the Project File Structure diagram.
+- `scripts/bootstrap.sh` now installs `docs/SESSION_PLAN.md` and reports its status in the adoption report.
+
 ## 1.32.0 - 2026-07-11
 
 ### Added

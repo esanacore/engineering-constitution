@@ -104,4 +104,5 @@ Before completing work:
 - Update CHANGELOG.md for user-facing changes.
 - Consider security impact.
 - Identify useful follow-up work.
+- Clear or archive `docs/SESSION_PLAN.md`.
 - Summarize changes and verification.

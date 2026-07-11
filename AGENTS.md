@@ -29,6 +29,7 @@ Read:
 - Validate shell scripts with `bash -n`.
 - Document user-facing changes in `CHANGELOG.md`.
 - Record future framework opportunities in `TODO.md`.
+- When editing workflow or template files, verify that `docs/SESSION_PLAN.md` guidance stays consistent across all agent instruction templates.
 
 ## Before Completing Work
 

@@ -60,6 +60,7 @@ Creates or installs:
   - docs/TEST_PLAN.md
   - docs/MVP_BACKLOG.md
   - docs/OPERATIONS.md
+  - docs/SESSION_PLAN.md
   - docs/ARCHITECTURE.md
   - .constitution-bootstrap/adoption-report.md
   - .constitution-bootstrap/templates/ for skipped existing files
@@ -444,6 +445,7 @@ generate_adoption_report() {
     status_line "docs/TEST_PLAN.md"
     status_line "docs/MVP_BACKLOG.md"
     status_line "docs/OPERATIONS.md"
+    status_line "docs/SESSION_PLAN.md"
     status_line "docs/ARCHITECTURE.md"
     echo
     echo "## Files Written"
@@ -585,6 +587,7 @@ copy_file "$template_dir/docs/REQUIREMENTS_TRACEABILITY.md" "$project_path/docs/
 copy_file "$template_dir/docs/TEST_PLAN.md" "$project_path/docs/TEST_PLAN.md"
 copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md"
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
+copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
 
 if [ ! -e "$project_path/README.md" ]; then

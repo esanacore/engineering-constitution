@@ -19,6 +19,8 @@ Agents follow the workflow in `constitution/AI_WORKFLOW.md` and the principles i
 
 Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/rules/project.mdc`, `.goosehints`, `.continue/config.json`, `.aider.conf.yml`) load automatically for each respective agent. They point to the constitution and add any project-level context the agent needs.
 
+Before beginning implementation, agents write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks. If a previous session was interrupted, agents check this file first for resumption context. See `DOCUMENTATION.md`'s "Session Planning" section.
+
 ## Project-Specific Rules and Overrides
 
 The constitution provides universal defaults. Each project can override or extend them in its local files.
@@ -653,6 +655,7 @@ project/
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation
 └── docs/
+    ├── SESSION_PLAN.md                    ← Current session's planned work (crash recovery)
     └── adr/                               ← Architecture Decision Records
 ```
 

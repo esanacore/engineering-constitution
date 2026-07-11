@@ -16,6 +16,7 @@ Read:
 
 - Follow existing project conventions.
 - Keep changes focused and maintainable.
+- Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
 - Add tests for new behavior and regression tests for bug fixes.
 - Update documentation when behavior, setup, architecture, or operations change.
 - Update `TODO.md` with discovered follow-up work.

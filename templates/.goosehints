@@ -41,6 +41,7 @@ Before making changes, read:
 ## Standards
 
 - Follow the workflow in `constitution/AI_WORKFLOW.md` for every task.
+- Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan before implementing.
 - Add or update tests for behavioral changes; evaluate coverage and record gaps.
 - Update `TODO.md` and `CHANGELOG.md` as part of every change.
 - Record major design decisions in `docs/adr/`.

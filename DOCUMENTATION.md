@@ -41,6 +41,7 @@ Repositories should also include:
 - docs/TEST_PLAN.md for repositories with automated tests
 - docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
+- docs/SESSION_PLAN.md for crash-recovery session planning
 - API documentation
 - Wiki content when appropriate
 
@@ -59,6 +60,15 @@ That document should cover:
 `examples/OPERATIONS.example.md` is a fully worked runbook for a fictional
 deployed service that fills in every one of these sections; use it as a model
 when populating `docs/OPERATIONS.md`.
+
+## Session Planning
+
+Agent sessions can crash, time out, or be interrupted mid-work. When this happens, the next session has no reliable record of what was planned — only what was partially done. `docs/SESSION_PLAN.md` closes this gap by documenting session intent **before** implementation begins.
+
+- **Write before implementing**: at the start of each session, write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks. See `AI_WORKFLOW.md`'s Required Workflow.
+- **Update during work**: keep the Resumption Notes section current as work progresses, so the plan stays useful if the session is interrupted.
+- **Clear after completing**: once the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`, clear or archive the plan. The file is overwritten at the start of the next session.
+- **Complementary to AGENT_HANDOFF.md**: the session plan captures *intent before work*; the handoff captures *state after work*. They are bookends of a session lifecycle.
 
 ## Binary Assets and Images
 

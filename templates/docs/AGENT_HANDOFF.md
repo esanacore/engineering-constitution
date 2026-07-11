@@ -2,6 +2,8 @@
 
 This document helps transition work between different AI agent sessions or different agents.
 
+**Before starting your session**, check `docs/SESSION_PLAN.md` for the previous agent's planned work and resumption notes. The session plan captures *intent before work*; this handoff captures *state after work*.
+
 ## How to Handoff
 
 When you are finishing a task or session, record the state here or in a dedicated `HANDOFF.md` file:

@@ -20,6 +20,7 @@ Use these files as primary context:
 
 - Prefer existing project conventions.
 - Keep changes focused and maintainable.
+- Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
 - Add tests for new behavior.
 - Add regression tests for bug fixes.
 - Update documentation for changed behavior, setup, architecture, or operations.
