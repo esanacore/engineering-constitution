@@ -23,6 +23,7 @@ This project follows semantic versioning.
 - `CONSTITUTION.md` Principle 1 (Documentation Is Part of the Deliverable) now explicitly states that planned work should be documented before implementation begins, pointing to `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`.
 - `INTEGRATION.md` now describes the session plan in its "How Agents Should Read and Apply the Constitution" section and includes `docs/SESSION_PLAN.md` in the Project File Structure diagram.
 - `scripts/bootstrap.sh` now installs `docs/SESSION_PLAN.md` and reports its status in the adoption report.
+- `templates/CLAUDE.md`'s "gstack" section is now explicitly marked optional ("gstack (Optional — delete this section if unused)"), with a preamble clarifying gstack is a third-party skill suite, not a constitution requirement, and instructing adopters without it to delete the whole section. Previously every bootstrapped repo inherited a personal tooling mandate (use `/browse` for all web browsing, never use `mcp__claude-in-chrome__*`) with no indication it was optional.
 
 ## 1.32.0 - 2026-07-11
 

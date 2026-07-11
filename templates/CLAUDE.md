@@ -15,10 +15,16 @@ Before making changes, read:
 - `TODO.md`
 - `CHANGELOG.md`
 
-## gstack
+## gstack (Optional — delete this section if unused)
 
-This project uses [gstack](https://github.com/garrytan/gstack) for AI-assisted
-workflows. Verify it's installed before relying on any skill below:
+This section applies only if this project has adopted
+[gstack](https://github.com/garrytan/gstack) for AI-assisted workflows.
+gstack is a third-party skill suite, not a constitution requirement — if
+this project doesn't use it, delete this entire section (through "Available
+gstack skills" below).
+
+If this project *does* use gstack, verify it's installed before relying on
+any skill below:
 
 ```bash
 test -d ~/.claude/skills/gstack/bin && echo "GSTACK_OK" || echo "GSTACK_MISSING"
