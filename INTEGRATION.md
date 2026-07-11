@@ -102,7 +102,16 @@ agent in CI-adjacent workflows.
 Both repos live under the `aaif-goose` GitHub org (renamed from `block`;
 old `block/...` URLs still redirect, but their own READMEs haven't all been
 updated — use `aaif-goose/...` directly). Neither ships with an adopting
-repo or with this framework; install them on the machine that will run them:
+repo or with this framework; install them on the machine that will run them.
+
+The fastest path is this repository's own installer, run once per
+machine (not per repo — see "Provisioning a Machine in One Step" below):
+
+```bash
+bash scripts/setup-machine.sh --skip-gstack
+```
+
+Or by hand:
 
 ```bash
 # goose CLI (required by goosetown too)
@@ -154,6 +163,10 @@ git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.cl
 cd ~/.claude/skills/gstack && ./setup
 ```
 
+Or run `bash scripts/setup-machine.sh --skip-goose --skip-goosetown` — see
+"Provisioning a Machine in One Step" below, which also handles the
+Playwright fallback described next automatically.
+
 Once installed, its skills appear automatically in Claude Code — no restart
 observed to be necessary, but if a freshly-installed skill doesn't show up,
 start a new session.
@@ -177,6 +190,29 @@ PLAYWRIGHT_HOST_PLATFORM_OVERRIDE=ubuntu24.04-x64 bunx playwright install chromi
 Adjust the override to whatever LTS Playwright's own error message says it
 does support — this is a Playwright-support-matrix lag, not a gstack bug,
 so the right target version will change over time.
+
+### Provisioning a Machine in One Step
+
+`scripts/setup-machine.sh` installs Bun, gstack, goose, and goosetown in
+one run. It is **not** called by `scripts/bootstrap.sh` — bootstrapping a
+repository only ever writes files (see "Repository Settings Checklist"
+below for the same separation-of-concerns reasoning applied to host
+settings); provisioning a machine's global AI-agent toolchain is a
+different, explicitly human-triggered action, run once per machine rather
+than once per adopted repository.
+
+```bash
+bash scripts/setup-machine.sh
+```
+
+It's idempotent (safe to re-run; each tool is skipped if already present),
+detects and works around the Playwright too-new-distro gap automatically,
+and supports `--skip-bun`, `--skip-gstack`, `--skip-goose`,
+`--skip-goosetown` plus environment overrides for install locations and
+source URLs — see the script's own header comment for the full list. Its
+test suite (`scripts/test_setup_machine.sh`) exercises every install path
+against local fixtures, never the real network, per `TESTING.md`
+"Governance Tooling Must Be Tested."
 
 ### Initializing gbrain
 

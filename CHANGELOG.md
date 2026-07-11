@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.32.0 - 2026-07-11
+
+### Added
+
+- Added `scripts/setup-machine.sh`, a one-time, per-machine installer for Bun, gstack, goose, and goosetown, run explicitly and separately from `scripts/bootstrap.sh` (which continues to only ever write files into an adopting repository, never make network calls beyond `git submodule add`). Idempotent — skips any tool already present — and automatically detects and works around the Playwright too-new-distro browser-install gap documented in v1.31.0's `INTEGRATION.md` addition. `templates/CLAUDE.md`, `templates/.goosehints`, and `INTEGRATION.md` now point to it as the fast path alongside the existing manual per-tool instructions.
+- Added `scripts/test_setup_machine.sh` (7 cases), exercising the real install code paths — not just mocked function calls — against local git-repo and installer-script fixtures wired in through `setup-machine.sh`'s new `GSTACK_REPO_URL`/`GOOSE_INSTALLER_URL`/`GOOSETOWN_REPO_URL`/`BUN_INSTALLER_URL` overrides, per `TESTING.md` "Governance Tooling Must Be Tested." Caught two real bugs during development: gstack's `./setup` output was being captured into a temp file that was deleted even on failure (so a failure's diagnostic output was unrecoverable — fixed by streaming through `tee`), and the Playwright-fallback test's own fixture initially checked for the override platform in `bunx`'s arguments instead of its environment, which doesn't reflect how `PLAYWRIGHT_HOST_PLATFORM_OVERRIDE` is actually passed.
+
+### Fixed
+
+- `scripts/check_secrets.sh` and `scripts/test_check_secrets.sh` (added in v1.31.0's merge) had also lost their executable bit, same root cause as the eight scripts fixed in v1.31.0. Restored `+x` for consistency with every other script under `scripts/`.
+
 ## 1.31.0 - 2026-07-11
 
 ### Added

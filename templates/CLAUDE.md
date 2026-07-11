@@ -24,8 +24,12 @@ workflows. Verify it's installed before relying on any skill below:
 test -d ~/.claude/skills/gstack/bin && echo "GSTACK_OK" || echo "GSTACK_MISSING"
 ```
 
-If `GSTACK_MISSING`, install it (requires [Bun](https://bun.sh) v1.0+ — install
-with `curl -fsSL https://bun.sh/install | bash` first if `bun --version` fails):
+If `GSTACK_MISSING`, the one-shot fix is `bash constitution/scripts/setup-machine.sh`
+(installs Bun, gstack, goose, and goosetown together, idempotently, run
+once per machine — see `constitution/INTEGRATION.md` "Provisioning a
+Machine in One Step"). Or install gstack alone (requires [Bun](https://bun.sh)
+v1.0+ — install with `curl -fsSL https://bun.sh/install | bash` first if
+`bun --version` fails):
 
 ```bash
 git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack

@@ -60,6 +60,9 @@ Sweeps tracked and untracked-but-not-gitignored files for secrets that should ne
 
 A real hit (filename or content) always fails, with or without `--strict`. It is a zero-dependency (bash + Git only) baseline, not a replacement for a dedicated scanner like gitleaks or trufflehog on projects with unusually sensitive credentials. `scripts/bootstrap.sh` wires it in twice: a `pre-push`-stage `pre-commit` hook and the `constitution-secrets.yml` CI workflow.
 
+### `scripts/setup-machine.sh`
+One-time, per-machine installer for Bun, gstack, goose, and goosetown. Deliberately **not** wired into `scripts/bootstrap.sh` — provisioning a machine's global AI-agent toolchain and bootstrapping a repository's governance files are different concerns with different blast radii; see `INTEGRATION.md` "Provisioning a Machine in One Step." Idempotent (skips anything already installed), supports `--skip-bun`/`--skip-gstack`/`--skip-goose`/`--skip-goosetown`, and automatically detects and works around gstack's Playwright browser-install gap on Linux distros newer than Playwright's support matrix.
+
 ### Test coverage for governance tooling
 The repository tests the bootstrap and checker scripts with shell-based regression suites including negative cases:
 
@@ -67,6 +70,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_check_traceability.sh`
 - `scripts/test_check_compliance.sh`
 - `scripts/test_check_secrets.sh`
+- `scripts/test_setup_machine.sh`
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 
@@ -92,8 +96,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.31.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.32.0`. Recent releases have focused on:
 
+- `scripts/setup-machine.sh`: a one-time, per-machine installer for gstack/goose/goosetown, deliberately kept separate from `scripts/bootstrap.sh` so repository bootstrapping never gains a side effect of installing global developer tooling
 - Real, concrete install instructions for gstack and goose/goosetown in `templates/CLAUDE.md`, `templates/.goosehints`, and `INTEGRATION.md` — previously these named the tools and skill lists but never said how to actually get them, so an agent following the docs literally had no path to install anything
 - CI enforcement that runs an adopting repository's own declared test suite and flags documentation drift, not just constitution governance-file presence (`run_declared_tests.sh`, `check_doc_freshness.sh`, `constitution-tests.yml`, `constitution-doc-freshness.yml`)
 - Placeholder-content detection in `check_compliance.sh`, so a recommended or product-facing doc still holding copied template text is flagged instead of passing as `OK`

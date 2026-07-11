@@ -36,6 +36,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
 - `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
+- `scripts/setup-machine.sh`: One-time, per-machine installer for the AI-agent toolchain the templates point at (Bun, gstack, goose, goosetown). Not invoked by `bootstrap.sh` — a machine is provisioned once, explicitly; a repository is bootstrapped by writing files only. Idempotent, skips anything already installed.
 
 ## Project Structure
 
@@ -81,7 +82,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.31.0
+Current version: 1.32.0
 
 See `VERSION`.
 

@@ -6,7 +6,9 @@ This repository follows [Eric's Engineering Constitution](constitution/CONSTITUT
 
 Neither ships with this repository — both are separate CLI tools you run
 this repo's work through, not something Claude Code (or any single-file
-hint like this one) can install on their own. If `goose --version` fails:
+hint like this one) can install on their own. If `goose --version` fails,
+the one-shot fix is `bash constitution/scripts/setup-machine.sh
+--skip-gstack` (run once per machine, idempotent). Or by hand:
 
 ```bash
 # goose CLI (org is aaif-goose, formerly published under block/)
