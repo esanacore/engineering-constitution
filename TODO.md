@@ -4,7 +4,7 @@
 
 - [x] Add retroactive version analysis mechanism.
 - [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
-- [ ] Add language-specific guidance for common stacks.
+- [x] Add language-specific guidance for common stacks. Shipped in 1.33.0 as `CONSTITUTION.md` Principle 12 (Industry-Standard Code Conventions), a new `CODE_STYLE.md` requiring code style/docstrings/comments/diagrams to follow the official, canonical style guide per language/platform, and a tracked `sources/STYLE_GUIDES.md` registry (Kotlin/Android, Java, Python, Swift, JS/TS, Go, C#, Rust, Shell) living alongside the `sources/` book-digestion workflow.
 - [x] Ship a GitHub Copilot custom agent ("Solon") at `.github/agents/solon.agent.md`, install it via bootstrap, and document it in `INTEGRATION.md`. Shipped in 1.25.0 for Visual Studio 2026 (v18.4+).
 - [x] Harden the release process in `RELEASES.md` with an ordered "Cutting a Release" gate (bump every version reference, tag, publish GitHub Release). Shipped in 1.24.0 after the README banner and tags lagged across 1.21.0–1.23.0.
 - [x] Add GoF design-pattern guidance (the two maxims plus a curated subset of patterns) to `ARCHITECTURE.md`, building on the SOLID + Dependency Rule design principles. Shipped in 1.23.0 alongside the design principles.
@@ -57,6 +57,7 @@
 - [x] Add optional product requirements and MVP backlog templates for product-facing repositories.
 - [x] Add an example of a fully populated `docs/OPERATIONS.md` for a deployed service. Added `examples/OPERATIONS.example.md` (a worked runbook for the fictional "Orders API" service), referenced from `OPERATIONS.md`, `DOCUMENTATION.md`, the blank template, and `README.md`.
 - [x] Make the "what can it do today?" README expectation an explicit, named standing requirement rather than one bullet in a longer list, since it's the thing most likely to silently go stale on a fast-growing project. Shipped in 1.30.0 as `DOCUMENTATION.md`'s dedicated "Current Capabilities" section, `CONSTITUTION.md` Principle 1, and explicit call-outs in `AI_WORKFLOW.md`'s documentation step and completion checklist.
+- [ ] Grow `sources/STYLE_GUIDES.md` as new languages/platforms are adopted across projects using this constitution — the seeded rows (Kotlin/Android, Java, Python, Swift, JS/TS, Go, C#, Rust, Shell) cover common stacks but aren't exhaustive. Also periodically check seeded URLs haven't moved.
 
 ## Nice-to-Have
 

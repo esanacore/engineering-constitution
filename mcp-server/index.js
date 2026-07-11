@@ -45,6 +45,18 @@ const RESOURCES = [
     description: "Universal testing requirements and expectations",
     path: "TESTING.md",
   },
+  {
+    uri: "constitution://core/code-style",
+    name: "Code Style Standards",
+    description: "Principle requiring official, canonical style guides for code style, docstrings, comments, and diagrams",
+    path: "CODE_STYLE.md",
+  },
+  {
+    uri: "constitution://core/style-guide-registry",
+    name: "Style Guide Registry",
+    description: "Registry of official style guide URLs and docstring conventions by language/platform",
+    path: "sources/STYLE_GUIDES.md",
+  },
 ];
 
 const SOURCE_SUMMARY_URI_PREFIX = "constitution://source-summary/";

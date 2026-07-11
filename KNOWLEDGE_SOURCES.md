@@ -7,13 +7,33 @@ place to drop new primary sources — books, papers, long-form articles — so a
 future influence on the constitution goes through the same careful-evaluation
 step instead of being absorbed ad hoc.
 
+## Two Kinds of Sources
+
+This directory covers two different shapes of external material, handled
+differently:
+
+- **Books, papers, long-form articles** — static, often copyrighted files.
+  Drop them in `raw/`, write a distilled summary in `summaries/`, and record
+  the pairing in `manifest.tsv`. This is the workflow documented below.
+- **Official, canonical style guides and standards** — public, continuously
+  updated web pages maintained by a language or platform owner (for example,
+  `developer.android.com`'s Kotlin style guide). These aren't downloaded or
+  digested; they're recorded by reference in `sources/STYLE_GUIDES.md`, a
+  simple tracked registry of URL + docstring/comment convention per
+  language/platform. See `CODE_STYLE.md` for the principle this supports and
+  `sources/STYLE_GUIDES.md` for the registry itself.
+
+The rest of this document describes the raw/summary workflow for the first
+kind.
+
 ## Directory Layout
 
 ```text
 sources/
-├── raw/            Gitignored. Drop PDF/EPUB/DOCX/MD/TXT files here, any depth.
-├── summaries/       Tracked. One .md summary per raw file, mirrored path.
-└── manifest.tsv      Tracked. path<TAB>sha256<TAB>summary<TAB>processed_at
+├── raw/               Gitignored. Drop PDF/EPUB/DOCX/MD/TXT files here, any depth.
+├── summaries/          Tracked. One .md summary per raw file, mirrored path.
+├── manifest.tsv         Tracked. path<TAB>sha256<TAB>summary<TAB>processed_at
+└── STYLE_GUIDES.md      Tracked. Registry of official style guide URLs by language/platform.
 ```
 
 Raw files are **never committed**. This avoids checking copyrighted book
