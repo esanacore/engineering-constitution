@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash constitution/scripts/check_constitution_freshness.sh || true"
+          }
+        ]
+      }
+    ]
+  }
+}

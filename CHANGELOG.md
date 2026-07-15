@@ -6,6 +6,12 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.34.0 - 2026-07-14
+
+### Added
+
+- Added a Claude Code `SessionStart` hook, `templates/.claude/settings.json`, installed into every adopting repository by `scripts/bootstrap.sh`. It runs the new `scripts/check_constitution_freshness.sh` — a single-repository counterpart to `scripts/audit_adopters.sh` that fetches the constitution's release tags and compares them against the pinned `constitution/` submodule — the instant a Claude Code session starts or resumes. If the submodule is behind, the hook's output is injected directly into the new session's context with the exact remediation commands and a pointer to `INTEGRATION.md`'s "Migrating Existing Repositories to New Framework Versions" checklist, so an agent knows to update the constitution before doing anything else, rather than relying only on the existing async layers (Dependabot PRs, the CI version gate, or a periodic `audit_adopters.sh` fleet scan). The hook only detects and reports; it never runs `git submodule update` itself, since picking up a new version can require manual template merging. Covered by `scripts/test_check_constitution_freshness.sh` (current/behind/unknown cases, plus a case proving the default fetch-enabled run detects a release tagged after the repository's last update) and a new assertion in `scripts/test_bootstrap.sh`. Documented as a fourth layer in `INTEGRATION.md`'s "Keeping Adopters On the Latest Version Automatically" and in the Project File Structure diagram.
+
 ## 1.33.0 - 2026-07-11
 
 ### Added

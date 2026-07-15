@@ -410,15 +410,43 @@ repositories stay on the latest release, the framework ships three layers that
    directories and reports which are `CURRENT`, `BEHIND`, or
    `AHEAD/DIVERGED`. It exits non-zero when any repository is behind, so it can
    also drive a centralized cron job.
+4. **A Claude Code session-start check** — `.claude/settings.json` (installed
+   by `scripts/bootstrap.sh`) registers a `SessionStart` hook that runs
+   `constitution/scripts/check_constitution_freshness.sh` the instant a Claude
+   Code session starts (or resumes) in the repository. Unlike the three layers
+   above, which are async — a PR someone has to notice and merge, a CI run,
+   a periodic fleet scan — this one is synchronous and agent-facing: it fetches
+   the constitution's latest release tags and, if the pinned submodule is
+   behind, prints the exact remediation commands (and a pointer to "Migrating
+   Existing Repositories to New Framework Versions" below) directly into the
+   new session's context, before the agent does anything else. This is the
+   mechanism that answers "when I open a project with the constitution
+   installed and start a new session, an agent ensures it's up to date."
 
 ```bash
 # One-shot snapshot across all your checked-out repositories:
 bash constitution/scripts/audit_adopters.sh --fetch ~/code ~/work
+
+# The same check for just the current repository (what the SessionStart hook runs):
+bash constitution/scripts/check_constitution_freshness.sh
 ```
 
 The CI gate compares against the latest **release tag**, not every commit on
 `main`, so in-progress constitution work does not turn every adopter red — only
-tagged releases do. See `constitution/RELEASES.md` for the tagging rule.
+tagged releases do. See `constitution/RELEASES.md` for the tagging rule. The
+session-start hook and the fleet audit make the same comparison.
+
+The hook only detects and reports — it deliberately never runs
+`git submodule update` itself, because updating pulls new template content
+that may need manual merging (see "Migrating Existing Repositories to New
+Framework Versions" below), which is a judgment call for the agent or human in
+the loop, not something a hook should do unattended. If a project's Claude
+Code settings already define other `SessionStart` hooks, merge the
+`constitution/templates/.claude/settings.json` template's hook entry into the
+existing `hooks.SessionStart` array by hand — `scripts/bootstrap.sh` will not
+overwrite an existing `.claude/settings.json` (it writes a merge copy to
+`.constitution-bootstrap/templates/` instead, same as every other file it
+doesn't overwrite by default).
 
 If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
@@ -651,6 +679,8 @@ project/
 ├── .pre-commit-config.yaml               ← Pre-commit hooks (lint, format, secret detection)
 ├── .devcontainer/
 │   └── devcontainer.json                 ← Reproducible dev environment
+├── .claude/
+│   └── settings.json                     ← Claude Code SessionStart hook: freshness check on every session
 ├── TODO.md                                ← Living roadmap
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation

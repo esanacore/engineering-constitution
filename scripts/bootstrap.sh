@@ -44,6 +44,7 @@ Creates or installs:
   - .aiderignore
   - .pre-commit-config.yaml
   - .devcontainer/devcontainer.json
+  - .claude/settings.json
   - TODO.md
   - CHANGELOG.md
   - VERSION
@@ -431,6 +432,7 @@ generate_adoption_report() {
     status_line ".aiderignore"
     status_line ".pre-commit-config.yaml"
     status_line ".devcontainer/devcontainer.json"
+    status_line ".claude/settings.json"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
     status_line "VERSION"
@@ -564,6 +566,8 @@ copy_file "$template_dir/.aiderignore" "$project_path/.aiderignore"
 copy_file "$template_dir/.pre-commit-config.yaml" "$project_path/.pre-commit-config.yaml"
 mkdir -p "$project_path/.devcontainer"
 copy_file "$template_dir/.devcontainer/devcontainer.json" "$project_path/.devcontainer/devcontainer.json"
+mkdir -p "$project_path/.claude"
+copy_file "$template_dir/.claude/settings.json" "$project_path/.claude/settings.json"
 if ! write_generated_todo_from_backlog; then
   copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
 fi

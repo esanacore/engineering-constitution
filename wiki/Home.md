@@ -96,8 +96,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.33.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.34.0`. Recent releases have focused on:
 
+- A Claude Code `SessionStart` hook (`templates/.claude/settings.json`, installed by `scripts/bootstrap.sh`) that runs `check_constitution_freshness.sh` the instant a session starts in an adopting repository, so an agent knows immediately — before doing anything else — whether the `constitution/` submodule is behind the latest release, instead of relying only on Dependabot, the CI version gate, or a periodic fleet audit
 - `CONSTITUTION.md` Principle 12 (Industry-Standard Code Conventions): code style, comments, docstrings, and diagrams follow the official, canonical style guide for the language/platform in use, backed by a new `CODE_STYLE.md` and a tracked `sources/STYLE_GUIDES.md` registry living alongside the book/paper digestion workflow
 - `scripts/setup-machine.sh`: a one-time, per-machine installer for gstack/goose/goosetown, deliberately kept separate from `scripts/bootstrap.sh` so repository bootstrapping never gains a side effect of installing global developer tooling
 - Real, concrete install instructions for gstack and goose/goosetown in `templates/CLAUDE.md`, `templates/.goosehints`, and `INTEGRATION.md` — previously these named the tools and skill lists but never said how to actually get them, so an agent following the docs literally had no path to install anything
