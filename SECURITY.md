@@ -89,6 +89,16 @@ Apply least privilege:
 - Separate development, staging, and production access.
 - Review administrative operations carefully.
 
+## Agent Runtime Security
+
+Autonomous AI agents executing development or operational tasks should operate under the principle of least privilege. Projects should deploy these agents behind an AI-specific protocol firewall (such as Claw Patrol) to restrict their network and system access.
+
+The agent environment should be configured to:
+
+- Block unauthorized or destructive commands (for example, dropping tables, deleting infrastructure, or modifying secrets).
+- Prevent the exfiltration of credentials or sensitive data to untrusted endpoints.
+- Ensure all agent actions are logged and auditable.
+
 ## Dependencies
 
 Review dependency risk regularly:
