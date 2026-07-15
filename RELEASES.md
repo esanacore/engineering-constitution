@@ -45,6 +45,11 @@ git push origin "v$(cat VERSION)"
 bash scripts/check_release_tag_alignment.sh .
 ```
 
+This repository's own `.github/workflows/release-tag-alignment.yml` workflow
+also runs `scripts/check_release_tag_alignment.sh` automatically on every pushed
+`v*` tag. Treat it as the hosted backstop for the same check; it does not
+replace running the script locally before you push the tag.
+
 ## CHANGELOG Format
 
 Use these categories:
@@ -120,7 +125,7 @@ list as a gate, not a suggestion — a release is not done until every box is ch
 4. **Update `TODO.md`** — mark shipped items done, record discovered follow-ups.
 5. **Run tests** and confirm they pass.
 6. **Commit** the version bump, changelog, and doc updates together.
-7. **Tag** the commit `vMAJOR.MINOR.PATCH` and push the tag (see *Git Tags*), then run `bash scripts/check_release_tag_alignment.sh .` so `VERSION`, `HEAD`, and the newest release tag are all proven to agree.
+7. **Tag** the commit `vMAJOR.MINOR.PATCH` and push the tag (see *Git Tags*), then run `bash scripts/check_release_tag_alignment.sh .` so `VERSION`, `HEAD`, and the newest release tag are all proven to agree. The source-repo `release-tag-alignment` GitHub Actions workflow will rerun this automatically once the tag lands on GitHub.
 8. **Publish the GitHub Release** from the changelog section, marked `--latest`
    (see *Publishing a GitHub Release*).
 

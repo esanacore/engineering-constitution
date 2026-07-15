@@ -6,6 +6,14 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- Added `.github/workflows/release-tag-alignment.yml`, a source-repo GitHub Actions workflow that runs `scripts/check_release_tag_alignment.sh` on every pushed `v*` tag and on manual dispatch for a chosen ref. This turns the release-tag checker into hosted post-tag operational automation instead of relying only on humans remembering to rerun it locally after publishing a framework tag.
+
+### Changed
+
+- `README.md` and `RELEASES.md` now document the source-repo `release-tag-alignment` workflow as the hosted backstop for validating `VERSION`, `HEAD`, and the latest release tag after a framework release.
+
 ## 1.34.0 - 2026-07-14
 
 ### Added
