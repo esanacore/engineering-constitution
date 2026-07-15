@@ -2,6 +2,7 @@
 
 ## Features
 
+- [x] Generate a premium visual infographic (`assets/diagrams/constitution_infographic.jpg`) and an interactive HTML demo dashboard (`demo.html`) for exploring the constitution framework.
 - [x] Recommend AI-specific firewalls (Claw Patrol) for agent runtime security in SECURITY.md and OPERATIONS.md.
 - [x] Add OTS (off-the-shelf) software tracking — the missing third leg of the FDA-style tracking triad (requirements traceability and declared-test enforcement already existed; dependency risk had a principle but no artifact or automation). Shipped in 1.35.0 as `templates/docs/OTS_SOFTWARE.md` (FDA OTS / IEC 62304 SOUP-informed inventory: stable `OTS-xxx` IDs, risk, verification, anomaly review, update policy, plus a hand-maintained System-Level OTS section), `scripts/check_ots_inventory.sh` (cross-checks root-level manifests — package.json, requirements.txt, pyproject.toml, go.mod, Cargo.toml, Gemfile — against the inventory so an undocumented dependency is flagged in the same change), `scripts/test_check_ots_inventory.sh` (10 cases), and `templates/.github/workflows/constitution-ots.yml`, all wired into bootstrap and the compliance checker.
 

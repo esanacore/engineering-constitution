@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eric's Engineering Constitution - Interactive Demo</title>
+  <!-- Google Fonts Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(30, 41, 59, 0.9);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(56, 189, 248, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --accent-cyan: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-yellow: #f59e0b;
+      
+      --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.15);
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 55, 247, 0.05) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 5rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-cyan);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Header styling */
+    header {
+      padding: 4rem 0 2rem 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge-status {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    .badge-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .logo-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 70%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      font-weight: 300;
+    }
+
+    /* Grid Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    /* Cards */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-main);
+    }
+
+    .card-title svg {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-cyan);
+    }
+
+    /* Pillars / Triad section */
+    .triad-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .triad-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .pillar-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity var(--transition-speed);
+    }
+
+    .pillar-card:hover::before {
+      opacity: 1;
+    }
+
+    .pillar-card.active {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.05);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+    }
+
+    .pillar-card.active::before {
+      opacity: 1;
+    }
+
+    .pillar-icon {
+      margin-bottom: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      color: var(--accent-cyan);
+    }
+
+    .pillar-card:hover .pillar-icon {
+      color: var(--text-main);
+      background: var(--accent-cyan);
+    }
+
+    .pillar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .triad-details {
+      margin-top: 1.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .triad-details.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    /* Terminal Console */
+    .console {
+      font-family: 'Fira Code', monospace;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1rem;
+      color: #38bdf8;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      overflow-x: auto;
+      max-height: 250px;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .console-line {
+      margin-bottom: 0.25rem;
+      white-space: pre-wrap;
+    }
+
+    .console-prompt {
+      color: #10b981;
+    }
+
+    .console-success {
+      color: #10b981;
+    }
+
+    .console-warning {
+      color: #f59e0b;
+    }
+
+    /* Infographic Preview Section */
+    .infographic-wrapper {
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .infographic-card {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-speed);
+      background: var(--bg-card);
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .infographic-card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .infographic-card:hover img {
+      transform: scale(1.02);
+    }
+
+    .infographic-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .infographic-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent);
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      text-align: left;
+    }
+
+    .infographic-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .infographic-tag {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Interactive Timeline / Workflow simulator */
+    .workflow-sim {
+      margin-top: 1.5rem;
+    }
+
+    .workflow-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all var(--transition-speed);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-dark);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .timeline-container {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 2px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+      opacity: 0.4;
+      transition: opacity var(--transition-speed), transform var(--transition-speed);
+    }
+
+    .timeline-item.active {
+      opacity: 1;
+      transform: translateX(5px);
+    }
+
+    .timeline-item.completed {
+      opacity: 0.8;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: calc(-2rem - 6px);
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      border: 2px solid var(--bg-dark);
+      transition: background var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .timeline-item.active .timeline-dot {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .timeline-item.completed .timeline-dot {
+      background: var(--accent-green);
+    }
+
+    .timeline-phase {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-purple);
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-step {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Principles Explorer */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .principles-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .principles-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .principle-card {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all var(--transition-speed);
+      cursor: pointer;
+    }
+
+    .principle-card:hover {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: var(--accent-purple);
+      transform: translateY(-2px);
+    }
+
+    .principle-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .principle-name {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+    }
+
+    .principle-short {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal Principles details */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-glow);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      padding: 2.5rem;
+      position: relative;
+      transform: scale(0.9);
+      transition: transform var(--transition-speed) ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: color var(--transition-speed);
+    }
+
+    .modal-close:hover {
+      color: var(--accent-red);
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-num {
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .info-section {
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 8px;
+      padding: 1rem;
+      border-left: 4px solid var(--accent-cyan);
+    }
+
+    .info-section.smell {
+      border-left-color: var(--accent-red);
+    }
+
+    .info-section.guardrail {
+      border-left-color: var(--accent-green);
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+
+    .info-section.smell .section-label {
+      color: var(--accent-red);
+    }
+
+    .info-section.guardrail .section-label {
+      color: var(--accent-green);
+    }
+
+    .section-content {
+      font-size: 0.95rem;
+    }
+
+    /* Configurator */
+    .configurator-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .configurator-wrapper {
+        grid-template-columns: 1fr 2fr;
+      }
+    }
+
+    .config-selectors {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .config-tab {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 500;
+      transition: all var(--transition-speed);
+    }
+
+    .config-tab:hover {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: var(--accent-cyan);
+    }
+
+    .config-tab.active {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+    }
+
+    .config-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--accent-cyan);
+    }
+
+    .config-editor-pane {
+      background: rgba(9, 13, 22, 0.9);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .code-block {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-comment {
+      color: #475569;
+    }
+
+    .code-key {
+      color: #38bdf8;
+    }
+
+    .code-string {
+      color: #10b981;
+    }
+
+    .btn-copy {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-copy:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-dark);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Image Modal for infographics */
+    .image-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .image-modal-overlay.active {
+      display: flex;
+    }
+
+    .image-modal-content {
+      max-width: 90%;
+      max-height: 85%;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div class="badge-container">
+        <span class="badge-status"></span>
+        <span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.35.0</span>
+      </div>
+      <h1 class="logo-text">Eric's Engineering Constitution</h1>
+      <p class="subtitle">A standardized framework ensuring rigor, security, and automated verification across software projects for humans and AI agents alike.</p>
+      
+      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+        <a href="#pillars" class="btn">Validation Pillars</a>
+        <a href="#principles" class="btn">12 Principles</a>
+        <a href="#workflow" class="btn btn-primary">Workflow Simulator</a>
+        <a href="#configurator" class="btn">Rules Configurator</a>
+      </div>
+    </header>
+
+    <!-- Interactive Hero Infographic -->
+    <div class="infographic-wrapper">
+      <div class="infographic-card" id="infographicTrigger">
+        <!-- Render the saved infographic image here -->
+        <img src="assets/diagrams/constitution_infographic.jpg" alt="Eric's Engineering Constitution Infographic visual representation">
+        <div class="infographic-overlay">
+          <span class="infographic-tag">Interactive Preview</span>
+          <h2 class="infographic-title">Framework Blueprint & Collaboration Paradigm</h2>
+          <p class="pillar-desc">Click to expand the high-resolution infographic summarizing the Constitution pillars and AI-Pair-Programming architecture.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area Grid -->
+    <div class="main-grid">
+      
+      <!-- Column 1: interactive components -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- Validation Triad section -->
+        <section id="pillars" class="glass-card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            The Compliance Validation Triad
+          </h2>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            The framework relies on a three-legged FDA-style tracking and validation triad. It establishes automated CI gates and local scripts to ensure that nothing reaches production without documentation, tests, and dependency risk checks.
+          </p>
+          
+          <div class="triad-container">
+            <div class="pillar-card active" onclick="switchTriad('trace')">
+              <div class="pillar-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+              </div>
+              <h3 class="pillar-title">1. Traceability</h3>
+              <p class="pillar-desc">Requirement to verification tracking</p>
+            </div>
+            
+            <div class="pillar-card" onclick="switchTriad('test')">
+              <div class="pillar-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <h3 class="pillar-title">2. Test execution</h3>
+              <p class="pillar-desc">Full test suite enforcement</p>
+            </div>
+            
+            <div class="pillar-card" onclick="switchTriad('ots')">
+              <div class="pillar-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <h3 class="pillar-title">3. OTS Inventory</h3>
+              <p class="pillar-desc">Third-party dependency scanner</p>
+            </div>
+          </div>
+
+          <!-- Traceability Pillar details -->
+          <div id="triad-trace" class="triad-details active">
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Requirements Traceability Matrix</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Enforces a mapped connection from stable requirement IDs (e.g. <code>FR-012</code>) to automated verification tests. Substring collisions are detected by CI to block invalid compliance states.
+            </p>
+            <div class="console">
+              <div class="console-line"><span class="console-prompt">$</span> bash constitution/scripts/check_traceability.sh</div>
+              <div class="console-line">Scanning docs/PRODUCT_REQUIREMENTS.md for requirement IDs...</div>
+              <div class="console-line">Found 12 functional requirements (FR-001 through FR-012)</div>
+              <div class="console-line">Scanning docs/REQUIREMENTS_TRACEABILITY.md for matching verification...</div>
+              <div class="console-line">Reconciling tests in tests/test_*.py ...</div>
+              <div class="console-line console-success">[OK] FR-001 -> verified by tests/test_auth.py:test_login_lockout</div>
+              <div class="console-line console-success">[OK] FR-012 -> verified by tests/test_processor_sop.py:test_regression</div>
+              <div class="console-line console-success">Traceability Matrix verification matches 100% of defined specifications.</div>
+            </div>
+          </div>
+
+          <!-- Test execution details -->
+          <div id="triad-test" class="triad-details">
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">Automated Test Suite Enforcement</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+              CI runs `run_declared_tests.sh` which dynamically parses and executes the verified test command declared inside <code>docs/TEST_PLAN.md</code>. A test failure blocks PR merging.
+            </p>
+            <div class="console">
+              <div class="console-line"><span class="console-prompt">$</span> bash constitution/scripts/run_declared_tests.sh .</div>
+              <div class="console-line">Found test plan: docs/TEST_PLAN.md</div>
+              <div class="console-line">Declared runner command: "npm run test:ci"</div>
+              <div class="console-line">Executing: npm run test:ci ...</div>
+              <div class="console-line"> PASS  tests/auth.test.ts (8.2s)</div>
+              <div class="console-line"> PASS  tests/compliance.test.ts (2.4s)</div>
+              <div class="console-line"> PASS  tests/secrets.test.ts (1.1s)</div>
+              <div class="console-line console-success">✔ All 45 tests passed.</div>
+              <div class="console-line console-success">Test suite run succeeded. Exiting 0.</div>
+            </div>
+          </div>
+
+          <!-- OTS Inventory details -->
+          <div id="triad-ots" class="triad-details">
+            <h4 style="margin-bottom: 0.5rem; font-weight: 600;">OTS Software Inventory & Risk Review</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Enforces recording and reviewing all third-party dependencies (runtimes, databases, libraries) in <code>docs/OTS_SOFTWARE.md</code>. `check_ots_inventory.sh` flags any newly added package missing in the inventory.
+            </p>
+            <div class="console">
+              <div class="console-line"><span class="console-prompt">$</span> bash constitution/scripts/check_ots_inventory.sh .</div>
+              <div class="console-line">Parsing local package manifests... (package.json, pyproject.toml)</div>
+              <div class="console-line">Comparing packages against docs/OTS_SOFTWARE.md inventory...</div>
+              <div class="console-line">[VERIFIED] lodash -> OTS-001 (Version: 4.17.21, Risk: Low)</div>
+              <div class="console-line">[VERIFIED] fastify -> OTS-002 (Version: 4.21.0, Risk: Medium)</div>
+              <div class="console-line console-success">[OK] All 12 runtime dependencies exist in OTS inventory.</div>
+              <div class="console-line console-success">OTS software check passed. No undocumented dependencies found.</div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Timeline Workflow Simulator -->
+        <section id="workflow" class="glass-card">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Interactive Workflow Simulator
+          </h2>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            Watch the AI agent transition through the 26 mandatory workflow steps. This ensures proper alignment, checkpoints, and documentation before code changes are made.
+          </p>
+
+          <div class="workflow-sim">
+            
+            <div class="workflow-controls">
+              <button class="btn btn-primary" id="btnNext" onclick="nextWorkflowStep()">Step Forward</button>
+              <button class="btn" id="btnReset" onclick="resetWorkflowSim()" disabled>Reset Simulator</button>
+              <span id="workflow-progress-text" style="align-self: center; font-size: 0.85rem; font-weight: 500; color: var(--accent-cyan);">Step 1 of 5</span>
+            </div>
+
+            <div class="timeline-container" id="timelineContainer">
+              
+              <div class="timeline-item active" id="step-1">
+                <div class="timeline-dot"></div>
+                <div class="timeline-phase">Phase 1: Initial Hook</div>
+                <div class="timeline-step">1. Claude Session Start hook triggered</div>
+                <div class="timeline-desc">The session start hook scans the repository submodule to verify compliance and updates version status. If the submodule pointer lags the latest release tag, instructions on remediation are injected directly into context.</div>
+              </div>
+
+              <div class="timeline-item" id="step-2">
+                <div class="timeline-dot"></div>
+                <div class="timeline-phase">Phase 2: Planning & Crash Recovery</div>
+                <div class="timeline-step">8 & 10. Write docs/SESSION_PLAN.md</div>
+                <div class="timeline-desc">Before any code is altered, the agent creates a session plan mapping goals, approaches, file diff boundaries, and risks. This serves as a recovery record should the session crash or get interrupted.</div>
+              </div>
+
+              <div class="timeline-item" id="step-3">
+                <div class="timeline-dot"></div>
+                <div class="timeline-phase">Phase 3: Implementation Loop</div>
+                <div class="timeline-step">12 & 13. Implement changes & Execute declared tests</div>
+                <div class="timeline-speed">Code edits are applied. The agent runs `run_declared_tests.sh` locally to run the exact test commands defined in the test plan to ensure no regressions occur.</div>
+              </div>
+
+              <div class="timeline-item" id="step-4">
+                <div class="timeline-dot"></div>
+                <div class="timeline-phase">Phase 4: Pre-Commit Sweep</div>
+                <div class="timeline-step">25. Secrets Sweep before push</div>
+                <div class="timeline-desc">The agent runs `check_secrets.sh` locally. It scans both tracked and untracked files for credential shapes and high-confidence regex patterns, blocking the push if a secret is found.</div>
+              </div>
+
+              <div class="timeline-item" id="step-5">
+                <div class="timeline-dot"></div>
+                <div class="timeline-phase">Phase 5: Session Termination</div>
+                <div class="timeline-step">23. Clear/Archive Session Plan</div>
+                <div class="timeline-desc">With work successfully verified, the final changes are recorded in the changelog and the roadmap is updated. The session plan is cleared, allowing the next session to overwrite it.</div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Column 2: 12 Principles List (Sidebar / interactive cards) -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <section class="glass-card" style="height: 100%;">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            12 Core Principles
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Click on any principle to inspect its operational code smell and required guardrail.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 900px; overflow-y: auto; padding-right: 0.5rem;">
+            
+            <div class="principle-card" onclick="openPrinciple(1)">
+              <div class="principle-num">Principle 1</div>
+              <div class="principle-name">Docs are Deliverables</div>
+              <p class="principle-short">All changes must consider documentation impact. Readme and session planning are mandatory.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(2)">
+              <div class="principle-num">Principle 2</div>
+              <div class="principle-name">Testing is Required</div>
+              <p class="principle-short">All new functionality and bug fixes include automated tests mapped to requirement IDs.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(3)">
+              <div class="principle-num">Principle 3</div>
+              <div class="principle-name">TODO Management</div>
+              <p class="principle-short">Maintain TODO.md as the living roadmap. Log debt, feature opportunities, and refactoring.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(4)">
+              <div class="principle-num">Principle 4</div>
+              <div class="principle-name">Continuous Improvement</div>
+              <p class="principle-short">Agents actively identify UI, UX, speed, reliability, and developer experience improvements.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(5)">
+              <div class="principle-num">Principle 5</div>
+              <div class="principle-name">Security Controls</div>
+              <p class="principle-short">Enforce input validation, least privilege, local secret sweeps, and protocol firewalls.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(6)">
+              <div class="principle-num">Principle 6</div>
+              <div class="principle-name">Architecture Awareness</div>
+              <p class="principle-short">Record major frameworks and database structures in Architecture Decision Records (ADRs).</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(7)">
+              <div class="principle-num">Principle 7</div>
+              <div class="principle-name">Dependency Hygiene</div>
+              <p class="principle-short">Prefer mature packages. Document dependencies in the OTS software inventory.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(8)">
+              <div class="principle-num">Principle 8</div>
+              <div class="principle-name">Observability by Design</div>
+              <p class="principle-short">Log diagnoses cleanly, avoid leaking credentials, and create clear operational logs.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(9)">
+              <div class="principle-num">Principle 9</div>
+              <div class="principle-name">Operations Discipline</div>
+              <p class="principle-short">Operational changes must be reviewable, observable, and recoverable with a runbook.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(10)">
+              <div class="principle-num">Principle 10</div>
+              <div class="principle-name">Release Discipline</div>
+              <p class="principle-short">SemVer enforcement. Bump versions on VERSION and push Git tags for each release.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(11)">
+              <div class="principle-num">Principle 11</div>
+              <div class="principle-name">Opportunity Discovery</div>
+              <p class="principle-short">Agents look beyond immediate tasks to recommend future architectures and tools.</p>
+            </div>
+
+            <div class="principle-card" onclick="openPrinciple(12)">
+              <div class="principle-num">Principle 12</div>
+              <div class="principle-name">Official Code Conventions</div>
+              <p class="principle-short">Style guides and docstring formats must follow language owners' official styling rules.</p>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- Configuration Helper Section -->
+    <section id="configurator" class="glass-card" style="margin-top: 2rem;">
+      <h2 class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 2 18 2 18 6 6 6"/><rect x="3" y="6" width="18" height="16" rx="2"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        Adoption Configuration Configurator
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+        Select your project language environment to generate customized rules to place in your repository rules file (e.g. <code>CLAUDE.md</code>, <code>AGENTS.md</code>).
+      </p>
+
+      <div class="configurator-wrapper">
+        <div class="config-selectors">
+          <div class="config-tab active" onclick="switchConfig('node')">
+            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Node.js / TypeScript
+          </div>
+          <div class="config-tab" onclick="switchConfig('python')">
+            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Python / FastAPI
+          </div>
+          <div class="config-tab" onclick="switchConfig('kotlin')">
+            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12m0 0V2M12 12h10M12 12H2"/></svg>
+            Kotlin / Android
+          </div>
+        </div>
+
+        <div class="config-editor-pane">
+          <button class="btn btn-copy" onclick="copyConfig()">Copy Config</button>
+          
+          <!-- Node / TS Config -->
+          <div id="config-node" class="code-block">
+<span class="code-comment">## Project-Specific Rules</span>
+- Use TypeScript with strict mode enabled.
+- Prefer functional components and hooks for React code.
+- Use `zod` for input validation.
+- All new API endpoints must be documented in `openapi.yaml`.
+- Run `npm run lint` and `npm test` before every commit.
+          </div>
+
+          <!-- Python Config -->
+          <div id="config-python" class="code-block" style="display: none;">
+<span class="code-comment">## Project-Specific Rules</span>
+- Use Python 3.11+.
+- Use Pydantic v2 for data modeling.
+- Follow PEP 8 style guidelines.
+- Use `pytest` for all tests.
+- All service methods must include docstrings following the Google style.
+- Run `ruff check .` for linting.
+          </div>
+
+          <!-- Kotlin Config -->
+          <div id="config-kotlin" class="code-block" style="display: none;">
+<span class="code-comment">## Project-Specific Rules</span>
+- Follow developer.android.com's official Kotlin style guide.
+- Format all docstrings using standard KDoc.
+- Leverage dependency injection frameworks (e.g. Hilt) for architecture.
+- Enforce layout standards matching strict Material 3 design directives.
+- Run `android lint` and verification builds in local docker containers.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Principles Detail Modal -->
+  <div class="modal-overlay" id="principlesModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-header">
+        <div class="modal-num" id="modalNum">Principle 1</div>
+        <h3 class="modal-title" id="modalTitle">Principle Title</h3>
+      </div>
+      <div class="modal-body">
+        <div class="info-section">
+          <div class="section-label">Summary</div>
+          <div class="section-content" id="modalSummary">Summary content.</div>
+        </div>
+        <div class="info-section smell">
+          <div class="section-label">Smell</div>
+          <div class="section-content" id="modalSmell">Smell content.</div>
+        </div>
+        <div class="info-section guardrail">
+          <div class="section-label">Guardrail</div>
+          <div class="section-content" id="modalGuardrail">Guardrail content.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Infographic Fullscreen Lightbox -->
+  <div class="image-modal-overlay" id="imageModal" onclick="closeImageModal()">
+    <img src="assets/diagrams/constitution_infographic.jpg" class="image-modal-content" alt="High Resolution Infographic">
+  </div>
+
+  <script>
+    // Principle database mapping
+    const principlesData = {
+      1: {
+        title: "Documentation Is Part of the Deliverable",
+        summary: "All code changes must consider documentation impact. Code is not finished until README, session plans, and api specs reflect correct architecture.",
+        smell: "README is outdated; new configuration variables or commands are undocumented; session resumes with empty plans.",
+        guardrail: "Write doc updates in the same commit. Maintain docs/SESSION_PLAN.md before editing code files."
+      },
+      2: {
+        title: "Testing Is Required",
+        summary: "All new functionality should include automated tests. Bug fixes require regression tests. Tests should trace back directly to requirement specifications.",
+        smell: "Tests are omitted for speed; test files are skipped; regression coverage decreases over minor bug resolutions.",
+        guardrail: "Verify code with automated tests. Reconcile matrix matches inside docs/REQUIREMENTS_TRACEABILITY.md."
+      },
+      3: {
+        title: "TODO Management",
+        summary: "TODO.md acts as the living roadmap. Completed work is deleted, and debt or technical trade-offs are logged explicitly.",
+        smell: "Unverified features appear in commits without representation in TODO.md; old entries rot without cleanup.",
+        guardrail: "Clean up completed items during releases. Ensure discovered debt is instantly tracked in TODO.md."
+      },
+      4: {
+        title: "Continuous Improvement",
+        summary: "AI agents and contributors actively evaluate and propose modifications regarding product speed, reliability, and UX.",
+        smell: "Code is written strictly matching constraints, bypassing obvious formatting improvements or speed shortcuts.",
+        guardrail: "Document potential performance enhancements in nice-to-have segments of the roadmap."
+      },
+      5: {
+        title: "Security & Validation",
+        summary: "Consider authentication, validation boundaries, and secrets sweep before pushes. Protocol firewalls govern autonomous runtimes.",
+        smell: "Credentials or API tokens escape in git history; input boundaries consume raw deserialized packets without filters.",
+        guardrail: "Execute check_secrets.sh before checking in code. Validate inputs at system boundary interfaces."
+      },
+      6: {
+        title: "Architecture Awareness",
+        summary: "Ensure architecture stays clean, structured, and modular. Standardize on SOLID principles and catalog choices in ADRs.",
+        smell: "Database code directly mixes with business logic. Global states hide tight component coupling.",
+        guardrail: "Point source dependencies inward. Create Architecture Decision Records (ADRs) when structure boundaries shift."
+      },
+      7: {
+        title: "Dependency Hygiene",
+        summary: "Track third-party library dependencies rigorously. Audit and record components in the off-the-shelf (OTS) software inventory.",
+        smell: "Random libraries are pulled for simple formatting helpers. Project dependencies diverge from the declared inventory record.",
+        guardrail: "Run check_ots_inventory.sh to verify manifests. Add package risk ratings inside docs/OTS_SOFTWARE.md."
+      },
+      8: {
+        title: "Observability by Design",
+        summary: "Build applications to be monitored and analyzed. Runtimes must record clear diagnostic metrics without leaking user records.",
+        smell: "Log statements contain raw credit card information or unmasked tokens. Exceptions dump to stdout without context.",
+        guardrail: "Log errors with tracing details. Never log full session tokens, passwords, or encrypted parameters."
+      },
+      9: {
+        title: "Operations & Infrastructure Discipline",
+        summary: "Operational workflows, environments, and container runtimes must be reviewable, observable, and easily recoverable.",
+        smell: "Staging and production nodes operate with ad hoc scripts and configuration settings maintained in manual sheets.",
+        guardrail: "Document deployment checklists and rollback commands within docs/OPERATIONS.md before deployments."
+      },
+      10: {
+        title: "Release Discipline",
+        summary: "Coordinate releases under Semantic Versioning guidelines. Increment VERSION files, update changelogs, and push git tags.",
+        smell: "Adopting repositories suffer compatibility crashes because patch versions contained breaking API updates.",
+        guardrail: "Generate dated changelog entries on releases. Align VERSION changes with explicit vX.Y.Z git tags."
+      },
+      11: {
+        title: "Opportunity Discovery",
+        summary: "Agents examine the broader context, identifying UX bottlenecks, test plan omissions, or pipeline acceleration paths.",
+        smell: "Tasks are completed mechanically without verifying whether complementary components require refactoring.",
+        guardrail: "Suggest future project improvements directly inside final agent session summaries."
+      },
+      12: {
+        title: "Industry-Standard Conventions",
+        summary: "Code styling, docstrings, and diagrams must comply with official languages and platform style guidelines.",
+        smell: "Custom comment formats conflict with standard language indexers (e.g. using JSDoc styles inside Python files).",
+        guardrail: "Align docstrings and styles with official guidelines recorded in sources/STYLE_GUIDES.md."
+      }
+    };
+
+    // Modal Control
+    function openPrinciple(id) {
+      const data = principlesData[id];
+      if (!data) return;
+      
+      document.getElementById('modalNum').innerText = `Principle ${id}`;
+      document.getElementById('modalTitle').innerText = data.title;
+      document.getElementById('modalSummary').innerText = data.summary;
+      document.getElementById('modalSmell').innerText = data.smell;
+      document.getElementById('modalGuardrail').innerText = data.guardrail;
+      
+      document.getElementById('principlesModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('principlesModal').classList.remove('active');
+    }
+
+    // Lightbox Control for Infographic
+    document.getElementById('infographicTrigger').addEventListener('click', function() {
+      document.getElementById('imageModal').classList.add('active');
+    });
+
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.remove('active');
+    }
+
+    // Configurator Control
+    let activeConfig = 'node';
+    function switchConfig(type) {
+      document.querySelectorAll('.config-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('config-node').style.display = 'none';
+      document.getElementById('config-python').style.display = 'none';
+      document.getElementById('config-kotlin').style.display = 'none';
+
+      if (type === 'node') {
+        document.getElementById('config-node').style.display = 'block';
+        activeConfig = 'node';
+      } else if (type === 'python') {
+        document.getElementById('config-python').style.display = 'block';
+        activeConfig = 'python';
+      } else if (type === 'kotlin') {
+        document.getElementById('config-kotlin').style.display = 'block';
+        activeConfig = 'kotlin';
+      }
+      
+      event.currentTarget.classList.add('active');
+    }
+
+    function copyConfig() {
+      const text = document.getElementById(`config-${activeConfig}`).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerText = 'Copied!';
+        btn.style.background = '#10b981';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.innerText = 'Copy Config';
+          btn.style.background = 'rgba(255, 255, 255, 0.05)';
+          btn.style.color = 'var(--text-main)';
+        }, 1500);
+      });
+    }
+
+    // Compliance Triad selector
+    function switchTriad(type) {
+      document.querySelectorAll('.pillar-card').forEach(card => card.classList.remove('active'));
+      document.querySelectorAll('.triad-details').forEach(el => el.classList.remove('active'));
+      
+      event.currentTarget.classList.add('active');
+      document.getElementById(`triad-${type}`).classList.add('active');
+    }
+
+    // Timeline Workflow Simulator
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function nextWorkflowStep() {
+      if (currentStep < totalSteps) {
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        document.getElementById(`step-${currentStep}`).classList.add('completed');
+        
+        currentStep++;
+        
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        
+        // Scroll step into view
+        const container = document.getElementById('timelineContainer');
+        const activeEl = document.getElementById(`step-${currentStep}`);
+        container.scrollTop = activeEl.offsetTop - container.offsetTop - 20;
+
+        document.getElementById('btnReset').removeAttribute('disabled');
+        
+        if (currentStep === totalSteps) {
+          document.getElementById('btnNext').setAttribute('disabled', 'true');
+        }
+      }
+      updateWorkflowProgressText();
+    }
+
+    function resetWorkflowSim() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'completed');
+      }
+      currentStep = 1;
+      document.getElementById(`step-1`).classList.add('active');
+      document.getElementById('timelineContainer').scrollTop = 0;
+      
+      document.getElementById('btnNext').removeAttribute('disabled');
+      document.getElementById('btnReset').setAttribute('disabled', 'true');
+      
+      updateWorkflowProgressText();
+    }
+
+    function updateWorkflowProgressText() {
+      document.getElementById('workflow-progress-text').innerText = `Step ${currentStep} of ${totalSteps}`;
+    }
+
+    // ESC closes modals
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+        closeImageModal();
+      }
+    });
+  </script>
+</body>
+</html>
