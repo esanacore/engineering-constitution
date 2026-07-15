@@ -24,6 +24,7 @@ Before completing work:
 - Add or update relevant tests.
 - Evaluate coverage against targets and record any gaps.
 - Update requirements traceability for product-facing repositories.
+- Update the OTS software inventory when third-party dependencies changed.
 - Update documentation when needed.
 - Update TODO.md with discovered or completed work.
 - Update CHANGELOG.md for user-facing changes.

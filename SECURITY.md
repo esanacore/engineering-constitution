@@ -98,6 +98,36 @@ Review dependency risk regularly:
 - Track known vulnerabilities.
 - Avoid adding dependencies for trivial functionality.
 
+### OTS Software Inventory
+
+Dependency risk review needs a durable record, not just good intentions.
+Repositories with third-party dependencies maintain `docs/OTS_SOFTWARE.md` —
+an off-the-shelf software inventory documenting, per component, its purpose,
+risk level, verification, known-anomaly (defect/CVE) tracking posture, and
+update policy. See `DOCUMENTATION.md`'s "OTS Software Inventory" section for
+the full structure.
+
+The framework ships a reference checker that adopters run through the
+`constitution/` submodule:
+
+```bash
+bash constitution/scripts/check_ots_inventory.sh
+```
+
+It cross-checks the runtime dependencies declared in root-level manifests
+(`package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`,
+`Gemfile`) against the inventory, flagging any dependency with no inventory
+row — so "we added a dependency but never documented or risk-assessed it"
+is caught mechanically instead of in a later audit. It warns by default;
+`--strict` makes gaps fail (see `TESTING.md`'s "CI Enforcement" rollout
+contract). `scripts/bootstrap.sh` installs
+`.github/workflows/constitution-ots.yml` to run it in CI on every push, pull
+request, and a daily schedule.
+
+A new dependency in a trust-sensitive position is also a threat-modeling
+trigger (see below) — the inventory row records the outcome; it does not
+replace the analysis.
+
 ## Logging and Auditing
 
 Logs should support diagnosis without leaking sensitive information.

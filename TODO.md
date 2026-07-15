@@ -2,6 +2,8 @@
 
 ## Features
 
+- [x] Add OTS (off-the-shelf) software tracking — the missing third leg of the FDA-style tracking triad (requirements traceability and declared-test enforcement already existed; dependency risk had a principle but no artifact or automation). Shipped in 1.35.0 as `templates/docs/OTS_SOFTWARE.md` (FDA OTS / IEC 62304 SOUP-informed inventory: stable `OTS-xxx` IDs, risk, verification, anomaly review, update policy, plus a hand-maintained System-Level OTS section), `scripts/check_ots_inventory.sh` (cross-checks root-level manifests — package.json, requirements.txt, pyproject.toml, go.mod, Cargo.toml, Gemfile — against the inventory so an undocumented dependency is flagged in the same change), `scripts/test_check_ots_inventory.sh` (10 cases), and `templates/.github/workflows/constitution-ots.yml`, all wired into bootstrap and the compliance checker.
+
 - [x] Ensure a new Claude Code session in an adopting project checks whether the `constitution/` submodule is up to date before other work begins. Shipped in 1.34.0 as a `SessionStart` hook (`templates/.claude/settings.json`) running the new `scripts/check_constitution_freshness.sh`, complementing the existing async layers (Dependabot, CI version gate, `audit_adopters.sh`) with an immediate, agent-facing check.
 - [x] Add retroactive version analysis mechanism.
 - [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
@@ -61,6 +63,8 @@
 - [ ] Grow `sources/STYLE_GUIDES.md` as new languages/platforms are adopted across projects using this constitution — the seeded rows (Kotlin/Android, Java, Python, Swift, JS/TS, Go, C#, Rust, Shell) cover common stacks but aren't exhaustive. Also periodically check seeded URLs haven't moved.
 
 ## Nice-to-Have
+
+- [ ] Extend `scripts/check_ots_inventory.sh`'s manifest coverage as adopting projects need it: Poetry's `[tool.poetry.dependencies]` (only PEP 621 arrays parse today), Maven `pom.xml` / Gradle build files (already detected as project signals by bootstrap but not parsed), and Swift Package Manager `Package.swift` (relevant to the iOS direction). Also consider walking monorepo sub-package manifests — the checker deliberately reads the project root only.
 
 - [ ] Add repository health dashboards.
 - [x] Add CI/CD enforcement examples.
