@@ -28,7 +28,8 @@ make_repo() {
     "$root/docs/AGENT_PROMPTS.md" \
     "$root/docs/AGENT_HANDOFF.md" \
     "$root/docs/OPERATIONS.md" \
-    "$root/docs/TEST_PLAN.md"
+    "$root/docs/TEST_PLAN.md" \
+    "$root/docs/OTS_SOFTWARE.md"
 }
 
 assert_contains() {

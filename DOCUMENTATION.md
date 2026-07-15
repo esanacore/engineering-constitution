@@ -39,6 +39,7 @@ Repositories should also include:
 - docs/PRODUCT_REQUIREMENTS.md for product-facing applications
 - docs/REQUIREMENTS_TRACEABILITY.md for product-facing applications
 - docs/TEST_PLAN.md for repositories with automated tests
+- docs/OTS_SOFTWARE.md for repositories with third-party dependencies
 - docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
 - docs/SESSION_PLAN.md for crash-recovery session planning
@@ -90,6 +91,7 @@ For each meaningful change, review whether updates are needed for:
 - Product requirements
 - Requirements traceability matrix
 - Test plan and coverage records
+- OTS software inventory (when dependencies were added, removed, or upgraded)
 - MVP or delivery backlog
 - API documentation
 - Deployment documentation
@@ -195,6 +197,22 @@ When a repository layers requirement namespaces — for example a product layer 
 - Never reuse a number across layers in a way that depends on the surrounding text to disambiguate.
 
 Governance tooling that consumes these IDs must itself be correct and tested; see `TESTING.md`.
+
+## OTS Software Inventory
+
+Repositories with third-party dependencies should maintain `docs/OTS_SOFTWARE.md`: an inventory of every off-the-shelf (OTS) software component the project depends on — libraries, frameworks, runtimes, databases, container base images. The structure follows the intent of the FDA's OTS software guidance and IEC 62304's SOUP requirements, generalized for any repository: for most projects it is simply the auditable answer to "what third-party software are we shipping, and is anyone watching it?"
+
+For each component, the inventory records:
+
+- A stable component ID (`OTS-001`), never reused — removed components are marked `Removed`, not deleted.
+- The name **exactly as declared in the dependency manifest**, so tooling can match manifest entries against inventory rows by exact value.
+- Version, supplier/maintainer, and its purpose in this system.
+- A risk level — at least `Medium` when the component sits in a trust-sensitive position (see `SECURITY.md`'s "Threat Modeling Triggers").
+- Verification: how fitness for use was established.
+- Anomaly review: where known defects/CVEs are tracked and when they were last reviewed.
+- Update policy: how the version moves (pinned, ranged, bot-managed, vendored).
+
+The inventory is a living document: update it in the **same change** that adds, removes, or upgrades a dependency, not in a later documentation pass. The framework ships `scripts/check_ots_inventory.sh` (see `TESTING.md`), which cross-checks the dependencies declared in root-level manifests (`package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Gemfile`) against the inventory's Name cells, so a dependency added without documentation is flagged automatically. System-level OTS (operating systems, databases, base images) cannot be discovered from manifests and is maintained by hand in the inventory's dedicated section.
 
 ## Architecture Decision Records
 

@@ -27,10 +27,12 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
+- `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
+- `scripts/check_ots_inventory.sh`: Reference checker that cross-checks the dependencies declared in root-level manifests against the OTS software inventory (`docs/OTS_SOFTWARE.md`), so a dependency added without documentation is flagged in the same change.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
 - `scripts/check_version_alignment.sh`: Reference checker that verifies adopter-facing Constitution version references match the pinned `constitution/VERSION`.
 - `scripts/check_release_tag_alignment.sh`: Source-repo checker that verifies `VERSION`, the matching `v<VERSION>` tag, and `HEAD` stay aligned after a release.
@@ -84,7 +86,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.34.0
+Current version: 1.35.0
 
 See `VERSION`.
 

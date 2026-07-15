@@ -1,0 +1,52 @@
+name: Constitution OTS Inventory
+
+# Cross-checks the project's declared third-party dependencies against the OTS
+# software inventory (docs/OTS_SOFTWARE.md), using the checker that ships in
+# the pinned `constitution/` submodule:
+#   - check_ots_inventory.sh — every runtime dependency declared in a
+#     root-level manifest (package.json, requirements.txt, pyproject.toml,
+#     go.mod, Cargo.toml, Gemfile) has an inventory row.
+#
+# This catches the drift case where a dependency is added without the
+# inventory being updated in the same change. Runs on every pull request and
+# push to the default branch, plus a daily schedule so drift is caught even
+# when no one is opening PRs.
+#
+# Follows the constitution's rollout contract: warn by default, --strict to
+# fail. Once this repository's inventory is complete, switch the run below to
+# `--strict` so an undocumented dependency fails the build.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "37 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ots-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_ots_inventory.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the OTS inventory checker). This repository does not appear to adopt Eric's Engineering Constitution, or the submodule needs updating."
+            exit 1
+          fi
+
+      - name: Verify OTS software inventory covers declared dependencies
+        shell: bash
+        # Swap in `--strict` once docs/OTS_SOFTWARE.md is fully populated.
+        run: bash constitution/scripts/check_ots_inventory.sh .
