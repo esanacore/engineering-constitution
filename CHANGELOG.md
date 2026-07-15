@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- `SECURITY.md` and `OPERATIONS.md` now recommend deploying autonomous development agents behind an AI-specific protocol firewall (such as Claw Patrol) to enforce least privilege, prevent unauthorized actions, and audit agent activity.
+
 ## 1.35.0 - 2026-07-15
 
 ### Added

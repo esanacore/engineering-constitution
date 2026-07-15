@@ -20,6 +20,7 @@ Apply these standards to:
 - Document the purpose and promotion path for each environment.
 - Avoid undocumented "special" environments that only one person understands.
 - Keep environment-specific configuration explicit and version controlled where possible.
+- Configure AI-specific protocol firewalls (such as Claw Patrol) in environments where autonomous agents execute tasks, ensuring they cannot perform destructive actions or access unauthorized resources.
 
 ## Toolchain Parity
 
