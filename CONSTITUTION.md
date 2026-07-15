@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.34.0
+Version: 1.35.0
 
 ## Purpose
 
@@ -126,6 +126,8 @@ Prefer:
 Remove unused dependencies.
 
 Review dependency risk regularly.
+
+Repositories with third-party dependencies should maintain an OTS software inventory (`docs/OTS_SOFTWARE.md`) documenting each component's purpose, risk, verification, and known-anomaly posture — updated in the same change that adds, removes, or upgrades a dependency. See `DOCUMENTATION.md`'s "OTS Software Inventory" section and `SECURITY.md`.
 
 ## Principle 8: Observability
 

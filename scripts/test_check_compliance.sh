@@ -28,7 +28,7 @@ make_compliant_repo() {
   done
   for f in SETUP.md COMMAND_REFERENCE.md TROUBLESHOOTING.md ARCHITECTURE.md \
            AGENT_PROMPTS.md AGENT_HANDOFF.md OPERATIONS.md TEST_PLAN.md \
-           SESSION_PLAN.md \
+           OTS_SOFTWARE.md SESSION_PLAN.md \
            PRODUCT_REQUIREMENTS.md REQUIREMENTS_TRACEABILITY.md; do
     echo "placeholder" > "$dest/docs/$f"
   done

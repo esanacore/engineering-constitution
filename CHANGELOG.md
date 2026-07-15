@@ -8,11 +8,27 @@ This project follows semantic versioning.
 
 ### Added
 
-- Added `.github/workflows/release-tag-alignment.yml`, a source-repo GitHub Actions workflow that runs `scripts/check_release_tag_alignment.sh` on every pushed `v*` tag and on manual dispatch for a chosen ref. This turns the release-tag checker into hosted post-tag operational automation instead of relying only on humans remembering to rerun it locally after publishing a framework tag.
+- `SECURITY.md` and `OPERATIONS.md` now recommend deploying autonomous development agents behind an AI-specific protocol firewall (such as Claw Patrol) to enforce least privilege, prevent unauthorized actions, and audit agent activity.
+
+## 1.35.0 - 2026-07-15
+
+### Added
+
+- Added OTS software tracking — the third leg of the framework's FDA-style tracking triad, alongside requirements traceability and declared-test enforcement. `templates/docs/OTS_SOFTWARE.md` is an off-the-shelf software inventory informed by the FDA's OTS software guidance and IEC 62304's SOUP requirements, generalized for any repository: per component, a stable `OTS-xxx` ID (never reused; removed components are marked `Removed`), the name exactly as declared in the dependency manifest, version, supplier, purpose, risk level (tied to `SECURITY.md`'s threat-modeling triggers), verification evidence, known-anomaly (defect/CVE) review posture, and update policy — plus a hand-maintained "System-Level OTS" section for components no manifest declares (operating systems, databases, container base images).
+- Added `scripts/check_ots_inventory.sh`, the enforcement half: it cross-checks the runtime dependencies declared in root-level manifests (`package.json` dependencies, `requirements.txt`, `pyproject.toml` PEP 621 arrays, `go.mod` direct requires, `Cargo.toml` `[dependencies]`, `Gemfile`) against the inventory's Name cells, so a dependency added without documentation is flagged in the same change that adds it — the "standard/automatic process" that keeps the inventory complete as an adopting project evolves, rather than leaving it to a later audit. Matching is by exact cell value (case-insensitive), never substring; placeholder cells never count; inventory rows beyond the manifests (system-level OTS, removed components, dev tooling) are informational and never fail. Follows the standard warn-by-default/`--strict` rollout contract.
+- Added `scripts/test_check_ots_inventory.sh` (10 cases) per "Governance Tooling Must Be Tested": the substring-collision case (a `dunder-proto` row must not satisfy the dependency `proto`), placeholder rows not counting as documentation, scope guarantees (package.json `devDependencies`, Cargo.toml `[dev-dependencies]`, and go.mod `// indirect` requires are excluded), case-insensitive matching (`Django` vs `django`), missing-inventory and undocumented-dependency behavior under default vs `--strict`, the vacuous no-manifests pass, system-level rows never failing, and usage errors.
+- Added `templates/.github/workflows/constitution-ots.yml`, installed by `scripts/bootstrap.sh` like the other governance gates, running the OTS inventory cross-check on every push, pull request, and a daily schedule.
+- Added `docs/OTS_SOFTWARE.md` to `scripts/bootstrap.sh`'s installed files and adoption report, `scripts/check_compliance.sh`'s recommended tier, and the assertions in `scripts/test_bootstrap.sh`, `scripts/test_check_compliance.sh`, and `scripts/test_check_compliance_placeholders.sh`.
 
 ### Changed
 
-- `README.md` and `RELEASES.md` now document the source-repo `release-tag-alignment` workflow as the hosted backstop for validating `VERSION`, `HEAD`, and the latest release tag after a framework release.
+- `CONSTITUTION.md` Principle 7 (Dependency Hygiene) now names the OTS software inventory as the durable record behind "review dependency risk regularly."
+- `DOCUMENTATION.md` gained a dedicated "OTS Software Inventory" section, added `docs/OTS_SOFTWARE.md` to the Strongly Encouraged files, and added the inventory to the Documentation Review Checklist.
+- `SECURITY.md`'s Dependencies section now documents the inventory and checker, including the note that a new dependency in a trust-sensitive position remains a threat-modeling trigger — the inventory records the outcome, it does not replace the analysis.
+- `TESTING.md` documents the checker in "Governance Tooling Must Be Tested" and adds `constitution-ots.yml` to the CI Enforcement list (now six templates on the same rollout contract).
+- `AI_WORKFLOW.md`'s Required Workflow gained step 16 (update the inventory in the same change that touches dependencies, and run the checker locally), with matching bullets in During Work and Before Completing Work; later steps renumbered 17–26.
+- `INTEGRATION.md` gained a "Keeping the OTS Software Inventory Current" section and lists `docs/OTS_SOFTWARE.md` in the Project File Structure diagram.
+- `CLAUDE.md` and `templates/CLAUDE.md` Completion Checklists now include updating the OTS software inventory when third-party dependencies changed.
 
 ## 1.34.0 - 2026-07-14
 

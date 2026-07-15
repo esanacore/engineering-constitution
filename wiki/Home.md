@@ -48,8 +48,11 @@ Validates that every bold requirement ID declared in `docs/PRODUCT_REQUIREMENTS.
 Checks whether an adopting repository includes the governance files the constitution expects. It reports:
 
 - **Required** files such as `README.md`, `HELP.md`, `CHANGELOG.md`, `TODO.md`, `SECURITY.md`, `AGENTS.md`, `CLAUDE.md`, `VERSION`, and the `constitution/` submodule
-- **Recommended** files such as `docs/SETUP.md`, `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, `docs/OPERATIONS.md`, and `docs/TEST_PLAN.md`
+- **Recommended** files such as `docs/SETUP.md`, `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, `docs/OPERATIONS.md`, `docs/TEST_PLAN.md`, and `docs/OTS_SOFTWARE.md`
 - **Product-facing** files such as `docs/PRODUCT_REQUIREMENTS.md` and `docs/REQUIREMENTS_TRACEABILITY.md`
+
+### `scripts/check_ots_inventory.sh`
+Cross-checks the runtime dependencies declared in root-level manifests (`package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Gemfile`) against the OTS software inventory (`docs/OTS_SOFTWARE.md`), flagging any dependency with no inventory row. Matches inventory Name cells by exact value (case-insensitive), never substring, and deliberately reads runtime dependencies only (no `devDependencies`, `[dev-dependencies]`, or `// indirect` requires). Warns by default, `--strict` to fail; wired into CI by `constitution-ots.yml`.
 
 ### `scripts/check_secrets.sh`
 Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote:
@@ -69,6 +72,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_bootstrap.sh`
 - `scripts/test_check_traceability.sh`
 - `scripts/test_check_compliance.sh`
+- `scripts/test_check_ots_inventory.sh`
 - `scripts/test_check_secrets.sh`
 - `scripts/test_setup_machine.sh`
 - `scripts/test_audit_adopters.sh`
@@ -81,7 +85,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 
 - Agent bridge files such as `.agent-instructions.md`, `.openhands_instructions`, `.goosehints`, `.project-rules.md`, and `SYSTEM_PROMPT.md`
 - Project governance files such as `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `HELP.md`, `README.md`, `SECURITY.md`, `TODO.md`, `CHANGELOG.md`, and `VERSION`
-- Documentation scaffolds under `templates/docs/`, including `SETUP.md`, `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`, `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`, `REQUIREMENTS_TRACEABILITY.md`, and `MVP_BACKLOG.md`
+- Documentation scaffolds under `templates/docs/`, including `SETUP.md`, `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`, `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`, `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md`, and `MVP_BACKLOG.md`
 - GitHub automation under `templates/.github/`, including Copilot instructions, Dependabot configuration, and workflow templates
 
 ### Example project
@@ -96,8 +100,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.34.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.35.0`. Recent releases have focused on:
 
+- OTS software tracking (`templates/docs/OTS_SOFTWARE.md`, `check_ots_inventory.sh`, `constitution-ots.yml`): an FDA OTS / IEC 62304 SOUP-informed third-party dependency inventory, with a checker that cross-references actual dependency manifests against it so documentation stays complete as dependencies evolve
 - A Claude Code `SessionStart` hook (`templates/.claude/settings.json`, installed by `scripts/bootstrap.sh`) that runs `check_constitution_freshness.sh` the instant a session starts in an adopting repository, so an agent knows immediately — before doing anything else — whether the `constitution/` submodule is behind the latest release, instead of relying only on Dependabot, the CI version gate, or a periodic fleet audit
 - `CONSTITUTION.md` Principle 12 (Industry-Standard Code Conventions): code style, comments, docstrings, and diagrams follow the official, canonical style guide for the language/platform in use, backed by a new `CODE_STYLE.md` and a tracked `sources/STYLE_GUIDES.md` registry living alongside the book/paper digestion workflow
 - `scripts/setup-machine.sh`: a one-time, per-machine installer for gstack/goose/goosetown, deliberately kept separate from `scripts/bootstrap.sh` so repository bootstrapping never gains a side effect of installing global developer tooling

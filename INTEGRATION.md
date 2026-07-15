@@ -615,6 +615,29 @@ bash constitution/scripts/check_secrets.sh
 bash constitution/scripts/check_secrets.sh --strict   # also enforce .gitignore coverage
 ```
 
+## Keeping the OTS Software Inventory Current
+
+`.github/workflows/constitution-ots.yml` runs
+`constitution/scripts/check_ots_inventory.sh` on every push and pull request,
+plus a daily schedule. It cross-checks the runtime dependencies declared in
+root-level manifests (`package.json`, `requirements.txt`, `pyproject.toml`,
+`go.mod`, `Cargo.toml`, `Gemfile`) against `docs/OTS_SOFTWARE.md` — the OTS
+software inventory documenting each third-party component's purpose, risk,
+verification, and known-anomaly posture (see `DOCUMENTATION.md`'s "OTS
+Software Inventory" section). A dependency added without an inventory row is
+flagged in the same pull request that adds it, which is what keeps the
+inventory a living document instead of a stale audit artifact.
+
+It follows the standard rollout contract — warn by default, `--strict` to
+fail. Once the inventory is fully populated, edit the workflow's run step to
+pass `--strict` so an undocumented dependency fails the build. Run it
+manually at any time with:
+
+```bash
+bash constitution/scripts/check_ots_inventory.sh
+bash constitution/scripts/check_ots_inventory.sh --strict
+```
+
 ## Example Traceability Flow
 
 For product-facing repositories, keep one visible path from product intent to automated verification:
@@ -686,6 +709,7 @@ project/
 ├── README.md                              ← Project documentation
 └── docs/
     ├── SESSION_PLAN.md                    ← Current session's planned work (crash recovery)
+    ├── OTS_SOFTWARE.md                    ← OTS software inventory (third-party dependency register)
     └── adr/                               ← Architecture Decision Records
 ```
 

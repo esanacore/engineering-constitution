@@ -49,7 +49,7 @@ Tiers:
   Recommended   docs/SETUP.md, docs/COMMAND_REFERENCE.md, docs/TROUBLESHOOTING.md,
                 docs/ARCHITECTURE.md, docs/adr/, docs/AGENT_PROMPTS.md,
                 docs/AGENT_HANDOFF.md, docs/OPERATIONS.md, docs/TEST_PLAN.md,
-                docs/SESSION_PLAN.md.
+                docs/OTS_SOFTWARE.md, docs/SESSION_PLAN.md.
   Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md.
 USAGE
 }
@@ -127,6 +127,7 @@ recommended=(
   docs/AGENT_HANDOFF.md
   docs/OPERATIONS.md
   docs/TEST_PLAN.md
+  docs/OTS_SOFTWARE.md
   docs/SESSION_PLAN.md
 )
 
