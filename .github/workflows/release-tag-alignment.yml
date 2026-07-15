@@ -1,0 +1,25 @@
+name: release-tag-alignment
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to validate (defaults to the triggering ref)."
+        required: false
+        type: string
+
+jobs:
+  check-release-tag-alignment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out target ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Validate VERSION, tag, and HEAD alignment
+        run: bash scripts/check_release_tag_alignment.sh .

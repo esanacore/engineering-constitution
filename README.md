@@ -41,6 +41,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
 - `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
 - `scripts/setup-machine.sh`: One-time, per-machine installer for the AI-agent toolchain the templates point at (Bun, gstack, goose, goosetown). Not invoked by `bootstrap.sh` — a machine is provisioned once, explicitly; a repository is bootstrapped by writing files only. Idempotent, skips anything already installed.
+- `.github/workflows/release-tag-alignment.yml`: Source-repo release guard that runs `scripts/check_release_tag_alignment.sh` on every pushed `v*` tag, and can be re-run manually for a chosen ref.
 
 ## Project Structure
 
@@ -67,6 +68,7 @@ engineering-constitution/
 │       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness)
 │       └── agents/                       ← Solon, the Copilot custom agent
 │
+├── .github/workflows/release-tag-alignment.yml  ← Post-tag release validation for this source repo
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
