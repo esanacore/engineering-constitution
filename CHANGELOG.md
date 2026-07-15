@@ -9,6 +9,8 @@ This project follows semantic versioning.
 ### Added
 
 - `SECURITY.md` and `OPERATIONS.md` now recommend deploying autonomous development agents behind an AI-specific protocol firewall (such as Claw Patrol) to enforce least privilege, prevent unauthorized actions, and audit agent activity.
+- Added a premium, modern high-tech infographic (`assets/diagrams/constitution_infographic.jpg`) to `README.md` summarizing the human-AI collaboration loop, the 12 Principles, and the validation triad.
+- Added an interactive HTML demo dashboard (`demo.html`) in the project root providing a visual explorer for the 12 principles, a step-by-step workflow simulator, and language-specific configs.
 
 ## 1.35.0 - 2026-07-15
 
