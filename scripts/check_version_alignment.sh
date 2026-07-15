@@ -40,7 +40,7 @@ Checks:
 Scanned files when present:
   README.md, AGENTS.md, CLAUDE.md, CONTRIBUTING.md, SYSTEM_PROMPT.md,
   docs/SETUP.md, docs/INDEX.md, docs/AGENT_HANDOFF.md, docs/AGENT_PROMPTS.md,
-  docs/governance/*.md.
+  demo.html, docs/governance/*.md.
 USAGE
 }
 
@@ -119,6 +119,7 @@ candidate_files=(
   docs/INDEX.md
   docs/AGENT_HANDOFF.md
   docs/AGENT_PROMPTS.md
+  demo.html
 )
 
 for file in "$root"/docs/governance/*.md; do
