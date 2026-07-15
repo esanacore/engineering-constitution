@@ -34,6 +34,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
 - `scripts/check_version_alignment.sh`: Reference checker that verifies adopter-facing Constitution version references match the pinned `constitution/VERSION`.
 - `scripts/check_release_tag_alignment.sh`: Source-repo checker that verifies `VERSION`, the matching `v<VERSION>` tag, and `HEAD` stay aligned after a release.
+- `scripts/check_constitution_freshness.sh`: Single-repository freshness check (the `audit_adopters.sh` companion for one repository instead of a fleet), run by the `.claude/settings.json` SessionStart hook so a Claude Code session flags a stale `constitution/` submodule immediately instead of waiting on CI or Dependabot.
 - `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
 - `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
@@ -83,7 +84,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.33.0
+Current version: 1.34.0
 
 See `VERSION`.
 

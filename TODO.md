@@ -2,6 +2,7 @@
 
 ## Features
 
+- [x] Ensure a new Claude Code session in an adopting project checks whether the `constitution/` submodule is up to date before other work begins. Shipped in 1.34.0 as a `SessionStart` hook (`templates/.claude/settings.json`) running the new `scripts/check_constitution_freshness.sh`, complementing the existing async layers (Dependabot, CI version gate, `audit_adopters.sh`) with an immediate, agent-facing check.
 - [x] Add retroactive version analysis mechanism.
 - [x] Standardize the Eric's Engineering Constitution adoption badge across bootstrapped repositories.
 - [x] Add language-specific guidance for common stacks. Shipped in 1.33.0 as `CONSTITUTION.md` Principle 12 (Industry-Standard Code Conventions), a new `CODE_STYLE.md` requiring code style/docstrings/comments/diagrams to follow the official, canonical style guide per language/platform, and a tracked `sources/STYLE_GUIDES.md` registry (Kotlin/Android, Java, Python, Swift, JS/TS, Go, C#, Rust, Shell) living alongside the `sources/` book-digestion workflow.
