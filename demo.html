@@ -772,6 +772,17 @@
       border: 1px solid var(--border-color);
       box-shadow: var(--shadow-glow);
     }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      .intro-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -794,6 +805,30 @@
         <a href="#configurator" class="btn">Rules Configurator</a>
       </div>
     </header>
+
+    <!-- What & Why Intro Block -->
+    <section class="glass-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(168, 55, 247, 0.05) 100%);">
+      <div class="intro-grid">
+        <div>
+          <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; color: var(--accent-cyan); font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-cyan);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            What is the Constitution?
+          </h2>
+          <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 300; line-height: 1.7;">
+            Eric's Engineering Constitution is a <strong>reusable governance framework</strong> pinned to repositories as a Git submodule. It aligns human contributors and autonomous AI agents under identical, high-standard software engineering behaviors—governing code quality, documentation, testing, and operations.
+          </p>
+        </div>
+        <div>
+          <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; color: var(--accent-purple); font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-purple);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Why does it exist?
+          </h2>
+          <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 300; line-height: 1.7;">
+            While AI agents accelerate development, they can introduce code drift, bypass regression tests, omit critical documentation, or leak secrets. The Constitution enforces <strong>continuous rigor</strong> by gating pull requests through automated compliance tools—ensuring every change is verified, safe, and fully documented.
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- Interactive Hero Infographic -->
     <div class="infographic-wrapper">
