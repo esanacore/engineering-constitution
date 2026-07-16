@@ -6,6 +6,13 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.37.0 - 2026-07-15
+
+### Added
+
+- Added `skills/` directory containing 25 new agent skills that enforce the constitution's principles autonomously.
+- Integrated the skills locally into the Antigravity agent configuration for seamless project-wide use.
+
 ## 1.36.0 - 2026-07-15
 
 ### Added

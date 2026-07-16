@@ -26,6 +26,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
 - `KNOWLEDGE_SOURCES.md`: How to drop in book/reference sources and turn them into agent-consumable summaries via `sources/`.
+- `skills/`: 25 built-in agent skills that enforce constitution rules autonomously.
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
@@ -75,6 +76,7 @@ engineering-constitution/
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
+├── skills/                               ← 25 built-in agent skills that execute constitution rules autonomously
 ├── mcp-server/                           ← MCP server exposing constitution docs/sources as resources
 └── wiki/                                 ← Wiki content (Home.md)
 ```
@@ -91,7 +93,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.35.0
+Current version: 1.37.0
 
 See `VERSION`.
 
