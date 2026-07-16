@@ -26,6 +26,9 @@ EOF
   cat > "$dest/docs/governance/ENGINEERING_CONSTITUTION_ALIGNMENT.md" <<'EOF'
 Reviewed constitution release: `1.25.0`
 EOF
+  cat > "$dest/demo.html" <<'EOF'
+<span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.25.0</span>
+EOF
 }
 
 run_check() {
@@ -75,6 +78,18 @@ echo "$output"
 [ "$status" -eq 1 ] || { echo "FAIL(4): expected missing constitution/VERSION to fail, got $status"; exit 1; }
 echo "$output" | grep -q "Missing constitution/VERSION" || { echo "FAIL(4): missing constitution/VERSION not reported"; exit 1; }
 echo "SUCCESS(4): missing constitution/VERSION fails."
+
+repo="$test_dir/mismatch-demo"
+make_repo "$repo"
+cat > "$repo/demo.html" <<'EOF'
+<span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.24.0</span>
+EOF
+
+run_check "$repo"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(6): expected stale demo.html reference to fail, got $status"; exit 1; }
+echo "$output" | grep -q "demo.html:1 mentions 1.24.0" || { echo "FAIL(6): stale demo mismatch not reported"; exit 1; }
+echo "SUCCESS(6): stale demo.html reference fails."
 
 run_check --bogus "$repo"
 [ "$status" -eq 2 ] || { echo "FAIL(5): expected unknown option to exit 2, got $status"; exit 1; }

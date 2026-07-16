@@ -118,8 +118,9 @@ list as a gate, not a suggestion — a release is not done until every box is ch
    - The `README.md` "Current version" line.
    - Any embedded version string in the project's primary doc (for this
      framework, `CONSTITUTION.md`'s `Version:` header).
+   - The interactive `demo.html` badge text.
    - Grep for the previous version string to catch stragglers:
-     `grep -rn "$(previous version)" --include='*.md' .`
+     `grep -rn "$(previous version)" --include='*.md' --include='*.html' .`
 3. **Update `CHANGELOG.md`** with a dated section for the new version under the
    correct categories.
 4. **Update `TODO.md`** — mark shipped items done, record discovered follow-ups.
