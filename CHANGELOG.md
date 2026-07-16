@@ -6,8 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.36.0 - 2026-07-15
+
 ### Added
 
+- Added standardized Project Memory (`docs/MEMORY.md`) to serve as a durable, cross-platform memory bank for preserving cumulative codebase learnings, user preferences, and approved decisions across session and platform transitions.
+- Integrated project memory reading and updating steps into the Required Workflow in `AI_WORKFLOW.md` and `CONSTITUTION.md` Principle 1.
+- Updated all 16 agent-instruction templates (`AGENTS.md`, `CLAUDE.md`, `COPILOT_INSTRUCTIONS.md`, `.agent-instructions.md`, `.cursorrules`, `.cursor/rules/project.mdc`, `.continue/config.json`, `.aider.conf.yml`, `.goosehints`, `.openhands_instructions`, `.project-rules.md`, `SYSTEM_PROMPT.md`, `CONTRIBUTING.md`, `HELP.md`, `docs/AGENT_HANDOFF.md`) to instruct agents to read `docs/MEMORY.md` at start and propose updates at the end of a session.
+- Updated `bootstrap.sh` to install `docs/MEMORY.md` during repository onboarding.
+- Updated `check_compliance.sh` to include `docs/MEMORY.md` in recommended compliance checks, with a placeholder exception to support new repositories.
 - `SECURITY.md` and `OPERATIONS.md` now recommend deploying autonomous development agents behind an AI-specific protocol firewall (such as Claw Patrol) to enforce least privilege, prevent unauthorized actions, and audit agent activity.
 - Added a premium, modern high-tech infographic (`assets/diagrams/constitution_infographic.jpg`) to `README.md` summarizing the human-AI collaboration loop, the 12 Principles, and the validation triad.
 - Added an interactive HTML demo dashboard (`demo.html`) in the project root providing a visual explorer for the 12 principles, a step-by-step workflow simulator, and language-specific configs.

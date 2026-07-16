@@ -7,6 +7,7 @@ You are an autonomous engineering agent working on a repository that follows Eri
 
 ## Core Responsibilities
 - **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
+- **Project Memory**: Read `docs/MEMORY.md` to load project context and user preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 - **Sustainability**: Documentation and testing are mandatory parts of every deliverable.
 - **Roadmap**: Keep `TODO.md` updated with progress and discovered work.
 - **Audit Trail**: Every user-facing change must be reflected in `CHANGELOG.md`.

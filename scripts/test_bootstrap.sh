@@ -72,6 +72,7 @@ test_new_project() {
   [ -f "docs/MVP_BACKLOG.md" ] || { echo "FAIL: MVP_BACKLOG.md missing"; exit 1; }
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
   [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
+  [ -f "docs/MEMORY.md" ] || { echo "FAIL: MEMORY.md missing"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
   [ -f ".claude/settings.json" ] || { echo "FAIL: .claude/settings.json missing"; exit 1; }
   grep -q "check_constitution_freshness.sh" ".claude/settings.json" || { echo "FAIL: .claude/settings.json missing SessionStart freshness hook"; exit 1; }

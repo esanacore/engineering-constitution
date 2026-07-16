@@ -37,15 +37,18 @@ Before making changes, read:
 2. `constitution/AI_WORKFLOW.md` — Required step-by-step workflow.
 3. `AGENTS.md` — Project-specific rules and overrides.
 4. `README.md`, `TODO.md`, `CHANGELOG.md` — Project context.
+5. `docs/MEMORY.md` — Project memory (learnings, preferences, decisions).
 
 ## Standards
 
 - Follow the workflow in `constitution/AI_WORKFLOW.md` for every task.
 - Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan before implementing.
+- Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences.
 - Add or update tests for behavioral changes; evaluate coverage and record gaps.
 - Update `TODO.md` and `CHANGELOG.md` as part of every change.
 - Record major design decisions in `docs/adr/`.
 - Review security impact before completing work.
+- Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 
 ## Multi-Agent Orchestration (goosetown)
 

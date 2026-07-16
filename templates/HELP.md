@@ -13,6 +13,7 @@ This file provides help for humans and AI agents working on this project.
 - **Entry Point**: Read `AGENTS.md` and `constitution/CONSTITUTION.md`.
 - **Workflow**: Follow `constitution/AI_WORKFLOW.md`.
 - **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan there before implementing.
+- **Project Memory**: Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 - **Command Help**: See `docs/COMMAND_REFERENCE.md`.
 - **Troubleshooting**: See `docs/TROUBLESHOOTING.md`.
 - **Handoffs**: If you are finishing a session, see `docs/AGENT_HANDOFF.md` and clear or archive `docs/SESSION_PLAN.md`.

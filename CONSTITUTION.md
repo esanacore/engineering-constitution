@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.35.0
+Version: 1.36.0
 
 ## Purpose
 
@@ -30,10 +30,11 @@ Review:
 - API documentation
 - Deployment documentation
 - Wiki content
+- Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
 
 A task is not complete until documentation impact has been evaluated.
 
-Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended.
+Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended. Cumulative codebase learnings, conventions, and approved decisions are preserved across sessions in the project memory bank (`docs/MEMORY.md`) at the user's discretion.
 
 Product-facing repositories should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
 

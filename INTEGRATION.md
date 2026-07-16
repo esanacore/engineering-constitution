@@ -709,6 +709,7 @@ project/
 ├── README.md                              ← Project documentation
 └── docs/
     ├── SESSION_PLAN.md                    ← Current session's planned work (crash recovery)
+    ├── MEMORY.md                          ← Durable project memory (learnings, preferences, decisions)
     ├── OTS_SOFTWARE.md                    ← OTS software inventory (third-party dependency register)
     └── adr/                               ← Architecture Decision Records
 ```

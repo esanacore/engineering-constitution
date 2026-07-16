@@ -6,5 +6,7 @@ This repository follows [Eric's Engineering Constitution](constitution/CONSTITUT
 
 1. Read `constitution/CONSTITUTION.md` and `constitution/AI_WORKFLOW.md`.
 2. Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
-3. Follow the project conventions in `AGENTS.md`.
-4. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.
+3. Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences.
+4. Follow the project conventions in `AGENTS.md`.
+5. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.
+6. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.

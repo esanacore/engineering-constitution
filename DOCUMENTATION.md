@@ -43,6 +43,7 @@ Repositories should also include:
 - docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
 - docs/SESSION_PLAN.md for crash-recovery session planning
+- docs/MEMORY.md for user-discretionary project memory (learnings, preferences, decisions)
 - API documentation
 - Wiki content when appropriate
 
@@ -70,6 +71,14 @@ Agent sessions can crash, time out, or be interrupted mid-work. When this happen
 - **Update during work**: keep the Resumption Notes section current as work progresses, so the plan stays useful if the session is interrupted.
 - **Clear after completing**: once the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`, clear or archive the plan. The file is overwritten at the start of the next session.
 - **Complementary to AGENT_HANDOFF.md**: the session plan captures *intent before work*; the handoff captures *state after work*. They are bookends of a session lifecycle.
+
+## Project Memory
+
+As agents and humans work on a project, they establish codebase learnings, discover quirks, make styling preferences, and agree on architectural decisions. The project memory file `docs/MEMORY.md` serves as a durable, cross-platform memory bank.
+
+- **Durable cross-session context**: AI agents read `docs/MEMORY.md` at the start of each session to align with past context, and propose updates at the end of a session.
+- **User-Discretionary Control**: The memory file is strictly under the user's discretion. The agent MUST NOT write to or update `docs/MEMORY.md` without presenting the proposed additions/edits directly to the user for explicit approval at the end of the session.
+- **Complementary to Session Plans and Handoffs**: While `docs/SESSION_PLAN.md` and `docs/AGENT_HANDOFF.md` capture the active/temporary context of a single session, `docs/MEMORY.md` preserves long-term, cumulative learnings and preferences.
 
 ## Binary Assets and Images
 

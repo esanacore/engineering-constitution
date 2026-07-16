@@ -88,10 +88,10 @@ product_strict_output=$(cat "$PRODUCT_OUT")
 assert_contains "$product_strict_output" "MISSING  docs/PRODUCT_REQUIREMENTS.md (product placeholder, --product)"
 assert_contains "$product_strict_output" "MISSING  docs/REQUIREMENTS_TRACEABILITY.md (product placeholder, --product)"
 
-# docs/SESSION_PLAN.md is deliberately placeholder-shaped between sessions
-# (it's cleared/overwritten at the start of each one), unlike every other
-# recommended file where placeholder content means "never customized" -- so
-# it must be exempt from this check even when full of <!-- --> comments.
+# docs/SESSION_PLAN.md and docs/MEMORY.md are deliberately placeholder-shaped
+# (or empty/pre-populated with templates) when not in active use or newly
+# created, so they must be exempt from placeholder checks even when full of
+# <!-- --> comments.
 session_plan_repo="$TMPDIR/session-plan-placeholder"
 make_repo "$session_plan_repo"
 cat > "$session_plan_repo/docs/SESSION_PLAN.md" <<'EOF'
@@ -102,15 +102,28 @@ cat > "$session_plan_repo/docs/SESSION_PLAN.md" <<'EOF'
 <!-- What does this session aim to accomplish? Be specific. -->
 EOF
 
+cat > "$session_plan_repo/docs/MEMORY.md" <<'EOF'
+# Project Memory
+
+<!-- 
+  Record the user's development preferences, styling decisions, and custom choices.
+-->
+EOF
+
 session_plan_output=$("$CHECK_SCRIPT" "$session_plan_repo")
 assert_contains "$session_plan_output" "OK       docs/SESSION_PLAN.md"
+assert_contains "$session_plan_output" "OK       docs/MEMORY.md"
 if [[ "$session_plan_output" == *"docs/SESSION_PLAN.md (recommended placeholder)"* ]]; then
   echo "FAIL: docs/SESSION_PLAN.md should not be flagged as a placeholder" >&2
   exit 1
 fi
+if [[ "$session_plan_output" == *"docs/MEMORY.md (recommended placeholder)"* ]]; then
+  echo "FAIL: docs/MEMORY.md should not be flagged as a placeholder" >&2
+  exit 1
+fi
 
 if ! "$CHECK_SCRIPT" --strict "$session_plan_repo" >/dev/null 2>&1; then
-  echo "FAIL: --strict should not fail on docs/SESSION_PLAN.md placeholder content" >&2
+  echo "FAIL: --strict should not fail on docs/SESSION_PLAN.md or docs/MEMORY.md placeholder content" >&2
   exit 1
 fi
 

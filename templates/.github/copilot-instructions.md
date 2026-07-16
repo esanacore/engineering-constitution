@@ -11,6 +11,7 @@ Read:
 - `README.md` — project purpose and setup
 - `TODO.md` — current roadmap and known issues
 - `CHANGELOG.md` — recent changes
+- `docs/MEMORY.md` — read to load project context, codebase memory, and user preferences
 
 ## Development Standards
 
@@ -23,6 +24,7 @@ Read:
 - Update `CHANGELOG.md` for user-facing changes.
 - Avoid adding unnecessary dependencies.
 - Consider security, observability, and release impact.
+- Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 
 ## Project-Specific Rules
 

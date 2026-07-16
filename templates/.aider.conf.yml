@@ -7,8 +7,9 @@ auto-commits: false
 
 # Load constitution files as read-only context on every session. Includes
 # docs/SESSION_PLAN.md so a previous interrupted session's plan is always
-# visible; write your own plan there before implementing, and clear or
-# archive it when the session completes.
+# visible, and docs/MEMORY.md so codebase memory is preserved; write your
+# own plan in docs/SESSION_PLAN.md before implementing, and clear or archive
+# it when the session completes.
 read:
   - AGENTS.md
   - constitution/CONSTITUTION.md
@@ -17,3 +18,4 @@ read:
   - TODO.md
   - CHANGELOG.md
   - docs/SESSION_PLAN.md
+  - docs/MEMORY.md
