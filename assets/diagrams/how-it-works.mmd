@@ -1,17 +1,17 @@
-flowchart TD
+flowchart LR
     subgraph Source["engineering-constitution (this repo)"]
-        direction LR
-        C[CONSTITUTION.md + AI_WORKFLOW.md + policy docs]
-        T[templates/]
-        S[scripts/bootstrap.sh]
+        direction TB
+        C["CONSTITUTION.md + AI_WORKFLOW.md + policy docs"]
+        T["templates/"]
+        S["scripts/bootstrap.sh"]
     end
 
     subgraph Project["Adopting project"]
-        direction TB
-        Sub[constitution/ git submodule]
-        Local[AGENTS.md, CLAUDE.md, .cursor/rules, .goosehints, ...]
-        Agent[AI agent or human contributor]
-        Gates[CI gates: version, compliance, tests, doc-freshness]
+        direction LR
+        Sub["constitution/ git submodule"]
+        Local["AGENTS.md, CLAUDE.md, .cursor/rules, .goosehints, ..."]
+        Agent["AI agent or human contributor"]
+        Gates["CI gates: version, compliance, tests, doc-freshness"]
 
         Sub --> Local
         Local -->|reading order| Agent
