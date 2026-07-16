@@ -10,8 +10,8 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - A standardized "Eric's Engineering Constitution" adoption badge in the README
 - A bootstrap script that installs those files into an existing Git repository
 
-[![Eric's Engineering Constitution Framework](assets/diagrams/constitution_infographic.jpg)](demo.html)
-*Click the infographic above or open [demo.html](demo.html) to run the interactive dashboard locally.*
+[![Eric's Engineering Constitution Framework](assets/diagrams/constitution_infographic.jpg)](https://esanacore.github.io/engineering-constitution/demo.html)
+*Click the infographic above or open [the interactive dashboard](https://esanacore.github.io/engineering-constitution/demo.html) to view it live.*
 
 ## Repository Contents
 
