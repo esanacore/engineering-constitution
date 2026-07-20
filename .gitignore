@@ -10,6 +10,15 @@ node_modules/
 !scripts/lib/
 !scripts/lib/*.sh
 
+# .claude/ holds exactly one shared file -- launch.json, the dev-server config
+# for previewing demo.html. Everything else there is per-developer state
+# (settings.local.json, scheduled_tasks.lock). Those were previously ignored
+# only by a personal global gitignore and this clone's .git/info/exclude,
+# neither of which travels with a clone. Now that .claude/ is a tracked
+# directory, allowlist it explicitly so no one commits their local state.
+.claude/*
+!.claude/launch.json
+
 # Secrets that should never be committed. See SECURITY.md's "Secrets Sweep"
 # and scripts/check_secrets.sh, which checks this list is present.
 .env
