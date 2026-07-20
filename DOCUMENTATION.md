@@ -40,6 +40,7 @@ Repositories should also include:
 - docs/REQUIREMENTS_TRACEABILITY.md for product-facing applications
 - docs/TEST_PLAN.md for repositories with automated tests
 - docs/OTS_SOFTWARE.md for repositories with third-party dependencies
+- docs/ENV_VARS.md for documenting environment variable requirements
 - docs/MVP_BACKLOG.md for early-stage products or prototypes
 - docs/OPERATIONS.md
 - docs/SESSION_PLAN.md for crash-recovery session planning
@@ -101,6 +102,7 @@ For each meaningful change, review whether updates are needed for:
 - Requirements traceability matrix
 - Test plan and coverage records
 - OTS software inventory (when dependencies were added, removed, or upgraded)
+- Environment contract (when environment variables were added or removed)
 - MVP or delivery backlog
 - API documentation
 - Deployment documentation
@@ -222,6 +224,18 @@ For each component, the inventory records:
 - Update policy: how the version moves (pinned, ranged, bot-managed, vendored).
 
 The inventory is a living document: update it in the **same change** that adds, removes, or upgrades a dependency, not in a later documentation pass. The framework ships `scripts/check_ots_inventory.sh` (see `TESTING.md`), which cross-checks the dependencies declared in root-level manifests (`package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Gemfile`) against the inventory's Name cells, so a dependency added without documentation is flagged automatically. System-level OTS (operating systems, databases, base images) cannot be discovered from manifests and is maintained by hand in the inventory's dedicated section.
+
+## Environment & Configuration Contract
+
+Repositories should maintain `docs/ENV_VARS.md`: an Environment & Configuration Contract that documents every environment variable required or optionally supported by the project. Undocumented configuration is technical debt that frequently breaks deployments.
+
+For each environment variable, the contract records:
+- The exact variable name (e.g. `NODE_ENV`).
+- A description of what it configures.
+- Whether it is required or optional.
+- A default or example value.
+
+The contract is a living document: update it in the **same change** that adds, modifies, or removes a configuration requirement from a manifest like `.env.example` or `docker-compose.yml`. The framework ships `scripts/check_env_vars.sh` (see `TESTING.md`), which parses variables from root-level configuration manifests and cross-checks them against `docs/ENV_VARS.md`, so a variable added to a manifest without documentation is flagged automatically.
 
 ## Architecture Decision Records
 

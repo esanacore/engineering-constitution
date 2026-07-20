@@ -55,6 +55,7 @@ test_new_project() {
   [ -f ".github/workflows/constitution-doc-freshness.yml" ] || { echo "FAIL: constitution-doc-freshness.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-secrets.yml" ] || { echo "FAIL: constitution-secrets.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-ots.yml" ] || { echo "FAIL: constitution-ots.yml workflow missing"; exit 1; }
+  [ -f ".github/workflows/constitution-env.yml" ] || { echo "FAIL: constitution-env.yml workflow missing"; exit 1; }
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
@@ -69,6 +70,7 @@ test_new_project() {
   [ -f "docs/REQUIREMENTS_TRACEABILITY.md" ] || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing"; exit 1; }
   [ -f "docs/TEST_PLAN.md" ] || { echo "FAIL: TEST_PLAN.md missing"; exit 1; }
   [ -f "docs/OTS_SOFTWARE.md" ] || { echo "FAIL: OTS_SOFTWARE.md missing"; exit 1; }
+  [ -f "docs/ENV_VARS.md" ] || { echo "FAIL: ENV_VARS.md missing"; exit 1; }
   [ -f "docs/MVP_BACKLOG.md" ] || { echo "FAIL: MVP_BACKLOG.md missing"; exit 1; }
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
   [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
@@ -83,6 +85,7 @@ test_new_project() {
   grep -q "Requirements Traceability Matrix" docs/REQUIREMENTS_TRACEABILITY.md || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing matrix heading"; exit 1; }
   grep -q "Coverage Gap Log" docs/TEST_PLAN.md || { echo "FAIL: TEST_PLAN.md missing coverage gap log"; exit 1; }
   grep -q "OTS Software Inventory" docs/OTS_SOFTWARE.md || { echo "FAIL: OTS_SOFTWARE.md missing inventory heading"; exit 1; }
+  grep -q "Environment & Configuration Contract" docs/ENV_VARS.md || { echo "FAIL: ENV_VARS.md missing contract heading"; exit 1; }
 
   # Verify the standardized constitution badge is present
   grep -q "CONSTITUTION_START" README.md || { echo "FAIL: README.md missing constitution badge markers"; exit 1; }

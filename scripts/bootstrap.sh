@@ -39,6 +39,7 @@ Creates or installs:
   - .github/workflows/constitution-doc-freshness.yml
   - .github/workflows/constitution-secrets.yml
   - .github/workflows/constitution-ots.yml
+  - .github/workflows/constitution-env.yml
   - .cursor/rules/project.mdc
   - .continue/config.json
   - .aider.conf.yml
@@ -429,6 +430,7 @@ generate_adoption_report() {
     status_line ".github/workflows/constitution-doc-freshness.yml"
     status_line ".github/workflows/constitution-secrets.yml"
     status_line ".github/workflows/constitution-ots.yml"
+    status_line ".github/workflows/constitution-env.yml"
     status_line ".cursor/rules/project.mdc"
     status_line ".continue/config.json"
     status_line ".aider.conf.yml"
@@ -449,6 +451,7 @@ generate_adoption_report() {
     status_line "docs/REQUIREMENTS_TRACEABILITY.md"
     status_line "docs/TEST_PLAN.md"
     status_line "docs/OTS_SOFTWARE.md"
+    status_line "docs/ENV_VARS.md"
     status_line "docs/MVP_BACKLOG.md"
     status_line "docs/OPERATIONS.md"
     status_line "docs/SESSION_PLAN.md"
@@ -564,6 +567,7 @@ copy_file "$template_dir/.github/workflows/constitution-tests.yml" "$project_pat
 copy_file "$template_dir/.github/workflows/constitution-doc-freshness.yml" "$project_path/.github/workflows/constitution-doc-freshness.yml"
 copy_file "$template_dir/.github/workflows/constitution-secrets.yml" "$project_path/.github/workflows/constitution-secrets.yml"
 copy_file "$template_dir/.github/workflows/constitution-ots.yml" "$project_path/.github/workflows/constitution-ots.yml"
+copy_file "$template_dir/.github/workflows/constitution-env.yml" "$project_path/.github/workflows/constitution-env.yml"
 copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
 mkdir -p "$project_path/.continue"
 copy_file "$template_dir/.continue/config.json" "$project_path/.continue/config.json"
@@ -596,6 +600,7 @@ copy_file "$template_dir/docs/PRODUCT_REQUIREMENTS.md" "$project_path/docs/PRODU
 copy_file "$template_dir/docs/REQUIREMENTS_TRACEABILITY.md" "$project_path/docs/REQUIREMENTS_TRACEABILITY.md"
 copy_file "$template_dir/docs/TEST_PLAN.md" "$project_path/docs/TEST_PLAN.md"
 copy_file "$template_dir/docs/OTS_SOFTWARE.md" "$project_path/docs/OTS_SOFTWARE.md"
+copy_file "$template_dir/docs/ENV_VARS.md" "$project_path/docs/ENV_VARS.md"
 copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md"
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"

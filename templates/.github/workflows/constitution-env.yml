@@ -1,0 +1,24 @@
+name: Constitution - Environment Contract
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  check-env:
+    name: Documented Configurations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check Environment Contract
+        run: |
+          if [ -f "scripts/check_env_vars.sh" ]; then
+            bash scripts/check_env_vars.sh --strict
+          else
+            echo "Skipping: scripts/check_env_vars.sh not found."
+            echo "(This is normal if the project hasn't updated its constitution submodule.)"
+          fi

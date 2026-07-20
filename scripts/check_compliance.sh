@@ -49,7 +49,8 @@ Tiers:
   Recommended   docs/SETUP.md, docs/COMMAND_REFERENCE.md, docs/TROUBLESHOOTING.md,
                 docs/ARCHITECTURE.md, docs/adr/, docs/AGENT_PROMPTS.md,
                 docs/AGENT_HANDOFF.md, docs/OPERATIONS.md, docs/TEST_PLAN.md,
-                docs/OTS_SOFTWARE.md, docs/SESSION_PLAN.md, docs/MEMORY.md.
+                docs/OTS_SOFTWARE.md, docs/SESSION_PLAN.md, docs/MEMORY.md,
+                docs/ENV_VARS.md.
   Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md.
 USAGE
 }
@@ -130,14 +131,15 @@ recommended=(
   docs/OTS_SOFTWARE.md
   docs/SESSION_PLAN.md
   docs/MEMORY.md
+  docs/ENV_VARS.md
 )
 
-# docs/SESSION_PLAN.md and docs/MEMORY.md are deliberately placeholder-shaped
-# (or empty/pre-populated with templates) when not in active use or newly
-# created -- unlike other recommended files, their placeholder content does
-# not indicate neglect, so they are exempted from the placeholder check.
+# docs/SESSION_PLAN.md, docs/MEMORY.md, and docs/ENV_VARS.md are deliberately
+# placeholder-shaped (or empty/pre-populated with templates) when not in active
+# use or newly created -- unlike other recommended files, their placeholder
+# content does not indicate neglect, so they are exempted from the placeholder check.
 recommended_skip_placeholder_check() {
-  [ "$1" = "docs/SESSION_PLAN.md" ] || [ "$1" = "docs/MEMORY.md" ]
+  [ "$1" = "docs/SESSION_PLAN.md" ] || [ "$1" = "docs/MEMORY.md" ] || [ "$1" = "docs/ENV_VARS.md" ]
 }
 
 # Required only for product-facing repositories.
