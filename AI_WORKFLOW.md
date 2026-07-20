@@ -21,9 +21,10 @@ This document defines the required workflow for AI-assisted software development
 15. Evaluate coverage and analyze gaps.
 16. Update requirements traceability for product-facing repositories.
 17. Update the OTS software inventory (`docs/OTS_SOFTWARE.md`) when third-party dependencies were added, removed, or upgraded — in the same change, not a later documentation pass. Run `bash constitution/scripts/check_ots_inventory.sh .` to confirm the manifests and the inventory agree. See DOCUMENTATION.md's "OTS Software Inventory" section.
-18. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
-19. Update TODO.md.
-20. Update CHANGELOG.md.
+18. Update the Environment & Configuration Contract (`docs/ENV_VARS.md`) when environment variables are added to, modified in, or removed from manifests (like `.env.example` or `docker-compose.yml`) — in the same change. Run `bash constitution/scripts/check_env_vars.sh .` to confirm the manifests and the contract agree.
+19. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
+20. Update TODO.md.
+21. Update CHANGELOG.md.
 21. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
 22. Perform a security review.
 23. Suggest future improvements.
@@ -58,6 +59,7 @@ Agents should:
 - Update documentation as part of the implementation, including README.md's current-features list (see DOCUMENTATION.md's "README Expectations") — CI's `constitution-doc-freshness.yml` workflow is a blunt tripwire for this, not a substitute for actually doing it.
 - Record discovered work in TODO.md.
 - When adding, removing, or upgrading a third-party dependency, update `docs/OTS_SOFTWARE.md` in the same change — CI's `constitution-ots.yml` workflow flags manifests that drift from the inventory, but it can only verify a row exists, not that the risk assessment is honest.
+- When adding or changing an environment variable in a manifest (e.g. `.env.example`, `docker-compose.yml`), update `docs/ENV_VARS.md` in the same change — CI's `constitution-env.yml` workflow flags undocumented variables.
 - Never commit or push a real secret, credential, or credential-shaped file — sweep with `constitution/scripts/check_secrets.sh` before pushing (see SECURITY.md's "Secrets Sweep"); CI's `constitution-secrets.yml` workflow is the backstop, not the reason to skip the local sweep.
 - Avoid unrelated refactors unless required for the task.
 - Use the `/browse` gstack skill for all web browsing; never call `mcp__claude-in-chrome__*` tools directly.
@@ -72,6 +74,7 @@ Agents must verify:
 - Coverage was evaluated against declared targets and any gaps were recorded.
 - Requirements traceability is updated for product-facing repositories.
 - The OTS software inventory (`docs/OTS_SOFTWARE.md`) is updated if this work touched third-party dependencies (`bash constitution/scripts/check_ots_inventory.sh .` agrees).
+- The Environment Contract (`docs/ENV_VARS.md`) is updated if this work touched environment variables (`bash constitution/scripts/check_env_vars.sh .` agrees).
 - Documentation impact has been evaluated, including whether README.md's current features/capabilities list still answers "what can it do today?" — not just whether the task was doc-focused.
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.

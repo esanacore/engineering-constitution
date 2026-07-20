@@ -93,7 +93,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.37.0
+Current version: 1.38.0
 
 See `VERSION`.
 
@@ -124,6 +124,30 @@ The target project must already be a Git repository. Pass `--force` to overwrite
 ```bash
 ./scripts/bootstrap.sh --force /path/to/project <repository-url>
 ```
+
+#### Choosing AI Tool Instruction Files
+
+By default, bootstrap installs **one** agent instruction file: `AGENTS.md`, the
+cross-vendor standard that most tools read directly. Tools that hardcode their
+own filename are opt-in, so an adopting repository does not carry instruction
+files for tools nobody on the project uses:
+
+```bash
+# Just AGENTS.md (default)
+./scripts/bootstrap.sh /path/to/project <repository-url>
+
+# Add Claude Code and Cursor support
+./scripts/bootstrap.sh --agents=claude,cursor /path/to/project <repository-url>
+
+# Every vendor file (the pre-1.38.0 behavior)
+./scripts/bootstrap.sh --agents=all /path/to/project <repository-url>
+```
+
+Supported keys: `claude`, `cursor`, `copilot`, `goose`, `openhands`,
+`antigravity`, `continue`, `aider`, `generic`, `all`. Run
+`./scripts/bootstrap.sh --help` for the files each one installs.
+
+A default bootstrap adds 12 root entries instead of 24.
 
 #### New Repository
 

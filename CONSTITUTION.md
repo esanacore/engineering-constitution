@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.36.0
+Version: 1.38.0
 
 ## Purpose
 
@@ -115,6 +115,8 @@ ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecate
 Code-level structure should follow the SOLID principles and the Dependency Rule, applied as pragmatic guardrails rather than ceremony. See `ARCHITECTURE.md`.
 
 Every README.md should include a visual project-structure tree and, whenever possible, at least one infographic — a component or flow diagram (Mermaid by default) — not just prose. This is the default, not an exception for complex systems. Keep both current in the same change that changes the structure. See `ARCHITECTURE.md`'s "Visual Architecture" section.
+
+The repository root is an architectural surface, not a junk drawer. It is the first thing a reader sees, and a root crowded with configuration and near-duplicate instruction files hides the project's actual shape. Keep it to the files that must live there: put governance documents where the hosting platform still finds them (`.github/`), reference documentation in `docs/`, and add a tool's configuration file only when the project actually uses that tool. Adopting a framework must not be the reason a root listing doubles. See `DOCUMENTATION.md`'s "Keeping the Repository Root Readable".
 
 ## Principle 7: Dependency Hygiene
 

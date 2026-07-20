@@ -6,6 +6,24 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.38.0 - 2026-07-19
+
+### Added
+
+- Added an Environment & Configuration Contract: `docs/ENV_VARS.md` documents every environment variable a project requires or optionally supports, and `scripts/check_env_vars.sh` parses root-level configuration manifests and cross-checks them against it, so a variable added without documentation is flagged in the same change. Installed by `bootstrap.sh` alongside a `constitution-env.yml` CI workflow, and checked in the recommended tier. Follows the warn-by-default/`--strict` rollout contract.
+- Added `bootstrap.sh --agents=<list>` to select which AI tool instruction files an adopting repository receives. Supported keys: `claude`, `cursor`, `copilot`, `goose`, `openhands`, `antigravity`, `continue`, `aider`, `generic`, and `all`. An unrecognized key is a usage error rather than a silent no-op.
+- Added a repository-root cleanliness rule to `CONSTITUTION.md` Principle 6 and a "Keeping the Repository Root Readable" section to `DOCUMENTATION.md`, establishing that adopting a framework must not double a project's root file listing.
+
+### Changed
+
+- **Bootstrap now installs `AGENTS.md` only by default.** The other 13 vendor instruction files are opt-in via `--agents`. Previously all of them were installed unconditionally, so every adopting repository carried instruction files for tools it did not use. A default bootstrap now adds 12 root entries instead of 24. Pass `--agents=all` for the previous behavior.
+- Relocated constitution-owned governance documents out of the adopting repository's root: `SECURITY.md` and `CONTRIBUTING.md` now install to `.github/` (where GitHub renders them identically), and `HELP.md` and `SYSTEM_PROMPT.md` now install to `docs/`.
+- `check_compliance.sh` no longer checks vendor instruction files such as `CLAUDE.md`, since they are opt-in per tool and their absence carries no signal. `AGENTS.md` remains required as the cross-vendor file. `.github/CONTRIBUTING.md` was added to the recommended tier.
+
+### Compatibility
+
+- Repositories that adopted before this release keep `HELP.md`, `SECURITY.md`, `CONTRIBUTING.md`, and `SYSTEM_PROMPT.md` in their root. `check_compliance.sh` accepts either location and reports whichever it finds, so no existing repository needs to change to stay compliant. Moving the files is optional cleanup.
+
 ## 1.37.0 - 2026-07-15
 
 ### Added

@@ -11,7 +11,7 @@ set -euo pipefail
 usage() {
   cat <<'USAGE'
 Usage:
-  bootstrap.sh [--force] <project-path> <constitution-repository-url>
+  bootstrap.sh [--force] [--agents=<list>] <project-path> <constitution-repository-url>
 
 Description:
   Initialize an existing Git repository with Eric's Engineering Constitution.
@@ -19,18 +19,9 @@ Description:
 Creates or installs:
   - constitution Git submodule
   - AGENTS.md
-  - CLAUDE.md
-  - .agent-instructions.md
-  - .cursorrules
-  - .antigravity/instructions.md
-  - .openhands_instructions
-  - .goosehints
-  - .project-rules.md
-  - SYSTEM_PROMPT.md
-  - CONTRIBUTING.md
-  - HELP.md
-  - SECURITY.md
-  - .github/copilot-instructions.md
+  - .github/CONTRIBUTING.md
+  - .github/SECURITY.md
+  - docs/HELP.md
   - .github/agents/solon.agent.md
   - .github/dependabot.yml
   - .github/workflows/constitution-version.yml
@@ -39,13 +30,9 @@ Creates or installs:
   - .github/workflows/constitution-doc-freshness.yml
   - .github/workflows/constitution-secrets.yml
   - .github/workflows/constitution-ots.yml
-  - .cursor/rules/project.mdc
-  - .continue/config.json
-  - .aider.conf.yml
-  - .aiderignore
+  - .github/workflows/constitution-env.yml
   - .pre-commit-config.yaml
   - .devcontainer/devcontainer.json
-  - .claude/settings.json
   - TODO.md
   - CHANGELOG.md
   - VERSION
@@ -69,21 +56,110 @@ Creates or installs:
   - .constitution-bootstrap/templates/ for skipped existing files
 
 Options:
-  --force   Overwrite existing generated files.
+  --force            Overwrite existing generated files.
+  --agents=<list>    Comma-separated AI tools to generate vendor instruction
+                     files for. Default: none -- only AGENTS.md is installed.
+
+Agent vendor files:
+  AGENTS.md is the cross-vendor standard and is always installed. Most modern
+  tools read it directly, so a repository needs nothing else. Tools that
+  hardcode their own filename get a vendor file only when named in --agents,
+  which keeps the adopting repository's root listing small.
+
+  Supported keys (--agents=claude,cursor):
+    claude        CLAUDE.md, .claude/settings.json
+    cursor        .cursorrules, .cursor/rules/project.mdc
+    copilot       .github/copilot-instructions.md
+    goose         .goosehints
+    openhands     .openhands_instructions
+    antigravity   .antigravity/instructions.md
+    continue      .continue/config.json
+    aider         .aider.conf.yml, .aiderignore
+    generic       .agent-instructions.md, .project-rules.md,
+                  docs/SYSTEM_PROMPT.md
+    all           Every key above (the pre-1.38.0 behavior).
 USAGE
 }
 
 force=false
 
-if [ "${1:-}" = "--force" ]; then
-  force=true
-  shift
-fi
+# Vendor instruction files are opt-in. AGENTS.md is the cross-vendor standard and
+# is always installed; everything else is generated only when the adopter names
+# the tool, so a repository does not carry instruction files for tools nobody on
+# the project uses. Empty means "AGENTS.md only".
+agents=""
+
+# All recognized --agents keys, used to expand `all` and to reject typos.
+all_agent_keys="claude cursor copilot goose openhands antigravity continue aider generic"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --force)
+      force=true
+      shift
+      ;;
+    --agents=*)
+      agents=${1#--agents=}
+      shift
+      ;;
+    --agents)
+      if [ "$#" -lt 2 ]; then
+        echo "--agents requires a value (for example --agents=claude,cursor)" >&2
+        exit 2
+      fi
+      agents=$2
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
 
 if [ "$#" -ne 2 ]; then
   usage
   exit 1
 fi
+
+# Normalize the requested agent list into space-delimited keys so `wants_agent`
+# can match on word boundaries. `all` expands to every supported key.
+requested_agents=""
+
+if [ -n "$agents" ]; then
+  for key in $(printf '%s' "$agents" | tr ',' ' '); do
+    case " $all_agent_keys " in
+      *" $key "*)
+        requested_agents="$requested_agents $key"
+        ;;
+      *)
+        if [ "$key" = "all" ]; then
+          requested_agents=" $all_agent_keys"
+        else
+          echo "Unknown --agents key: $key" >&2
+          echo "Supported keys: $all_agent_keys all" >&2
+          exit 2
+        fi
+        ;;
+    esac
+  done
+fi
+
+# True when the adopter asked for this vendor's instruction files.
+wants_agent() {
+  case " $requested_agents " in
+    *" $1 "*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 
 project_path=$1
 constitution_url=$2
@@ -409,18 +485,41 @@ generate_adoption_report() {
     echo
     status_line "README.md"
     status_line "AGENTS.md"
-    status_line "CLAUDE.md"
-    status_line ".agent-instructions.md"
-    status_line ".cursorrules"
-    status_line ".antigravity/instructions.md"
-    status_line ".openhands_instructions"
-    status_line ".goosehints"
-    status_line ".project-rules.md"
-    status_line "SYSTEM_PROMPT.md"
-    status_line "CONTRIBUTING.md"
-    status_line "HELP.md"
-    status_line "SECURITY.md"
-    status_line ".github/copilot-instructions.md"
+    if wants_agent claude; then
+      status_line "CLAUDE.md"
+      status_line ".claude/settings.json"
+    fi
+    if wants_agent cursor; then
+      status_line ".cursorrules"
+      status_line ".cursor/rules/project.mdc"
+    fi
+    if wants_agent copilot; then
+      status_line ".github/copilot-instructions.md"
+    fi
+    if wants_agent goose; then
+      status_line ".goosehints"
+    fi
+    if wants_agent openhands; then
+      status_line ".openhands_instructions"
+    fi
+    if wants_agent antigravity; then
+      status_line ".antigravity/instructions.md"
+    fi
+    if wants_agent continue; then
+      status_line ".continue/config.json"
+    fi
+    if wants_agent aider; then
+      status_line ".aider.conf.yml"
+      status_line ".aiderignore"
+    fi
+    if wants_agent generic; then
+      status_line ".agent-instructions.md"
+      status_line ".project-rules.md"
+      status_line "docs/SYSTEM_PROMPT.md"
+    fi
+    status_line ".github/CONTRIBUTING.md"
+    status_line ".github/SECURITY.md"
+    status_line "docs/HELP.md"
     status_line ".github/agents/solon.agent.md"
     status_line ".github/dependabot.yml"
     status_line ".github/workflows/constitution-version.yml"
@@ -429,13 +528,9 @@ generate_adoption_report() {
     status_line ".github/workflows/constitution-doc-freshness.yml"
     status_line ".github/workflows/constitution-secrets.yml"
     status_line ".github/workflows/constitution-ots.yml"
-    status_line ".cursor/rules/project.mdc"
-    status_line ".continue/config.json"
-    status_line ".aider.conf.yml"
-    status_line ".aiderignore"
+    status_line ".github/workflows/constitution-env.yml"
     status_line ".pre-commit-config.yaml"
     status_line ".devcontainer/devcontainer.json"
-    status_line ".claude/settings.json"
     status_line "TODO.md"
     status_line "CHANGELOG.md"
     status_line "VERSION"
@@ -449,6 +544,7 @@ generate_adoption_report() {
     status_line "docs/REQUIREMENTS_TRACEABILITY.md"
     status_line "docs/TEST_PLAN.md"
     status_line "docs/OTS_SOFTWARE.md"
+    status_line "docs/ENV_VARS.md"
     status_line "docs/MVP_BACKLOG.md"
     status_line "docs/OPERATIONS.md"
     status_line "docs/SESSION_PLAN.md"
@@ -541,20 +637,58 @@ else
   echo "Added constitution submodule: $constitution_url"
 fi
 
+# AGENTS.md is the cross-vendor standard: always installed, and the only agent
+# instruction file most repositories need.
 copy_file "$template_dir/AGENTS.md" "$project_path/AGENTS.md"
-copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
-copy_file "$template_dir/.agent-instructions.md" "$project_path/.agent-instructions.md"
-copy_file "$template_dir/.cursorrules" "$project_path/.cursorrules"
-mkdir -p "$project_path/.antigravity"
-copy_file "$template_dir/.antigravity/instructions.md" "$project_path/.antigravity/instructions.md"
-copy_file "$template_dir/.openhands_instructions" "$project_path/.openhands_instructions"
-copy_file "$template_dir/.goosehints" "$project_path/.goosehints"
-copy_file "$template_dir/.project-rules.md" "$project_path/.project-rules.md"
-copy_file "$template_dir/SYSTEM_PROMPT.md" "$project_path/SYSTEM_PROMPT.md"
-copy_file "$template_dir/CONTRIBUTING.md" "$project_path/CONTRIBUTING.md"
-copy_file "$template_dir/HELP.md" "$project_path/HELP.md"
-copy_file "$template_dir/SECURITY.md" "$project_path/SECURITY.md"
-copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
+
+# Vendor files for tools that hardcode their own filename, opt-in via --agents.
+if wants_agent claude; then
+  copy_file "$template_dir/CLAUDE.md" "$project_path/CLAUDE.md"
+  copy_file "$template_dir/.claude/settings.json" "$project_path/.claude/settings.json"
+fi
+
+if wants_agent cursor; then
+  copy_file "$template_dir/.cursorrules" "$project_path/.cursorrules"
+  copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
+fi
+
+if wants_agent copilot; then
+  copy_file "$template_dir/.github/copilot-instructions.md" "$project_path/.github/copilot-instructions.md"
+fi
+
+if wants_agent goose; then
+  copy_file "$template_dir/.goosehints" "$project_path/.goosehints"
+fi
+
+if wants_agent openhands; then
+  copy_file "$template_dir/.openhands_instructions" "$project_path/.openhands_instructions"
+fi
+
+if wants_agent antigravity; then
+  mkdir -p "$project_path/.antigravity"
+  copy_file "$template_dir/.antigravity/instructions.md" "$project_path/.antigravity/instructions.md"
+fi
+
+if wants_agent continue; then
+  copy_file "$template_dir/.continue/config.json" "$project_path/.continue/config.json"
+fi
+
+if wants_agent aider; then
+  copy_file "$template_dir/.aider.conf.yml" "$project_path/.aider.conf.yml"
+  copy_file "$template_dir/.aiderignore" "$project_path/.aiderignore"
+fi
+
+if wants_agent generic; then
+  copy_file "$template_dir/.agent-instructions.md" "$project_path/.agent-instructions.md"
+  copy_file "$template_dir/.project-rules.md" "$project_path/.project-rules.md"
+  copy_file "$template_dir/SYSTEM_PROMPT.md" "$project_path/docs/SYSTEM_PROMPT.md"
+fi
+
+# GitHub renders CONTRIBUTING.md and SECURITY.md from .github/ identically to the
+# repository root, so they live there to keep the root file listing short.
+copy_file "$template_dir/CONTRIBUTING.md" "$project_path/.github/CONTRIBUTING.md"
+copy_file "$template_dir/SECURITY.md" "$project_path/.github/SECURITY.md"
+copy_file "$template_dir/HELP.md" "$project_path/docs/HELP.md"
 mkdir -p "$project_path/.github/agents"
 copy_file "$template_dir/.github/agents/solon.agent.md" "$project_path/.github/agents/solon.agent.md"
 copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependabot.yml"
@@ -564,16 +698,10 @@ copy_file "$template_dir/.github/workflows/constitution-tests.yml" "$project_pat
 copy_file "$template_dir/.github/workflows/constitution-doc-freshness.yml" "$project_path/.github/workflows/constitution-doc-freshness.yml"
 copy_file "$template_dir/.github/workflows/constitution-secrets.yml" "$project_path/.github/workflows/constitution-secrets.yml"
 copy_file "$template_dir/.github/workflows/constitution-ots.yml" "$project_path/.github/workflows/constitution-ots.yml"
-copy_file "$template_dir/.cursor/rules/project.mdc" "$project_path/.cursor/rules/project.mdc"
-mkdir -p "$project_path/.continue"
-copy_file "$template_dir/.continue/config.json" "$project_path/.continue/config.json"
-copy_file "$template_dir/.aider.conf.yml" "$project_path/.aider.conf.yml"
-copy_file "$template_dir/.aiderignore" "$project_path/.aiderignore"
+copy_file "$template_dir/.github/workflows/constitution-env.yml" "$project_path/.github/workflows/constitution-env.yml"
 copy_file "$template_dir/.pre-commit-config.yaml" "$project_path/.pre-commit-config.yaml"
 mkdir -p "$project_path/.devcontainer"
 copy_file "$template_dir/.devcontainer/devcontainer.json" "$project_path/.devcontainer/devcontainer.json"
-mkdir -p "$project_path/.claude"
-copy_file "$template_dir/.claude/settings.json" "$project_path/.claude/settings.json"
 if ! write_generated_todo_from_backlog; then
   copy_file "$template_dir/TODO.md" "$project_path/TODO.md"
 fi
@@ -596,6 +724,7 @@ copy_file "$template_dir/docs/PRODUCT_REQUIREMENTS.md" "$project_path/docs/PRODU
 copy_file "$template_dir/docs/REQUIREMENTS_TRACEABILITY.md" "$project_path/docs/REQUIREMENTS_TRACEABILITY.md"
 copy_file "$template_dir/docs/TEST_PLAN.md" "$project_path/docs/TEST_PLAN.md"
 copy_file "$template_dir/docs/OTS_SOFTWARE.md" "$project_path/docs/OTS_SOFTWARE.md"
+copy_file "$template_dir/docs/ENV_VARS.md" "$project_path/docs/ENV_VARS.md"
 copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md"
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"

@@ -35,19 +35,23 @@ test_new_project() {
   # Verify files
   [ -d "constitution" ] || { echo "FAIL: constitution submodule missing"; exit 1; }
   [ -f "AGENTS.md" ] || { echo "FAIL: AGENTS.md missing"; exit 1; }
-  [ -f "CLAUDE.md" ] || { echo "FAIL: CLAUDE.md missing"; exit 1; }
-  [ -f ".agent-instructions.md" ] || { echo "FAIL: .agent-instructions.md missing"; exit 1; }
-  [ -f ".cursorrules" ] || { echo "FAIL: .cursorrules missing"; exit 1; }
-  [ -f ".antigravity/instructions.md" ] || { echo "FAIL: .antigravity/instructions.md missing"; exit 1; }
-  [ -f ".openhands_instructions" ] || { echo "FAIL: .openhands_instructions missing"; exit 1; }
-  [ -f ".goosehints" ] || { echo "FAIL: .goosehints missing"; exit 1; }
-  [ -f ".project-rules.md" ] || { echo "FAIL: .project-rules.md missing"; exit 1; }
-  [ -f "SYSTEM_PROMPT.md" ] || { echo "FAIL: SYSTEM_PROMPT.md missing"; exit 1; }
-  [ -f "CONTRIBUTING.md" ] || { echo "FAIL: CONTRIBUTING.md missing"; exit 1; }
-  [ -f "HELP.md" ] || { echo "FAIL: HELP.md missing"; exit 1; }
-  [ -f "SECURITY.md" ] || { echo "FAIL: SECURITY.md missing"; exit 1; }
-  [ -f ".github/copilot-instructions.md" ] || { echo "FAIL: copilot-instructions.md missing"; exit 1; }
+  [ -f ".github/CONTRIBUTING.md" ] || { echo "FAIL: .github/CONTRIBUTING.md missing"; exit 1; }
+  [ -f "docs/HELP.md" ] || { echo "FAIL: docs/HELP.md missing"; exit 1; }
+  [ -f ".github/SECURITY.md" ] || { echo "FAIL: .github/SECURITY.md missing"; exit 1; }
   [ -f ".github/agents/solon.agent.md" ] || { echo "FAIL: solon.agent.md missing"; exit 1; }
+
+  # Vendor instruction files are opt-in: a default bootstrap installs AGENTS.md
+  # only, so the adopting repository's root listing stays short.
+  for vendor_file in CLAUDE.md .cursorrules .goosehints .openhands_instructions \
+                     .project-rules.md .agent-instructions.md .aider.conf.yml \
+                     .aiderignore SYSTEM_PROMPT.md docs/SYSTEM_PROMPT.md \
+                     .github/copilot-instructions.md .antigravity/instructions.md \
+                     .continue/config.json .claude/settings.json; do
+    if [ -e "$vendor_file" ]; then
+      echo "FAIL: $vendor_file installed without --agents"
+      exit 1
+    fi
+  done
   [ -f ".github/dependabot.yml" ] || { echo "FAIL: dependabot.yml missing"; exit 1; }
   [ -f ".github/workflows/constitution-version.yml" ] || { echo "FAIL: constitution-version.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-compliance.yml" ] || { echo "FAIL: constitution-compliance.yml workflow missing"; exit 1; }
@@ -55,7 +59,7 @@ test_new_project() {
   [ -f ".github/workflows/constitution-doc-freshness.yml" ] || { echo "FAIL: constitution-doc-freshness.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-secrets.yml" ] || { echo "FAIL: constitution-secrets.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-ots.yml" ] || { echo "FAIL: constitution-ots.yml workflow missing"; exit 1; }
-  [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: project.mdc missing"; exit 1; }
+  [ -f ".github/workflows/constitution-env.yml" ] || { echo "FAIL: constitution-env.yml workflow missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
   [ -f "VERSION" ] || { echo "FAIL: VERSION missing"; exit 1; }
@@ -69,20 +73,19 @@ test_new_project() {
   [ -f "docs/REQUIREMENTS_TRACEABILITY.md" ] || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing"; exit 1; }
   [ -f "docs/TEST_PLAN.md" ] || { echo "FAIL: TEST_PLAN.md missing"; exit 1; }
   [ -f "docs/OTS_SOFTWARE.md" ] || { echo "FAIL: OTS_SOFTWARE.md missing"; exit 1; }
+  [ -f "docs/ENV_VARS.md" ] || { echo "FAIL: ENV_VARS.md missing"; exit 1; }
   [ -f "docs/MVP_BACKLOG.md" ] || { echo "FAIL: MVP_BACKLOG.md missing"; exit 1; }
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
   [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
   [ -f "docs/MEMORY.md" ] || { echo "FAIL: MEMORY.md missing"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
-  [ -f ".claude/settings.json" ] || { echo "FAIL: .claude/settings.json missing"; exit 1; }
-  grep -q "check_constitution_freshness.sh" ".claude/settings.json" || { echo "FAIL: .claude/settings.json missing SessionStart freshness hook"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }
-
   # Verify requirement traceability wiring
   grep -q "FR-001" docs/PRODUCT_REQUIREMENTS.md || { echo "FAIL: PRODUCT_REQUIREMENTS.md missing requirement IDs"; exit 1; }
   grep -q "Requirements Traceability Matrix" docs/REQUIREMENTS_TRACEABILITY.md || { echo "FAIL: REQUIREMENTS_TRACEABILITY.md missing matrix heading"; exit 1; }
   grep -q "Coverage Gap Log" docs/TEST_PLAN.md || { echo "FAIL: TEST_PLAN.md missing coverage gap log"; exit 1; }
   grep -q "OTS Software Inventory" docs/OTS_SOFTWARE.md || { echo "FAIL: OTS_SOFTWARE.md missing inventory heading"; exit 1; }
+  grep -q "Environment & Configuration Contract" docs/ENV_VARS.md || { echo "FAIL: ENV_VARS.md missing contract heading"; exit 1; }
 
   # Verify the standardized constitution badge is present
   grep -q "CONSTITUTION_START" README.md || { echo "FAIL: README.md missing constitution badge markers"; exit 1; }
@@ -110,6 +113,7 @@ test_existing_files_preservation() {
   # Verify files were NOT overwritten
   grep -q "Original README" README.md || { echo "FAIL: README.md was overwritten"; exit 1; }
   grep -q "Original TODO" TODO.md || { echo "FAIL: TODO.md was overwritten"; exit 1; }
+
 
   # Verify merge templates were created
   [ -f ".constitution-bootstrap/templates/README.md" ] || { echo "FAIL: README.md merge template missing"; exit 1; }
@@ -222,8 +226,66 @@ BACKLOG_EOF
   echo "SUCCESS: Backlog migration verified."
 }
 
+# Create an empty committed Git repository for a bootstrap run.
+make_repo() {
+  path=$1
+  mkdir -p "$path"
+  cd "$path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+  git commit --allow-empty -qm "Initial commit"
+}
+
+test_agents_selection() {
+  echo "Testing --agents vendor selection..."
+
+  # A named subset installs that vendor's files and no others.
+  project_path="$test_dir/agents-subset"
+  make_repo "$project_path"
+  "$bootstrap_script" --agents=claude,cursor "$project_path" "$constitution_url" >/dev/null
+
+  [ -f "CLAUDE.md" ] || { echo "FAIL: --agents=claude did not install CLAUDE.md"; exit 1; }
+  [ -f ".claude/settings.json" ] || { echo "FAIL: --agents=claude did not install .claude/settings.json"; exit 1; }
+  grep -q "check_constitution_freshness.sh" ".claude/settings.json" || { echo "FAIL: .claude/settings.json missing SessionStart freshness hook"; exit 1; }
+  [ -f ".cursorrules" ] || { echo "FAIL: --agents=cursor did not install .cursorrules"; exit 1; }
+  [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: --agents=cursor did not install project.mdc"; exit 1; }
+
+  for unwanted in .goosehints .openhands_instructions .aider.conf.yml \
+                  .github/copilot-instructions.md .project-rules.md; do
+    if [ -e "$unwanted" ]; then
+      echo "FAIL: $unwanted installed for --agents=claude,cursor"
+      exit 1
+    fi
+  done
+
+  # --agents=all restores the pre-1.38.0 behavior.
+  project_path="$test_dir/agents-all"
+  make_repo "$project_path"
+  "$bootstrap_script" --agents=all "$project_path" "$constitution_url" >/dev/null
+
+  for expected in CLAUDE.md .cursorrules .goosehints .openhands_instructions \
+                  .project-rules.md .agent-instructions.md .aider.conf.yml \
+                  .aiderignore docs/SYSTEM_PROMPT.md .continue/config.json \
+                  .github/copilot-instructions.md .antigravity/instructions.md; do
+    [ -e "$expected" ] || { echo "FAIL: --agents=all did not install $expected"; exit 1; }
+  done
+
+  # An unrecognized key is a usage error rather than a silent no-op.
+  project_path="$test_dir/agents-bogus"
+  make_repo "$project_path"
+  set +e
+  "$bootstrap_script" --agents=bogus "$project_path" "$constitution_url" >/dev/null 2>&1
+  status=$?
+  set -e
+  [ "$status" -eq 2 ] || { echo "FAIL: expected exit 2 for an unknown --agents key, got $status"; exit 1; }
+
+  echo "SUCCESS: --agents vendor selection verified."
+}
+
 # Run tests
 test_new_project
+test_agents_selection
 test_existing_files_preservation
 test_badge_injection
 test_badge_no_heading

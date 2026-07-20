@@ -11,15 +11,15 @@ trap 'rm -rf "$TMPDIR"' EXIT
 make_repo() {
   local root=$1
 
-  mkdir -p "$root/docs/adr" "$root/constitution"
+  mkdir -p "$root/docs/adr" "$root/constitution" "$root/.github"
   touch \
     "$root/README.md" \
-    "$root/HELP.md" \
+    "$root/docs/HELP.md" \
     "$root/CHANGELOG.md" \
     "$root/TODO.md" \
-    "$root/SECURITY.md" \
+    "$root/.github/SECURITY.md" \
+    "$root/.github/CONTRIBUTING.md" \
     "$root/AGENTS.md" \
-    "$root/CLAUDE.md" \
     "$root/VERSION" \
     "$root/docs/SETUP.md" \
     "$root/docs/COMMAND_REFERENCE.md" \
@@ -88,7 +88,7 @@ product_strict_output=$(cat "$PRODUCT_OUT")
 assert_contains "$product_strict_output" "MISSING  docs/PRODUCT_REQUIREMENTS.md (product placeholder, --product)"
 assert_contains "$product_strict_output" "MISSING  docs/REQUIREMENTS_TRACEABILITY.md (product placeholder, --product)"
 
-# docs/SESSION_PLAN.md and docs/MEMORY.md are deliberately placeholder-shaped
+# docs/SESSION_PLAN.md, docs/MEMORY.md, and docs/ENV_VARS.md are deliberately placeholder-shaped
 # (or empty/pre-populated with templates) when not in active use or newly
 # created, so they must be exempt from placeholder checks even when full of
 # <!-- --> comments.
@@ -102,7 +102,7 @@ cat > "$session_plan_repo/docs/SESSION_PLAN.md" <<'EOF'
 <!-- What does this session aim to accomplish? Be specific. -->
 EOF
 
-cat > "$session_plan_repo/docs/MEMORY.md" <<'EOF'
+cat <<'EOF' > "$session_plan_repo/docs/MEMORY.md"
 # Project Memory
 
 <!-- 
@@ -110,9 +110,16 @@ cat > "$session_plan_repo/docs/MEMORY.md" <<'EOF'
 -->
 EOF
 
+cat <<'EOF' > "$session_plan_repo/docs/ENV_VARS.md"
+# Environment & Configuration Contract
+
+<!-- List required variables here -->
+EOF
+
 session_plan_output=$("$CHECK_SCRIPT" "$session_plan_repo")
 assert_contains "$session_plan_output" "OK       docs/SESSION_PLAN.md"
 assert_contains "$session_plan_output" "OK       docs/MEMORY.md"
+assert_contains "$session_plan_output" "OK       docs/ENV_VARS.md"
 if [[ "$session_plan_output" == *"docs/SESSION_PLAN.md (recommended placeholder)"* ]]; then
   echo "FAIL: docs/SESSION_PLAN.md should not be flagged as a placeholder" >&2
   exit 1
@@ -121,9 +128,13 @@ if [[ "$session_plan_output" == *"docs/MEMORY.md (recommended placeholder)"* ]];
   echo "FAIL: docs/MEMORY.md should not be flagged as a placeholder" >&2
   exit 1
 fi
+if [[ "$session_plan_output" == *"docs/ENV_VARS.md (recommended placeholder)"* ]]; then
+  echo "FAIL: docs/ENV_VARS.md should not be flagged as a placeholder" >&2
+  exit 1
+fi
 
 if ! "$CHECK_SCRIPT" --strict "$session_plan_repo" >/dev/null 2>&1; then
-  echo "FAIL: --strict should not fail on docs/SESSION_PLAN.md or docs/MEMORY.md placeholder content" >&2
+  echo "FAIL: --strict should not fail on docs/SESSION_PLAN.md, docs/MEMORY.md, or docs/ENV_VARS.md placeholder content" >&2
   exit 1
 fi
 
