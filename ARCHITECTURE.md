@@ -89,10 +89,25 @@ an em dash means none. A layer may always import itself, and imports that do not
 resolve to a declared layer — third-party and standard-library packages — are
 ignored.
 
+The declared graph must be **acyclic**. If two layers may each depend on the
+other, dependencies cannot point inward — and no per-import check can catch it,
+because every edge of the cycle is individually legal under its own allow-list.
+The checker runs a graph pass over the table for this reason.
+
+Checking the declared graph rather than the observed imports is sufficient
+rather than a shortcut: every real import is either permitted, and therefore an
+edge already present in the declared graph, or it is a violation the checker
+already reports. An acyclic declaration admits no cycle among the imports that
+pass. It also catches an unsound architecture before any code exercises it.
+
+A `May Depend On` entry naming no declared layer is reported as well. A typo
+there is silent by construction — the intended dependency is never permitted, so
+the layer quietly enforces more than its author wrote.
+
 Enforcement is opt-in per project: only the project knows its own layering, so a
 repository without this table is never failed for lacking one. Once the table is
 accurate, switch `.github/workflows/constitution-architecture.yml` to `--strict`
-so an outward-pointing dependency fails the build.
+so an outward-pointing dependency or a cyclic declaration fails the build.
 
 The checker also reports **structural signals** — oversized files, crowded
 directories. These are review prompts and never fail a build, even under

@@ -648,98 +648,6 @@
       font-size: 0.95rem;
     }
 
-    /* Configurator */
-    .configurator-wrapper {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-top: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .configurator-wrapper {
-        grid-template-columns: 1fr 2fr;
-      }
-    }
-
-    .config-selectors {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .config-tab {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 500;
-      transition: all var(--transition-speed);
-    }
-
-    .config-tab:hover {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: var(--accent-cyan);
-    }
-
-    .config-tab.active {
-      background: var(--bg-card-hover);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
-    }
-
-    .config-icon {
-      width: 24px;
-      height: 24px;
-      color: var(--accent-cyan);
-    }
-
-    .config-editor-pane {
-      background: rgba(9, 13, 22, 0.9);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.5rem;
-      position: relative;
-    }
-
-    .code-block {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      overflow-x: auto;
-      white-space: pre;
-    }
-
-    .code-comment {
-      color: #475569;
-    }
-
-    .code-key {
-      color: #38bdf8;
-    }
-
-    .code-string {
-      color: #10b981;
-    }
-
-    .btn-copy {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-copy:hover {
-      background: var(--accent-cyan);
-      color: var(--bg-dark);
-    }
-
     /* Animations */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -819,24 +727,6 @@
         padding: 0.6rem 1rem;
         font-size: 0.85rem;
       }
-      .code-block {
-        font-size: 0.8rem;
-      }
-      .config-selectors {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-      .config-tab {
-        flex: 0 0 auto;
-        min-width: 160px;
-        padding: 0.75rem;
-      }
-      .config-tab div div:last-child {
-        display: none;
-      }
     }
 
     @media (max-width: 640px) {
@@ -868,7 +758,7 @@
     <header>
       <div class="badge-container">
         <span class="badge-status"></span>
-        <span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.39.1</span>
+        <span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.40.0</span>
       </div>
       <h1 class="logo-text">Eric's Engineering Constitution</h1>
       <p class="subtitle">A standardized framework ensuring rigor, security, and automated verification across software projects for humans and AI agents alike.</p>
@@ -877,7 +767,6 @@
         <a href="#pillars" class="btn">Validation Pillars</a>
         <a href="#principles" class="btn">12 Principles</a>
         <a href="#workflow" class="btn btn-primary">Workflow Simulator</a>
-        <a href="#configurator" class="btn">Rules Configurator</a>
       </div>
     </header>
 
@@ -1171,69 +1060,6 @@
 
     </div>
 
-    <!-- Configuration Helper Section -->
-    <section id="configurator" class="glass-card" style="margin-top: 2rem;">
-      <h2 class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 2 18 2 18 6 6 6"/><rect x="3" y="6" width="18" height="16" rx="2"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-        Adoption Configuration Configurator
-      </h2>
-      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-        Select your project language environment to generate customized rules to place in your repository rules file (e.g. <code>CLAUDE.md</code>, <code>AGENTS.md</code>).
-      </p>
-
-      <div class="configurator-wrapper">
-        <div class="config-selectors">
-          <div class="config-tab active" onclick="switchConfig('node')">
-            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            Node.js / TypeScript
-          </div>
-          <div class="config-tab" onclick="switchConfig('python')">
-            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Python / FastAPI
-          </div>
-          <div class="config-tab" onclick="switchConfig('kotlin')">
-            <svg class="config-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12m0 0V2M12 12h10M12 12H2"/></svg>
-            Kotlin / Android
-          </div>
-        </div>
-
-        <div class="config-editor-pane">
-          <button class="btn btn-copy" onclick="copyConfig()">Copy Config</button>
-          
-          <!-- Node / TS Config -->
-          <div id="config-node" class="code-block">
-<span class="code-comment">## Project-Specific Rules</span>
-- Use TypeScript with strict mode enabled.
-- Prefer functional components and hooks for React code.
-- Use `zod` for input validation.
-- All new API endpoints must be documented in `openapi.yaml`.
-- Run `npm run lint` and `npm test` before every commit.
-          </div>
-
-          <!-- Python Config -->
-          <div id="config-python" class="code-block" style="display: none;">
-<span class="code-comment">## Project-Specific Rules</span>
-- Use Python 3.11+.
-- Use Pydantic v2 for data modeling.
-- Follow PEP 8 style guidelines.
-- Use `pytest` for all tests.
-- All service methods must include docstrings following the Google style.
-- Run `ruff check .` for linting.
-          </div>
-
-          <!-- Kotlin Config -->
-          <div id="config-kotlin" class="code-block" style="display: none;">
-<span class="code-comment">## Project-Specific Rules</span>
-- Follow developer.android.com's official Kotlin style guide.
-- Format all docstrings using standard KDoc.
-- Leverage dependency injection frameworks (e.g. Hilt) for architecture.
-- Enforce layout standards matching strict Material 3 design directives.
-- Run `android lint` and verification builds in local docker containers.
-          </div>
-        </div>
-      </div>
-    </section>
-
   </div>
 
   <!-- Principles Detail Modal -->
@@ -1368,43 +1194,6 @@
 
     function closeImageModal() {
       document.getElementById('imageModal').classList.remove('active');
-    }
-
-    // Configurator Control
-    let activeConfig = 'node';
-    function switchConfig(type) {
-      document.querySelectorAll('.config-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById('config-node').style.display = 'none';
-      document.getElementById('config-python').style.display = 'none';
-      document.getElementById('config-kotlin').style.display = 'none';
-
-      if (type === 'node') {
-        document.getElementById('config-node').style.display = 'block';
-        activeConfig = 'node';
-      } else if (type === 'python') {
-        document.getElementById('config-python').style.display = 'block';
-        activeConfig = 'python';
-      } else if (type === 'kotlin') {
-        document.getElementById('config-kotlin').style.display = 'block';
-        activeConfig = 'kotlin';
-      }
-      
-      event.currentTarget.classList.add('active');
-    }
-
-    function copyConfig() {
-      const text = document.getElementById(`config-${activeConfig}`).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.btn-copy');
-        btn.innerText = 'Copied!';
-        btn.style.background = '#10b981';
-        btn.style.color = '#fff';
-        setTimeout(() => {
-          btn.innerText = 'Copy Config';
-          btn.style.background = 'rgba(255, 255, 255, 0.05)';
-          btn.style.color = 'var(--text-main)';
-        }, 1500);
-      });
     }
 
     // Compliance Triad selector

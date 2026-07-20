@@ -51,6 +51,11 @@ use an em dash for none. A layer may always import itself, and imports that do
 not resolve to a declared layer (third-party and standard-library packages) are
 ignored.
 
+The graph must be acyclic: if two layers may each depend on the other,
+dependencies cannot point inward and the checker reports a CYCLE. Names in
+"May Depend On" must match a declared Layer exactly -- a typo permits nothing
+and silently makes that layer stricter than intended, so it is reported too.
+
 Delete the layers that do not apply and rename the paths to match this project.
 
 | Layer          | Path               | May Depend On       |
