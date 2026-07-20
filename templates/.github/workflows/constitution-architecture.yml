@@ -1,0 +1,55 @@
+name: Constitution Architecture
+
+# Checks that source-code dependencies point inward, per the constitution's
+# Dependency Rule (ARCHITECTURE.md), using the checker that ships in the pinned
+# `constitution/` submodule:
+#   - check_architecture.sh — every import from a declared layer resolves to a
+#     layer that layer is allowed to depend on.
+#
+# Every other constitution workflow verifies that a *file* exists. This one
+# verifies that the code's structure matches what the project says its structure
+# is: a repository can carry every governance document and still have its domain
+# layer importing its web framework.
+#
+# Layer enforcement is opt-in per project: until docs/ARCHITECTURE.md declares a
+# "Layer Boundaries" table, this job reports advisory structural signals only and
+# passes. Only the project knows its own layering.
+#
+# Follows the constitution's rollout contract: warn by default, --strict to
+# fail. Once the layer table is accurate, switch the run below to `--strict` so
+# an outward-pointing dependency fails the build.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "43 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  architecture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_architecture.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the architecture checker). This repository does not appear to adopt Eric's Engineering Constitution, or the submodule needs updating."
+            exit 1
+          fi
+
+      - name: Verify dependencies point inward
+        shell: bash
+        # Swap in `--strict` once the docs/ARCHITECTURE.md layer table is accurate.
+        run: bash constitution/scripts/check_architecture.sh .

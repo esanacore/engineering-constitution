@@ -6,6 +6,19 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.39.0 - 2026-07-19
+
+### Added
+
+- Added `scripts/check_architecture.sh`, the first checker that inspects code *structure* rather than file presence. A repository could carry every governance document the constitution requires and still have its domain layer importing its web framework; this closes that gap. When a project declares its layers in `docs/ARCHITECTURE.md` under a `Layer Boundaries` table, the checker verifies every import points inward per the Dependency Rule, across Python, JavaScript/TypeScript, Go, Java/Kotlin/Scala, Swift, Rust, C#, Ruby, and PHP. Relative imports are resolved against the importing file's directory first, and imports are attributed by path component rather than substring, so a layer named `db` is never matched by an import of `dbutils`. Layer enforcement is opt-in per project — only the project knows its own layering, so a repository without the table is never failed for lacking one.
+- Added advisory **structural signals** to the same checker (oversized files, crowded directories). These never affect exit status, even under `--strict`. This is deliberate: `ARCHITECTURE.md`'s SRP guardrail says not to split a module merely because it is long, so failing a build on line count would contradict the principle the checker exists to serve. Thresholds are configurable via `--max-file-lines` and `--max-dir-files`.
+- Added `templates/.github/workflows/constitution-architecture.yml` and a commented `Layer Boundaries` section in `templates/docs/ARCHITECTURE.md`, both installed by `bootstrap.sh`. The shipped table is commented out so a fresh adopter is never failed by the template's example paths.
+- Added `scripts/test_check_architecture.sh` (12 cases), covering the negative direction that matters most for governance tooling: that a legal inward dependency is never flagged, that vendored code under `node_modules/` is not attributed to the project, that a typo'd layer path is surfaced rather than silently disabling enforcement, and that a 700-line file under `--strict` still exits 0.
+
+### Changed
+
+- `CONSTITUTION.md` Principle 6 and `ARCHITECTURE.md` now state that the Dependency Rule is enforceable rather than aspirational, and that carrying every governance document is not the same as having sound structure.
+
 ## 1.38.0 - 2026-07-19
 
 ### Added

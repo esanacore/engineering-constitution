@@ -60,6 +60,7 @@ test_new_project() {
   [ -f ".github/workflows/constitution-secrets.yml" ] || { echo "FAIL: constitution-secrets.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-ots.yml" ] || { echo "FAIL: constitution-ots.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-env.yml" ] || { echo "FAIL: constitution-env.yml workflow missing"; exit 1; }
+  [ -f ".github/workflows/constitution-architecture.yml" ] || { echo "FAIL: constitution-architecture.yml workflow missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
   [ -f "VERSION" ] || { echo "FAIL: VERSION missing"; exit 1; }
@@ -86,6 +87,10 @@ test_new_project() {
   grep -q "Coverage Gap Log" docs/TEST_PLAN.md || { echo "FAIL: TEST_PLAN.md missing coverage gap log"; exit 1; }
   grep -q "OTS Software Inventory" docs/OTS_SOFTWARE.md || { echo "FAIL: OTS_SOFTWARE.md missing inventory heading"; exit 1; }
   grep -q "Environment & Configuration Contract" docs/ENV_VARS.md || { echo "FAIL: ENV_VARS.md missing contract heading"; exit 1; }
+  grep -q "Layer Boundaries" docs/ARCHITECTURE.md || { echo "FAIL: ARCHITECTURE.md missing Layer Boundaries section"; exit 1; }
+  # The shipped layer table is commented out so a fresh adopter is not failed by
+  # a template's example paths; check_architecture.sh must treat it as absent.
+  bash "$repo_root/scripts/check_architecture.sh" --strict . >/dev/null 2>&1 || { echo "FAIL: fresh bootstrap does not pass check_architecture.sh --strict"; exit 1; }
 
   # Verify the standardized constitution badge is present
   grep -q "CONSTITUTION_START" README.md || { echo "FAIL: README.md missing constitution badge markers"; exit 1; }

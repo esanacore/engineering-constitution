@@ -68,6 +68,39 @@ Source-code dependencies must point inward, toward higher-level policy.
 - Guardrail: if you cannot test a business rule without standing up a database
   or web server, a dependency is pointing the wrong way.
 
+#### Enforcing the Dependency Rule
+
+The rule above is checkable, not just advisory. Declare the project's layers in
+`docs/ARCHITECTURE.md` under a `Layer Boundaries` heading and
+`scripts/check_architecture.sh` will verify that every import points inward:
+
+```markdown
+## Layer Boundaries
+
+| Layer          | Path               | May Depend On       |
+| -------------- | ------------------ | ------------------- |
+| domain         | src/domain         | --                  |
+| application    | src/application    | domain              |
+| infrastructure | src/infrastructure | domain, application |
+```
+
+List layers inner-first. `May Depend On` names the layers each one may import;
+an em dash means none. A layer may always import itself, and imports that do not
+resolve to a declared layer — third-party and standard-library packages — are
+ignored.
+
+Enforcement is opt-in per project: only the project knows its own layering, so a
+repository without this table is never failed for lacking one. Once the table is
+accurate, switch `.github/workflows/constitution-architecture.yml` to `--strict`
+so an outward-pointing dependency fails the build.
+
+The checker also reports **structural signals** — oversized files, crowded
+directories. These are review prompts and never fail a build, even under
+`--strict`. That is deliberate: the SRP guardrail above says not to split a
+module merely because it is long, so a checker that failed on line count would
+contradict the principle it exists to serve. A long file is a reason to look,
+not a verdict.
+
 ### Design Patterns
 
 The patterns from *Design Patterns* (Gamma, Helm, Johnson, Vlissides, 1994) are a

@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.38.0
+Version: 1.39.0
 
 ## Purpose
 
@@ -113,6 +113,8 @@ Create ADRs for:
 ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecated`), record their relationships to other ADRs (`extends`, `supersedes`, `related`), and state explicit promotion criteria while `Proposed`. See `DOCUMENTATION.md`.
 
 Code-level structure should follow the SOLID principles and the Dependency Rule, applied as pragmatic guardrails rather than ceremony. See `ARCHITECTURE.md`.
+
+The Dependency Rule is enforceable, not merely aspirational: declare the project's layers in `docs/ARCHITECTURE.md` and `scripts/check_architecture.sh` verifies that every import points inward. Compliance is not the same as good structure — a repository can carry every governance document this constitution requires and still have its business rules importing its database. Declaring layers is what closes that gap. See `ARCHITECTURE.md`'s "Enforcing the Dependency Rule".
 
 Every README.md should include a visual project-structure tree and, whenever possible, at least one infographic — a component or flow diagram (Mermaid by default) — not just prose. This is the default, not an exception for complex systems. Keep both current in the same change that changes the structure. See `ARCHITECTURE.md`'s "Visual Architecture" section.
 
