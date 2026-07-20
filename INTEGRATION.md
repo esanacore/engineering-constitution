@@ -411,7 +411,7 @@ repositories stay on the latest release, the framework ships three layers that
    `AHEAD/DIVERGED`. It exits non-zero when any repository is behind, so it can
    also drive a centralized cron job.
 4. **A Claude Code session-start check** — `.claude/settings.json` (installed
-   by `scripts/bootstrap.sh`) registers a `SessionStart` hook that runs
+   by `scripts/bootstrap.sh --agents=claude`) registers a `SessionStart` hook that runs
    `constitution/scripts/check_constitution_freshness.sh` the instant a Claude
    Code session starts (or resumes) in the repository. Unlike the three layers
    above, which are async — a PR someone has to notice and merge, a CI run,

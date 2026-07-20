@@ -11,15 +11,15 @@ trap 'rm -rf "$TMPDIR"' EXIT
 make_repo() {
   local root=$1
 
-  mkdir -p "$root/docs/adr" "$root/constitution"
+  mkdir -p "$root/docs/adr" "$root/constitution" "$root/.github"
   touch \
     "$root/README.md" \
-    "$root/HELP.md" \
+    "$root/docs/HELP.md" \
     "$root/CHANGELOG.md" \
     "$root/TODO.md" \
-    "$root/SECURITY.md" \
+    "$root/.github/SECURITY.md" \
+    "$root/.github/CONTRIBUTING.md" \
     "$root/AGENTS.md" \
-    "$root/CLAUDE.md" \
     "$root/VERSION" \
     "$root/docs/SETUP.md" \
     "$root/docs/COMMAND_REFERENCE.md" \
@@ -105,7 +105,7 @@ EOF
 cat <<'EOF' > "$session_plan_repo/docs/MEMORY.md"
 # Project Memory
 
-<!--
+<!-- 
   Record the user's development preferences, styling decisions, and custom choices.
 -->
 EOF

@@ -19,13 +19,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Build a fully compliant adopter skeleton (required + recommended + product).
+# Build a fully compliant adopter skeleton (required + recommended + product)
+# in the current layout, where HELP.md, SECURITY.md, and CONTRIBUTING.md live
+# outside the repository root.
 make_compliant_repo() {
   dest=$1
-  mkdir -p "$dest/docs/adr" "$dest/constitution"
-  for f in README.md HELP.md CHANGELOG.md TODO.md SECURITY.md AGENTS.md CLAUDE.md VERSION; do
+  mkdir -p "$dest/docs/adr" "$dest/constitution" "$dest/.github"
+  for f in README.md CHANGELOG.md TODO.md AGENTS.md VERSION; do
     echo "placeholder" > "$dest/$f"
   done
+  echo "placeholder" > "$dest/docs/HELP.md"
+  echo "placeholder" > "$dest/.github/SECURITY.md"
+  echo "placeholder" > "$dest/.github/CONTRIBUTING.md"
   for f in SETUP.md COMMAND_REFERENCE.md TROUBLESHOOTING.md ARCHITECTURE.md \
            AGENT_PROMPTS.md AGENT_HANDOFF.md OPERATIONS.md TEST_PLAN.md \
            OTS_SOFTWARE.md SESSION_PLAN.md MEMORY.md ENV_VARS.md \
@@ -64,13 +69,49 @@ echo "SUCCESS(1): fully compliant repository passes."
 # ---------------------------------------------------------------------------
 repo="$test_dir/missing-required"
 make_compliant_repo "$repo"
-rm "$repo/SECURITY.md"
+rm "$repo/.github/SECURITY.md"
 
 run_check "$repo"
 echo "$output"
 [ "$status" -eq 1 ] || { echo "FAIL(2): expected exit 1 when a required file is missing, got $status"; exit 1; }
-echo "$output" | grep -q "MISSING  SECURITY.md (required)" || { echo "FAIL(2): missing SECURITY.md not reported"; exit 1; }
+echo "$output" | grep -q "MISSING  .github/SECURITY.md (required)" || { echo "FAIL(2): missing .github/SECURITY.md not reported"; exit 1; }
 echo "SUCCESS(2): missing required file fails."
+
+# ---------------------------------------------------------------------------
+# 2c. Repositories that adopted before v1.38.0 keep HELP.md, SECURITY.md, and
+#     CONTRIBUTING.md in the repository root. Both layouts must pass, and the
+#     report must name the location that actually exists.
+# ---------------------------------------------------------------------------
+repo="$test_dir/legacy-layout"
+make_compliant_repo "$repo"
+mv "$repo/docs/HELP.md" "$repo/HELP.md"
+mv "$repo/.github/SECURITY.md" "$repo/SECURITY.md"
+mv "$repo/.github/CONTRIBUTING.md" "$repo/CONTRIBUTING.md"
+
+run_check "$repo"
+echo "$output"
+[ "$status" -eq 0 ] || { echo "FAIL(2c): expected exit 0 for pre-1.38.0 root layout, got $status"; exit 1; }
+echo "$output" | grep -q "OK       HELP.md" || { echo "FAIL(2c): root HELP.md not accepted"; exit 1; }
+echo "$output" | grep -q "OK       SECURITY.md" || { echo "FAIL(2c): root SECURITY.md not accepted"; exit 1; }
+echo "$output" | grep -q "OK       CONTRIBUTING.md" || { echo "FAIL(2c): root CONTRIBUTING.md not accepted"; exit 1; }
+echo "$output" | grep -q "Required missing: 0;" || { echo "FAIL(2c): legacy layout reported required gaps"; exit 1; }
+echo "SUCCESS(2c): pre-1.38.0 root layout is grandfathered."
+
+# ---------------------------------------------------------------------------
+# 2d. Vendor instruction files are opt-in per tool, so a repository without
+#     CLAUDE.md must not be warned about it.
+# ---------------------------------------------------------------------------
+repo="$test_dir/no-vendor-files"
+make_compliant_repo "$repo"
+
+run_check --strict "$repo"
+echo "$output"
+[ "$status" -eq 0 ] || { echo "FAIL(2d): expected exit 0 without vendor files under --strict, got $status"; exit 1; }
+if echo "$output" | grep -q "CLAUDE.md"; then
+  echo "FAIL(2d): CLAUDE.md should not be checked"
+  exit 1
+fi
+echo "SUCCESS(2d): vendor instruction files are not required."
 
 # ---------------------------------------------------------------------------
 # 2b. Missing the constitution submodule directory -> exit 1.

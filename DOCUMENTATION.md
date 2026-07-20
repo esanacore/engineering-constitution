@@ -20,15 +20,42 @@ repository instead of the example/template state.
 Every repository should include:
 
 - README.md
-- HELP.md
+- docs/HELP.md
 - CHANGELOG.md
 - TODO.md
-- SECURITY.md
+- .github/SECURITY.md
+- AGENTS.md
+
+### Keeping the Repository Root Readable
+
+The repository root is the first thing a reader sees, so only files that must
+live there belong there. Governance documents live where the hosting platform
+still finds them:
+
+| Document | Location | Why |
+| --- | --- | --- |
+| SECURITY.md | `.github/` | GitHub renders it as the security policy from `.github/` exactly as it does from the root. |
+| CONTRIBUTING.md | `.github/` | Same: GitHub links it from the issue and pull request UI wherever it lives. |
+| HELP.md | `docs/` | Read by humans, not tooling; belongs with the rest of the documentation. |
+| SYSTEM_PROMPT.md | `docs/` | Reference material pasted into tools by hand, not auto-loaded. |
+
+Repositories that adopted the constitution before v1.38.0 may keep these files
+in the root. `scripts/check_compliance.sh` accepts either location, so moving
+them is a cleanup you can schedule rather than a migration you must perform.
+
+Agent instruction files follow the same principle. `AGENTS.md` is the
+cross-vendor standard and is the only one every repository needs. Files that
+exist solely because a tool hardcodes its own name — `CLAUDE.md`,
+`.cursorrules`, `.goosehints`, `.openhands_instructions`, and the rest — are
+installed only for the tools a project actually uses, via
+`bootstrap.sh --agents=<list>`. Do not add a vendor file for a tool nobody on
+the project runs.
 
 ## Strongly Encouraged
 
 Repositories should also include:
 
+- .github/CONTRIBUTING.md
 - docs/SETUP.md
 - docs/COMMAND_REFERENCE.md
 - docs/TROUBLESHOOTING.md
