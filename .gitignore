@@ -1,5 +1,15 @@
 node_modules/
 
+# scripts/lib/ holds libraries bootstrap.sh sources at runtime and MUST be
+# tracked. Many developers carry a Python-flavored global gitignore (the one
+# GitHub suggests for Python includes a bare `lib/` for build output), which
+# silently excludes this directory from `git add -A`. A repository .gitignore
+# outranks the global one, so this negation keeps the libraries committable on
+# any machine. Without it, a clone gets a bootstrap.sh that sources files that
+# do not exist.
+!scripts/lib/
+!scripts/lib/*.sh
+
 # Secrets that should never be committed. See SECURITY.md's "Secrets Sweep"
 # and scripts/check_secrets.sh, which checks this list is present.
 .env

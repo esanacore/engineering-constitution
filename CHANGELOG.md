@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.39.1 - 2026-07-19
+
+### Changed
+
+- Split `scripts/bootstrap.sh` (754 lines) along its responsibility seams into `scripts/lib/bootstrap_readme.sh` (constitution badge), `scripts/lib/bootstrap_migrate.sh` (seeding TODO.md and CHANGELOG.md from a project's existing backlog or release notes), and `scripts/lib/bootstrap_report.sh` (adoption report and project detection), leaving `bootstrap.sh` at 383 lines owning argument parsing, `--agents` selection, and the install manifest. The split follows the SRP guardrail in `ARCHITECTURE.md` — each extracted file changes for its own reason, independent of which templates get installed — rather than being driven by line count, which that guardrail explicitly warns against. Verified behavior-preserving: an identical bootstrap run before and after produces byte-identical file trees, adoption reports, stdout, and generated content.
+- `bootstrap.sh` now fails with an explicit "Missing required library" error and remediation hint if `scripts/lib/` is incomplete, rather than failing partway through an install. This is a new failure mode introduced by the split, and is covered by a test asserting nothing is written to the target project when a library is absent.
+
+### Fixed
+
+- Added a `.gitignore` negation for `scripts/lib/`. The Python-flavored global gitignore many developers carry (including the one GitHub suggests for Python) contains a bare `lib/`, which silently excluded the new libraries from `git add -A` — a clone would have received a `bootstrap.sh` that sources files that do not exist, while the working tree it was developed in kept passing. A new test asserts every library `bootstrap.sh` sources is both present and tracked by Git, since a checker that only inspects a working tree cannot see this class of bug.
+
 ## 1.39.0 - 2026-07-19
 
 ### Added
