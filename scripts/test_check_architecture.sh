@@ -366,6 +366,129 @@ echo "$output" | grep -q "VIOLATION src/app/m.py" || { echo "FAIL(17): typo'd al
 echo "SUCCESS(17): an unknown dependency name is surfaced and still enforced strictly."
 
 # ---------------------------------------------------------------------------
+# 18. Regression: two layers sharing a directory name must not swallow a real
+#     violation. Attribution used to test full-path and directory-name matches
+#     per layer in turn, so an earlier layer's directory name beat a later
+#     layer's exact path -- and when the wrong answer was the importing layer
+#     itself, the import was dropped as a self-import and the violation
+#     vanished. This exact fixture reported "all dependencies point inward"
+#     and exited 0 before the two-pass fix.
+# ---------------------------------------------------------------------------
+repo="$test_dir/shared-basename"
+mkdir -p "$repo/docs" "$repo/src/a/core" "$repo/src/b/core"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path       | May Depend On |
+| ----- | ---------- | ------------- |
+| acore | src/a/core | --            |
+| bcore | src/b/core | acore         |
+EOF
+echo 'from src.b.core.thing import x' > "$repo/src/a/core/m.py"
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(18): shared-basename violation was swallowed, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "VIOLATION src/a/core/m.py" || { echo "FAIL(18): violation not reported"; echo "$output"; exit 1; }
+echo "$output" | grep -q "'acore' imports 'bcore'" || { echo "FAIL(18): violation misattributed"; echo "$output"; exit 1; }
+echo "$output" | grep -q "share the directory name 'core'" || { echo "FAIL(18): shared directory name not surfaced"; echo "$output"; exit 1; }
+echo "SUCCESS(18): a shared layer directory name no longer swallows a violation."
+
+# ---------------------------------------------------------------------------
+# 19. Go: internal imports carry the go.mod module prefix, which must be
+#     stripped before the path can be compared to a layer.
+# ---------------------------------------------------------------------------
+repo="$test_dir/go-module"
+mkdir -p "$repo/docs" "$repo/domain" "$repo/infra"
+echo 'module github.com/esanacore/app' > "$repo/go.mod"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path   | May Depend On |
+| ------ | ------ | ------------- |
+| domain | domain | --            |
+| infra  | infra  | domain        |
+EOF
+echo 'import "github.com/esanacore/app/infra/db"' > "$repo/domain/x.go"
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(19): go module-prefixed violation not caught, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "go.mod module prefix: github.com/esanacore/app" || { echo "FAIL(19): module prefix not reported"; echo "$output"; exit 1; }
+echo "$output" | grep -q "'domain' imports 'infra'" || { echo "FAIL(19): go violation misattributed"; echo "$output"; exit 1; }
+
+# A third-party import sharing the module's shape must not be attributed.
+repo="$test_dir/go-thirdparty"
+mkdir -p "$repo/docs" "$repo/domain" "$repo/infra"
+echo 'module github.com/esanacore/app' > "$repo/go.mod"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path   | May Depend On |
+| ------ | ------ | ------------- |
+| domain | domain | --            |
+| infra  | infra  | domain        |
+EOF
+echo 'import "github.com/other/lib/telemetry"' > "$repo/domain/x.go"
+
+run_check --strict "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(19): a third-party import was treated as a layer, got $status"; echo "$output"; exit 1; }
+echo "SUCCESS(19): go.mod module prefixes are resolved, third-party imports are not."
+
+# ---------------------------------------------------------------------------
+# 20. TypeScript: tsconfig.json path aliases must be rewritten before matching.
+#     The file is parsed as JSONC, since comments are conventional there.
+# ---------------------------------------------------------------------------
+repo="$test_dir/ts-alias"
+mkdir -p "$repo/docs" "$repo/src/domain" "$repo/src/infra"
+cat > "$repo/tsconfig.json" <<'EOF'
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    // aliases used across the app
+    "paths": {
+      "@infra/*": ["src/infra/*"],
+      "@domain/*": ["src/domain/*"]
+    }
+  }
+}
+EOF
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | --            |
+| infra  | src/infra  | domain        |
+EOF
+echo "import { db } from '@infra/db';" > "$repo/src/domain/x.ts"
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(20): aliased violation not caught, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "tsconfig path aliases: 2 declared" || { echo "FAIL(20): aliases not parsed past the JSONC comment"; echo "$output"; exit 1; }
+echo "$output" | grep -q "'domain' imports 'infra' via \"@infra/db\"" || { echo "FAIL(20): alias not resolved"; echo "$output"; exit 1; }
+echo "SUCCESS(20): tsconfig path aliases are resolved."
+
+# ---------------------------------------------------------------------------
+# 21. Python src-layout: packages are addressed from src/, not the repo root,
+#     so a bare `infra.db` must resolve to src/infra/db.
+# ---------------------------------------------------------------------------
+repo="$test_dir/py-src-layout"
+mkdir -p "$repo/docs" "$repo/src/domain" "$repo/src/infra"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | --            |
+| infra  | src/infra  | domain        |
+EOF
+echo 'from infra.db import session' > "$repo/src/domain/x.py"
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(21): src-layout violation not caught, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "'domain' imports 'infra'" || { echo "FAIL(21): bare package path not resolved through src/"; echo "$output"; exit 1; }
+echo "SUCCESS(21): a src-layout package path resolves to its layer."
+
+# ---------------------------------------------------------------------------
 # 12. Usage errors report exit 2.
 # ---------------------------------------------------------------------------
 run_check --bogus "$repo"

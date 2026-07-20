@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.41.0 - 2026-07-20
+
+### Fixed
+
+- **`check_architecture.sh` silently dropped real violations between layers whose directories share a name** (for example `src/a/core` and `src/b/core`). Attribution tested a layer's full declared path and then its directory name *per layer in turn*, so an earlier layer's directory name beat a later layer's exact path. When the wrong answer happened to be the importing layer itself, the import was discarded as a self-import and the violation disappeared — the checker reported "all dependencies point inward" and exited 0. Attribution now runs the full-path pass across every layer before any directory-name pass, since a full-path match is strictly better evidence. Present since the checker shipped in 1.39.0; the exact fixture that failed is now a regression test.
+
+### Added
+
+- `check_architecture.sh` now reads each language's module roots so an import can be compared to a layer path in the same terms rather than by directory name alone: the `module` prefix from `go.mod`, `paths` aliases and `baseUrl` from `tsconfig.json`/`jsconfig.json` (parsed as JSONC, since comments are conventional there), and a top-level `src/` for src-layout projects. Without these a Go import arrives carrying its module prefix and a TypeScript alias such as `@infra/db` names no directory at all. Detected roots are reported in the output, so attribution never depends on something invisible.
+- Layers whose directories share a name are now reported explicitly, and that name is skipped when falling back to directory-name matching rather than guessed at — attributing a dependency to the wrong layer is how a real violation disappears.
+- Four new cases in `scripts/test_check_architecture.sh` (21 total): the shared-directory-name regression, Go module-prefix resolution paired with a third-party import that must *not* be attributed, TypeScript alias resolution past a JSONC comment, and a Python src-layout package path.
+
 ## 1.40.0 - 2026-07-20
 
 ### Removed

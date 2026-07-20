@@ -104,6 +104,19 @@ A `May Depend On` entry naming no declared layer is reported as well. A typo
 there is silent by construction — the intended dependency is never permitted, so
 the layer quietly enforces more than its author wrote.
 
+The checker reads each language's module roots so an import can be compared to a
+layer path in the same terms: the `module` prefix from `go.mod`, `paths` aliases
+and `baseUrl` from `tsconfig.json`, and a top-level `src/` for src-layout
+projects. Without them a Go import arrives carrying its module prefix and a
+TypeScript alias such as `@infra/db` names no directory at all.
+
+Two layers whose directories share a name — `src/a/core` and `src/b/core` —
+cannot be told apart from an import that does not spell a full layer path. The
+checker reports the collision and declines to attribute those imports rather
+than guessing, because assigning a dependency to the wrong layer is precisely
+how a real violation disappears. Give such layers distinct directory names, or
+write imports that name the full path.
+
 Enforcement is opt-in per project: only the project knows its own layering, so a
 repository without this table is never failed for lacking one. Once the table is
 accurate, switch `.github/workflows/constitution-architecture.yml` to `--strict`

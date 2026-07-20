@@ -47,9 +47,20 @@ set -euo pipefail
 #     layering; the structural signals still run.
 #   - Imports are matched to layers by path/module *component*, never by
 #     substring, so a layer named `db` is not matched by an import of
-#     `dbutils`. An import is attributed to a layer when it contains the
-#     layer's full declared path, or a component exactly equal to the layer
-#     directory's own name.
+#     `dbutils`. Attribution runs in two passes over every candidate form of
+#     the reference: a layer's full declared path is matched across all layers
+#     first, and only then the layer directory's own name. A full-path match is
+#     strictly better evidence, so it must not lose to another layer's
+#     directory name.
+#   - Language module roots are read so an import can be expressed in the same
+#     terms as a layer path: the `module` prefix from go.mod, `paths` aliases
+#     and `baseUrl` from tsconfig.json/jsconfig.json, and a top-level src/ for
+#     src-layout projects. Without them a Go import carries its module prefix
+#     and a TypeScript alias names no directory at all.
+#   - Layers whose directories share a name (src/a/core and src/b/core) cannot
+#     be told apart from a bare module path. That is reported, and such names
+#     are skipped in the second pass rather than guessed at: attributing a
+#     dependency to the wrong layer is how a real violation disappears.
 #   - Imports that resolve to no declared layer are ignored. Third-party and
 #     standard-library imports are not the Dependency Rule's concern here.
 #   - Relative imports (`../`) are resolved against the importing file's
@@ -297,6 +308,121 @@ resolve_relative() {
   }'
 }
 
+# --- Module roots -----------------------------------------------------------
+#
+# An import is only comparable to a layer path once it is expressed in the same
+# terms. Languages disagree about what an import string is relative to: Go
+# prefixes every internal import with the module path from go.mod, TypeScript
+# rewrites aliases through tsconfig.json, and Python src-layouts address
+# packages from a root that is not the repository root. Reading those roots
+# turns an import into a repository-relative path, which can then be matched
+# against a declared layer path exactly rather than by directory name.
+
+# The `module` line in go.mod, e.g. `github.com/esanacore/app`.
+go_module_prefix=""
+
+if [ -f "$root/go.mod" ]; then
+  go_module_prefix=$(sed -n 's/^[[:space:]]*module[[:space:]]\{1,\}\([^[:space:]]\{1,\}\).*/\1/p' "$root/go.mod" | head -n 1)
+fi
+
+# `compilerOptions.paths` aliases from tsconfig.json, as `pattern|target` pairs
+# with the trailing `/*` stripped from both sides. Comment lines are dropped
+# first, since tsconfig is conventionally JSONC.
+ts_aliases=""
+
+for tsconfig in tsconfig.json jsconfig.json; do
+  [ -f "$root/$tsconfig" ] || continue
+  ts_aliases="$ts_aliases$(
+    sed 's|//.*||' "$root/$tsconfig" |
+      tr -d '\n' |
+      grep -oE '"[^"]+"[[:space:]]*:[[:space:]]*\[[[:space:]]*"[^"]+"' |
+      sed -E 's|"([^"]+)"[[:space:]]*:[[:space:]]*\[[[:space:]]*"([^"]+)"|\1\|\2|' |
+      sed 's|/\*||g'
+  )
+"
+done
+
+ts_aliases=$(printf '%s' "$ts_aliases" | awk 'NF')
+
+# Directory prefixes a bare module path may be relative to. `baseUrl` covers
+# TypeScript; a top-level `src/` covers the Python and Node src-layout, where
+# `from domain.models import X` addresses `src/domain/models`.
+module_roots=""
+
+if [ -f "$root/tsconfig.json" ]; then
+  base_url=$(sed 's|//.*||' "$root/tsconfig.json" |
+    grep -oE '"baseUrl"[[:space:]]*:[[:space:]]*"[^"]+"' |
+    sed -E 's|.*"([^"]+)"$|\1|' | head -n 1)
+  case "$base_url" in
+    ""|.|./) ;;
+    *) module_roots="$module_roots $(normalize_ref "$base_url")" ;;
+  esac
+fi
+
+for candidate_root in src lib app; do
+  [ -d "$root/$candidate_root" ] || continue
+  case " $module_roots " in
+    *" $candidate_root "*) ;;
+    *) module_roots="$module_roots $candidate_root" ;;
+  esac
+done
+
+# Every repository-relative form an import might take. Emitting a candidate is
+# free: a wrong one simply matches no declared layer path.
+candidate_refs() {
+  local ref=$1 rest pattern target mroot
+
+  printf '%s\n' "$ref"
+
+  if [ -n "$go_module_prefix" ]; then
+    case "$ref" in
+      "$go_module_prefix"/*)
+        rest=${ref#"$go_module_prefix"/}
+        printf '%s\n' "$(normalize_ref "$rest")"
+        ;;
+    esac
+  fi
+
+  if [ -n "$ts_aliases" ]; then
+    while IFS='|' read -r pattern target; do
+      [ -n "$pattern" ] || continue
+      pattern=$(normalize_ref "$pattern")
+      target=$(normalize_ref "$target")
+      case "$ref" in
+        "$pattern"/*) printf '%s\n' "$target/${ref#"$pattern"/}" ;;
+        "$pattern")   printf '%s\n' "$target" ;;
+      esac
+    done <<EOF
+$ts_aliases
+EOF
+  fi
+
+  for mroot in $module_roots; do
+    case "$ref" in
+      "$mroot"/*) ;;
+      *) printf '%s\n' "$mroot/$ref" ;;
+    esac
+  done
+}
+
+# Layer directory names shared by more than one layer. A bare module path that
+# names only such a directory cannot be attributed to one layer, and guessing
+# would be worse than declining: it silently reassigns a real dependency.
+ambiguous_tokens=$(printf '%s\n' "$layer_records" | awk '
+  BEGIN { FS = "|" }
+  $1 != "" {
+    path = $2
+    gsub(/^[ \t]+|[ \t]+$/, "", path)
+    sub(/\/+$/, "", path)
+    n = split(path, seg, "/")
+    token = seg[n]
+    if (token == "") next
+    if (!(token in count)) count[token] = 0
+    count[token]++
+  }
+  END { for (t in count) if (count[t] > 1) print t }
+' || true)
+
 # Extract raw import targets from a file, one per line, by language.
 extract_imports() {
   local file=$1 abs="$root/$1"
@@ -450,6 +576,36 @@ if [ "$layers_declared" -eq 0 ]; then
     echo "  SKIP     docs/ARCHITECTURE.md not found; layer enforcement is opt-in"
   fi
 else
+  # Report the module roots in play. Attribution depends on them, so a wrong or
+  # missing root should be visible rather than inferred from odd results.
+  if [ -n "$go_module_prefix" ]; then
+    echo "  INFO     go.mod module prefix: $go_module_prefix"
+  fi
+  if [ -n "$ts_aliases" ]; then
+    echo "  INFO     tsconfig path aliases: $(printf '%s' "$ts_aliases" | grep -c '' ) declared"
+  fi
+
+  # Layers sharing a directory name cannot be told apart from a bare module
+  # path. Say so: the alternative is guessing, and silently attributing a
+  # dependency to the wrong layer is how a real violation disappears.
+  if [ -n "$ambiguous_tokens" ]; then
+    while IFS= read -r token; do
+      [ -n "$token" ] || continue
+      sharing=$(printf '%s\n' "$layer_records" | awk -F'|' -v t="$token" '
+        $1 != "" {
+          path = $2
+          gsub(/^[ \t]+|[ \t]+$/, "", path)
+          sub(/\/+$/, "", path)
+          n = split(path, seg, "/")
+          if (seg[n] == t) printf "%s%s", (found++ ? ", " : ""), $1
+        }' )
+      echo "  WARN     layers $sharing share the directory name '$token'"
+      echo "           imports that do not spell a full layer path cannot be attributed between them"
+    done <<EOF
+$ambiguous_tokens
+EOF
+  fi
+
   # A dependency name matching no declared layer never permits anything, so the
   # layer quietly enforces more than its author wrote. Surface it before the
   # per-file scan, since it changes what the results below mean.
@@ -480,23 +636,60 @@ EOF
   fi
 
   # Attribute a normalized import to a declared layer, or nothing.
+  # Attribute an import to a declared layer, in two passes over every candidate
+  # form of the reference.
+  #
+  # Pass 1 matches a layer's full declared path; pass 2 falls back to the layer
+  # directory's own name. The passes are separate, and pass 1 runs over ALL
+  # layers before pass 2 runs over any, because a full-path match is strictly
+  # better evidence than a directory-name match. Interleaving them -- testing
+  # both for each layer in turn -- lets an earlier layer's directory name beat a
+  # later layer's exact path, which silently misattributes the import and, when
+  # the wrong answer is the importing layer itself, drops a real violation as a
+  # self-import.
+  #
+  # Pass 2 skips directory names shared by several layers. Declining to answer
+  # is correct there: any guess reassigns a genuine dependency.
   layer_for_ref() {
-    local ref=$1 rec name path token
+    local ref=$1 candidates name path token
 
-    while IFS='|' read -r name path _; do
-      [ -n "$name" ] || continue
-      path=$(normalize_ref "$path")
-      token=${path##*/}
+    candidates=$(candidate_refs "$ref")
 
-      case "/$ref/" in
-        */"$path"/*) printf '%s' "$name"; return 0 ;;
-      esac
-
-      case "/$ref/" in
-        */"$token"/*) printf '%s' "$name"; return 0 ;;
-      esac
-    done <<EOF
+    while IFS= read -r candidate; do
+      [ -n "$candidate" ] || continue
+      while IFS='|' read -r name path _; do
+        [ -n "$name" ] || continue
+        path=$(normalize_ref "$path")
+        case "/$candidate/" in
+          */"$path"/*) printf '%s' "$name"; return 0 ;;
+        esac
+      done <<EOF
 $layer_records
+EOF
+    done <<EOF
+$candidates
+EOF
+
+    while IFS= read -r candidate; do
+      [ -n "$candidate" ] || continue
+      while IFS='|' read -r name path _; do
+        [ -n "$name" ] || continue
+        path=$(normalize_ref "$path")
+        token=${path##*/}
+        [ -n "$token" ] || continue
+
+        if printf '%s\n' "$ambiguous_tokens" | grep -qxF "$token"; then
+          continue
+        fi
+
+        case "/$candidate/" in
+          */"$token"/*) printf '%s' "$name"; return 0 ;;
+        esac
+      done <<EOF
+$layer_records
+EOF
+    done <<EOF
+$candidates
 EOF
 
     return 1
