@@ -8,6 +8,7 @@ This project follows semantic versioning.
 
 ### Added
 
+- Added an Environment & Configuration Contract: `docs/ENV_VARS.md` documents every environment variable a project requires or optionally supports, and `scripts/check_env_vars.sh` parses root-level configuration manifests and cross-checks them against it, so a variable added without documentation is flagged in the same change. Installed by `bootstrap.sh` alongside a `constitution-env.yml` CI workflow, and checked in the recommended tier. Follows the warn-by-default/`--strict` rollout contract.
 - Added `bootstrap.sh --agents=<list>` to select which AI tool instruction files an adopting repository receives. Supported keys: `claude`, `cursor`, `copilot`, `goose`, `openhands`, `antigravity`, `continue`, `aider`, `generic`, and `all`. An unrecognized key is a usage error rather than a silent no-op.
 - Added a repository-root cleanliness rule to `CONSTITUTION.md` Principle 6 and a "Keeping the Repository Root Readable" section to `DOCUMENTATION.md`, establishing that adopting a framework must not double a project's root file listing.
 
