@@ -13,10 +13,23 @@ set -euo pipefail
 #
 #   1. Layer boundaries (a real violation). The project declares its layers in
 #      docs/ARCHITECTURE.md under a "Layer Boundaries" heading, as a table of
-#      Layer | Path | May Depend On. Every source file under a layer's path is
-#      scanned for imports; an import that resolves to a layer absent from that
-#      layer's "May Depend On" list is a violation. Warn by default, fail under
-#      --strict.
+#      Layer | Path | May Depend On. Two things are checked, and both warn by
+#      default and fail under --strict:
+#
+#      a. The declared graph must be acyclic. "Dependencies point inward" is not
+#         satisfiable if two layers may each depend on the other, and no
+#         per-import check can see this: each edge of a cycle is individually
+#         legal per its own allow-list. Only a graph pass finds it.
+#
+#         Checking the *declared* graph rather than the observed imports is
+#         sufficient, not a shortcut: every actual import is either permitted --
+#         and therefore an edge already in this graph -- or it is a violation,
+#         reported by (b). So an acyclic declaration admits no cycle among the
+#         imports that pass. It is also stricter in a useful way, catching an
+#         unsound architecture before any code exercises it.
+#
+#      b. Every import from a declared layer must resolve to a layer that layer
+#         is allowed to depend on.
 #
 #   2. Structural signals (never a violation). Oversized files and crowded
 #      directories are reported as review prompts only, and never affect exit
@@ -88,6 +101,12 @@ Declaring layers:
 
   A layer may always import itself. With no such table, layer enforcement is
   skipped and only structural signals are reported.
+
+  The declared graph must be acyclic: if two layers may each depend on the
+  other, dependencies cannot point inward, and every edge of that cycle still
+  looks legal to a per-import check. A "May Depend On" name matching no declared
+  layer is reported too, since a typo there permits nothing and silently makes a
+  layer stricter than its author intended.
 
 Severity:
   Layer violations are real findings: warned by default, failing under --strict.
@@ -320,7 +339,102 @@ extract_imports() {
   esac
 }
 
+# Emit one line per cycle in the declared dependency graph, normalized so the
+# same cycle found from different entry points is reported once.
+#
+# Checking the *declared* graph rather than the observed imports is deliberate,
+# and it is sufficient: every actual import is either permitted -- and therefore
+# an edge already present in this graph -- or it is a violation, which is
+# reported separately below. So if this graph is acyclic, no cycle can exist
+# among the imports that pass. A cyclic declaration is an unsound architecture
+# regardless of how much of it the code currently exercises.
+find_declared_cycles() {
+  printf '%s\n' "$layer_records" | awk '
+    BEGIN { FS = "|" }
+    {
+      name = $1
+      if (name == "") next
+      known[name] = 1
+      order[++n] = name
+      adj[name] = $3
+    }
+    END {
+      for (i = 1; i <= n; i++) if (!(order[i] in state)) dfs(order[i])
+      for (c in seen) print c
+    }
+
+    function dfs(node,   i, m, deps, dep, j, path, start) {
+      state[node] = 1
+      stack[++sp] = node
+
+      m = split(adj[node], deps, ",")
+      for (i = 1; i <= m; i++) {
+        dep = deps[i]
+        gsub(/^[ \t]+|[ \t]+$/, "", dep)
+        gsub(/`/, "", dep)
+        if (dep == "" || dep ~ /^(-+|—+|none|n\/a)$/) continue
+        if (!(dep in known)) continue
+        if (dep == node) continue
+
+        if (state[dep] == 1) {
+          start = 0
+          for (j = 1; j <= sp; j++) if (stack[j] == dep) { start = j; break }
+          if (start) {
+            path = ""
+            for (j = start; j <= sp; j++) path = path stack[j] " -> "
+            seen[normalize(path dep)] = 1
+          }
+        } else if (state[dep] != 2) {
+          dfs(dep)
+        }
+      }
+
+      state[node] = 2
+      sp--
+    }
+
+    # Rotate the cycle to begin at its lexicographically smallest member, so the
+    # same cycle discovered from different entry points dedupes to one finding.
+    function normalize(p,   parts, k, cnt, min, mi, out, idx) {
+      cnt = split(p, parts, " -> ") - 1
+      min = parts[1]; mi = 1
+      for (k = 2; k <= cnt; k++) if (parts[k] < min) { min = parts[k]; mi = k }
+      out = ""
+      for (k = 0; k < cnt; k++) {
+        idx = ((mi - 1 + k) % cnt) + 1
+        out = out parts[idx] " -> "
+      }
+      return out min
+    }
+  '
+}
+
+# Names in a "May Depend On" cell that match no declared layer. A typo there is
+# silent by construction: the intended dependency is never permitted, and no
+# import can ever match it, so the layer simply behaves as if it declared less
+# than the author believed.
+find_unknown_dependencies() {
+  printf '%s\n' "$layer_records" | awk '
+    BEGIN { FS = "|" }
+    { if ($1 != "") { known[$1] = 1; order[++n] = $1; adj[$1] = $3 } }
+    END {
+      for (i = 1; i <= n; i++) {
+        name = order[i]
+        m = split(adj[name], deps, ",")
+        for (j = 1; j <= m; j++) {
+          dep = deps[j]
+          gsub(/^[ \t]+|[ \t]+$/, "", dep)
+          gsub(/`/, "", dep)
+          if (dep == "" || dep ~ /^(-+|—+|none|n\/a)$/) continue
+          if (!(dep in known)) print name "|" dep
+        }
+      }
+    }
+  '
+}
+
 layer_violations=0
+cycle_violations=0
 layers_declared=0
 
 if [ -n "$layer_records" ]; then
@@ -336,6 +450,35 @@ if [ "$layers_declared" -eq 0 ]; then
     echo "  SKIP     docs/ARCHITECTURE.md not found; layer enforcement is opt-in"
   fi
 else
+  # A dependency name matching no declared layer never permits anything, so the
+  # layer quietly enforces more than its author wrote. Surface it before the
+  # per-file scan, since it changes what the results below mean.
+  unknown_deps=$(find_unknown_dependencies || true)
+
+  if [ -n "$unknown_deps" ]; then
+    while IFS='|' read -r from dep; do
+      [ -n "$from" ] || continue
+      echo "  WARN     layer '$from' may depend on '$dep', which is not a declared layer"
+    done <<EOF
+$unknown_deps
+EOF
+  fi
+
+  # The declared graph must be a directed acyclic graph. "Dependencies point
+  # inward" is not satisfiable if two layers may each depend on the other.
+  declared_cycles=$(find_declared_cycles || true)
+
+  if [ -n "$declared_cycles" ]; then
+    while IFS= read -r cycle; do
+      [ -n "$cycle" ] || continue
+      echo "  CYCLE     $cycle"
+      echo "            the declared layer graph must be acyclic; these layers may each depend on the other"
+      cycle_violations=$((cycle_violations + 1))
+    done <<EOF
+$declared_cycles
+EOF
+  fi
+
   # Attribute a normalized import to a declared layer, or nothing.
   layer_for_ref() {
     local ref=$1 rec name path token
@@ -410,8 +553,8 @@ EOF
 $layer_records
 EOF
 
-  if [ "$layer_violations" -eq 0 ]; then
-    echo "  OK       $layers_declared layer(s) declared; all dependencies point inward"
+  if [ "$layer_violations" -eq 0 ] && [ "$cycle_violations" -eq 0 ]; then
+    echo "  OK       $layers_declared layer(s) declared; graph is acyclic and all dependencies point inward"
   fi
 fi
 
@@ -459,14 +602,22 @@ if [ "$signal_count" -eq 0 ]; then
 fi
 
 echo
-echo "Layer violations: $layer_violations; structural signals: $signal_count."
+echo "Layer violations: $layer_violations; declared cycles: $cycle_violations; structural signals: $signal_count."
 
-if [ "$layer_violations" -gt 0 ]; then
+if [ "$layer_violations" -gt 0 ] || [ "$cycle_violations" -gt 0 ]; then
+  if [ "$cycle_violations" -gt 0 ] && [ "$layer_violations" -gt 0 ]; then
+    summary="the declared layer graph is cyclic and dependencies point outward"
+  elif [ "$cycle_violations" -gt 0 ]; then
+    summary="the declared layer graph is cyclic"
+  else
+    summary="dependencies point outward"
+  fi
+
   if [ "$strict" = "true" ]; then
-    echo "FAIL: dependencies point outward (--strict)."
+    echo "FAIL: $summary (--strict)."
     exit 1
   fi
-  echo "WARN: dependencies point outward (pass --strict to enforce)."
+  echo "WARN: $summary (pass --strict to enforce)."
 fi
 
 exit 0

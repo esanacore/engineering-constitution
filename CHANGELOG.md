@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.40.0 - 2026-07-20
+
+### Removed
+
+- Removed the "Adoption Configuration Configurator" section from `demo.html`. It presented three hardcoded blobs of project rules behind language tabs while describing itself as generating customized rules, and the rules were invented — `zod`, Pydantic v2, Hilt, `ruff check .` appear nowhere else in this repository, so nothing kept them in sync. It also competed with Principle 12, which directs projects to each language's official canonical style guide (`CODE_STYLE.md`, `sources/STYLE_GUIDES.md`), implying on the most public artifact in the repository that the framework ships opinionated per-language rules. It does not. The real mechanism is unchanged and already covered: adopters run `bootstrap.sh`, which installs `AGENTS.md` and writes an adoption report directing them to record project rules there.
+
+### Added
+
+- `scripts/check_architecture.sh` now detects cycles in the declared layer graph. A cycle is invisible to the existing per-import check: if two layers may each depend on the other, every edge of that cycle is individually legal under its own allow-list, yet dependencies cannot point inward. A DFS over the declared table reports any cycle, normalized so one reachable from several entry points is reported once rather than once per path into it. Warns by default, fails under `--strict`, and is counted separately from import violations in the summary line.
+- The same checker now surfaces `May Depend On` entries naming no declared layer. A typo there is silent by construction — the intended dependency is never permitted, so the layer quietly enforces more than its author wrote, and the resulting import failures look inexplicable.
+- Five new cases in `scripts/test_check_architecture.sh` (17 total): a two-layer cycle, a multi-hop cycle reachable from several entry points (asserting it is deduped), an acyclic diamond that must *not* be reported, a self-reference that must not count as a cycle, and an unknown dependency name.
+
 ## 1.39.1 - 2026-07-19
 
 ### Changed

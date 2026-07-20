@@ -249,6 +249,123 @@ run_check --strict "$repo"
 echo "SUCCESS(11): vendored directories are excluded."
 
 # ---------------------------------------------------------------------------
+# 13. A cycle in the declared layer graph is a violation on its own. Each edge
+#     is individually legal per its allow-list, so the per-import check cannot
+#     see this -- only a graph pass can.
+# ---------------------------------------------------------------------------
+repo="$test_dir/cycle-two"
+mkdir -p "$repo/docs" "$repo/src/domain" "$repo/src/infra"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | infra         |
+| infra  | src/infra  | domain        |
+EOF
+echo "x = 1" > "$repo/src/domain/a.py"
+echo "y = 2" > "$repo/src/infra/b.py"
+
+run_check "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(13): expected exit 0 without --strict, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "CYCLE     domain -> infra -> domain" || { echo "FAIL(13): two-layer cycle not reported"; echo "$output"; exit 1; }
+echo "$output" | grep -q "declared cycles: 1;" || { echo "FAIL(13): cycle not counted"; echo "$output"; exit 1; }
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(13): expected exit 1 under --strict for a cycle, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "FAIL: the declared layer graph is cyclic (--strict)." || { echo "FAIL(13): strict cycle failure line missing"; echo "$output"; exit 1; }
+echo "SUCCESS(13): a two-layer cycle is detected and fails under --strict."
+
+# ---------------------------------------------------------------------------
+# 14. Cycles longer than two hops are found, and a cycle reachable from several
+#     entry points is reported once rather than once per path into it.
+# ---------------------------------------------------------------------------
+repo="$test_dir/cycle-three"
+mkdir -p "$repo/docs" "$repo/src/a" "$repo/src/b" "$repo/src/c" "$repo/src/entry"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path      | May Depend On |
+| ----- | --------- | ------------- |
+| entry | src/entry | a, b          |
+| a     | src/a     | b             |
+| b     | src/b     | c             |
+| c     | src/c     | a             |
+EOF
+for d in a b c entry; do echo "x = 1" > "$repo/src/$d/m.py"; done
+
+run_check "$repo"
+echo "$output" | grep -q "CYCLE     a -> b -> c -> a" || { echo "FAIL(14): three-layer cycle not reported"; echo "$output"; exit 1; }
+echo "$output" | grep -q "declared cycles: 1;" || { echo "FAIL(14): cycle reachable from two entry points was not deduped"; echo "$output"; exit 1; }
+echo "SUCCESS(14): multi-hop cycles are found and deduped."
+
+# ---------------------------------------------------------------------------
+# 15. An acyclic graph must not be reported as cyclic. A diamond (two layers
+#     sharing a dependency) is the shape most likely to be mistaken for a cycle.
+# ---------------------------------------------------------------------------
+repo="$test_dir/diamond"
+mkdir -p "$repo/docs" "$repo/src/base" "$repo/src/left" "$repo/src/right" "$repo/src/top"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path      | May Depend On |
+| ----- | --------- | ------------- |
+| base  | src/base  | --            |
+| left  | src/left  | base          |
+| right | src/right | base          |
+| top   | src/top   | left, right   |
+EOF
+for d in base left right top; do echo "x = 1" > "$repo/src/$d/m.py"; done
+
+run_check --strict "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(15): a diamond was reported as cyclic, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "declared cycles: 0;" || { echo "FAIL(15): false cycle on an acyclic graph"; echo "$output"; exit 1; }
+echo "$output" | grep -q "graph is acyclic" || { echo "FAIL(15): acyclic confirmation missing"; echo "$output"; exit 1; }
+echo "SUCCESS(15): an acyclic diamond is not reported as a cycle."
+
+# ---------------------------------------------------------------------------
+# 16. A layer may always depend on itself; a self-reference is not a cycle.
+# ---------------------------------------------------------------------------
+repo="$test_dir/self-loop"
+mkdir -p "$repo/docs" "$repo/src/core"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path     | May Depend On |
+| ----- | -------- | ------------- |
+| core  | src/core | core          |
+EOF
+echo "x = 1" > "$repo/src/core/m.py"
+
+run_check --strict "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(16): a self-reference was treated as a cycle, got $status"; echo "$output"; exit 1; }
+echo "SUCCESS(16): a self-reference is not a cycle."
+
+# ---------------------------------------------------------------------------
+# 17. A "May Depend On" name matching no declared layer is surfaced. A typo
+#     there is silent by construction: it permits nothing, so the layer
+#     enforces more than its author wrote.
+# ---------------------------------------------------------------------------
+repo="$test_dir/unknown-dep"
+mkdir -p "$repo/docs" "$repo/src/app" "$repo/src/domain"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | --            |
+| app    | src/app    | doamin        |
+EOF
+echo "x = 1" > "$repo/src/domain/m.py"
+echo "from src.domain.m import x" > "$repo/src/app/m.py"
+
+run_check "$repo"
+echo "$output" | grep -q "layer 'app' may depend on 'doamin', which is not a declared layer" || { echo "FAIL(17): unknown dependency name not surfaced"; echo "$output"; exit 1; }
+# The typo means the real dependency is not permitted, so the import is a violation.
+echo "$output" | grep -q "VIOLATION src/app/m.py" || { echo "FAIL(17): typo'd allow-list did not make the import a violation"; echo "$output"; exit 1; }
+echo "SUCCESS(17): an unknown dependency name is surfaced and still enforced strictly."
+
+# ---------------------------------------------------------------------------
 # 12. Usage errors report exit 2.
 # ---------------------------------------------------------------------------
 run_check --bogus "$repo"
