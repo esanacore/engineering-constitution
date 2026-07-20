@@ -6,6 +6,8 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.38.0 - 2026-07-19
+
 ### Added
 
 - Added an Environment & Configuration Contract: `docs/ENV_VARS.md` documents every environment variable a project requires or optionally supports, and `scripts/check_env_vars.sh` parses root-level configuration manifests and cross-checks them against it, so a variable added without documentation is flagged in the same change. Installed by `bootstrap.sh` alongside a `constitution-env.yml` CI workflow, and checked in the recommended tier. Follows the warn-by-default/`--strict` rollout contract.
