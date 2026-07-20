@@ -38,6 +38,22 @@ only its layer violations respond to `--strict`.
 | `check_constitution_freshness.sh` | Warns at session start when the pinned `constitution/` submodule is behind the latest release. |
 | `check_source_summaries.sh` | Detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries. |
 
+## Shared libraries (`scripts/lib/`)
+
+The two largest scripts source their concerns from `scripts/lib/` rather than
+carrying everything inline. These files are **sourced, never executed**, so they
+stay non-executable and are not checkers in their own right:
+
+| Library | Sourced by | Owns |
+| --- | --- | --- |
+| `bootstrap_readme.sh`, `bootstrap_migrate.sh`, `bootstrap_report.sh` | `bootstrap.sh` | badge injection; seeding `TODO.md`/`CHANGELOG.md` from a project's existing backlog or release notes; the adoption report. |
+| `architecture_languages.sh`, `architecture_layers.sh`, `architecture_signals.sh` | `check_architecture.sh` | how each language spells imports and what it resolves them against; the declared layer table as a graph; advisory heuristics that never fail a build. |
+
+Each split follows the SRP guardrail in `ARCHITECTURE.md` — a file is separated
+because it changes for its own reason, never merely because it is long. Both
+scripts verify their libraries are present at startup and exit with a
+remediation hint if the checkout is incomplete.
+
 ## See also
 
 - [[Standards Overview]]

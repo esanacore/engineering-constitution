@@ -211,6 +211,25 @@ fi
 
 root=$(CDPATH= cd -- "$root" && pwd)
 
+# Concerns that change for their own reasons live in scripts/lib/ and are
+# sourced here. They contain definitions only -- nothing runs at source time --
+# so they load through the absolute "$script_dir" before any of them is called,
+# and the project being checked can never affect which files load.
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+lib_dir="$script_dir/lib"
+
+for lib in architecture_languages.sh architecture_layers.sh architecture_signals.sh; do
+  if [ ! -f "$lib_dir/$lib" ]; then
+    echo "Missing required library: $lib_dir/$lib" >&2
+    echo "The constitution checkout looks incomplete; re-clone or update the submodule." >&2
+    exit 2
+  fi
+  # shellcheck source=/dev/null
+  . "$lib_dir/$lib"
+done
+
+detect_module_roots
+
 # Directories that hold code the project did not write. Scanning them produces
 # noise at best and false layer violations at worst.
 excluded_dirs='.git node_modules vendor dist build out target coverage .venv venv __pycache__ .mypy_cache .pytest_cache .next .nuxt .gradle Pods DerivedData .constitution-bootstrap constitution'
@@ -246,326 +265,8 @@ echo
 
 architecture_doc="$root/docs/ARCHITECTURE.md"
 
-# Extract the "Layer Boundaries" table as `layer|path|allowed` records. Header
-# and separator rows are dropped; a row needs all three cells to count.
-parse_layer_table() {
-  [ -f "$architecture_doc" ] || return 0
-
-  awk '
-    tolower($0) ~ /^#+[[:space:]]*layer boundaries[[:space:]]*$/ { intable = 1; next }
-    intable && /^#+[[:space:]]/ { intable = 0 }
-    intable && /^[[:space:]]*\|/ {
-      line = $0
-      sub(/^[[:space:]]*\|/, "", line)
-      sub(/\|[[:space:]]*$/, "", line)
-      n = split(line, cell, "|")
-      if (n < 3) next
-
-      for (i = 1; i <= n; i++) {
-        gsub(/^[[:space:]]+|[[:space:]]+$/, "", cell[i])
-        gsub(/`/, "", cell[i])
-      }
-
-      if (cell[1] ~ /^-+$/ || cell[2] ~ /^-+$/) next
-      if (tolower(cell[1]) == "layer") next
-      if (cell[1] == "" || cell[2] == "") next
-
-      print cell[1] "|" cell[2] "|" cell[3]
-    }
-  ' "$architecture_doc"
-}
-
 layer_records=$(parse_layer_table || true)
-
-# Normalize a module/import string to slash-delimited components so Python
-# dotted paths and filesystem paths compare the same way.
-normalize_ref() {
-  printf '%s' "$1" | tr '.' '/' | sed 's|^\./||; s|//*|/|g; s|^/||; s|/$||'
-}
-
-# Resolve a relative import against the importing file's directory, so
-# `../domain/user` imported from `src/app/x.ts` becomes `src/domain/user`.
-resolve_relative() {
-  local ref=$1 base=$2 combined
-
-  case "$ref" in
-    ./*|../*) ;;
-    *) printf '%s' "$ref"; return 0 ;;
-  esac
-
-  combined="$base/$ref"
-
-  printf '%s' "$combined" | awk -F/ '{
-    n = 0
-    for (i = 1; i <= NF; i++) {
-      if ($i == "" || $i == ".") continue
-      if ($i == "..") { if (n > 0) n--; continue }
-      stack[++n] = $i
-    }
-    out = ""
-    for (i = 1; i <= n; i++) out = out (i > 1 ? "/" : "") stack[i]
-    print out
-  }'
-}
-
-# --- Module roots -----------------------------------------------------------
-#
-# An import is only comparable to a layer path once it is expressed in the same
-# terms. Languages disagree about what an import string is relative to: Go
-# prefixes every internal import with the module path from go.mod, TypeScript
-# rewrites aliases through tsconfig.json, and Python src-layouts address
-# packages from a root that is not the repository root. Reading those roots
-# turns an import into a repository-relative path, which can then be matched
-# against a declared layer path exactly rather than by directory name.
-
-# The `module` line in go.mod, e.g. `github.com/esanacore/app`.
-go_module_prefix=""
-
-if [ -f "$root/go.mod" ]; then
-  go_module_prefix=$(sed -n 's/^[[:space:]]*module[[:space:]]\{1,\}\([^[:space:]]\{1,\}\).*/\1/p' "$root/go.mod" | head -n 1)
-fi
-
-# `compilerOptions.paths` aliases from tsconfig.json, as `pattern|target` pairs
-# with the trailing `/*` stripped from both sides. Comment lines are dropped
-# first, since tsconfig is conventionally JSONC.
-ts_aliases=""
-
-for tsconfig in tsconfig.json jsconfig.json; do
-  [ -f "$root/$tsconfig" ] || continue
-  # `|| true` for the same reason as baseUrl below: a tsconfig declaring no
-  # array-valued option at all makes this grep exit 1 and abort the checker.
-  ts_aliases="$ts_aliases$(
-    sed 's|//.*||' "$root/$tsconfig" |
-      tr -d '\n' |
-      grep -oE '"[^"]+"[[:space:]]*:[[:space:]]*\[[[:space:]]*"[^"]+"' |
-      sed -E 's|"([^"]+)"[[:space:]]*:[[:space:]]*\[[[:space:]]*"([^"]+)"|\1\|\2|' |
-      sed 's|/\*||g' || true
-  )
-"
-done
-
-ts_aliases=$(printf '%s' "$ts_aliases" | awk 'NF')
-
-# Directory prefixes a bare module path may be relative to. `baseUrl` covers
-# TypeScript; a top-level `src/` covers the Python and Node src-layout, where
-# `from domain.models import X` addresses `src/domain/models`.
-module_roots=""
-
-if [ -f "$root/tsconfig.json" ]; then
-  # `|| true` because a tsconfig without baseUrl is the common case, not an
-  # error -- Next.js ships `paths` with no `baseUrl`. Under `set -euo pipefail`
-  # an unguarded grep that matches nothing exits 1, fails the assignment, and
-  # aborts the whole checker after it has printed only its header: no
-  # violation, no message, exit 1. Every other pipeline here is guarded the
-  # same way; this one was missed when module roots were added in 1.41.0.
-  base_url=$(sed 's|//.*||' "$root/tsconfig.json" |
-    grep -oE '"baseUrl"[[:space:]]*:[[:space:]]*"[^"]+"' |
-    sed -E 's|.*"([^"]+)"$|\1|' | head -n 1 || true)
-  case "$base_url" in
-    ""|.|./) ;;
-    *) module_roots="$module_roots $(normalize_ref "$base_url")" ;;
-  esac
-fi
-
-for candidate_root in src lib app; do
-  [ -d "$root/$candidate_root" ] || continue
-  case " $module_roots " in
-    *" $candidate_root "*) ;;
-    *) module_roots="$module_roots $candidate_root" ;;
-  esac
-done
-
-# Every repository-relative form an import might take. Emitting a candidate is
-# free: a wrong one simply matches no declared layer path.
-candidate_refs() {
-  local ref=$1 rest pattern target mroot
-
-  printf '%s\n' "$ref"
-
-  if [ -n "$go_module_prefix" ]; then
-    case "$ref" in
-      "$go_module_prefix"/*)
-        rest=${ref#"$go_module_prefix"/}
-        printf '%s\n' "$(normalize_ref "$rest")"
-        ;;
-    esac
-  fi
-
-  if [ -n "$ts_aliases" ]; then
-    while IFS='|' read -r pattern target; do
-      [ -n "$pattern" ] || continue
-      pattern=$(normalize_ref "$pattern")
-      target=$(normalize_ref "$target")
-      case "$ref" in
-        "$pattern"/*) printf '%s\n' "$target/${ref#"$pattern"/}" ;;
-        "$pattern")   printf '%s\n' "$target" ;;
-      esac
-    done <<EOF
-$ts_aliases
-EOF
-  fi
-
-  for mroot in $module_roots; do
-    case "$ref" in
-      "$mroot"/*) ;;
-      *) printf '%s\n' "$mroot/$ref" ;;
-    esac
-  done
-}
-
-# Layer directory names shared by more than one layer. A bare module path that
-# names only such a directory cannot be attributed to one layer, and guessing
-# would be worse than declining: it silently reassigns a real dependency.
-ambiguous_tokens=$(printf '%s\n' "$layer_records" | awk '
-  BEGIN { FS = "|" }
-  $1 != "" {
-    path = $2
-    gsub(/^[ \t]+|[ \t]+$/, "", path)
-    sub(/\/+$/, "", path)
-    n = split(path, seg, "/")
-    token = seg[n]
-    if (token == "") next
-    if (!(token in count)) count[token] = 0
-    count[token]++
-  }
-  END { for (t in count) if (count[t] > 1) print t }
-' || true)
-
-# Extract raw import targets from a file, one per line, by language.
-extract_imports() {
-  local file=$1 abs="$root/$1"
-
-  case "$file" in
-    *.py)
-      sed -nE 's/^[[:space:]]*from[[:space:]]+([A-Za-z0-9_.]+)[[:space:]]+import.*/\1/p; s/^[[:space:]]*import[[:space:]]+([A-Za-z0-9_.]+).*/\1/p' "$abs"
-      ;;
-    *.js|*.jsx|*.mjs|*.cjs|*.ts|*.tsx)
-      grep -oE "(from|import|require\()[[:space:]]*['\"][^'\"]+['\"]" "$abs" 2>/dev/null |
-        sed -E "s/.*['\"]([^'\"]+)['\"].*/\1/"
-      ;;
-    *.go)
-      grep -oE '"[^"]+"' "$abs" 2>/dev/null | tr -d '"'
-      ;;
-    *.java|*.kt|*.kts|*.scala)
-      sed -nE 's/^[[:space:]]*import[[:space:]]+(static[[:space:]]+)?([A-Za-z0-9_.]+).*/\2/p' "$abs"
-      ;;
-    *.swift)
-      sed -nE 's/^[[:space:]]*import[[:space:]]+([A-Za-z0-9_.]+).*/\1/p' "$abs"
-      ;;
-    *.rs)
-      # `a::b::c` -> `a/b/c`; collapse the doubled slash `::` would otherwise
-      # leave, so the path reads correctly when echoed back in a finding.
-      sed -nE 's/^[[:space:]]*(pub[[:space:]]+)?use[[:space:]]+([A-Za-z0-9_:]+).*/\2/p' "$abs" |
-        sed 's|::|/|g'
-      ;;
-    *.cs)
-      sed -nE 's/^[[:space:]]*using[[:space:]]+(static[[:space:]]+)?([A-Za-z0-9_.]+).*/\2/p' "$abs"
-      ;;
-    *.rb)
-      sed -nE "s/^[[:space:]]*require(_relative)?[[:space:]]+['\"]([^'\"]+)['\"].*/\2/p" "$abs"
-      ;;
-    *.php)
-      sed -nE 's/^[[:space:]]*use[[:space:]]+([A-Za-z0-9_\\]+).*/\1/p' "$abs" | tr '\\' '/'
-      ;;
-    *)
-      : # Other extensions contribute structural signals only.
-      ;;
-  esac
-}
-
-# Emit one line per cycle in the declared dependency graph, normalized so the
-# same cycle found from different entry points is reported once.
-#
-# Checking the *declared* graph rather than the observed imports is deliberate,
-# and it is sufficient: every actual import is either permitted -- and therefore
-# an edge already present in this graph -- or it is a violation, which is
-# reported separately below. So if this graph is acyclic, no cycle can exist
-# among the imports that pass. A cyclic declaration is an unsound architecture
-# regardless of how much of it the code currently exercises.
-find_declared_cycles() {
-  printf '%s\n' "$layer_records" | awk '
-    BEGIN { FS = "|" }
-    {
-      name = $1
-      if (name == "") next
-      known[name] = 1
-      order[++n] = name
-      adj[name] = $3
-    }
-    END {
-      for (i = 1; i <= n; i++) if (!(order[i] in state)) dfs(order[i])
-      for (c in seen) print c
-    }
-
-    function dfs(node,   i, m, deps, dep, j, path, start) {
-      state[node] = 1
-      stack[++sp] = node
-
-      m = split(adj[node], deps, ",")
-      for (i = 1; i <= m; i++) {
-        dep = deps[i]
-        gsub(/^[ \t]+|[ \t]+$/, "", dep)
-        gsub(/`/, "", dep)
-        if (dep == "" || dep ~ /^(-+|—+|none|n\/a)$/) continue
-        if (!(dep in known)) continue
-        if (dep == node) continue
-
-        if (state[dep] == 1) {
-          start = 0
-          for (j = 1; j <= sp; j++) if (stack[j] == dep) { start = j; break }
-          if (start) {
-            path = ""
-            for (j = start; j <= sp; j++) path = path stack[j] " -> "
-            seen[normalize(path dep)] = 1
-          }
-        } else if (state[dep] != 2) {
-          dfs(dep)
-        }
-      }
-
-      state[node] = 2
-      sp--
-    }
-
-    # Rotate the cycle to begin at its lexicographically smallest member, so the
-    # same cycle discovered from different entry points dedupes to one finding.
-    function normalize(p,   parts, k, cnt, min, mi, out, idx) {
-      cnt = split(p, parts, " -> ") - 1
-      min = parts[1]; mi = 1
-      for (k = 2; k <= cnt; k++) if (parts[k] < min) { min = parts[k]; mi = k }
-      out = ""
-      for (k = 0; k < cnt; k++) {
-        idx = ((mi - 1 + k) % cnt) + 1
-        out = out parts[idx] " -> "
-      }
-      return out min
-    }
-  '
-}
-
-# Names in a "May Depend On" cell that match no declared layer. A typo there is
-# silent by construction: the intended dependency is never permitted, and no
-# import can ever match it, so the layer simply behaves as if it declared less
-# than the author believed.
-find_unknown_dependencies() {
-  printf '%s\n' "$layer_records" | awk '
-    BEGIN { FS = "|" }
-    { if ($1 != "") { known[$1] = 1; order[++n] = $1; adj[$1] = $3 } }
-    END {
-      for (i = 1; i <= n; i++) {
-        name = order[i]
-        m = split(adj[name], deps, ",")
-        for (j = 1; j <= m; j++) {
-          dep = deps[j]
-          gsub(/^[ \t]+|[ \t]+$/, "", dep)
-          gsub(/`/, "", dep)
-          if (dep == "" || dep ~ /^(-+|—+|none|n\/a)$/) continue
-          if (!(dep in known)) print name "|" dep
-        }
-      }
-    }
-  '
-}
+compute_ambiguous_tokens
 
 layer_violations=0
 cycle_violations=0
@@ -763,44 +464,7 @@ fi
 # Structural signals. Advisory only -- these never change the exit status.
 # ---------------------------------------------------------------------------
 
-echo
-echo "Structural signals (advisory; never fail the build):"
-
-signal_count=0
-
-if [ -n "$all_source_files" ]; then
-  while IFS= read -r file; do
-    [ -n "$file" ] || continue
-    lines=$(wc -l < "$root/$file" 2>/dev/null | tr -d ' ')
-    [ -n "$lines" ] || continue
-    if [ "$lines" -gt "$max_file_lines" ]; then
-      echo "  SIGNAL   $file is $lines lines (over $max_file_lines)"
-      signal_count=$((signal_count + 1))
-    fi
-  done <<EOF
-$all_source_files
-EOF
-
-  crowded=$(printf '%s\n' "$all_source_files" |
-    sed 's|/[^/]*$||' |
-    sort |
-    uniq -c |
-    awk -v limit="$max_dir_files" '$1 > limit {print $1 "\t" $2}' || true)
-
-  if [ -n "$crowded" ]; then
-    while IFS=$'\t' read -r count dir; do
-      [ -n "$dir" ] || continue
-      echo "  SIGNAL   $dir/ holds $count source files (over $max_dir_files)"
-      signal_count=$((signal_count + 1))
-    done <<EOF
-$crowded
-EOF
-  fi
-fi
-
-if [ "$signal_count" -eq 0 ]; then
-  echo "  OK       no oversized files or crowded directories"
-fi
+report_structural_signals
 
 echo
 echo "Layer violations: $layer_violations; declared cycles: $cycle_violations; structural signals: $signal_count."
