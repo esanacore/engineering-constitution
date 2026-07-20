@@ -288,9 +288,74 @@ test_agents_selection() {
   echo "SUCCESS: --agents vendor selection verified."
 }
 
+test_libraries_are_tracked() {
+  echo "Testing that every sourced library is tracked by Git..."
+
+  # bootstrap.sh sources these at runtime, so a clone that lacks them gets a
+  # script that fails on every run. They were nearly shipped untracked: the
+  # Python-flavored global gitignore many developers carry includes a bare
+  # `lib/`, which silently excluded scripts/lib/ from `git add -A`. The repo
+  # .gitignore now negates that, and this test is the guard -- a checker that
+  # only runs against a working tree cannot see this class of bug.
+  cd "$repo_root"
+
+  for lib in bootstrap_readme.sh bootstrap_migrate.sh bootstrap_report.sh; do
+    [ -f "scripts/lib/$lib" ] || { echo "FAIL: scripts/lib/$lib is missing from the working tree"; exit 1; }
+
+    if ! git ls-files --error-unmatch "scripts/lib/$lib" >/dev/null 2>&1; then
+      echo "FAIL: scripts/lib/$lib exists but is NOT tracked by Git."
+      echo "      A fresh clone would get a bootstrap.sh that sources a missing file."
+      echo "      Check: git check-ignore -v scripts/lib/$lib"
+      exit 1
+    fi
+  done
+
+  # Anything bootstrap.sh names in its source loop must actually exist.
+  sourced=$(sed -n 's/^for lib in \(.*\); do$/\1/p' scripts/bootstrap.sh | head -n 1)
+  [ -n "$sourced" ] || { echo "FAIL: could not find the library source loop in bootstrap.sh"; exit 1; }
+
+  for lib in $sourced; do
+    [ -f "scripts/lib/$lib" ] || { echo "FAIL: bootstrap.sh sources '$lib', which does not exist in scripts/lib/"; exit 1; }
+  done
+
+  echo "SUCCESS: all sourced libraries exist and are tracked."
+}
+
+test_missing_library() {
+  echo "Testing behavior when a scripts/lib/ library is missing..."
+
+  # Splitting bootstrap.sh into sourced libraries introduced a failure mode it
+  # did not have before: an incomplete checkout. That must fail loudly with a
+  # usable message, not produce a half-bootstrapped repository via a
+  # "command not found" partway through the install.
+  staged="$test_dir/staged-constitution"
+  mkdir -p "$staged"
+  cp -r "$repo_root/scripts" "$repo_root/templates" "$staged/"
+  rm "$staged/scripts/lib/bootstrap_report.sh"
+
+  project_path="$test_dir/missing-lib-project"
+  make_repo "$project_path"
+
+  set +e
+  output=$("$staged/scripts/bootstrap.sh" "$project_path" "$constitution_url" 2>&1)
+  status=$?
+  set -e
+
+  [ "$status" -eq 1 ] || { echo "FAIL: expected exit 1 for a missing library, got $status"; echo "$output"; exit 1; }
+  echo "$output" | grep -q "Missing required library" || { echo "FAIL: missing-library error not reported"; echo "$output"; exit 1; }
+  echo "$output" | grep -q "looks incomplete" || { echo "FAIL: remediation hint not shown"; echo "$output"; exit 1; }
+
+  # It must bail before touching the project.
+  [ ! -e "$project_path/AGENTS.md" ] || { echo "FAIL: files were installed despite a missing library"; exit 1; }
+
+  echo "SUCCESS: a missing library fails loudly before touching the project."
+}
+
 # Run tests
 test_new_project
+test_libraries_are_tracked
 test_agents_selection
+test_missing_library
 test_existing_files_preservation
 test_badge_injection
 test_badge_no_heading

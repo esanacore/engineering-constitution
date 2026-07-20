@@ -34,7 +34,8 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
-- `scripts/bootstrap.sh`: Script to initialize an existing repository.
+- `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
+- `scripts/lib/`: Libraries sourced by `bootstrap.sh`, one per concern — `bootstrap_readme.sh` (constitution badge), `bootstrap_migrate.sh` (seeding TODO.md/CHANGELOG.md from a project's existing backlog or release notes), and `bootstrap_report.sh` (the adoption report and project detection). Sourced, never executed directly.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_ots_inventory.sh`: Reference checker that cross-checks the dependencies declared in root-level manifests against the OTS software inventory (`docs/OTS_SOFTWARE.md`), so a dependency added without documentation is flagged in the same change.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
@@ -75,6 +76,7 @@ engineering-constitution/
 │
 ├── .github/workflows/release-tag-alignment.yml  ← Post-tag release validation for this source repo
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
+│   └── lib/                              ← Concern-scoped libraries sourced by bootstrap.sh
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
 ├── skills/                               ← 25 built-in agent skills that execute constitution rules autonomously
@@ -94,7 +96,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.39.0
+Current version: 1.39.1
 
 See `VERSION`.
 
