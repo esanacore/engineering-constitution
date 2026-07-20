@@ -38,6 +38,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_ots_inventory.sh`: Reference checker that cross-checks the dependencies declared in root-level manifests against the OTS software inventory (`docs/OTS_SOFTWARE.md`), so a dependency added without documentation is flagged in the same change.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
+- `scripts/check_architecture.sh`: Reference checker that verifies source-code dependencies point inward per the Dependency Rule, using the layer table a project declares in `docs/ARCHITECTURE.md`. The one checker that inspects code structure rather than file presence — a repository can be fully compliant and still have its domain layer importing its database. Also reports advisory structural signals (oversized files, crowded directories) that never fail a build.
 - `scripts/check_version_alignment.sh`: Reference checker that verifies adopter-facing Constitution version references match the pinned `constitution/VERSION`.
 - `scripts/check_release_tag_alignment.sh`: Source-repo checker that verifies `VERSION`, the matching `v<VERSION>` tag, and `HEAD` stay aligned after a release.
 - `scripts/check_constitution_freshness.sh`: Single-repository freshness check (the `audit_adopters.sh` companion for one repository instead of a fleet), run by the `.claude/settings.json` SessionStart hook so a Claude Code session flags a stale `constitution/` submodule immediately instead of waiting on CI or Dependabot.
@@ -93,7 +94,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.38.0
+Current version: 1.39.0
 
 See `VERSION`.
 

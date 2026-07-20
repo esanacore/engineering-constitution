@@ -31,6 +31,7 @@ Creates or installs:
   - .github/workflows/constitution-secrets.yml
   - .github/workflows/constitution-ots.yml
   - .github/workflows/constitution-env.yml
+  - .github/workflows/constitution-architecture.yml
   - .pre-commit-config.yaml
   - .devcontainer/devcontainer.json
   - TODO.md
@@ -529,6 +530,7 @@ generate_adoption_report() {
     status_line ".github/workflows/constitution-secrets.yml"
     status_line ".github/workflows/constitution-ots.yml"
     status_line ".github/workflows/constitution-env.yml"
+    status_line ".github/workflows/constitution-architecture.yml"
     status_line ".pre-commit-config.yaml"
     status_line ".devcontainer/devcontainer.json"
     status_line "TODO.md"
@@ -699,6 +701,7 @@ copy_file "$template_dir/.github/workflows/constitution-doc-freshness.yml" "$pro
 copy_file "$template_dir/.github/workflows/constitution-secrets.yml" "$project_path/.github/workflows/constitution-secrets.yml"
 copy_file "$template_dir/.github/workflows/constitution-ots.yml" "$project_path/.github/workflows/constitution-ots.yml"
 copy_file "$template_dir/.github/workflows/constitution-env.yml" "$project_path/.github/workflows/constitution-env.yml"
+copy_file "$template_dir/.github/workflows/constitution-architecture.yml" "$project_path/.github/workflows/constitution-architecture.yml"
 copy_file "$template_dir/.pre-commit-config.yaml" "$project_path/.pre-commit-config.yaml"
 mkdir -p "$project_path/.devcontainer"
 copy_file "$template_dir/.devcontainer/devcontainer.json" "$project_path/.devcontainer/devcontainer.json"
