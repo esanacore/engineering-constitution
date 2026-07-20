@@ -35,7 +35,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
-- `scripts/lib/`: Libraries sourced by `bootstrap.sh`, one per concern — `bootstrap_readme.sh` (constitution badge), `bootstrap_migrate.sh` (seeding TODO.md/CHANGELOG.md from a project's existing backlog or release notes), and `bootstrap_report.sh` (the adoption report and project detection). Sourced, never executed directly.
+- `scripts/lib/`: Libraries sourced by the two largest scripts, one file per concern. For `bootstrap.sh`: `bootstrap_readme.sh` (constitution badge), `bootstrap_migrate.sh` (seeding TODO.md/CHANGELOG.md from a project's existing backlog or release notes), `bootstrap_report.sh` (the adoption report and project detection). For `check_architecture.sh`: `architecture_languages.sh` (how each language spells imports and what it resolves them against), `architecture_layers.sh` (the declared layer table as a graph), `architecture_signals.sh` (advisory structural heuristics that never fail a build). Sourced, never executed directly.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_ots_inventory.sh`: Reference checker that cross-checks the dependencies declared in root-level manifests against the OTS software inventory (`docs/OTS_SOFTWARE.md`), so a dependency added without documentation is flagged in the same change.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
@@ -96,7 +96,7 @@ Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.
 
 ## Version
 
-Current version: 1.41.1
+Current version: 1.41.2
 
 See `VERSION`.
 

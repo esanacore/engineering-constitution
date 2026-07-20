@@ -100,7 +100,7 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.41.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.41.2`. Recent releases have focused on:
 
 - OTS software tracking (`templates/docs/OTS_SOFTWARE.md`, `check_ots_inventory.sh`, `constitution-ots.yml`): an FDA OTS / IEC 62304 SOUP-informed third-party dependency inventory, with a checker that cross-references actual dependency manifests against it so documentation stays complete as dependencies evolve
 - A Claude Code `SessionStart` hook (`templates/.claude/settings.json`, installed by `scripts/bootstrap.sh`) that runs `check_constitution_freshness.sh` the instant a session starts in an adopting repository, so an agent knows immediately — before doing anything else — whether the `constitution/` submodule is behind the latest release, instead of relying only on Dependabot, the CI version gate, or a periodic fleet audit

@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.41.2 - 2026-07-20
+
+### Changed
+
+- Split `scripts/check_architecture.sh` (816 lines) along its responsibility seams into `scripts/lib/architecture_languages.sh` (how each language spells imports and what it resolves them against), `scripts/lib/architecture_layers.sh` (the declared layer table as a graph), and `scripts/lib/architecture_signals.sh` (advisory heuristics that never fail a build), leaving the checker at 488 lines owning argument parsing, source discovery, attribution, and reporting. Three independent reasons to change: adding a language touches only the first, adding a property to verify about the graph only the second, retuning a heuristic only the third. The signals file is deliberately separate because that half cannot fail a build while the other half can. As with the `bootstrap.sh` split, the seams are SRP rather than line count — `ARCHITECTURE.md` warns against splitting merely because a file is long, and this checker's own signal is advisory for that reason.
+- Verified behavior-preserving rather than merely test-passing: 24 runs across 8 fixtures × 3 option modes produce byte-identical output before and after. This caught a real defect during the refactor — converting a top-level assignment into a function left its call site behind, so `compute_ambiguous_tokens` was defined but never invoked.
+- Two new cases in `scripts/test_check_architecture.sh` (24 total): every library the checker sources must be present *and tracked by Git*, and a missing library must exit 2 with a remediation hint rather than emitting a partial report that resembles a clean result. The tracked-by-Git assertion exists because a working tree passes happily while a clone gets a checker that dies on its first line — the failure mode that nearly shipped in 1.39.1.
+- The split carries the 1.41.1 `baseUrl` fix intact: both `|| true` guards moved into `architecture_languages.sh` alongside the `detect_module_roots` code they protect. That reconciliation is the reason this landed after 1.41.1 rather than before — the fix and the split touched the same lines, and moving code out from under a just-shipped fix is how a fix silently disappears. Verified by running the original crash scenario (a `tsconfig.json` with `paths` but no `baseUrl`) through the split checker.
+
 ## 1.41.1 - 2026-07-20
 
 ### Fixed
