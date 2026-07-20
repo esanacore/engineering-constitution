@@ -6,6 +6,13 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.41.1 - 2026-07-20
+
+### Fixed
+
+- **`check_architecture.sh` aborted on any TypeScript project whose `tsconfig.json` has no `baseUrl`.** The module-root scan added in 1.41.0 assigns `base_url=$(... | grep -oE '"baseUrl"...' | ...)` under `set -euo pipefail`; when the grep matches nothing it exits 1, the assignment fails, and the checker exits 1 having printed only its header — no violation listed, no message on stdout or stderr, so it reads as a failing architecture gate rather than a broken checker. Next.js ships `tsconfig.json` with `paths` and no `baseUrl`, so this fired on a default Next project. Every other pipeline in the file already guarded with `|| true`; this one was missed. The alias scan immediately above it had the same defect for a tsconfig declaring no array-valued option at all, and is fixed with it.
+- Regression test (22) covers both shapes, and asserts a real violation in the same no-`baseUrl` repository is still caught — a guard that silently swallowed the run would otherwise pass a test that only checked the exit code.
+
 ## 1.41.0 - 2026-07-20
 
 ### Fixed

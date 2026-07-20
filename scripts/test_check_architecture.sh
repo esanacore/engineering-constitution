@@ -504,4 +504,59 @@ run_check --max-dir-files abc "$repo"
 [ "$status" -eq 2 ] || { echo "FAIL(12): expected exit 2 on a non-numeric threshold, got $status"; exit 1; }
 echo "SUCCESS(12): usage errors report exit 2."
 
+
+# ---------------------------------------------------------------------------
+# 22. A tsconfig.json without `baseUrl` must not abort the checker.
+#
+#     `set -euo pipefail` plus an unguarded `grep` that matches nothing exits
+#     1 mid-assignment, which killed the run after only the header had been
+#     printed: no violations listed, no error, exit 1. Next.js ships `paths`
+#     with no `baseUrl`, so this fired on a default Next project and looked
+#     like a failing architecture gate rather than a broken checker.
+#
+#     The second case covers the same failure in the alias scan: a tsconfig
+#     declaring no array-valued option at all.
+# ---------------------------------------------------------------------------
+repo="$test_dir/tsconfig-no-baseurl"
+mkdir -p "$repo/docs" "$repo/src/domain" "$repo/src/infra"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF2'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | --            |
+| infra  | src/infra  | domain        |
+EOF2
+# paths but no baseUrl -- the shape Next.js generates.
+printf '{\n  "compilerOptions": {\n    "paths": { "@/*": ["./*"] }\n  }\n}\n' > "$repo/tsconfig.json"
+echo 'export const ok = 1;' > "$repo/src/domain/x.ts"
+
+run_check "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(22): clean repo with no baseUrl should pass, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "Layer violations: 0" || { echo "FAIL(22): checker aborted before reporting"; echo "$output"; exit 1; }
+
+# The same repo with a real violation must still be caught -- proving the
+# guard did not simply swallow the run.
+echo "import { thing } from '../infra/db';" > "$repo/src/domain/x.ts"
+echo 'export const thing = 1;' > "$repo/src/infra/db.ts"
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(22): violation missed when baseUrl absent, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "'domain' imports 'infra'" || { echo "FAIL(22): violation not reported"; echo "$output"; exit 1; }
+
+# A tsconfig with no array-valued option at all must not abort the alias scan.
+repo="$test_dir/tsconfig-no-arrays"
+mkdir -p "$repo/docs" "$repo/src/domain"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF2'
+## Layer Boundaries
+
+| Layer  | Path       | May Depend On |
+| ------ | ---------- | ------------- |
+| domain | src/domain | --            |
+EOF2
+printf '{\n  "compilerOptions": { "strict": true }\n}\n' > "$repo/tsconfig.json"
+echo 'export const ok = 1;' > "$repo/src/domain/x.ts"
+run_check "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(22): tsconfig with no arrays should pass, got $status"; echo "$output"; exit 1; }
+echo "SUCCESS(22): a tsconfig without baseUrl does not abort the checker."
+
 echo "ALL TESTS PASSED"

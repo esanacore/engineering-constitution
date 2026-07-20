@@ -332,12 +332,14 @@ ts_aliases=""
 
 for tsconfig in tsconfig.json jsconfig.json; do
   [ -f "$root/$tsconfig" ] || continue
+  # `|| true` for the same reason as baseUrl below: a tsconfig declaring no
+  # array-valued option at all makes this grep exit 1 and abort the checker.
   ts_aliases="$ts_aliases$(
     sed 's|//.*||' "$root/$tsconfig" |
       tr -d '\n' |
       grep -oE '"[^"]+"[[:space:]]*:[[:space:]]*\[[[:space:]]*"[^"]+"' |
       sed -E 's|"([^"]+)"[[:space:]]*:[[:space:]]*\[[[:space:]]*"([^"]+)"|\1\|\2|' |
-      sed 's|/\*||g'
+      sed 's|/\*||g' || true
   )
 "
 done
@@ -350,9 +352,15 @@ ts_aliases=$(printf '%s' "$ts_aliases" | awk 'NF')
 module_roots=""
 
 if [ -f "$root/tsconfig.json" ]; then
+  # `|| true` because a tsconfig without baseUrl is the common case, not an
+  # error -- Next.js ships `paths` with no `baseUrl`. Under `set -euo pipefail`
+  # an unguarded grep that matches nothing exits 1, fails the assignment, and
+  # aborts the whole checker after it has printed only its header: no
+  # violation, no message, exit 1. Every other pipeline here is guarded the
+  # same way; this one was missed when module roots were added in 1.41.0.
   base_url=$(sed 's|//.*||' "$root/tsconfig.json" |
     grep -oE '"baseUrl"[[:space:]]*:[[:space:]]*"[^"]+"' |
-    sed -E 's|.*"([^"]+)"$|\1|' | head -n 1)
+    sed -E 's|.*"([^"]+)"$|\1|' | head -n 1 || true)
   case "$base_url" in
     ""|.|./) ;;
     *) module_roots="$module_roots $(normalize_ref "$base_url")" ;;
