@@ -119,6 +119,7 @@ The current framework version in `README.md` and `CONSTITUTION.md` is `1.41.0`. 
 - Automated constitution version drift detection for adopters
 - Worked operations documentation examples
 - Editor/tooling bootstrap support for Continue.dev, Aider, pre-commit, and devcontainers
+- A per-IDE guide for applying the constitution in Visual Studio, VS Code, and JetBrains, mirrored into every adopting repo's `docs/HELP.md` (`INTEGRATION.md` "Using the Constitution in Your IDE")
 
 ## See also
 

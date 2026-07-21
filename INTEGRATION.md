@@ -21,6 +21,114 @@ Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/ru
 
 Before beginning implementation, agents write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks. If a previous session was interrupted, agents check this file first for resumption context. See `DOCUMENTATION.md`'s "Session Planning" section.
 
+## Using the Constitution in Your IDE
+
+Most developers apply the constitution from inside an IDE — Visual Studio, VS
+Code, or a JetBrains IDE — rather than from a terminal. The mechanism is the
+same in every IDE and is worth stating plainly:
+
+> **The constitution reaches your AI assistant through plain-text instruction
+> files that live in the repository.** You do not install a plugin *for the
+> constitution*. You install (or already have) an AI coding assistant, and that
+> assistant automatically reads the instruction files this framework puts in the
+> repo — chiefly `AGENTS.md`, and, when the tool hardcodes its own filename, a
+> vendor file such as `.github/copilot-instructions.md`, `CLAUDE.md`, or
+> `.cursor/rules/project.mdc`. Those files point the assistant at the
+> `constitution/` submodule and its reading order. Open the repo, use your
+> assistant as usual, and the constitution is already in force.
+
+Because the instruction files are committed to the repository, every contributor
+gets identical behavior no matter which IDE they open it in, and no per-machine
+configuration is required beyond having an assistant installed.
+
+The table below maps each IDE to the assistant(s) that work in it and the file
+each one reads. Detailed per-tool setup and customization live in the
+tool-specific sections later in this guide (see the cross-references).
+
+| IDE | AI assistant | Instruction file it reads automatically |
+|---|---|---|
+| **Visual Studio** (2022 17.x / 2026 18.x) | GitHub Copilot | `.github/copilot-instructions.md`, and `AGENTS.md` |
+| Visual Studio | GitHub Copilot **custom agent** (Solon) | `.github/agents/solon.agent.md` |
+| **VS Code** | GitHub Copilot | `.github/copilot-instructions.md`, `AGENTS.md` |
+| VS Code | Continue.dev | `.continue/config.json` |
+| VS Code | Cursor (VS Code fork) | `.cursor/rules/project.mdc`, `.cursorrules`, `AGENTS.md` |
+| **JetBrains** (IntelliJ IDEA, PyCharm, WebStorm, GoLand, Rider, …) | GitHub Copilot plugin | `.github/copilot-instructions.md`, `AGENTS.md` |
+| JetBrains | Continue.dev plugin | `.continue/config.json` |
+
+If your repository was bootstrapped with the default `--agents` selection, only
+`AGENTS.md` is present. Tools that read `AGENTS.md` directly (modern Copilot,
+Cursor, and most others) work immediately. To get a hardcoded vendor file for a
+specific tool — for example `.github/copilot-instructions.md` for older Copilot
+clients — re-run the bootstrap with that tool named (see
+[README.md](README.md), "Choosing AI Tool Instruction Files"), or copy the file
+from `constitution/templates/`.
+
+### Visual Studio (Microsoft's IDE)
+
+Visual Studio is the fullest IDE story because it supports Copilot **custom
+agents** — the constitution ships one named **Solon** (see "GitHub Copilot
+Custom Agent" below).
+
+1. **Install/verify GitHub Copilot.** Copilot is bundled with Visual Studio
+   2022 17.10+ and 2026. Confirm you are signed in under
+   **Tools > Options > GitHub > Copilot**.
+2. **Open the repository folder** (the one containing `AGENTS.md` and the
+   `constitution/` submodule). Copilot picks up `.github/copilot-instructions.md`
+   and `AGENTS.md` automatically — no per-session action needed.
+3. **Initialize the submodule** if you cloned without it, so the
+   `constitution/` files the instructions point at actually exist:
+   `git submodule update --init --recursive`.
+4. **Use Solon for constitution-aware review.** Custom agents require **Visual
+   Studio 2026 version 18.4 or later** (or a current Copilot client that
+   supports custom agents). In Copilot Chat, type `@Solon` followed by your
+   request, or pick **Solon** from the agent dropdown. To make Solon available
+   in every repository you open, copy `.github/agents/solon.agent.md` to the
+   user-level location `%USERPROFILE%\.github\agents\` (configurable under
+   **Tools > Options > GitHub > Copilot**).
+
+### VS Code
+
+1. **Install an assistant:** the **GitHub Copilot** extension, the
+   **Continue.dev** extension, or use **Cursor** (a VS Code fork).
+2. **Open the repository folder.** Each assistant reads its file automatically —
+   Copilot reads `.github/copilot-instructions.md` and `AGENTS.md`, Continue
+   reads `.continue/config.json`, Cursor reads `.cursor/rules/project.mdc` and
+   `AGENTS.md`.
+3. **Reopen in the devcontainer when prompted.** The bootstrap installs
+   `.devcontainer/devcontainer.json` with the Copilot and Continue.dev
+   extensions pre-wired, so a "Reopen in Container" gives every contributor an
+   identical environment (see "Devcontainer" below).
+
+### JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, GoLand, Rider)
+
+1. **Install an assistant plugin** from the Marketplace: the **GitHub Copilot**
+   plugin or the **Continue** plugin.
+2. **Open the repository.** The Copilot plugin reads
+   `.github/copilot-instructions.md` and `AGENTS.md`; the Continue plugin reads
+   `.continue/config.json`. No further configuration is required to load the
+   constitution.
+
+### Verifying the constitution is loaded in your IDE
+
+Instruction files load silently, so confirm they took effect before you rely on
+them. In your assistant's chat panel, ask:
+
+```text
+Which engineering constitution files are you following for this repository,
+and what is the required reading order?
+```
+
+A correctly configured assistant names `AGENTS.md` (and its tool-specific file)
+and describes the reading order from `constitution/INTEGRATION.md`: `AGENTS.md`
+→ `constitution/CONSTITUTION.md` → `constitution/AI_WORKFLOW.md` → project
+`README.md`/`TODO.md`/`CHANGELOG.md`. If it does not, check that the instruction
+file exists in the repo, that the `constitution/` submodule is initialized, and
+that you opened the repository **root** (not a subfolder) so the assistant can
+see the files.
+
+Project-specific rules always win over constitution defaults — see the next
+section for where to put them per IDE.
+
 ## Project-Specific Rules and Overrides
 
 The constitution provides universal defaults. Each project can override or extend them in its local files.

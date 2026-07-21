@@ -2,6 +2,17 @@
 
 This guide describes how to set up your local environment and run the project for the first time.
 
+## IDE Setup
+
+This project follows Eric's Engineering Constitution. To have it applied
+automatically in **Visual Studio**, **VS Code**, or a **JetBrains IDE**, install
+an AI coding assistant (GitHub Copilot, Continue.dev, or Cursor) and open the
+repository — the assistant reads the instruction files committed here and picks
+up the constitution with no extra configuration. After cloning, run
+`git submodule update --init --recursive` so the `constitution/` submodule is
+present. See `docs/HELP.md`, "Using This Project in Your IDE," for the per-IDE
+file mapping and `constitution/INTEGRATION.md` for full details.
+
 ## Prerequisites
 
 <!-- List required runtimes, tools, and versions (e.g., Node.js 20+, Python 3.12, git-lfs) -->
