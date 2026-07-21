@@ -110,7 +110,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.41.1
+Current version: 1.42.0
 
 See `VERSION`.
 
