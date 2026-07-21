@@ -42,6 +42,7 @@
 
 ## Technical Debt
 
+- [x] Restore the executable bit on `check_architecture.sh`, `check_constitution_freshness.sh`, `check_env_vars.sh`, and their paired `test_*.sh`, which were committed as `100644`. Their tests invoke the checker directly (not via `bash`), so a fresh clone failed two suites with `Permission denied`. Fixed in 1.42.0 via `git update-index --chmod=+x`; sourced `scripts/lib/*.sh` correctly stay non-executable. Consider a CI guard that asserts every `scripts/check_*.sh`/`test_*.sh` is executable so this can't silently regress.
 - [x] Define a repeatable release process for framework updates. Shipped in 1.24.0 as the ordered "Cutting a Release" gate in `RELEASES.md` (see the Features entry above).
 - [x] Cut the first `vX.Y.Z` release tag on `main`. Stale: releases have been tagged since v1.20.0, and the `constitution-version-check` gate is actively enforcing against the latest tag.
 - [x] Add a checker that catches stale adopter-facing Constitution version references after a submodule bump. Shipped in 1.26.0 as `scripts/check_version_alignment.sh` with negative-case tests.
