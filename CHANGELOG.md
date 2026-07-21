@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **A wiki subsystem — first slice.** "Wiki content" has been named as part of the deliverable since Principle 1 (`CONSTITUTION.md`, `DOCUMENTATION.md`, Solon's law) but shipped no template, automation, or publishing path, and the constitution's own `wiki/Home.md` ended in six dangling `[[links]]` to pages that never existed. This slice builds the mechanism and dogfoods it:
+  - `docs/adr/0001-wiki-subsystem.md` records the decision (status **Proposed**) — author wiki pages in-repo under `wiki/`, publish them to the native `<repo>.wiki.git` on merge, and keep them current with a structural freshness tripwire. A `docs/adr/README.md` index accompanies it (the constitution's first ADR).
+  - `scripts/check_wiki_freshness.sh` flags a pull request that **adds or removes** source files without touching the wiki that catalogues them. It is deliberately a *higher* bar than `check_doc_freshness.sh`: modifying existing files never trips it, only additions and deletions do, because a wiki is a high-altitude catalogue of capabilities, not a per-line mirror of the code. Warn by default, `--strict` to fail. Backed by `scripts/test_check_wiki_freshness.sh` (7 cases), which proves the defining property — modify-only diffs do not trip it — alongside the add, delete, ignore-list, custom-`--wiki-dir`, and usage-error cases.
+  - `templates/.github/workflows/constitution-wiki.yml` is the adopter payload: a freshness job on pull requests plus a publish-on-merge job that mirrors `wiki/` to the repository's built-in GitHub wiki, so the rendered wiki is never stale relative to its reviewed source.
+  - The constitution's own wiki is finished: the six dangling links now resolve to real pages (`Getting-Started`, `Bootstrap-Script`, `Governance-Checkers`, `Templates-and-Examples`, `MCP-Server`, `Standards-Overview`) with a `_Sidebar.md`, and `.github/workflows/wiki-sync.yml` dogfoods the publish model on this repository.
+  - Scope boundary: because the ADR is Proposed, this slice ships tooling and dogfoods it but does **not** yet make a wiki binding for adopters. Wiring the checker into `check_compliance.sh` and `bootstrap.sh`, and promoting "Wiki content" to a required standard, are gated on Acceptance and tracked in `TODO.md`.
+
 ## 1.42.0 - 2026-07-21
 
 ### Added
