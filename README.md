@@ -17,7 +17,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 
 - `CONSTITUTION.md`: Authoritative engineering principles.
 - `AI_WORKFLOW.md`: Step-by-step AI agent workflow.
-- `INTEGRATION.md`: Submodule workflow, agent reading order, project-specific overrides, and VERSION update strategy.
+- `INTEGRATION.md`: Submodule workflow, agent reading order, **how to use the constitution in your IDE (Visual Studio, VS Code, JetBrains)**, project-specific overrides, and VERSION update strategy.
 - `TESTING.md`: Testing expectations and reporting standards.
 - `DOCUMENTATION.md`: Documentation requirements and checklists.
 - `SECURITY.md`: Security review standards.
@@ -93,6 +93,20 @@ engineering-constitution/
 Every adopting project pulls this repository in as a read-only `constitution/` submodule, layers a small set of local files on top (agent entry points, tool-specific rule files, CI workflows), and lets AI agents and CI gates enforce the same standards documented here — see `INTEGRATION.md` for the full reading order and multi-tool setup.
 
 Diagram source: `assets/diagrams/how-it-works.mmd` (see `assets/diagrams/README.md` to regenerate the SVG after editing it). It's a pre-rendered image rather than a live `mermaid` code block because GitHub's native mobile apps don't render Mermaid — only github.com in a browser does.
+
+## Using It in Your IDE
+
+You do not install anything "for the constitution." Open a bootstrapped
+repository in **Visual Studio**, **VS Code**, or a **JetBrains IDE** and your
+AI coding assistant (GitHub Copilot, Continue.dev, Cursor, …) automatically
+reads the instruction files committed to the repo — chiefly `AGENTS.md`, plus
+any tool-specific file such as `.github/copilot-instructions.md` — which point
+it at the `constitution/` submodule. Visual Studio users also get **Solon**, a
+constitution-aware GitHub Copilot custom agent.
+
+See `INTEGRATION.md`, "Using the Constitution in Your IDE," for the per-IDE
+setup steps and a one-line prompt to verify the constitution is actually loaded.
+Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 

@@ -6,6 +6,11 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **A dedicated "Using the Constitution in Your IDE" guide in `INTEGRATION.md`.** The IDE story was previously scattered: Visual Studio appeared only inside the Solon custom-agent section, and VS Code / JetBrains only inside the Continue.dev and Devcontainer sections, so a developer opening the repo in an IDE had no single place that told them how the constitution reaches their assistant. The new section leads with the core mechanism — the constitution loads through the instruction files committed to the repo (`AGENTS.md` plus any vendor file), not through an IDE plugin — then gives an IDE-to-assistant-to-file mapping table and step-by-step setup for Visual Studio (including the Solon custom agent and user-level install), VS Code (Copilot / Continue / Cursor / devcontainer), and JetBrains IDEs. It closes with a copy-paste prompt to verify the constitution is actually loaded and what a correct answer looks like. Surfaced from `README.md` (a new "Using It in Your IDE" section and the `INTEGRATION.md` contents line) and the wiki.
+- **Adopting repositories now carry the same IDE guidance.** `templates/HELP.md` (installed as every adopter's `docs/HELP.md`, a required governance file) gains a "Using This Project in Your IDE" section with the per-IDE file mapping and verification prompt, pointing back to `constitution/INTEGRATION.md` for the full guide. `templates/docs/SETUP.md` gains an "IDE Setup" section so the workstation-setup path also directs contributors to it. This means the guarantee holds end to end: the framework documents IDE usage, and repos that adopt it document it too, without any bootstrap or compliance-checker changes (both files already ship to every adopter).
+
 ## 1.41.1 - 2026-07-20
 
 ### Fixed
