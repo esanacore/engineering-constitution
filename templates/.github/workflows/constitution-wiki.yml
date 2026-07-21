@@ -1,0 +1,105 @@
+name: Constitution Wiki
+
+# Keeps an adopting repository's wiki honest and current, via two jobs that run
+# on different events (see ADR-0001 in the constitution's docs/adr/):
+#
+#   freshness (pull_request) -- flags a PR that ADDS or REMOVES source files
+#     without touching wiki/, via constitution/scripts/check_wiki_freshness.sh.
+#     A deliberately higher bar than the doc-freshness tripwire: it fires on
+#     structural change (a file appeared or disappeared), not on every edit.
+#     Runs in default (non-strict) mode, which warns instead of failing. Add
+#     --strict to the invocation below once the signal is useful for this repo.
+#
+#   publish (push to the default branch) -- mirrors wiki/ to this repository's
+#     built-in GitHub wiki (<repo>.wiki.git) so the rendered wiki is never
+#     stale relative to its reviewed source.
+#
+# PREREQUISITE for the publish job: the GitHub wiki must be enabled and
+# initialized once by hand (Settings -> Features -> Wikis, then create the Home
+# page in the UI). Until a wiki repo exists, <repo>.wiki.git cannot be cloned
+# or pushed. The job below tolerates the not-yet-initialized case by failing
+# loudly with a clear message rather than silently.
+#
+# Authored wiki pages live under wiki/ in this repository. Use GitHub-wiki
+# conventions: Home.md as the landing page, _Sidebar.md for navigation, and
+# [[Page Name]] links that resolve to Page-Name.md.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+
+jobs:
+  freshness:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository with submodules and full history
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_wiki_freshness.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the wiki-freshness checker). This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+      - name: Check wiki freshness
+        shell: bash
+        run: |
+          bash constitution/scripts/check_wiki_freshness.sh \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head "${{ github.sha }}" \
+            .
+
+  publish:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Publish wiki/ to the GitHub wiki
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ ! -d wiki ] || [ -z "$(ls -A wiki 2>/dev/null)" ]; then
+            echo "No wiki/ content to publish; nothing to do."
+            exit 0
+          fi
+
+          wiki_remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
+
+          if ! git clone --depth 1 "$wiki_remote" wiki-publish 2>/dev/null; then
+            echo "::error::Could not clone ${GITHUB_REPOSITORY}.wiki.git. Enable the wiki (Settings -> Features -> Wikis) and create the Home page once in the UI to initialize it, then re-run."
+            exit 1
+          fi
+
+          # Mirror wiki/ into the wiki repo (excluding its .git), so deletions
+          # propagate too. rsync is available on ubuntu-latest runners.
+          rsync -a --delete --exclude '.git' wiki/ wiki-publish/
+
+          cd wiki-publish
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Wiki already up to date; nothing to publish."
+            exit 0
+          fi
+          git commit -m "Sync wiki from ${GITHUB_SHA}"
+          git push
+          echo "Published wiki/ to ${GITHUB_REPOSITORY}.wiki.git"

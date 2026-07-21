@@ -2,6 +2,12 @@
 
 ## Features
 
+- [~] Add a wiki subsystem so "wiki content" (already named in Principle 1) has a real template, automation, and publishing path. Slice 1 shipped (pending release, see CHANGELOG `Unreleased`): ADR-0001 (`docs/adr/0001-wiki-subsystem.md`, Proposed) + ADR index; `scripts/check_wiki_freshness.sh` (structural add/remove tripwire) + `scripts/test_check_wiki_freshness.sh` (7 cases); `templates/.github/workflows/constitution-wiki.yml` (freshness + publish-on-merge); the constitution's own finished wiki (six pages + `_Sidebar.md`) dogfooded via `.github/workflows/wiki-sync.yml`. Follow-up slices, gated on ADR-0001 moving to **Accepted**:
+  - [ ] Decide whether a wiki is Recommended or Required for adopters, then wire `check_wiki_freshness.sh` into `scripts/check_compliance.sh` and install `constitution-wiki.yml` + a `templates/wiki/Home.md` scaffold from `scripts/bootstrap.sh`. Promote "Wiki content" from a checklist bullet to a dedicated required/recommended standard.
+  - [ ] Add a wiki link/orphan checker that verifies every `[[WikiLink]]` resolves to an existing page and flags orphaned pages, with tests — the most common wiki rot caught mechanically.
+  - [ ] Generate the mechanical wiki pages from source of truth (e.g. a Governance Checkers page built from the `scripts/check_*.sh` headers) so they cannot drift.
+  - [ ] Scheduled agent regeneration: a cadence/on-release GitHub Action that invokes Solon to reconcile the wiki against current source and open a PR — the genuinely self-updating layer, built on the foundation above.
+
 - [x] Generate 25 constitution-enforcing agent skills and integrate them locally. Shipped in 1.37.0.
 - [x] Generate a premium visual infographic (`assets/diagrams/constitution_infographic.jpg`) and an interactive HTML demo dashboard (`demo.html`) for exploring the constitution framework.
 - [x] Recommend AI-specific firewalls (Claw Patrol) for agent runtime security in SECURITY.md and OPERATIONS.md.

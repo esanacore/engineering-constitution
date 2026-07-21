@@ -45,6 +45,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_constitution_freshness.sh`: Single-repository freshness check (the `audit_adopters.sh` companion for one repository instead of a fleet), run by the `.claude/settings.json` SessionStart hook so a Claude Code session flags a stale `constitution/` submodule immediately instead of waiting on CI or Dependabot.
 - `scripts/run_declared_tests.sh`: Runs the test command an adopting repository declares in `docs/TEST_PLAN.md`, enforcing it in CI.
 - `scripts/check_doc_freshness.sh`: Blunt CI tripwire that flags a pull request changing source files without touching README.md/CHANGELOG.md.
+- `scripts/check_wiki_freshness.sh`: CI tripwire that flags a pull request adding or removing source files without touching the wiki that catalogues them — a higher bar than doc-freshness (modifications alone never trip it). See `docs/adr/0001-wiki-subsystem.md`.
 - `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
 - `scripts/setup-machine.sh`: One-time, per-machine installer for the AI-agent toolchain the templates point at (Bun, gstack, goose, goosetown). Not invoked by `bootstrap.sh` — a machine is provisioned once, explicitly; a repository is bootstrapped by writing files only. Idempotent, skips anything already installed.
 - `.github/workflows/release-tag-alignment.yml`: Source-repo release guard that runs `scripts/check_release_tag_alignment.sh` on every pushed `v*` tag, and can be re-run manually for a chosen ref.
@@ -71,17 +72,18 @@ engineering-constitution/
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
 │   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, ADR, ...)
 │   └── .github/
-│       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness)
+│       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki)
 │       └── agents/                       ← Solon, the Copilot custom agent
 │
-├── .github/workflows/release-tag-alignment.yml  ← Post-tag release validation for this source repo
+├── docs/adr/                             ← Architecture Decision Records for the framework itself
+├── .github/workflows/                    ← This repo's own CI: release-tag-alignment, wiki-sync
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
 │   └── lib/                              ← Concern-scoped libraries sourced by bootstrap.sh
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
 ├── skills/                               ← 25 built-in agent skills that execute constitution rules autonomously
 ├── mcp-server/                           ← MCP server exposing constitution docs/sources as resources
-└── wiki/                                 ← Wiki content (Home.md)
+└── wiki/                                 ← This repo's own wiki (Home + Getting Started, Bootstrap Script, Governance Checkers, ...)
 ```
 
 `INTEGRATION.md`'s "Project File Structure" section shows the mirror image of this: what an **adopting** project looks like once it pulls this repository in as a `constitution/` submodule.

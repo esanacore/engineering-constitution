@@ -108,6 +108,38 @@ As agents and humans work on a project, they establish codebase learnings, disco
 - **User-Discretionary Control**: The memory file is strictly under the user's discretion. The agent MUST NOT write to or update `docs/MEMORY.md` without presenting the proposed additions/edits directly to the user for explicit approval at the end of the session.
 - **Complementary to Session Plans and Handoffs**: While `docs/SESSION_PLAN.md` and `docs/AGENT_HANDOFF.md` capture the active/temporary context of a single session, `docs/MEMORY.md` preserves long-term, cumulative learnings and preferences.
 
+## Wiki
+
+A wiki is a high-altitude, navigable catalogue of a project — what it is, how to
+use it, and how its pieces fit — sitting above the reference documents in `docs/`
+and the `README.md`. "Wiki content" is named in `CONSTITUTION.md` Principle 1 and
+in the Documentation Review Checklist; this section describes how the framework
+expects one to be built and kept current. The decision behind it is recorded in
+`docs/adr/0001-wiki-subsystem.md`.
+
+- **Author in-repo, publish to the native wiki.** Wiki pages live under `wiki/`
+  in the repository, in GitHub-wiki-native Markdown (`Home.md` as the landing
+  page, `_Sidebar.md` for navigation, `[[Page Name]]` links that resolve to
+  `Page-Name.md`). They are reviewed through normal pull requests and versioned
+  with the code, then published to the repository's built-in GitHub wiki
+  (`<repo>.wiki.git`) on merge, so the rendered wiki is never stale relative to
+  its reviewed source. Editing pages directly in the GitHub wiki UI is avoided:
+  that surface escapes pull-request review and CI.
+- **Keep it current mechanically.** `constitution-wiki.yml` (installed from the
+  templates) runs `check_wiki_freshness.sh`, which flags a pull request that adds
+  or removes source files without touching `wiki/` — a blunt tripwire on
+  structural change, following the warn-by-default / `--strict` rollout contract.
+  It is a higher bar than the README/CHANGELOG doc-freshness tripwire and does
+  not replace it.
+- **No placeholders.** As with every other document here, a wiki page copied from
+  a template is not finished documentation until it describes the real project.
+
+The rollout of the wiki requirement is staged (see `docs/adr/0001-wiki-subsystem.md`):
+the tooling and the constitution's own dogfooded wiki ship first; making a wiki a
+binding obligation on adopting repositories — wiring the checker into
+`check_compliance.sh` and installing the workflow from `bootstrap.sh` — is gated
+on that ADR moving to Accepted.
+
 ## Binary Assets and Images
 
 Documentation often depends on images, diagrams, and other binary assets. Handle them so they render reliably and large originals stay out of the main history.
