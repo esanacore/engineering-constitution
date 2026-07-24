@@ -489,6 +489,56 @@ echo "$output" | grep -q "'domain' imports 'infra'" || { echo "FAIL(21): bare pa
 echo "SUCCESS(21): a src-layout package path resolves to its layer."
 
 # ---------------------------------------------------------------------------
+# 23. Every library check_architecture.sh sources must exist AND be tracked by
+#     Git. A working tree passes happily while a clone gets a checker that dies
+#     on its first line -- the failure mode that nearly shipped in 1.39.1, when
+#     a bare `lib/` in a personal global gitignore silently excluded
+#     scripts/lib/ from `git add -A`.
+# ---------------------------------------------------------------------------
+repo_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
+sourced=$(sed -n 's/^for lib in \(.*\); do$/\1/p' "$repo_root/scripts/check_architecture.sh" | head -n 1)
+[ -n "$sourced" ] || { echo "FAIL(23): could not find the library source loop in check_architecture.sh"; exit 1; }
+
+for lib in $sourced; do
+  [ -f "$repo_root/scripts/lib/$lib" ] || { echo "FAIL(23): check_architecture.sh sources '$lib', which does not exist"; exit 1; }
+
+  if ! git -C "$repo_root" ls-files --error-unmatch "scripts/lib/$lib" >/dev/null 2>&1; then
+    echo "FAIL(23): scripts/lib/$lib exists but is NOT tracked by Git."
+    echo "          A fresh clone would get a checker that sources a missing file."
+    echo "          Check: git check-ignore -v scripts/lib/$lib"
+    exit 1
+  fi
+done
+echo "SUCCESS(23): all sourced libraries exist and are tracked."
+
+# ---------------------------------------------------------------------------
+# 24. A missing library must fail loudly as a usage error rather than producing
+#     a half-finished report that looks like a clean result.
+# ---------------------------------------------------------------------------
+staged="$test_dir/staged-constitution"
+mkdir -p "$staged/scripts"
+cp "$repo_root/scripts/check_architecture.sh" "$staged/scripts/"
+cp -r "$repo_root/scripts/lib" "$staged/scripts/"
+rm "$staged/scripts/lib/architecture_layers.sh"
+
+repo="$test_dir/lib-missing"
+mkdir -p "$repo/src"
+echo "x = 1" > "$repo/src/a.py"
+
+set +e
+output=$("$staged/scripts/check_architecture.sh" "$repo" 2>&1)
+status=$?
+set -e
+
+[ "$status" -eq 2 ] || { echo "FAIL(24): expected exit 2 for a missing library, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "Missing required library" || { echo "FAIL(24): missing-library error not reported"; echo "$output"; exit 1; }
+if echo "$output" | grep -q "Layer violations:"; then
+  echo "FAIL(24): produced a summary despite a missing library"
+  exit 1
+fi
+echo "SUCCESS(24): a missing library fails loudly before reporting anything."
+
+# ---------------------------------------------------------------------------
 # 12. Usage errors report exit 2.
 # ---------------------------------------------------------------------------
 run_check --bogus "$repo"
