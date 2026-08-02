@@ -267,6 +267,7 @@ architecture_doc="$root/docs/ARCHITECTURE.md"
 
 layer_records=$(parse_layer_table || true)
 compute_ambiguous_tokens
+compute_layer_match_suffixes
 
 layer_violations=0
 cycle_violations=0
@@ -309,7 +310,7 @@ else
           if (seg[n] == t) printf "%s%s", (found++ ? ", " : ""), $1
         }' )
       echo "  WARN     layers $sharing share the directory name '$token'"
-      echo "           imports that do not spell a full layer path cannot be attributed between them"
+      echo "           an import naming only '$token' cannot be attributed between them; one that spells a parent segment is resolved"
     done <<EOF
 $ambiguous_tokens
 EOF
@@ -344,23 +345,26 @@ $declared_cycles
 EOF
   fi
 
-  # Attribute a normalized import to a declared layer, or nothing.
   # Attribute an import to a declared layer, in two passes over every candidate
   # form of the reference.
   #
-  # Pass 1 matches a layer's full declared path; pass 2 falls back to the layer
-  # directory's own name. The passes are separate, and pass 1 runs over ALL
-  # layers before pass 2 runs over any, because a full-path match is strictly
-  # better evidence than a directory-name match. Interleaving them -- testing
-  # both for each layer in turn -- lets an earlier layer's directory name beat a
-  # later layer's exact path, which silently misattributes the import and, when
-  # the wrong answer is the importing layer itself, drops a real violation as a
-  # self-import.
+  # Pass 1 matches a layer's full declared path. Pass 2 falls back to the
+  # shortest tail of a layer's path that is unique among all layers (its
+  # `layer_match_suffixes` entry). Pass 1 runs over ALL layers before pass 2
+  # runs over any, because a full-path match is strictly better evidence than a
+  # suffix match. Interleaving them -- testing both for each layer in turn --
+  # lets an earlier layer's suffix beat a later layer's exact path, which
+  # silently misattributes the import and, when the wrong answer is the
+  # importing layer itself, drops a real violation as a self-import.
   #
-  # Pass 2 skips directory names shared by several layers. Declining to answer
-  # is correct there: any guess reassigns a genuine dependency.
+  # The unique-suffix fallback resolves shared basenames the moment the import
+  # spells the disambiguating parent: `b/core` names `x/b/core`, not `x/a/core`,
+  # even though the full path is absent. When several layers still match a
+  # candidate, the longest (most specific) suffix wins; a tie between different
+  # layers is genuinely ambiguous -- the import names only the bare shared
+  # directory -- and declines, because any guess reassigns a real dependency.
   layer_for_ref() {
-    local ref=$1 candidates name path token
+    local ref=$1 candidates name path suffix best_name best_len slen tie
 
     candidates=$(candidate_refs "$ref")
 
@@ -381,22 +385,25 @@ EOF
 
     while IFS= read -r candidate; do
       [ -n "$candidate" ] || continue
-      while IFS='|' read -r name path _; do
+      best_name=""; best_len=0; tie=0
+      while IFS='|' read -r name suffix; do
         [ -n "$name" ] || continue
-        path=$(normalize_ref "$path")
-        token=${path##*/}
-        [ -n "$token" ] || continue
-
-        if printf '%s\n' "$ambiguous_tokens" | grep -qxF "$token"; then
-          continue
-        fi
-
         case "/$candidate/" in
-          */"$token"/*) printf '%s' "$name"; return 0 ;;
+          */"$suffix"/*)
+            slen=$(printf '%s' "$suffix" | awk -F/ '{print NF}')
+            if [ "$slen" -gt "$best_len" ]; then
+              best_len=$slen; best_name=$name; tie=0
+            elif [ "$slen" -eq "$best_len" ] && [ "$name" != "$best_name" ]; then
+              tie=1
+            fi
+            ;;
         esac
       done <<EOF
-$layer_records
+$layer_match_suffixes
 EOF
+      if [ -n "$best_name" ] && [ "$tie" -eq 0 ]; then
+        printf '%s' "$best_name"; return 0
+      fi
     done <<EOF
 $candidates
 EOF

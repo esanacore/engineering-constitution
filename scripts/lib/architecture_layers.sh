@@ -5,7 +5,7 @@
 #
 # Sourced, never executed. Reads the globals `architecture_doc` and
 # `layer_records`; sets `ambiguous_tokens` when `compute_ambiguous_tokens` is
-# called.
+# called, and `layer_match_suffixes` when `compute_layer_match_suffixes` is.
 #
 # Everything here treats the declared layer table as a graph: parsing it,
 # finding cycles in it, and finding names in it that refer to no layer. None of
@@ -64,6 +64,59 @@ compute_ambiguous_tokens() {
       count[token]++
     }
     END { for (t in count) if (count[t] > 1) print t }
+  ' || true)
+}
+
+# For each layer, the shortest tail of its path that no other layer's path ends
+# with -- its most economical unambiguous name. For a layer whose directory name
+# is already unique this is just that name (`domain`); for two layers sharing a
+# basename it is the basename plus enough parent segments to separate them
+# (`a/core` vs `b/core`). This is what lets attribution resolve a shared basename
+# when an import spells the disambiguating parent, instead of skipping it and
+# losing the violation. If a layer's whole path is a tail of another's -- so no
+# suffix is ever unique -- the full path is used, and the longest-match rule at
+# the call site prefers the more specific layer.
+#
+# Sets the global `layer_match_suffixes` as `name|suffix` records.
+layer_match_suffixes=""
+
+compute_layer_match_suffixes() {
+  layer_match_suffixes=$(printf '%s\n' "$layer_records" | awk '
+    BEGIN { FS = "|" }
+    $1 != "" {
+      nm[++n] = $1
+      p = $2
+      gsub(/^[ \t]+|[ \t]+$/, "", p)
+      sub(/\/+$/, "", p)
+      gsub(/\/\/+/, "/", p)
+      sub(/^\.\//, "", p)
+      pa[n] = p
+    }
+    # The last k segments of a path, or "" when it has fewer than k.
+    function tail(path, k,   seg, m, j, t) {
+      m = split(path, seg, "/")
+      if (k > m) return ""
+      t = ""
+      for (j = m - k + 1; j <= m; j++) t = t (t == "" ? "" : "/") seg[j]
+      return t
+    }
+    END {
+      for (i = 1; i <= n; i++) {
+        ns = split(pa[i], seg, "/")
+        chosen = ""
+        for (k = 1; k <= ns; k++) {
+          t = tail(pa[i], k)
+          uniq = 1
+          for (m = 1; m <= n; m++) {
+            if (m == i) continue
+            if (tail(pa[m], k) == t) { uniq = 0; break }
+          }
+          if (uniq) { chosen = t; break }
+        }
+        if (chosen == "") chosen = pa[i]
+        print nm[i] "|" chosen
+      }
+    }
   ' || true)
 }
 
