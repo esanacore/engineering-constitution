@@ -15,6 +15,10 @@ This project follows semantic versioning.
   - The constitution's own wiki is finished: the six dangling links now resolve to real pages (`Getting-Started`, `Bootstrap-Script`, `Governance-Checkers`, `Templates-and-Examples`, `MCP-Server`, `Standards-Overview`) with a `_Sidebar.md`, and `.github/workflows/wiki-sync.yml` dogfoods the publish model on this repository.
   - Scope boundary: because the ADR is Proposed, this slice ships tooling and dogfoods it but does **not** yet make a wiki binding for adopters. Wiring the checker into `check_compliance.sh` and `bootstrap.sh`, and promoting "Wiki content" to a required standard, are gated on Acceptance and tracked in `TODO.md`.
 
+### Fixed
+
+- **`check_architecture.sh` no longer drops a violation when two layers share a directory name.** Two layers with the same basename (`x/a/core`, `x/b/core`) were told apart only when an import spelled the *full* layer path; an import that spelled the disambiguating parent but not the full path (`b/core`, arriving that way when the leading segments are not a reconstructable module root) fell through to a fallback that skipped shared basenames outright, so a real outward dependency through it was silently unreported. Attribution's second pass now matches each layer by the shortest tail of its path that is unique among all layers (`b/core` names `x/b/core`, not `x/a/core`), with the longest match winning. An import naming only the bare shared name still declines rather than guessing — resolving when it can, staying silent when it genuinely cannot, so the fix adds no false positives. The layer-name-collision warning is unchanged. Two new test cases (26 total): the suffix-disambiguated violation is now caught, and the bare-name case still declines.
+
 ## 1.42.1 - 2026-07-21
 
 ### Changed

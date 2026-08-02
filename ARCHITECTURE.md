@@ -111,11 +111,14 @@ projects. Without them a Go import arrives carrying its module prefix and a
 TypeScript alias such as `@infra/db` names no directory at all.
 
 Two layers whose directories share a name — `src/a/core` and `src/b/core` —
-cannot be told apart from an import that does not spell a full layer path. The
-checker reports the collision and declines to attribute those imports rather
-than guessing, because assigning a dependency to the wrong layer is precisely
-how a real violation disappears. Give such layers distinct directory names, or
-write imports that name the full path.
+are told apart as soon as an import spells enough of the path to disambiguate.
+The checker matches each layer by the shortest tail of its path that is unique
+among all layers, so `b/core` names the second layer even when the full
+`src/b/core` is absent. An import naming only the bare shared directory `core`
+is genuinely ambiguous — it could mean either — so the checker reports the
+collision and declines to attribute it rather than guessing, because assigning a
+dependency to the wrong layer is precisely how a real violation disappears. To
+remove the ambiguity entirely, give such layers distinct directory names.
 
 Enforcement is opt-in per project: only the project knows its own layering, so a
 repository without this table is never failed for lacking one. Once the table is

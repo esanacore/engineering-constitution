@@ -609,4 +609,55 @@ run_check "$repo"
 [ "$status" -eq 0 ] || { echo "FAIL(22): tsconfig with no arrays should pass, got $status"; echo "$output"; exit 1; }
 echo "SUCCESS(22): a tsconfig without baseUrl does not abort the checker."
 
+# ---------------------------------------------------------------------------
+# 25. Shared basename, disambiguated by a parent segment. Two layers share the
+#     directory name `core`, and an import spells `b.core` -- the basename plus
+#     one parent -- but NOT the full layer path `x/b/core`, and `x` is not a
+#     module root that could reconstruct it. Test 18 covers the full-path
+#     spelling (caught by pass 1); this covers the suffix-only spelling, which
+#     the old bare-basename fallback skipped as ambiguous and silently dropped.
+# ---------------------------------------------------------------------------
+repo="$test_dir/shared-basename-suffix"
+mkdir -p "$repo/docs" "$repo/x/a/core" "$repo/x/b/core"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path     | May Depend On |
+| ----- | -------- | ------------- |
+| acore | x/a/core | --            |
+| bcore | x/b/core | acore         |
+EOF
+# Resolves to `b/core/thing`, never `x/b/core/thing`: full path absent, but the
+# `b/core` tail uniquely names layer bcore.
+echo 'from b.core.thing import y' > "$repo/x/a/core/m.py"
+
+run_check --strict "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(25): a suffix-disambiguated shared-basename violation was dropped, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "VIOLATION x/a/core/m.py" || { echo "FAIL(25): violation not reported"; echo "$output"; exit 1; }
+echo "SUCCESS(25): a shared basename is resolved when a parent segment disambiguates it."
+
+# ---------------------------------------------------------------------------
+# 26. The same two layers, but the import spells only the bare shared name
+#     `core` with no parent. This is genuinely ambiguous -- it could name either
+#     layer -- so attribution must decline rather than guess. Declining is what
+#     keeps the fix in test 25 from becoming a false-positive machine: it must
+#     resolve when it can and stay silent when it truly cannot.
+# ---------------------------------------------------------------------------
+repo="$test_dir/shared-basename-bare"
+mkdir -p "$repo/docs" "$repo/x/a/core" "$repo/x/b/core"
+cat > "$repo/docs/ARCHITECTURE.md" <<'EOF'
+## Layer Boundaries
+
+| Layer | Path     | May Depend On |
+| ----- | -------- | ------------- |
+| acore | x/a/core | --            |
+| bcore | x/b/core | acore         |
+EOF
+echo 'from core.thing import y' > "$repo/x/a/core/m.py"
+
+run_check --strict "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(26): a bare ambiguous basename was guessed at instead of declined, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "share the directory name 'core'" || { echo "FAIL(26): shared directory name not surfaced"; echo "$output"; exit 1; }
+echo "SUCCESS(26): a bare ambiguous basename declines rather than guessing."
+
 echo "ALL TESTS PASSED"
