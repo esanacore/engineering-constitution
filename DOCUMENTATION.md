@@ -130,7 +130,11 @@ expects one to be built and kept current. The decision behind it is recorded in
   or removes source files without touching `wiki/` — a blunt tripwire on
   structural change, following the warn-by-default / `--strict` rollout contract.
   It is a higher bar than the README/CHANGELOG doc-freshness tripwire and does
-  not replace it.
+  not replace it. The same workflow's `links` job runs `check_wiki_links.sh`,
+  which flags dangling `[[WikiLinks]]` and orphan pages so the two most common
+  forms of wiki rot — a link to a page that does not exist, and a page nothing
+  links to — are caught mechanically. The constitution runs this checker in
+  `--strict` mode as a pre-publish gate, so a broken wiki never reaches readers.
 - **No placeholders.** As with every other document here, a wiki page copied from
   a template is not finished documentation until it describes the real project.
 

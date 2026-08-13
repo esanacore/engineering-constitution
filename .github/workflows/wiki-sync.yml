@@ -27,6 +27,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check wiki link integrity (blocks a broken wiki from publishing)
+        shell: bash
+        run: |
+          # The constitution runs its own link checker in --strict mode: unlike
+          # a freshly bootstrapped adopter (which starts in warn mode per the
+          # rollout contract), this wiki is caught up, so a dangling link or
+          # orphan page should stop the publish rather than reach readers.
+          bash scripts/check_wiki_links.sh --strict .
+
       - name: Publish wiki/ to the GitHub wiki
         shell: bash
         env:
