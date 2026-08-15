@@ -38,6 +38,8 @@ make_compliant_repo() {
     echo "placeholder" > "$dest/docs/$f"
   done
   echo "placeholder" > "$dest/docs/adr/0001-record-architecture-decisions.md"
+  mkdir -p "$dest/wiki"
+  echo "placeholder" > "$dest/wiki/Home.md"
   echo "v1" > "$dest/constitution/VERSION"
 }
 
@@ -76,6 +78,20 @@ echo "$output"
 [ "$status" -eq 1 ] || { echo "FAIL(2): expected exit 1 when a required file is missing, got $status"; exit 1; }
 echo "$output" | grep -q "MISSING  .github/SECURITY.md (required)" || { echo "FAIL(2): missing .github/SECURITY.md not reported"; exit 1; }
 echo "SUCCESS(2): missing required file fails."
+
+# ---------------------------------------------------------------------------
+# 2a. A wiki is a required governance artifact (ADR-0001). A repository with no
+#     wiki/Home.md must fail like any other missing required file.
+# ---------------------------------------------------------------------------
+repo="$test_dir/missing-wiki"
+make_compliant_repo "$repo"
+rm -rf "$repo/wiki"
+
+run_check "$repo"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(2a): expected exit 1 when wiki/Home.md is missing, got $status"; exit 1; }
+echo "$output" | grep -q "MISSING  wiki/Home.md (required)" || { echo "FAIL(2a): missing wiki/Home.md not reported"; exit 1; }
+echo "SUCCESS(2a): missing wiki/Home.md fails as a required file."
 
 # ---------------------------------------------------------------------------
 # 2c. Repositories that adopted before v1.38.0 keep HELP.md, SECURITY.md, and

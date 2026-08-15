@@ -45,7 +45,7 @@ Options:
 
 Tiers:
   Required      README.md, docs/HELP.md, CHANGELOG.md, TODO.md,
-                .github/SECURITY.md, AGENTS.md, VERSION,
+                .github/SECURITY.md, AGENTS.md, VERSION, wiki/Home.md,
                 constitution/ (submodule).
   Recommended   .github/CONTRIBUTING.md, docs/SETUP.md, docs/COMMAND_REFERENCE.md,
                 docs/TROUBLESHOOTING.md, docs/ARCHITECTURE.md, docs/adr/,
@@ -124,6 +124,7 @@ required=(
   .github/SECURITY.md
   AGENTS.md
   VERSION
+  wiki/Home.md
   constitution
 )
 
