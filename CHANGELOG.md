@@ -6,11 +6,7 @@ This project follows semantic versioning.
 
 ## Unreleased
 
-### Changed
-
-- **A wiki is now a Required governance artifact for adopters (ADR-0001 Accepted, slice 3).** `wiki/Home.md` joins the required-file set in `scripts/check_compliance.sh`, alongside README/CHANGELOG/AGENTS. `scripts/bootstrap.sh` now installs a `templates/wiki/Home.md` scaffold and the `constitution-wiki.yml` workflow, so a freshly bootstrapped repository carries a wiki (and its freshness/link/publish automation) from the start. `DOCUMENTATION.md` promotes "Wiki content" from a Strongly Encouraged bullet to a Required File, and ADR-0001 moves `Proposed → Accepted`. Tests updated: `test_check_compliance.sh` gains a missing-`wiki/Home.md` negative case, and `test_bootstrap.sh` asserts the scaffold and workflow are installed.
-  - **Adopter impact — this departs from the usual warn-first rollout.** Because `wiki/Home.md` is *required* (not merely recommended), an existing adopter that does not yet carry one will see `check_compliance.sh` — and the `constitution-compliance.yml` CI check — report a required-file gap on its next submodule bump. The fix is to add a `wiki/Home.md` (start from the installed scaffold). This is the intended effect of the maintainer's decision to make a wiki Required.
-  - **Operational follow-up:** publishing the constitution's own wiki still needs the GitHub wiki initialized once in the UI before `wiki-sync.yml` can run end to end (see the workflow's Prerequisite note).
+## 1.43.0 - 2026-08-15
 
 ### Added
 
