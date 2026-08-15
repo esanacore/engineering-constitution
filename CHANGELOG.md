@@ -6,6 +6,8 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.43.0 - 2026-08-15
+
 ### Added
 
 - **Wiki subsystem — link/orphan checker (slice 2).** `scripts/check_wiki_links.sh` verifies the internal integrity of a wiki directory: it flags **dangling** `[[WikiLinks]]` (a link whose target page does not exist) and **orphan** pages (a non-special page no other page links to). Link resolution follows GitHub's wiki (Gollum) rules — `[[Target]]` and `[[Display|Target]]`, spaces mapping to hyphens, an ignored `#anchor`, skipped external `://` targets, and case-insensitive page names — so the checker matches how the published wiki actually resolves links. It follows the warn-by-default / `--strict` rollout contract. Backed by `scripts/test_check_wiki_links.sh` (7 cases): a clean wiki passes, a dangling link and an orphan page are each caught, the resolution rules do not false-positive, special pages (`Home`, `_Sidebar`, `_Footer`, `_Header`) are never orphans, a custom `--wiki-dir` is honored, and a bad option reports a usage error. Wired into `templates/.github/workflows/constitution-wiki.yml` as a new `links` job (warn mode, so a freshly bootstrapped wiki with unwritten pages does not instantly turn CI red), and the constitution dogfoods it in `--strict` mode as a pre-publish gate in `.github/workflows/wiki-sync.yml` — a broken wiki cannot publish to the rendered GitHub wiki. The constitution's own eight-page wiki passes clean.
