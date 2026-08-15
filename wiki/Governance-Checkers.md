@@ -30,6 +30,7 @@ only its layer violations respond to `--strict`.
 | `run_declared_tests.sh` | Runs the "Full suite" command declared in `docs/TEST_PLAN.md`, so "run all automated tests" is enforced in CI. |
 | `check_doc_freshness.sh` | Flags a PR that changes source but never touches `README.md`/`CHANGELOG.md`. Blunt tripwire. |
 | `check_wiki_freshness.sh` | Flags a PR that **adds or removes** source files without touching the wiki that catalogues them — a higher bar than doc-freshness (modifications do not trip it). See [[Home]] and `docs/adr/0001-wiki-subsystem.md`. |
+| `check_wiki_links.sh` | Checks a wiki directory's internal integrity: dangling `[[WikiLinks]]` (targets with no page) and orphan pages (linked by nothing). Resolves links by GitHub wiki rules. See [[Home]]. |
 | `check_ots_inventory.sh` | Cross-checks runtime dependencies in root manifests against `docs/OTS_SOFTWARE.md`, matched by exact name, so an undocumented dependency is flagged. |
 | `check_env_vars.sh` | Cross-checks environment variables in root manifests against `docs/ENV_VARS.md`. |
 | `check_architecture.sh` | Verifies every import points inward per the Dependency Rule, using layers a project declares in `docs/ARCHITECTURE.md`; also detects cycles and unknown layer references. |

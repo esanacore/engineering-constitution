@@ -10,6 +10,11 @@ name: Constitution Wiki
 #     Runs in default (non-strict) mode, which warns instead of failing. Add
 #     --strict to the invocation below once the signal is useful for this repo.
 #
+#   links (pull_request + push) -- checks wiki/ for dangling [[WikiLinks]] and
+#     orphan pages, via constitution/scripts/check_wiki_links.sh. Also
+#     non-strict by default; add --strict once the wiki is caught up, at which
+#     point you may also gate the publish job on it with `needs: links`.
+#
 #   publish (push to the default branch) -- mirrors wiki/ to this repository's
 #     built-in GitHub wiki (<repo>.wiki.git) so the rendered wiki is never
 #     stale relative to its reviewed source.
@@ -61,6 +66,32 @@ jobs:
             --base "${{ github.event.pull_request.base.sha }}" \
             --head "${{ github.sha }}" \
             .
+
+  links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_wiki_links.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the wiki-links checker). This repository does not appear to adopt Eric's Engineering Constitution."
+            exit 1
+          fi
+
+      - name: Check wiki link integrity
+        shell: bash
+        run: |
+          # Add --strict once this repository's wiki is caught up (no dangling
+          # links or orphans) to turn findings into a failure.
+          bash constitution/scripts/check_wiki_links.sh .
 
   publish:
     if: github.event_name == 'push'
