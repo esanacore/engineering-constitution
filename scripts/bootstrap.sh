@@ -32,6 +32,7 @@ Creates or installs:
   - .github/workflows/constitution-ots.yml
   - .github/workflows/constitution-env.yml
   - .github/workflows/constitution-architecture.yml
+  - .github/workflows/constitution-wiki.yml
   - .pre-commit-config.yaml
   - .devcontainer/devcontainer.json
   - TODO.md
@@ -53,6 +54,7 @@ Creates or installs:
   - docs/SESSION_PLAN.md
   - docs/MEMORY.md
   - docs/ARCHITECTURE.md
+  - wiki/Home.md
   - .constitution-bootstrap/adoption-report.md
   - .constitution-bootstrap/templates/ for skipped existing files
 
@@ -331,6 +333,7 @@ copy_file "$template_dir/.github/workflows/constitution-secrets.yml" "$project_p
 copy_file "$template_dir/.github/workflows/constitution-ots.yml" "$project_path/.github/workflows/constitution-ots.yml"
 copy_file "$template_dir/.github/workflows/constitution-env.yml" "$project_path/.github/workflows/constitution-env.yml"
 copy_file "$template_dir/.github/workflows/constitution-architecture.yml" "$project_path/.github/workflows/constitution-architecture.yml"
+copy_file "$template_dir/.github/workflows/constitution-wiki.yml" "$project_path/.github/workflows/constitution-wiki.yml"
 copy_file "$template_dir/.pre-commit-config.yaml" "$project_path/.pre-commit-config.yaml"
 mkdir -p "$project_path/.devcontainer"
 copy_file "$template_dir/.devcontainer/devcontainer.json" "$project_path/.devcontainer/devcontainer.json"
@@ -362,6 +365,13 @@ copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"
 copy_file "$template_dir/docs/MEMORY.md" "$project_path/docs/MEMORY.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
+
+# A wiki is a required governance artifact (constitution DOCUMENTATION.md
+# "Required Files", ADR-0001). Install the Home page scaffold; the adopter
+# fills it in and adds further pages under wiki/, which the constitution-wiki
+# workflow publishes to the built-in GitHub wiki on merge.
+mkdir -p "$project_path/wiki"
+copy_file "$template_dir/wiki/Home.md" "$project_path/wiki/Home.md"
 
 if [ ! -e "$project_path/README.md" ]; then
   copy_file "$template_dir/README.md" "$project_path/README.md"

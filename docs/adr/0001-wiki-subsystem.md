@@ -1,8 +1,8 @@
 # ADR-0001: A Wiki Subsystem That Stays Current
 
-Status: Proposed
+Status: Accepted
 
-Date: 2026-07-21
+Date: 2026-07-21 (proposed); 2026-08-15 (accepted)
 
 ## Relationships
 
@@ -10,21 +10,31 @@ Date: 2026-07-21
 - Supersedes: none
 - Related: `DOCUMENTATION.md` ("Wiki"), `CONSTITUTION.md` Principle 1
 
-## Promotion Criteria
+## Promotion Criteria (met at acceptance)
 
-This ADR moves to **Accepted** when, gated by the framework maintainer (Eric):
+Accepted by the framework maintainer (Eric) on 2026-08-15. The decision it
+gated: **a wiki is Required for adopters** — `wiki/Home.md` is a required
+governance file in `check_compliance.sh`, and `bootstrap.sh` installs the
+`templates/wiki/Home.md` scaffold and `constitution-wiki.yml` so a freshly
+bootstrapped repository carries one from the start.
 
-- The first slice (checker + tests + workflow template + the constitution's own
-  finished wiki) has shipped and the checker's tests pass in the declared suite.
-- The publish-on-merge sync has run successfully at least once against the
-  constitution's own `.wiki.git`, confirming the mechanism end to end.
-- A decision is taken on whether a wiki is **Recommended** or **Required** for
-  adopters, which gates wiring `check_wiki_freshness.sh` into
-  `check_compliance.sh` and installing `constitution-wiki.yml` from
-  `bootstrap.sh`.
+Status of the criteria stated while Proposed:
 
-Until then, the tooling ships and the constitution dogfoods it, but a wiki is
-not yet a binding obligation on adopting repositories.
+- ✅ The first slice shipped (`check_wiki_freshness.sh` + tests + workflow
+  template + the constitution's own finished wiki) and its tests pass. The
+  link/orphan checker (`check_wiki_links.sh`) shipped alongside acceptance.
+- ✅ The Recommended-vs-Required decision was taken: **Required**.
+- ◻ *Operational follow-up, not a design blocker:* the publish-on-merge sync
+  still needs the constitution's own GitHub wiki initialized once in the UI
+  before it can run end to end (see "Prerequisite" in
+  `.github/workflows/wiki-sync.yml`). Acceptance does not wait on this one-time
+  manual step; it is tracked as an operational task.
+
+Because a wiki is now Required, existing adopters that do not yet carry
+`wiki/Home.md` will see `check_compliance.sh` (and `constitution-compliance.yml`)
+report a required-file gap on their next submodule bump. This is the intended
+effect of the Required decision; it departs from the usual warn-first rollout,
+so the change is called out prominently in `CHANGELOG.md`.
 
 ## Context
 
@@ -88,10 +98,14 @@ existing `.github/agents/` mechanism (Solon) to open a reconciliation PR on a
 cadence — the genuinely "self-updating" layer, kept out of slice 1 because it is
 higher-risk and depends on this foundation.
 
-**Staging.** Because this ADR is Proposed, slice 1 ships the tooling and
-dogfoods it on the constitution's own wiki, but does not make a wiki binding for
-adopters. Compliance/bootstrap wiring waits for Acceptance (see Promotion
-Criteria).
+**Staging.** The subsystem shipped in slices. Slice 1 shipped the tooling
+(`check_wiki_freshness.sh`, the workflow template) and dogfooded it on the
+constitution's own wiki without binding adopters. Slice 2 added the link/orphan
+checker (`check_wiki_links.sh`). On acceptance (slice 3), the wiki became a
+Required governance artifact: `wiki/Home.md` is required by `check_compliance.sh`,
+and `bootstrap.sh` installs the `templates/wiki/Home.md` scaffold and
+`constitution-wiki.yml`. The two further layers below (generated pages,
+scheduled regeneration) remain follow-up work.
 
 ## Consequences
 

@@ -25,6 +25,7 @@ Every repository should include:
 - TODO.md
 - .github/SECURITY.md
 - AGENTS.md
+- wiki/Home.md
 
 ### Keeping the Repository Root Readable
 
@@ -138,11 +139,13 @@ expects one to be built and kept current. The decision behind it is recorded in
 - **No placeholders.** As with every other document here, a wiki page copied from
   a template is not finished documentation until it describes the real project.
 
-The rollout of the wiki requirement is staged (see `docs/adr/0001-wiki-subsystem.md`):
-the tooling and the constitution's own dogfooded wiki ship first; making a wiki a
-binding obligation on adopting repositories — wiring the checker into
-`check_compliance.sh` and installing the workflow from `bootstrap.sh` — is gated
-on that ADR moving to Accepted.
+A wiki is a **required** governance artifact (ADR-0001 is Accepted): every
+adopting repository carries `wiki/Home.md`, `scripts/check_compliance.sh` treats
+it as a required file, and `scripts/bootstrap.sh` installs the
+`templates/wiki/Home.md` scaffold and the `constitution-wiki.yml` workflow so a
+freshly bootstrapped repository has one from the start. An existing adopter that
+predates this requirement will see a required-file gap from `check_compliance.sh`
+until it adds a `wiki/Home.md`; the scaffold is the intended starting point.
 
 ## Binary Assets and Images
 

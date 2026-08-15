@@ -61,6 +61,8 @@ test_new_project() {
   [ -f ".github/workflows/constitution-ots.yml" ] || { echo "FAIL: constitution-ots.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-env.yml" ] || { echo "FAIL: constitution-env.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-architecture.yml" ] || { echo "FAIL: constitution-architecture.yml workflow missing"; exit 1; }
+  [ -f ".github/workflows/constitution-wiki.yml" ] || { echo "FAIL: constitution-wiki.yml workflow missing"; exit 1; }
+  [ -f "wiki/Home.md" ] || { echo "FAIL: wiki/Home.md missing"; exit 1; }
   [ -f "TODO.md" ] || { echo "FAIL: TODO.md missing"; exit 1; }
   [ -f "CHANGELOG.md" ] || { echo "FAIL: CHANGELOG.md missing"; exit 1; }
   [ -f "VERSION" ] || { echo "FAIL: VERSION missing"; exit 1; }
