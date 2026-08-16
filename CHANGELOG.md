@@ -6,9 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.44.0 - 2026-08-15
+
 ### Changed
 
 - **A wiki is now a required governance artifact for adopters — ADR-0001 accepted (wiki subsystem slice 3).** This shipped in PR #48 without a changelog entry and is recorded here retroactively; it landed after the 1.43.0 release commit, so it is *not* part of the `v1.43.0` tag despite sharing its `VERSION`. ADR-0001 moves **Proposed → Accepted**, ending the staged rollout that 1.43.0's scope boundary described: `wiki/Home.md` joins `DOCUMENTATION.md`'s "Required Files" and `check_compliance.sh`'s required tier, and `bootstrap.sh` now installs a `templates/wiki/Home.md` scaffold plus the `constitution-wiki.yml` workflow (freshness tripwire, link/orphan check, publish-on-merge) into every adopting repository, so a freshly bootstrapped repo carries a wiki from the start. Covered by new `test_bootstrap.sh` and `test_check_compliance.sh` cases. **Migration:** an existing adopter will see a new required-file failure from `check_compliance.sh` (and the constitution-compliance CI gate) until it adds a `wiki/Home.md` — copy `constitution/templates/wiki/Home.md` as the starting point and fill it in; per `DOCUMENTATION.md`, a scaffold left as a placeholder is not finished documentation.
+
+### Fixed
+
+- **`test_check_compliance_placeholders.sh` broke silently when `wiki/Home.md` became required.** Slice 3 updated `test_check_compliance.sh` for the new required file but missed this suite: its fixture builder creates every required file *except* `wiki/Home.md`, so the first unguarded `$(check_compliance.sh ...)` capture exits 1 under `set -euo pipefail` and the test dies with no output at all — exit 1, nothing on stderr, indistinguishable from a crash. Fixed by adding `wiki/Home.md` to the fixture. Found by the pre-release full-suite run, which is the release gate working as intended; the silent-death failure mode is the same one the governance-tooling testing standard exists to catch.
 
 ## 1.43.0 - 2026-08-15
 
