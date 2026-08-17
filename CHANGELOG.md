@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- **`constitution-wiki.yml`'s publish job now skips gracefully when the repository's GitHub wiki has never been enabled/initialized, instead of failing the run.** The original template failed loudly on the uninitialized-wiki case, which meant every push to the default branch of a freshly migrated adopter went red until a human clicked through Settings → Features → Wikis — a repository setting, not a defect in the change under test. The publish job now captures the wiki clone's output and distinguishes the two cases: "wiki not found / not initialized" emits a warning annotation and exits 0 (the reviewed source under `wiki/` remains the source of truth, and content correctness is still enforced by the links/freshness jobs on pull requests), while any other clone failure (auth, network) still fails so genuine problems are never masked. First proven in the field on an adopting repository (AI-Process-Engineer PR #52) and upstreamed verbatim; rolled out to the existing adopter fleet in the same change.
+
 ## 1.44.0 - 2026-08-15
 
 ### Changed

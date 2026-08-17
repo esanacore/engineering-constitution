@@ -21,9 +21,14 @@ name: Constitution Wiki
 #
 # PREREQUISITE for the publish job: the GitHub wiki must be enabled and
 # initialized once by hand (Settings -> Features -> Wikis, then create the Home
-# page in the UI). Until a wiki repo exists, <repo>.wiki.git cannot be cloned
-# or pushed. The job below tolerates the not-yet-initialized case by failing
-# loudly with a clear message rather than silently.
+# page in the UI). Until a wiki repo exists, <repo>.wiki.git cannot be cloned.
+# The publish job treats that specific case as a graceful **skip** (a warning
+# annotation, exit 0) rather than a failure — it is a repository setting, not a
+# defect in the change under test, and the reviewed source in wiki/ is the
+# source of truth regardless of whether the mirror has been set up. Content
+# correctness is still enforced by the links/freshness jobs on pull requests.
+# A clone failure for ANY OTHER reason (auth, network) still fails the job, so
+# genuine problems are never masked as "wiki not enabled".
 #
 # Authored wiki pages live under wiki/ in this repository. Use GitHub-wiki
 # conventions: Home.md as the landing page, _Sidebar.md for navigation, and
@@ -114,8 +119,22 @@ jobs:
 
           wiki_remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
 
-          if ! git clone --depth 1 "$wiki_remote" wiki-publish 2>/dev/null; then
-            echo "::error::Could not clone ${GITHUB_REPOSITORY}.wiki.git. Enable the wiki (Settings -> Features -> Wikis) and create the Home page once in the UI to initialize it, then re-run."
+          # Capture the clone's output so we can distinguish "wiki not yet
+          # enabled/initialized" (a repo setting -> skip gracefully) from a
+          # genuine failure like auth or network (-> still fail). set +e around
+          # the clone so pipefail doesn't abort on the expected not-found case.
+          set +e
+          clone_out=$(git clone --depth 1 "$wiki_remote" wiki-publish 2>&1)
+          clone_rc=$?
+          set -e
+
+          if [ "$clone_rc" -ne 0 ]; then
+            if printf '%s' "$clone_out" | grep -qiE 'not found|does not exist|could not read'; then
+              echo "::warning::GitHub wiki for ${GITHUB_REPOSITORY} is not enabled/initialized, so wiki/ was not mirrored. This is a one-time repo setting, not a defect: enable it (Settings -> Features -> Wikis) and create the Home page once to turn publishing on. wiki/ content is still validated by the links/freshness jobs on pull requests."
+              exit 0
+            fi
+            echo "::error::Failed to clone ${GITHUB_REPOSITORY}.wiki.git for a reason other than an uninitialized wiki:"
+            printf '%s\n' "$clone_out"
             exit 1
           fi
 
