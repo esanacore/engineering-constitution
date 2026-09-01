@@ -88,6 +88,29 @@ Agents must verify:
 - Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
 - Git environment is clean: branches and worktrees created for this task are removed after merging (or after the agent confirms they are no longer needed); branches or worktrees the agent did not create are left alone unless a human confirms they are safe to remove, since they may belong to another in-progress session or automation; no untracked files (e.g. `node_modules`) are accidentally staged.
 
+## Model Selection (Advisory)
+
+The constitution is model-agnostic: every requirement above applies whatever
+model runs the session. When you can choose models, though, capability and cost
+tier well along the workflow's own seams
+(see `sources/summaries/articles/the-harness-is-the-thing.md`):
+
+- **Reach for the most capable model you have** for the judgment-heavy phases:
+  understanding the task and planning (steps 10–12), the isolated critique pass
+  (step 16), and user-facing communication (changelog wording, release notes,
+  summaries).
+- **Well-patterned execution can run on a cheaper model.** Once a plan is
+  explicit and the pattern is set — often by letting the stronger model plan
+  and implement the first task, then handing off — routine implementation,
+  test scaffolding, and mechanical documentation updates rarely need frontier
+  capability.
+- **Never trade away workflow steps for model cost.** A cheaper model runs the
+  same Required Workflow; the checkers and CI gates hold regardless. If a model cannot
+  follow the workflow reliably, it is the wrong model for that phase, not a
+  reason to shorten the workflow.
+
+This is advisory: single-model sessions are fully compliant.
+
 ## Summary Expectations
 
 Final summaries should include:
