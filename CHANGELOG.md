@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **Source summary: "The Harness Is the Thing" (Scott Fryxell, 2026-08-25)** at `sources/summaries/articles/the-harness-is-the-thing.md`, recorded in `sources/manifest.tsv` per the `KNOWLEDGE_SOURCES.md` workflow. The article independently converges on this framework's thesis (the organizing system around AI agents outlasts any model) and contributes three promotion leads now tracked in `TODO.md` — an isolated critique pass (strengthening the existing Self-Critique pre-flight item), advisory cost-tiered model routing, and a parent-directory `AGENTS.md` auto-load pattern for multi-repo workspaces — plus one recorded tension: instruction weight has a per-session cost this framework does not yet measure. No constitution document changed; promotion is deliberate and separate.
+
 ## 1.44.1 - 2026-08-18
 
 ### Changed

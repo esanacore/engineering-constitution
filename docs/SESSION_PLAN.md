@@ -7,6 +7,8 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Wiki subsystem, slice 1 — ADR-0001 (Proposed) + index, `check_wiki_freshness.sh`
-and its tests, `constitution-wiki.yml`, the constitution's own finished wiki, and
-`wiki-sync.yml`. Recorded in `CHANGELOG.md` (`Unreleased`) and `TODO.md`.
+Knowledge-source intake of "The Harness Is the Thing" (Scott Fryxell) —
+summary at `sources/summaries/articles/the-harness-is-the-thing.md`, manifest
+row recorded, promotion leads tracked in `TODO.md`, changelog entry in
+`Unreleased`. Promotion into constitution documents deliberately deferred per
+`KNOWLEDGE_SOURCES.md`.
