@@ -7,6 +7,15 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Wiki subsystem, slice 1 — ADR-0001 (Proposed) + index, `check_wiki_freshness.sh`
-and its tests, `constitution-wiki.yml`, the constitution's own finished wiki, and
-`wiki-sync.yml`. Recorded in `CHANGELOG.md` (`Unreleased`) and `TODO.md`.
+Knowledge-source intake of "The Harness Is the Thing" (Scott Fryxell) —
+summary at `sources/summaries/articles/the-harness-is-the-thing.md`, manifest
+row recorded, promotion leads tracked in `TODO.md`, changelog entry in
+`Unreleased`. All three promotion leads shipped on user request (PR #57):
+isolated critique pass as `AI_WORKFLOW.md` step 16 (+ checklist bullet + wiki
+section, duplicate numbering fixed), "Model Selection (Advisory)" in
+`AI_WORKFLOW.md`, and "Terminal Sessions Across Many Repositories" in
+`INTEGRATION.md`. Only the instruction-weight audit remains open in
+`TODO.md`. Released as 1.45.0 (version bump folded into PR #57; all 19 test
+suites green). Follow-up: fleet-wide `constitution/` submodule bump —
+adopters with a required version-gate (gentle-table, patients-served) block
+until it lands.

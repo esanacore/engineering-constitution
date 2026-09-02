@@ -129,6 +129,50 @@ see the files.
 Project-specific rules always win over constitution defaults — see the next
 section for where to put them per IDE.
 
+## Terminal Sessions Across Many Repositories (Optional)
+
+Everything above is per-repository: each adopting repo commits its own
+`AGENTS.md`, and any agent opened at the repo root reads it automatically. If
+you keep several adopting repositories under one workspace root and work from a
+terminal, you can additionally layer a **workspace-level** `AGENTS.md` above
+them — personal, cross-repo instructions (preferred shells and tools, where
+scratch output goes, which model tier to reach for) that no single repository
+should have to carry.
+
+Most terminal agents only read instruction files at or below the current
+directory, so the workspace file needs a small shell wrapper that walks parent
+directories and appends the nearest `AGENTS.md` it finds
+(pattern via `sources/summaries/articles/the-harness-is-the-thing.md`):
+
+```bash
+# Auto-load the nearest ancestor AGENTS.md into Claude Code.
+# Launched at a repo root, the repo's own committed AGENTS.md is found first,
+# which the tool already reads natively — the wrapper only changes behavior
+# when you launch from a subdirectory or from the workspace root itself.
+claude() {
+  local dir="$PWD"
+  while [ "$dir" != "/" ]; do
+    if [ -f "$dir/AGENTS.md" ]; then
+      command claude --append-system-prompt "$(cat "$dir/AGENTS.md")" "$@"
+      return
+    fi
+    dir=$(dirname "$dir")
+  done
+  command claude "$@"
+}
+```
+
+Two boundaries keep this composable with, rather than competing with, the
+per-repo model:
+
+- **The workspace file is personal, not governance.** It is never committed to
+  an adopting repository and must not contradict the constitution or a
+  repository's own `AGENTS.md` — project-specific rules and the constitution's
+  reading order still win, exactly as in the override rules below.
+- **The repository stays self-sufficient.** Teammates and CI see only the
+  committed instruction files; a repo must behave correctly for an agent that
+  never saw your workspace file.
+
 ## Project-Specific Rules and Overrides
 
 The constitution provides universal defaults. Each project can override or extend them in its local files.

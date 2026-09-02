@@ -26,7 +26,13 @@ Behavioral changes require appropriate automated tests. The goal is not simply t
 
 Bug fixes should include regression coverage. Coverage gaps are evaluated rather than hidden.
 
-## 5. Keep engineering artifacts synchronized
+## 5. Critique from a fresh context
+
+Before documentation begins, the finished diff gets an isolated critique pass: a fresh context — a sub-agent, a second session, or at minimum a distinct pass that re-reads only the final diff rather than the conversation that produced it — questions whether the change is correct, minimal, and as simple as it could be.
+
+The same context that planned and implemented a change is a poor judge of it; isolating the critique restores the distance that makes human code review work.
+
+## 6. Keep engineering artifacts synchronized
 
 Implementation is only part of the change. Depending on impact, the same work may also update:
 
@@ -41,17 +47,17 @@ Implementation is only part of the change. Depending on impact, the same work ma
 
 The principle is simple: documentation debt should not be deliberately created as a side effect of moving faster.
 
-## 6. Review security and release impact
+## 7. Review security and release impact
 
 Before completion, the agent evaluates security impact and performs the repository's secret sweep. It also asks whether accumulated user-facing work should trigger a release rather than allowing changes to remain indefinitely under `Unreleased`.
 
-## 7. Preserve useful learning
+## 8. Preserve useful learning
 
 During work, an agent may discover a repository-specific convention, user preference, or important decision. The Constitution tells the agent to propose durable learnings to the user and, after approval, record them in project memory.
 
 This allows useful context to accumulate intentionally without treating every chat statement as permanent policy.
 
-## 8. Finish cleanly
+## 9. Finish cleanly
 
 Before declaring the task complete, the agent verifies tests and documentation, clears or archives the session plan, summarizes the work, merges or opens a pull request, and cleans up only the Git state it owns.
 
@@ -64,6 +70,7 @@ The workflow specifically guards against common failure modes of high-speed AI d
 - coding before understanding the project;
 - duplicate or conflicting parallel work;
 - untested generated behavior;
+- unexamined self-review, where the context that wrote a change is the only one that ever questioned it;
 - stale README and requirements documentation;
 - undocumented dependencies and configuration;
 - architecture drift;

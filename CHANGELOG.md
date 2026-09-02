@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.45.0 - 2026-09-02
+
+### Added
+
+- **An isolated critique pass is now a required workflow step.** `AI_WORKFLOW.md`'s Required Workflow gains step 16: after tests and coverage, and before any documentation work, the finished diff is critiqued from a fresh context — a sub-agent, a second session, or at minimum a distinct pass that re-reads only the final diff rather than the conversation that produced it — asking whether the change is correct, minimal, and as simple as it could be, with findings folded back into implementation before proceeding. Rationale: a single context that plans, implements, and critiques its own work blurs the critic's objectivity (promoted from `sources/summaries/articles/the-harness-is-the-thing.md`; first lead of that intake). A matching verification bullet joins Before Completing Work, and the wiki's `AI-Development-Workflow` page gains a "Critique from a fresh context" section. Renumbering later steps also fixed a pre-existing duplicate "21." in the list (the workflow now counts 30 steps, previously mis-numbered to 28). The automated form of this check (`scripts/ai_preflight.sh`) remains tracked in `TODO.md`.
+
+- **Advisory model-selection guidance in `AI_WORKFLOW.md`** (second lead promoted from the same intake). A new "Model Selection (Advisory)" section maps capability tiers onto the workflow's own seams: the most capable available model for judgment-heavy phases (understanding/planning steps 10–12, the step-16 critique pass, user-facing communication), cheaper models for well-patterned execution once a plan is explicit — often by letting the stronger model plan and implement the first task before handing off. Explicitly bounded: model-agnostic, advisory only, and never a reason to shorten the workflow — a model that cannot follow it is the wrong model for that phase.
+
+- **Workspace-level `AGENTS.md` pattern in `INTEGRATION.md`** (third lead promoted from the same intake). A new "Terminal Sessions Across Many Repositories (Optional)" section documents layering a personal, cross-repo `AGENTS.md` above a workspace of adopting repositories, loaded via a portable parent-directory-walking shell wrapper. Two boundaries keep it composable with the per-repo submodule model rather than competing with it: the workspace file is personal configuration, never committed governance, and never overrides a repository's own rules or the constitution's reading order; and every repository must remain self-sufficient for teammates, CI, and agents that never saw the workspace file.
+
+- **Source summary: "The Harness Is the Thing" (Scott Fryxell, 2026-08-25)** at `sources/summaries/articles/the-harness-is-the-thing.md`, recorded in `sources/manifest.tsv` per the `KNOWLEDGE_SOURCES.md` workflow. The article independently converges on this framework's thesis (the organizing system around AI agents outlasts any model) and contributes three promotion leads now tracked in `TODO.md` — an isolated critique pass (strengthening the existing Self-Critique pre-flight item), advisory cost-tiered model routing, and a parent-directory `AGENTS.md` auto-load pattern for multi-repo workspaces — plus one recorded tension: instruction weight has a per-session cost this framework does not yet measure. No constitution document changed; promotion is deliberate and separate.
+
 ## 1.44.1 - 2026-08-18
 
 ### Changed
