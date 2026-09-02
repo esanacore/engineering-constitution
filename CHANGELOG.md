@@ -6,6 +6,8 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.45.0 - 2026-09-02
+
 ### Added
 
 - **An isolated critique pass is now a required workflow step.** `AI_WORKFLOW.md`'s Required Workflow gains step 16: after tests and coverage, and before any documentation work, the finished diff is critiqued from a fresh context — a sub-agent, a second session, or at minimum a distinct pass that re-reads only the final diff rather than the conversation that produced it — asking whether the change is correct, minimal, and as simple as it could be, with findings folded back into implementation before proceeding. Rationale: a single context that plans, implements, and critiques its own work blurs the critic's objectivity (promoted from `sources/summaries/articles/the-harness-is-the-thing.md`; first lead of that intake). A matching verification bullet joins Before Completing Work, and the wiki's `AI-Development-Workflow` page gains a "Critique from a fresh context" section. Renumbering later steps also fixed a pre-existing duplicate "21." in the list (the workflow now counts 30 steps, previously mis-numbered to 28). The automated form of this check (`scripts/ai_preflight.sh`) remains tracked in `TODO.md`.
