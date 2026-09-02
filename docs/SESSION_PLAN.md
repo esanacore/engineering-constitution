@@ -16,6 +16,7 @@ section, duplicate numbering fixed), "Model Selection (Advisory)" in
 `AI_WORKFLOW.md`, and "Terminal Sessions Across Many Repositories" in
 `INTEGRATION.md`. Only the instruction-weight audit remains open in
 `TODO.md`. Released as 1.45.0 (version bump folded into PR #57; all 19 test
-suites green). Follow-up: fleet-wide `constitution/` submodule bump —
-adopters with a required version-gate (gentle-table, patients-served) block
-until it lands.
+suites green; tag v1.45.0 on merge commit 7dfc546e, alignment verified,
+GitHub Release published by Eric). Fleet bump complete: 16 PRs opened via
+locally-run script (patients-served and PicklesToys already current;
+18 adopters total, 0 failures); gentle-table #17 merges first, squash.
