@@ -38,6 +38,7 @@ only its layer violations respond to `--strict`.
 | `check_version_alignment.sh` | Catches adopter-facing version references that drifted from the pinned `constitution/VERSION`. |
 | `check_constitution_freshness.sh` | Warns at session start when the pinned `constitution/` submodule is behind the latest release. |
 | `check_source_summaries.sh` | Detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries. |
+| `measure_instruction_weight.sh` | Reports the token weight of the agent required-reading order — bytes, words, and estimated tokens per document and in total, with an advisory `HEAVY` flag. A meter, not a gate: it fails only when the reading list names a file that does not exist. |
 
 ## Shared libraries (`scripts/lib/`)
 
