@@ -6,6 +6,8 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.46.0 - 2026-09-10
+
 ### Changed
 
 - **The required reading order now scopes unbounded files** (the change the instruction-weight measurement justified): at session start, agents read `TODO.md`'s open (`[ ]`/`[~]`) items only and `CHANGELOG.md`'s `Unreleased` section plus the most recent release — completed items and older releases are history, consulted on demand — and this repository's `INTEGRATION.md` moves to consult-on-demand in `AGENTS.md`. Applied as one uniform, grep-driven sweep: `AI_WORKFLOW.md` steps 4–5 (with a measured-rationale note after the step list), root `CLAUDE.md`/`AGENTS.md`/`COPILOT_INSTRUCTIONS.md`/Solon, eight template instruction files (`.aider.conf.yml`, which loads files whole, instead gains a comment documenting the rising cost), and all four sample-project instruction files. On the source repo this trims the `AGENTS.md` reading order from ~65k to roughly ~35k estimated session-start tokens with no information loss for a fresh task. Write-guidance mentions of TODO/CHANGELOG (update rules, freshness tripwires) are deliberately unchanged.
