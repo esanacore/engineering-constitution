@@ -19,4 +19,7 @@ section, duplicate numbering fixed), "Model Selection (Advisory)" in
 suites green; tag v1.45.0 on merge commit 7dfc546e, alignment verified,
 GitHub Release published by Eric). Fleet bump complete: 16 PRs opened via
 locally-run script (patients-served and PicklesToys already current;
-18 adopters total, 0 failures); gentle-table #17 merges first, squash.
+18 adopters total, 0 failures). Rollout closed 2026-09-10: 15 PRs merged
+via local gh batch (gentle-table squashed first), smart-teleprompter
+pre-merged, 702_with_the_view already pinned ahead of the tag (stale PR
+closed). All 18 adopters carry v1.45.0.
