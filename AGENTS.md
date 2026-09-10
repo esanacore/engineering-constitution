@@ -8,7 +8,7 @@ Read:
 
 - `CONSTITUTION.md`
 - `AI_WORKFLOW.md`
-- `INTEGRATION.md`
+- `INTEGRATION.md` when the task touches adopter integration, bootstrap, or IDE/multi-tool setup — a reference, not session-start reading
 - `TESTING.md`
 - `DOCUMENTATION.md`
 - `SECURITY.md`
@@ -17,8 +17,8 @@ Read:
 - `RELEASES.md`
 - `TODO_GUIDELINES.md`
 - `README.md`
-- `TODO.md`
-- `CHANGELOG.md`
+- `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history, read on demand
+- `CHANGELOG.md` — the `Unreleased` section and the most recent release; older sections are history, read on demand
 
 ## Work Standards
 

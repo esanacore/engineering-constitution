@@ -7,9 +7,11 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Instruction-weight audit — the final "Harness Is the Thing" promotion lead.
-Shipped `scripts/measure_instruction_weight.sh` (+9-case test suite, README
-and wiki catalogue entries). Findings recorded in `TODO.md`: rule docs are
-lean (~16.5k est. tokens); the weight is in unbounded CHANGELOG (~20.5k) and
-TODO (~8k). Digest rejected on the data; a reading-order scoping proposal is
-queued in `TODO.md` awaiting Eric's decision. All 20 test suites green.
+Reading-order scoping (approved by Eric, justified by the instruction-weight
+measurement): TODO → open items, CHANGELOG → `Unreleased` + latest release,
+this repo's INTEGRATION → consult-on-demand. Applied as one grep-driven
+sweep across `AI_WORKFLOW.md` steps 4–5 (+ rationale note), root
+instruction files, 8 templates (`.aider.conf.yml` gains a whole-file-cost
+comment), and 4 sample-project files; final re-grep found no stragglers.
+All 20 suites green. Two entries now in `Unreleased` — 1.46.0 ready to cut
+on Eric's word.

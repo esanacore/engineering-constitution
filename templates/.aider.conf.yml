@@ -15,6 +15,9 @@ read:
   - constitution/CONSTITUTION.md
   - constitution/AI_WORKFLOW.md
   - README.md
+  # aider loads read files whole; TODO.md and CHANGELOG.md grow without bound,
+  # so their context cost rises over time. Measure with
+  # constitution/scripts/measure_instruction_weight.sh and prune here if needed.
   - TODO.md
   - CHANGELOG.md
   - docs/SESSION_PLAN.md

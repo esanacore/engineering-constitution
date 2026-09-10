@@ -36,7 +36,7 @@ Before making changes, read:
 1. `constitution/CONSTITUTION.md` — Universal Principles.
 2. `constitution/AI_WORKFLOW.md` — Required step-by-step workflow.
 3. `AGENTS.md` — Project-specific rules and overrides.
-4. `README.md`, `TODO.md`, `CHANGELOG.md` — Project context.
+4. `README.md`, `TODO.md`, `CHANGELOG.md` — Project context (TODO: open items only; CHANGELOG: `Unreleased` + latest release).
 5. `docs/MEMORY.md` — Project memory (learnings, preferences, decisions).
 
 ## Standards
