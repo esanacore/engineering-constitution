@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **`scripts/measure_instruction_weight.sh` — the instruction-weight meter** (final lead from the "The Harness Is the Thing" intake, closing that source's promotion list). Reports bytes, words, and estimated tokens (bytes/4) for every document in the agent required-reading order — parsed from `CLAUDE.md`/`AGENTS.md` reading sections in both the heading and prose shapes the framework's files actually use — per document and in total, with an advisory `HEAVY` flag above ~8,000 estimated tokens and an explicit-`--files` mode. Deliberately a meter, not a gate: heavy documents never fail the run; the one hard failure is a reading list naming a file that does not exist (a broken reading order, including an uninitialized `constitution/` submodule). Backed by `scripts/test_measure_instruction_weight.sh` (9 cases: section parsing in both shapes, checklist bullets excluded, missing-file failure, HEAVY advisory non-failure, dedupe, `--files`, usage errors, empty repo). First measurements recorded in `TODO.md`: the rule documents are lean (~16.5k estimated tokens); the session-start weight lives in unbounded history files (`CHANGELOG.md` ~20.5k, `TODO.md` ~8k) — so the follow-up on the table is scoping the reading order, not a condensed digest.
+
 ## 1.45.0 - 2026-09-02
 
 ### Added
