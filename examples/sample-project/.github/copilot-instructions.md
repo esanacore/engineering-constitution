@@ -11,8 +11,8 @@ Read:
 - `constitution/CONSTITUTION.md` — universal engineering principles
 - `constitution/AI_WORKFLOW.md` — required workflow steps
 - `README.md` — project purpose and setup
-- `TODO.md` — current roadmap and known issues
-- `CHANGELOG.md` — recent changes
+- `TODO.md` — current roadmap and known issues (open items only; completed entries are history)
+- `CHANGELOG.md` — recent changes (`Unreleased` + the most recent release only)
 
 ## Development Standards
 

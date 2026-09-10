@@ -7,8 +7,8 @@ This document defines the required workflow for AI-assisted software development
 1. Read AGENTS.md.
 2. Read constitution documents.
 3. Read README.md.
-4. Read TODO.md.
-5. Read CHANGELOG.md.
+4. Read TODO.md — the open (`[ ]`/`[~]`) items. Completed entries are history; consult them on demand, not at session start.
+5. Read CHANGELOG.md — the `Unreleased` section and the most recent release. Older sections are history, consulted on demand.
 6. Read OPERATIONS.md when the task affects infrastructure, CI/CD, deployment, or runbooks.
 7. Review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work.
 8. Check `docs/SESSION_PLAN.md` for an existing plan from a previous interrupted session. If one exists, review it for resumption context.
@@ -34,6 +34,8 @@ This document defines the required workflow for AI-assisted software development
 28. Summarize work.
 29. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
 30. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
+
+The scoped reads in steps 4–5 are deliberate: unbounded history files dominate session-start cost, while the rule documents themselves are comparatively lean — measured, not assumed (run `bash constitution/scripts/measure_instruction_weight.sh .` to see any repository's numbers). Scoping trims roughly half of a mature repository's reading-order cost with no information loss for a fresh task.
 
 ## Before Beginning Work
 

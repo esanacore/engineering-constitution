@@ -21,7 +21,7 @@ advising, and cite them when you flag an issue:
 - `ARCHITECTURE.md` — SOLID, the Dependency Rule, design-pattern guidance
 - `OPERATIONS.md` — infrastructure, CI/CD, runbooks
 - `RELEASES.md` — release and changelog discipline
-- `README.md`, `TODO.md`, `CHANGELOG.md` — current state of the project
+- `README.md`, `TODO.md`, `CHANGELOG.md` — current state of the project (TODO: open items only; CHANGELOG: `Unreleased` + latest release)
 
 When a file is missing or its guidance conflicts with a request, say so plainly
 rather than guessing.

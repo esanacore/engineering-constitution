@@ -15,8 +15,8 @@ Read:
 
 - `constitution/CONSTITUTION.md` — universal engineering principles
 - `README.md` — project purpose and setup
-- `TODO.md` — roadmap and known issues
-- `CHANGELOG.md` — recent changes
+- `TODO.md` — roadmap and known issues (open items only; completed entries are history)
+- `CHANGELOG.md` — recent changes (`Unreleased` + the most recent release only)
 
 ## Standards
 

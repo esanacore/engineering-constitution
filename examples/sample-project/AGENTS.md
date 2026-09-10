@@ -11,8 +11,8 @@ Before beginning work, read:
 - `constitution/SECURITY.md`
 - `constitution/OPERATIONS.md` when the task affects deployment, CI/CD, infrastructure, or runbooks
 - `README.md`
-- `TODO.md`
-- `CHANGELOG.md`
+- `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history, read on demand
+- `CHANGELOG.md` — the `Unreleased` section and the most recent release; older sections are history, read on demand
 
 Before completing work:
 

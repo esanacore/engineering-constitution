@@ -22,7 +22,7 @@ advising, and cite them when you flag an issue:
 - `constitution/ARCHITECTURE.md` — SOLID, the Dependency Rule, design patterns
 - `constitution/OPERATIONS.md` — infrastructure, CI/CD, runbooks
 - `constitution/RELEASES.md` — release and changelog discipline
-- `README.md`, `TODO.md`, `CHANGELOG.md` — current state of this project
+- `README.md`, `TODO.md`, `CHANGELOG.md` — current state of this project (TODO: open items only; CHANGELOG: `Unreleased` + latest release)
 
 Project-specific rules in `AGENTS.md` and `.github/copilot-instructions.md` take
 precedence over the constitution defaults. When guidance conflicts or a file is
