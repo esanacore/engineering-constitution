@@ -268,8 +268,14 @@ Skills are loaded by the tool, not by the constitution, so wiring is per tool:
 
   ```bash
   mkdir -p .claude/skills
-  ln -s ../../constitution/skills .claude/skills/constitution   # macOS/Linux
+  for d in constitution/skills/*/; do                        # macOS/Linux
+    ln -s "../../$d" ".claude/skills/$(basename "$d")"
+  done
   ```
+
+  (One symlink per skill, so each lands at `.claude/skills/<name>/SKILL.md`
+  exactly where the tool looks; a single link to the whole directory would
+  nest them one level too deep.)
 
   On Windows (or wherever symlinks are unavailable), copy instead and re-copy
   after each submodule bump:

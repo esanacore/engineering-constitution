@@ -18,5 +18,6 @@ check_contains_version() {
 check_contains_version "$repo_root/README.md"
 check_contains_version "$repo_root/CONSTITUTION.md"
 check_contains_version "$repo_root/wiki/Home.md"
+check_contains_version "$repo_root/demo.html"
 
 echo "ALL TESTS PASSED"

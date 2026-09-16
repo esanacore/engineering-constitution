@@ -26,9 +26,10 @@ repository. Notable groups:
   pinned by full commit SHA (`SECURITY.md`, "CI/CD Supply Chain").
 - **Agent runtime guardrails** — `templates/.claude/settings.json` (installed
   with `--agents=claude`) carries a `permissions.deny` list that refuses
-  `sudo`, recursive deletes from `/` or `~`, force pushes, hard resets, and
-  branch or tag deletion, and refuses to read credential-shaped files; see
-  `SECURITY.md`, "Agent Runtime Security".
+  `sudo`, deleting `/` or `~`, force/mirror/delete pushes, and branch or tag
+  deletion, and refuses to read credential-shaped files. It is a
+  prefix-matched floor, not a guarantee; see `SECURITY.md`, "Agent Runtime
+  Security".
 - **Incident postmortems** — `templates/docs/INCIDENT_POSTMORTEM.md`, copied
   per incident into `docs/incidents/`, with corrective actions that become
   `TODO.md` items (`OPERATIONS.md`, "Incident Response").

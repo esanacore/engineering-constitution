@@ -54,7 +54,6 @@ for c in "${checkers[@]}"; do
   grep -q -E '^\s*ci_annotate (error|warning|notice) ' "$c" || fail "$name never calls ci_annotate"
 
   paired="scripts/test_${name%.sh}.sh"
-  paired=${paired/test_check_/test_check_}
   [ -f "$paired" ] || fail "$name has no paired negative-case suite at $paired"
 done
 echo "PASS (${#checkers[@]} checkers)"

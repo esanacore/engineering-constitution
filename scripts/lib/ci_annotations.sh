@@ -26,8 +26,11 @@ ci_annotate() {
     warning|error|notice) ;;
     *) level=notice ;;
   esac
-  # Newlines would terminate the workflow command early; GitHub expects %0A.
-  local message
-  message=$(printf '%s' "$*" | sed ':a;N;$!ba;s/\n/%0A/g')
+  # GitHub's workflow-command encoding: % -> %25 first, then newline -> %0A
+  # (a raw newline would end the command early). Pure bash, so it behaves the
+  # same on GNU, BSD/macOS, and Git Bash.
+  local message="$*"
+  message=${message//%/%25}
+  message=${message//$'\n'/%0A}
   printf '::%s::%s\n' "$level" "$message"
 }

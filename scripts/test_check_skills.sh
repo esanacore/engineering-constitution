@@ -54,6 +54,9 @@ bad="$tmp/bad-ref"; make_skill "$bad" eta eta "Eta." 'Run `bash scripts/no_such_
 status=0; out=$("$checker" --strict "$bad") || status=$?
 [ "$status" -eq 1 ] || fail "dangling script reference should fail under --strict, got $status"
 grep -q 'references no_such_checker.sh, which does not exist' <<< "$out" || { echo "$out"; fail "dangling reference not reported"; }
+hyphen="$tmp/hyphen"; mkdir -p "$hyphen/scripts/lib"; touch "$hyphen/scripts/setup-machine.sh" "$hyphen/scripts/lib/ci_annotations.sh"
+make_skill "$hyphen" iota iota "Iota." 'Run `bash scripts/setup-machine.sh`; annotations come from `scripts/lib/ci_annotations.sh`.'
+out=$("$checker" --strict "$hyphen") || { echo "$out"; fail "a hyphenated script name or a lib/ script was mangled into a missing reference"; }
 adopter="$tmp/adopter"; mkdir -p "$adopter/constitution/scripts"; touch "$adopter/constitution/scripts/check_env_vars.sh"
 make_skill "$adopter" theta theta "Theta." 'Run `bash constitution/scripts/check_env_vars.sh .`.'
 "$checker" --strict "$adopter" >/dev/null || fail "constitution/scripts/ reference should satisfy the check"

@@ -131,9 +131,8 @@ echo "Branch: $branch"
 echo
 
 bumped=0; skipped=0; failed=0
-results=()
 
-record() { results+=("$1  $2"); echo "  $1  $2"; }
+record() { echo "  $1  $2"; }
 
 while IFS= read -r url || [ -n "$url" ]; do
   url=$(printf '%s' "$url" | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
@@ -144,7 +143,7 @@ while IFS= read -r url || [ -n "$url" ]; do
   echo "== $name ($url)"
 
   rm -rf "$dest"
-  if ! git clone -q "$url" "$dest" 2>"$workdir/$name.clone.log"; then
+  if ! git clone -q "$url" "$dest" </dev/null 2>"$workdir/$name.clone.log"; then
     sed 's/^/     /' "$workdir/$name.clone.log"
     record FAILED "$name: clone failed"; failed=$((failed + 1)); continue
   fi
@@ -177,7 +176,7 @@ while IFS= read -r url || [ -n "$url" ]; do
     record BUMPED "$name: commit created on $branch (dry run, not pushed; base $default_branch)"; bumped=$((bumped + 1)); continue
   fi
 
-  if ! git -C "$dest" push -q -u origin "$branch" 2>"$workdir/$name.push.log"; then
+  if ! git -C "$dest" push -q -u origin "$branch" </dev/null 2>"$workdir/$name.push.log"; then
     sed 's/^/     /' "$workdir/$name.push.log"
     record FAILED "$name: push failed"; failed=$((failed + 1)); continue
   fi
@@ -186,7 +185,7 @@ while IFS= read -r url || [ -n "$url" ]; do
   if [ "$have_gh" = "true" ]; then
     if pr_url=$(cd "$dest" && gh pr create --base "$default_branch" --head "$branch" \
         --title "constitution: bump to v$version" \
-        --body "Re-pins \`constitution/\` to $full_sha (v$version). See the constitution's CHANGELOG for what changed." 2>&1); then
+        --body "Re-pins \`constitution/\` to $full_sha (v$version). See the constitution's CHANGELOG for what changed." </dev/null 2>&1); then
       pr_note="pull request: $pr_url"
     else
       pr_note="pushed $branch; gh pr create failed: $pr_url"
@@ -203,7 +202,6 @@ done < "$repos_file"
 
 echo
 echo "Summary: $bumped bumped, $skipped skipped, $failed failed."
-for r in "${results[@]+"${results[@]}"}"; do echo "  $r"; done
 
 [ "$failed" -eq 0 ] || exit 1
 exit 0

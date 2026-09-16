@@ -105,14 +105,21 @@ The agent environment should be configured to:
 The principle needs an artifact, not just a sentence. The framework ships one
 for Claude Code: `templates/.claude/settings.json` (installed by
 `bootstrap.sh --agents=claude`) carries a `permissions.deny` list that refuses
-the commands an agent should never run unprompted — `sudo`, recursive deletes
-from `/` or `~`, force pushes, hard resets, branch and tag deletion — and
-refuses to read credential-shaped files (`.env`, `*.pem`, `*.key`, `id_rsa`,
-`credentials.json`). It is a floor: projects add their own entries (a
-production database CLI, a deploy command) rather than removing these. Tools
-without an equivalent deny mechanism get the same list as prose in the
-project's instruction file, and a protocol firewall in front of the agent
-enforces it independently of the tool's own configuration.
+the commands an agent should never run unprompted — `sudo`, deleting `/` or
+`~` recursively, force pushes (including `--force-with-lease`: rewriting a
+remote branch's history is a decision for the human, who can run it), mirror
+and delete pushes, branch and tag deletion — and refuses to read
+credential-shaped files (`.env` and its `.local`/`.production` variants,
+`*.pem`, `*.key`, `id_rsa`, `credentials.json`). It is a floor, and a
+prefix-matched one: reordering flags (`git push origin main --force`) slips
+past it, `rm -rf` of anything but `/` and `~` is allowed because scratch
+directories are routine, and `.env.example` stays readable on purpose.
+Projects add their own entries (a production database CLI, a deploy command)
+rather than removing these. Tools without an equivalent deny mechanism get
+the same list as prose in the project's instruction file, and a protocol
+firewall in front of the agent enforces it independently of the tool's own
+configuration — that firewall, not the prefix list, is what makes the
+guarantee hold.
 
 ## Untrusted Content and AI Agents
 

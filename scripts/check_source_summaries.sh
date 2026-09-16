@@ -218,7 +218,7 @@ case "$1" in
     shift
     root=${1:-sources}
     if ! cmd_scan "$root"; then
-      ci_annotate warning "check_source_summaries.sh: sources under $root are NEW, CHANGED, or missing a summary"
+      ci_annotate error "check_source_summaries.sh: sources under $root are NEW, CHANGED, or missing a summary"
       exit 1
     fi
     exit 0

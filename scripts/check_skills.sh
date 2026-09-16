@@ -82,7 +82,8 @@ fi
 
 script_exists() {
   local name=$1
-  [ -f "$root/scripts/$name" ] || [ -f "$root/constitution/scripts/$name" ]
+  [ -f "$root/scripts/$name" ] || [ -f "$root/scripts/lib/$name" ] \
+    || [ -f "$root/constitution/scripts/$name" ] || [ -f "$root/constitution/scripts/lib/$name" ]
 }
 
 echo "Skill validation under $skills_dir/"
@@ -132,7 +133,7 @@ for skill_dir in "$skills_path"/*/; do
       if ! script_exists "$ref"; then
         problems+=("references $ref, which does not exist under scripts/")
       fi
-    done < <(grep -oE '[A-Za-z0-9_]+\.sh' "$file" | sort -u)
+    done < <(grep -oE '[A-Za-z0-9_.-]+\.sh' "$file" | sort -u)
   fi
 
   if [ "${#problems[@]}" -eq 0 ]; then

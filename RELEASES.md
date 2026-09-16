@@ -20,7 +20,11 @@ contract its adopters' CI depends on, so for *this* repository the terms mean
   stop working, without any change on the adopter's side: a new **required**
   file or required tier entry in `check_compliance.sh`; a checker whose
   default flips from warn to fail; a removed or renamed script, template, or
-  workflow that adopters invoke; a changed exit-code meaning or option.
+  workflow that adopters invoke; a changed exit-code meaning or option in a
+  script that a shipped workflow template or a documented CI invocation
+  depends on. (An on-demand tool such as `version_analyzer.sh` or
+  `measure_instruction_weight.sh` is not on that path; changing its usage
+  exit code is PATCH-shaped.)
 - **MINOR** — a new standard, checker, template, workflow, or skill that
   warns by default; a new recommended file; a new Required Workflow step;
   new advisory guidance.

@@ -50,7 +50,9 @@ Framework Itself":
 1. **MAJOR** is any change that can turn an adopter's CI red or break a
    documented invocation without any change on the adopter's side — a new
    required file, a warn-to-fail default flip, a removed or renamed script,
-   template, or workflow, a changed exit code or option.
+   template, or workflow, a changed exit code or option in a script that a
+   shipped workflow template or documented CI invocation depends on
+   (on-demand tools such as `version_analyzer.sh` are not on that path).
 2. **MINOR** is anything additive that warns by default; **PATCH** changes no
    contract.
 3. **A deprecation window converts MAJOR-shaped into MINOR**: the requirement
