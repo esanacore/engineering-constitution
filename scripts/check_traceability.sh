@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that every requirement ID declared in a product requirements document
 # has a verifying-test entry in the requirements traceability matrix.
 #
@@ -196,6 +204,7 @@ echo
 echo "Checked $total requirement(s); $covered covered, $failures gap(s)/missing."
 
 if [ "$failures" -gt 0 ]; then
+  ci_annotate error "check_traceability.sh: $failures of $total requirement(s) have no verifying test"
   exit 1
 fi
 exit 0

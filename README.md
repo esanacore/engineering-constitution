@@ -26,17 +26,24 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
 - `KNOWLEDGE_SOURCES.md`: How to drop in book/reference sources and turn them into agent-consumable summaries via `sources/`.
-- `skills/`: 25 built-in agent skills that enforce constitution rules autonomously.
+- `skills/`: 25 built-in agent skills that enforce constitution rules autonomously — validated by `scripts/check_skills.sh`; see `INTEGRATION.md`'s "Agent Skills" for how each tool loads them.
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
 - `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `templates/wiki/Home.md`: Wiki landing-page scaffold installed into every adopter as the required `wiki/Home.md` (see `docs/adr/0001-wiki-subsystem.md`).
+- `templates/docs/INCIDENT_POSTMORTEM.md`: Blameless postmortem template, copied per incident into `docs/incidents/`.
+- `templates/.github/pull_request_template.md` and `templates/.github/CODEOWNERS`: Installed by bootstrap so every pull request carries the Completion Checklist and the trivial-change declaration, and code ownership is a host-enforced setting rather than a memory.
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
 - `scripts/lib/`: Libraries sourced by the two largest scripts, one file per concern. For `bootstrap.sh`: `bootstrap_readme.sh` (constitution badge), `bootstrap_migrate.sh` (seeding TODO.md/CHANGELOG.md from a project's existing backlog or release notes), `bootstrap_report.sh` (the adoption report and project detection). For `check_architecture.sh`: `architecture_languages.sh` (how each language spells imports and what it resolves them against), `architecture_layers.sh` (the declared layer table as a graph), `architecture_signals.sh` (advisory structural heuristics that never fail a build). Sourced, never executed directly.
+- `scripts/run_all_tests.sh`: The framework's own "Full suite" — runs every `scripts/test_*.sh` and names each failing suite; run in CI by `.github/workflows/tests.yml` alongside a `self-governance` job that turns the shipped checkers on this repository.
+- `scripts/check_instruction_templates.sh`: Reference checker that verifies every agent instruction file present (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, the Solon agent, ...) carries the same guidance anchors, so a rule added to one vendor file is not silently missing from another.
+- `scripts/check_skills.sh`: Reference checker that validates every `skills/*/SKILL.md` (front-matter name matches its directory, description present, referenced scripts exist).
+- `scripts/test_checker_contract.sh`: Meta-test holding every `check_*.sh` to the shared checker contract (`--help`, exit `2` on a bad option, `--strict` where documented, executable bit, a paired negative-case suite, CI annotations). Every checker sources `scripts/lib/ci_annotations.sh` and emits `::warning::` / `::error::` under GitHub Actions.
+- `scripts/bump_adopters.sh`: Fleet bump for step 9 of cutting a release — re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently.
 - `scripts/check_traceability.sh`: Reference checker that verifies every requirement ID has a verifying-test entry in the traceability matrix.
 - `scripts/check_ots_inventory.sh`: Reference checker that cross-checks the dependencies declared in root-level manifests against the OTS software inventory (`docs/OTS_SOFTWARE.md`), so a dependency added without documentation is flagged in the same change.
 - `scripts/check_compliance.sh`: Reference checker that verifies an adopting repository carries the expected governance files.
@@ -52,6 +59,8 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/check_secrets.sh`: Sweeps tracked and untracked-but-not-gitignored files for secrets that should never reach a remote (credential-shaped filenames, high-confidence content patterns), and checks .gitignore coverage.
 - `scripts/setup-machine.sh`: One-time, per-machine installer for the AI-agent toolchain the templates point at (Bun, gstack, goose, goosetown). Not invoked by `bootstrap.sh` — a machine is provisioned once, explicitly; a repository is bootstrapped by writing files only. Idempotent, skips anything already installed.
 - `.github/workflows/release-tag-alignment.yml`: Source-repo release guard that runs `scripts/check_release_tag_alignment.sh` on every pushed `v*` tag, and can be re-run manually for a chosen ref.
+- `.github/workflows/tests.yml`: Source-repo CI — the full test suite plus the self-governance checkers on every pull request and push to `main`.
+- `docs/adr/`: The framework's own ADRs: 0001 (wiki subsystem), 0002 (compatibility policy — what "breaking" means for a governance framework), 0003 (the proportionate workflow for trivial changes). Changes to the Required Files, Required Workflow, checker contract, or compatibility policy require one (`DOCUMENTATION.md`, "ADR Triggers for the Framework Itself").
 
 ## Project Structure
 
@@ -74,12 +83,15 @@ engineering-constitution/
 │
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
 │   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, ADR, ...)
+│   ├── .claude/settings.json             ← Claude Code SessionStart hook + permissions deny list
 │   └── .github/
-│       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki)
-│       └── agents/                       ← Solon, the Copilot custom agent
+│       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki, ...), SHA-pinned
+│       ├── agents/                       ← Solon, the Copilot custom agent
+│       └── pull_request_template.md, CODEOWNERS, dependabot.yml
 │
-├── docs/adr/                             ← Architecture Decision Records for the framework itself
-├── .github/workflows/                    ← This repo's own CI: release-tag-alignment, wiki-sync
+├── docs/                                 ← This repo's own governance docs (TEST_PLAN, ARCHITECTURE, OPERATIONS, ...)
+│   └── adr/                              ← Architecture Decision Records for the framework itself
+├── .github/                              ← This repo's own CI (tests, release-tag-alignment, wiki-sync), PR template, CODEOWNERS
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
 │   └── lib/                              ← Concern-scoped libraries sourced by bootstrap.sh
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
@@ -115,7 +127,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.46.0
+Current version: 1.47.0
 
 See `VERSION`.
 

@@ -297,4 +297,36 @@ run_check "$test_dir/does-not-exist"
 [ "$status" -eq 2 ] || { echo "FAIL(10): expected exit 2 on missing root, got $status"; exit 1; }
 echo "SUCCESS(10): usage errors report exit 2."
 
+# ---------------------------------------------------------------------------
+# 11. A sub-package manifest is ignored by default and read with
+#     --manifest-dir, labeled with its directory; a missing --manifest-dir is
+#     a usage error rather than a silent skip.
+# ---------------------------------------------------------------------------
+repo="$test_dir/subpackage"
+mkdir -p "$repo/mcp-server"
+cat > "$repo/mcp-server/package.json" <<'EOF'
+{
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.1"
+  }
+}
+EOF
+start_inventory "$repo"
+
+run_check --strict "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(11): sub-package manifest must be ignored without --manifest-dir, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "nothing to verify" || { echo "FAIL(11): expected the vacuous pass without --manifest-dir"; exit 1; }
+
+run_check --strict --manifest-dir mcp-server "$repo"
+[ "$status" -eq 1 ] || { echo "FAIL(11): undocumented sub-package dependency must fail under --strict, got $status"; echo "$output"; exit 1; }
+echo "$output" | grep -q "MISSING  @modelcontextprotocol/sdk (mcp-server/package.json)" || { echo "FAIL(11): sub-package dependency not labeled with its directory"; echo "$output"; exit 1; }
+
+inventory_row "$repo" OTS-001 "@modelcontextprotocol/sdk"
+run_check --strict --manifest-dir mcp-server "$repo"
+[ "$status" -eq 0 ] || { echo "FAIL(11): documented sub-package dependency should pass, got $status"; echo "$output"; exit 1; }
+
+run_check --manifest-dir does-not-exist "$repo"
+[ "$status" -eq 2 ] || { echo "FAIL(11): a missing --manifest-dir must be a usage error, got $status"; exit 1; }
+echo "SUCCESS(11): --manifest-dir reads sub-package manifests and labels them."
+
 echo "ALL TESTS PASSED"

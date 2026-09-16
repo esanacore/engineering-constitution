@@ -37,6 +37,43 @@ This document defines the required workflow for AI-assisted software development
 
 The scoped reads in steps 4–5 are deliberate: unbounded history files dominate session-start cost, while the rule documents themselves are comparatively lean — measured, not assumed (run `bash constitution/scripts/measure_instruction_weight.sh .` to see any repository's numbers). Scoping trims roughly half of a mature repository's reading-order cost with no information loss for a fresh task.
 
+## Proportionate Workflow (Trivial Changes)
+
+The thirty steps above are sized for a change that alters behavior. Applied
+unchanged to a typo fix, they cost more than the fix and teach agents that the
+workflow is ceremony — the failure mode `sources/summaries/articles/the-harness-is-the-thing.md`
+warns about. So the workflow is proportionate, by rule rather than by
+judgment call (ADR-0003):
+
+A change is **trivial** only when *all* of the following hold:
+
+- It alters no behavior: documentation, comments, formatting, a typo, a
+  rename with no callers outside the diff, or a single-line fix whose cause
+  is local and obvious.
+- It is small enough to review in one screen and touches no more than a few
+  files.
+- It touches nothing sensitive: no dependency, environment variable,
+  secret, authentication or authorization path, CI workflow, agent
+  instruction file, governance checker, or template.
+- Nobody has asked for the full workflow. A user, a reviewer, or a failing
+  check can reclassify a change at any time, and "when in doubt, it is not
+  trivial" is the tie-breaker.
+
+For a trivial change, these steps may be skipped: 11 (session plan),
+12 (implementation plan), 15 (coverage evaluation), 16 (isolated critique),
+17–19 (traceability, OTS, environment contract), 23 (release evaluation),
+26 (memory proposals), and 27 (session-plan cleanup, since none was written).
+The scoped reads in steps 1–9 still apply; step 14 applies only if a test
+already covers the touched line (fix it if the change breaks it); step 20
+applies whenever the change is user-visible; step 21 applies when work was
+discovered; step 22 applies when the change is user-facing; step 24 shrinks
+to "does this touch anything on the sensitive list?"; and **step 29, the
+secrets sweep, is never skipped** — a one-line change is exactly the size at
+which a pasted token goes unnoticed.
+
+A trivial change still opens a pull request (step 30) and still says in its
+description that it took the fast path, so a reviewer can disagree.
+
 ## Before Beginning Work
 
 Agents must gather enough project context to make safe changes:

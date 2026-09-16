@@ -21,6 +21,14 @@ yet" case), and `check_secrets.sh` always fails on a real secret-shaped hit
 signals never fail, because line count is a prompt to look, not a verdict —
 only its layer violations respond to `--strict`.
 
+The contract is enforced, not just described: `scripts/test_checker_contract.sh`
+fails the build if any `check_*.sh` lacks `--help`, does not exit `2` on a bad
+option, ignores `--strict` where its usage documents it, is not committed
+executable, has no paired negative-case suite, or does not emit CI annotations.
+Under GitHub Actions every checker also prints `::warning::` / `::error::`
+workflow commands (via `scripts/lib/ci_annotations.sh`) so findings appear in
+the pull request UI rather than only in the job log.
+
 ## The checkers
 
 | Script | What it verifies |
@@ -38,6 +46,10 @@ only its layer violations respond to `--strict`.
 | `check_version_alignment.sh` | Catches adopter-facing version references that drifted from the pinned `constitution/VERSION`. |
 | `check_constitution_freshness.sh` | Warns at session start when the pinned `constitution/` submodule is behind the latest release. |
 | `check_source_summaries.sh` | Detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries. |
+| `check_instruction_templates.sh` | Every agent instruction file present (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, the Solon agent, `docs/HELP.md`, ...) carries the same guidance anchors — session planning and project memory by default — so a rule added to one vendor file is not silently missing from the others. |
+| `check_skills.sh` | Every `skills/*/SKILL.md` has front matter whose `name` matches its directory, a description, an H1 body, and references only scripts that exist. |
+| `run_all_tests.sh` | The framework's own "Full suite": runs every `scripts/test_*.sh` and names each failing suite; run by `.github/workflows/tests.yml`. |
+| `bump_adopters.sh` | Not a checker but a release step: re-pins every adopter's `constitution/` submodule to a release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`, "Cutting a Release", step 9. |
 | `measure_instruction_weight.sh` | Reports the token weight of the agent required-reading order — bytes, words, and estimated tokens per document and in total, with an advisory `HEAVY` flag. A meter, not a gate: it fails only when the reading list names a file that does not exist. |
 
 ## Shared libraries (`scripts/lib/`)
@@ -50,6 +62,7 @@ stay non-executable and are not checkers in their own right:
 | --- | --- | --- |
 | `bootstrap_readme.sh`, `bootstrap_migrate.sh`, `bootstrap_report.sh` | `bootstrap.sh` | badge injection; seeding `TODO.md`/`CHANGELOG.md` from a project's existing backlog or release notes; the adoption report. |
 | `architecture_languages.sh`, `architecture_layers.sh`, `architecture_signals.sh` | `check_architecture.sh` | how each language spells imports and what it resolves them against; the declared layer table as a graph; advisory heuristics that never fail a build. |
+| `ci_annotations.sh` | every `check_*.sh` and `run_all_tests.sh` | the `ci_annotate` helper that prints GitHub Actions `::warning::` / `::error::` workflow commands when `GITHUB_ACTIONS=true`, and nothing otherwise. |
 
 Each split follows the SRP guardrail in `ARCHITECTURE.md` — a file is separated
 because it changes for its own reason, never merely because it is long. Both

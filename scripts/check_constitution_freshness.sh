@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Check whether a single repository's `constitution/` submodule is pinned to
 # the latest tagged release of Eric's Engineering Constitution.
 #
@@ -109,6 +117,7 @@ New Framework Versions"):
   git add constitution
   git commit -m "Update Eric's engineering constitution to \$(cat constitution/VERSION)"
 EOF
+  ci_annotate error "constitution/ submodule is behind: pinned v$pinned_version, latest release v$latest_version"
   exit 1
 else
   echo "Eric's Engineering Constitution: AHEAD/DIVERGED (pinned v$pinned_version, latest tag v$latest_version)."

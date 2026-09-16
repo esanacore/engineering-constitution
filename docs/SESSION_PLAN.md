@@ -7,11 +7,12 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Reading-order scoping (approved by Eric, justified by the instruction-weight
-measurement): TODO → open items, CHANGELOG → `Unreleased` + latest release,
-this repo's INTEGRATION → consult-on-demand. Applied as one grep-driven
-sweep across `AI_WORKFLOW.md` steps 4–5 (+ rationale note), root
-instruction files, 8 templates (`.aider.conf.yml` gains a whole-file-cost
-comment), and 4 sample-project files; final re-grep found no stragglers.
-All 20 suites green. Two entries now in `Unreleased` — 1.46.0 ready to cut
-on Eric's word.
+The 1.47.0 improvement batch (approved by Eric in full): own tests and
+checkers in CI, self-compliance docs, instruction-template and skills
+checkers, checker-contract meta-test with CI annotations, MCP drift fix, ADR
+rule + ADR-0002/0003, agent-facing security and deny list, CI supply chain,
+proportionate workflow, PR/CODEOWNERS templates, Conventional Commits,
+"product-facing" defined, postmortem template, data classification, OTS
+License column, framework SemVer semantics, `bump_adopters.sh`. Outcomes are
+in `CHANGELOG.md` 1.47.0 and `docs/AGENT_HANDOFF.md`. Tag + GitHub Release +
+fleet bump remain Eric's post-merge steps.

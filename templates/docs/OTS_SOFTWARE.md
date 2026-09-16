@@ -15,6 +15,7 @@ Related documents:
 
 - **Component ID**: a stable identifier, `OTS-001`, `OTS-002`, ... Once assigned, an ID is never reused, even after the component is removed. When a component is removed, set its Status to `Removed` rather than deleting the row.
 - **Name**: the component's name **exactly as it is declared in the dependency manifest** (`package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Gemfile`, ...). The automated checker (`constitution/scripts/check_ots_inventory.sh`) matches manifest entries against this cell by exact value (case-insensitive), so a paraphrased or prettified name counts as undocumented.
+- **License**: the SPDX identifier (`MIT`, `Apache-2.0`, `GPL-3.0-only`, ...) as declared by the supplier. Every real SOUP register carries it, and it is the column a legal or procurement review asks for first; a copyleft license in a component that ships in a proprietary product is a finding, not a footnote.
 - **Risk**: `Low`, `Medium`, or `High`. A component is at least `Medium` when it sits in a trust-sensitive position — handling credentials, parsing untrusted input, or running with elevated privileges (see `SECURITY.md`'s "Threat Modeling Triggers").
 - **Verification**: how fitness for use was established — for example, the project's own integration tests that exercise it, upstream test-suite maturity, vendor certification, or a manual validation record.
 - **Anomaly Review**: known-issue posture — where known defects/CVEs for this component are tracked, and the date they were last reviewed.
@@ -27,9 +28,9 @@ Components declared in a dependency manifest in this repository. `constitution/s
 
 <!-- Add one row per manifest-declared dependency. Delete the placeholder row once real entries exist. -->
 
-| Component ID | Name | Version | Supplier / Maintainer | Purpose | Risk | Verification | Anomaly Review | Update Policy | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| OTS-001 | `<name exactly as declared in the manifest>` | `<version or range>` | `<who maintains it>` | `<role in this system>` | `<Low / Medium / High>` | `<how fitness for use was established>` | `<tracker link — last reviewed <YYYY-MM-DD>>` | `<pinned / range / bot-managed>` | Active |
+| Component ID | Name | Version | Supplier / Maintainer | Purpose | License | Risk | Verification | Anomaly Review | Update Policy | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| OTS-001 | `<name exactly as declared in the manifest>` | `<version or range>` | `<who maintains it>` | `<role in this system>` | `<SPDX license id>` | `<Low / Medium / High>` | `<how fitness for use was established>` | `<tracker link — last reviewed <YYYY-MM-DD>>` | `<pinned / range / bot-managed>` | Active |
 
 ## System-Level OTS
 
@@ -37,9 +38,9 @@ Software the project depends on that is **not** declared in a dependency manifes
 
 <!-- Add one row per system-level component. Delete the placeholder row once real entries exist. -->
 
-| Component ID | Name | Version | Supplier / Maintainer | Purpose | Risk | Verification | Anomaly Review | Update Policy | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| OTS-101 | `<e.g. PostgreSQL>` | `<version>` | `<who maintains it>` | `<role in this system>` | `<Low / Medium / High>` | `<how fitness for use was established>` | `<tracker link — last reviewed <YYYY-MM-DD>>` | `<managed by / upgrade cadence>` | Active |
+| Component ID | Name | Version | Supplier / Maintainer | Purpose | License | Risk | Verification | Anomaly Review | Update Policy | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| OTS-101 | `<e.g. PostgreSQL>` | `<version>` | `<who maintains it>` | `<role in this system>` | `<SPDX license id>` | `<Low / Medium / High>` | `<how fitness for use was established>` | `<tracker link — last reviewed <YYYY-MM-DD>>` | `<managed by / upgrade cadence>` | Active |
 
 ## Review Cadence
 

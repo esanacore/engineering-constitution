@@ -24,6 +24,8 @@ Creates or installs:
   - docs/HELP.md
   - .github/agents/solon.agent.md
   - .github/dependabot.yml
+  - .github/pull_request_template.md
+  - .github/CODEOWNERS
   - .github/workflows/constitution-version.yml
   - .github/workflows/constitution-compliance.yml
   - .github/workflows/constitution-tests.yml
@@ -325,6 +327,8 @@ copy_file "$template_dir/HELP.md" "$project_path/docs/HELP.md"
 mkdir -p "$project_path/.github/agents"
 copy_file "$template_dir/.github/agents/solon.agent.md" "$project_path/.github/agents/solon.agent.md"
 copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependabot.yml"
+copy_file "$template_dir/.github/pull_request_template.md" "$project_path/.github/pull_request_template.md"
+copy_file "$template_dir/.github/CODEOWNERS" "$project_path/.github/CODEOWNERS"
 copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_path/.github/workflows/constitution-version.yml"
 copy_file "$template_dir/.github/workflows/constitution-compliance.yml" "$project_path/.github/workflows/constitution-compliance.yml"
 copy_file "$template_dir/.github/workflows/constitution-tests.yml" "$project_path/.github/workflows/constitution-tests.yml"

@@ -35,13 +35,13 @@ This page is a map; the source files are authoritative.
 
 | Document | Covers |
 | --- | --- |
-| `AI_WORKFLOW.md` | The required step-by-step workflow for AI-assisted changes. |
+| `AI_WORKFLOW.md` | The required step-by-step workflow for AI-assisted changes, and the proportionate fast path for trivial ones (ADR-0003). |
 | `TESTING.md` | Test pyramid, coverage, and CI enforcement expectations. |
 | `DOCUMENTATION.md` | Required/encouraged documents, requirements traceability, ADRs, and the wiki. |
-| `SECURITY.md` | Security review expectations and the secrets sweep. |
+| `SECURITY.md` | Security review expectations, the secrets sweep, untrusted content reaching AI agents (prompt injection), the agent deny list, CI/CD supply chain (SHA-pinned actions), and data classification. |
 | `ARCHITECTURE.md` | SOLID, the Dependency Rule and how it is enforced, design patterns, and visual architecture. |
 | `OPERATIONS.md` | Deployment, monitoring, backup/restore, rollback, incident response. |
-| `RELEASES.md` | Semantic versioning and the ordered release process. |
+| `RELEASES.md` | Semantic versioning, what "breaking" means for the framework itself and the deprecation window (ADR-0002), Conventional Commit messages, the ordered release process, and the fleet bump. |
 | `CODE_STYLE.md` | Principle 12 in full, plus the canonical style-guide registry. |
 | `INTEGRATION.md` | Agent-tool integration and machine provisioning. |
 
@@ -51,7 +51,12 @@ Principles are backed by automation wherever possible: the CI checkers in
 [[Governance Checkers]], the MCP server in [[MCP Server]], and the Solon agent
 (`.github/agents/solon.agent.md`), which reviews changes against these same
 documents. Decisions that shape the framework itself are recorded as ADRs under
-`docs/adr/`.
+`docs/adr/` — and since 1.47.0 that is a rule, not a habit: a change to the
+Required Files, the Required Workflow, the checker contract, or the
+compatibility policy gets an ADR first (`DOCUMENTATION.md`, "ADR Triggers for
+the Framework Itself"). The framework also runs its own suites and checkers on
+every pull request (`.github/workflows/tests.yml`), so it is held to the
+same gates it ships.
 
 ## See also
 

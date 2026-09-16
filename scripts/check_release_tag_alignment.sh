@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that this repository's release metadata and Git tags agree.
 #
 # Usage:
@@ -122,6 +130,7 @@ else
 fi
 
 if [ "$fail" -ne 0 ]; then
+  ci_annotate error "check_release_tag_alignment.sh: VERSION ($expected_version), HEAD, and the latest release tag ($latest_tag) are not aligned"
   exit 1
 fi
 

@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that every third-party dependency declared in the project's dependency
 # manifests has a corresponding entry in the OTS software inventory
 # (docs/OTS_SOFTWARE.md).
@@ -18,8 +26,8 @@ set -euo pipefail
 # never satisfy a check for `proto`.
 #
 # Scope, deliberately:
-#   - Only manifests at the project root are read (monorepo packages are not
-#     walked).
+#   - Only manifests at the project root are read unless --manifest-dir names
+#     more (monorepo packages are not walked automatically).
 #   - Only runtime dependencies are read (package.json "dependencies", not
 #     "devDependencies"; Cargo.toml [dependencies], not [dev-dependencies];
 #     go.mod direct requires, not "// indirect"). Development-only tooling may
@@ -41,7 +49,7 @@ set -euo pipefail
 usage() {
   cat <<'USAGE'
 Usage:
-  check_ots_inventory.sh [--strict] [project-root]
+  check_ots_inventory.sh [--strict] [--manifest-dir <dir>]... [project-root]
 
 Description:
   Confirm that every third-party dependency declared in the project's
@@ -52,11 +60,15 @@ Arguments:
   project-root   Path to the repository root to check. Default: current directory.
 
 Options:
-  --strict    Treat undocumented dependencies (and a missing inventory file)
-              as failures instead of warnings.
-  -h, --help  Show this help.
+  --strict              Treat undocumented dependencies (and a missing
+                        inventory file) as failures instead of warnings.
+  --manifest-dir <dir>  Also read manifests in this directory, relative to
+                        the project root (for a sub-package such as
+                        mcp-server/). Repeatable. Dependencies found there are
+                        labeled with the directory prefix in the report.
+  -h, --help            Show this help.
 
-Manifests read (project root only, runtime dependencies only):
+Manifests read (project root plus any --manifest-dir, runtime dependencies only):
   package.json      "dependencies" block (not devDependencies)
   requirements.txt  requirement lines (options, URLs, and includes skipped)
   pyproject.toml    PEP 621 [project] dependencies array
@@ -74,6 +86,7 @@ USAGE
 
 strict=false
 root=""
+manifest_dirs=()
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -83,6 +96,18 @@ while [ "$#" -gt 0 ]; do
       ;;
     --strict)
       strict=true
+      shift
+      ;;
+    --manifest-dir)
+      if [ "$#" -lt 2 ]; then
+        echo "--manifest-dir requires a directory argument" >&2
+        exit 2
+      fi
+      manifest_dirs+=("$2")
+      shift 2
+      ;;
+    --manifest-dir=*)
+      manifest_dirs+=("${1#--manifest-dir=}")
       shift
       ;;
     --)
@@ -134,117 +159,135 @@ $lines"
   fi
 }
 
-if [ -f "$root/package.json" ]; then
-  add_deps "$(
-    awk '
-      /"dependencies"[[:space:]]*:[[:space:]]*\{/ { ind = 1; if ($0 ~ /\}/) ind = 0; next }
-      ind && /\}/ { ind = 0; next }
-      ind {
-        line = $0
-        if (match(line, /"[^"]+"[[:space:]]*:/)) {
-          key = substr(line, RSTART, RLENGTH)
-          sub(/^"/, "", key)
-          sub(/"[[:space:]]*:$/, "", key)
-          if (key != "") print key "\tpackage.json"
-        }
-      }
-    ' "$root/package.json"
-  )"
-fi
+# collect_manifests <dir> <label-prefix>: read every supported manifest in
+# <dir> and append its runtime dependencies to $deps, labeled
+# "<label-prefix><manifest>" so a report line says where each one came from.
+collect_manifests() {
+  local dir=$1
+  local prefix=$2
 
-if [ -f "$root/requirements.txt" ]; then
-  add_deps "$(
-    awk '
-      /^[[:space:]]*(#|$)/ { next }        # comments, blanks
-      /^[[:space:]]*-/ { next }            # pip options, -r includes, -e installs
-      /^[[:space:]]*(git\+|https?:|file:)/ { next }  # URL requirements
-      /^[[:space:]]*\.\.?\// { next }      # local paths
-      {
-        line = $0
-        sub(/^[[:space:]]+/, "", line)
-        if (match(line, /^[A-Za-z0-9][A-Za-z0-9._-]*/)) {
-          print substr(line, RSTART, RLENGTH) "\trequirements.txt"
-        }
-      }
-    ' "$root/requirements.txt"
-  )"
-fi
-
-if [ -f "$root/pyproject.toml" ]; then
-  add_deps "$(
-    awk '
-      /^[[:space:]]*dependencies[[:space:]]*=[[:space:]]*\[/ {
-        ind = 1
-        if ($0 ~ /\]/) ind = 0   # single-line array handled below too
-      }
-      ind || /^[[:space:]]*dependencies[[:space:]]*=[[:space:]]*\[/ {
-        line = $0
-        while (match(line, /"[^"]+"/) || match(line, /'\''[^'\'']+'\''/)) {
-          spec = substr(line, RSTART + 1, RLENGTH - 2)
-          line = substr(line, RSTART + RLENGTH)
-          if (match(spec, /^[A-Za-z0-9][A-Za-z0-9._-]*/)) {
-            print substr(spec, RSTART, RLENGTH) "\tpyproject.toml"
+  if [ -f "$dir/package.json" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /"dependencies"[[:space:]]*:[[:space:]]*\{/ { ind = 1; if ($0 ~ /\}/) ind = 0; next }
+        ind && /\}/ { ind = 0; next }
+        ind {
+          line = $0
+          if (match(line, /"[^"]+"[[:space:]]*:/)) {
+            key = substr(line, RSTART, RLENGTH)
+            sub(/^"/, "", key)
+            sub(/"[[:space:]]*:$/, "", key)
+            if (key != "") print key "\t" prefix "package.json"
           }
         }
-      }
-      ind && /\]/ { ind = 0 }
-    ' "$root/pyproject.toml"
-  )"
-fi
+      ' "$dir/package.json"
+    )"
+  fi
 
-if [ -f "$root/go.mod" ]; then
-  add_deps "$(
-    awk '
-      /^require[[:space:]]*\(/ { ind = 1; next }
-      ind && /^\)/ { ind = 0; next }
-      ind {
-        if ($0 ~ /\/\/[[:space:]]*indirect/) next
-        if (NF >= 2) print $1 "\tgo.mod"
-        next
-      }
-      /^require[[:space:]]+[^(]/ {
-        if ($0 ~ /\/\/[[:space:]]*indirect/) next
-        print $2 "\tgo.mod"
-      }
-    ' "$root/go.mod"
-  )"
-fi
-
-if [ -f "$root/Cargo.toml" ]; then
-  add_deps "$(
-    awk '
-      /^\[dependencies\]/ { ind = 1; next }
-      /^\[dependencies\./ {
-        name = $0
-        sub(/^\[dependencies\./, "", name)
-        sub(/\].*$/, "", name)
-        if (name != "") print name "\tCargo.toml"
-        ind = 0
-        next
-      }
-      /^\[/ { ind = 0; next }
-      ind && /^[A-Za-z0-9_-]+[[:space:]]*=/ {
-        name = $0
-        sub(/[[:space:]]*=.*$/, "", name)
-        if (name != "") print name "\tCargo.toml"
-      }
-    ' "$root/Cargo.toml"
-  )"
-fi
-
-if [ -f "$root/Gemfile" ]; then
-  add_deps "$(
-    awk '
-      /^[[:space:]]*gem[[:space:]]+["'\'']/ {
-        line = $0
-        sub(/^[[:space:]]*gem[[:space:]]+["'\'']/, "", line)
-        if (match(line, /^[^"'\'']+/)) {
-          print substr(line, RSTART, RLENGTH) "\tGemfile"
+  if [ -f "$dir/requirements.txt" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /^[[:space:]]*(#|$)/ { next }        # comments, blanks
+        /^[[:space:]]*-/ { next }            # pip options, -r includes, -e installs
+        /^[[:space:]]*(git\+|https?:|file:)/ { next }  # URL requirements
+        /^[[:space:]]*\.\.?\// { next }      # local paths
+        {
+          line = $0
+          sub(/^[[:space:]]+/, "", line)
+          if (match(line, /^[A-Za-z0-9][A-Za-z0-9._-]*/)) {
+            print substr(line, RSTART, RLENGTH) "\t" prefix "requirements.txt"
+          }
         }
-      }
-    ' "$root/Gemfile"
-  )"
-fi
+      ' "$dir/requirements.txt"
+    )"
+  fi
+
+  if [ -f "$dir/pyproject.toml" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /^[[:space:]]*dependencies[[:space:]]*=[[:space:]]*\[/ {
+          ind = 1
+          if ($0 ~ /\]/) ind = 0   # single-line array handled below too
+        }
+        ind || /^[[:space:]]*dependencies[[:space:]]*=[[:space:]]*\[/ {
+          line = $0
+          while (match(line, /"[^"]+"/) || match(line, /'\''[^'\'']+'\''/)) {
+            spec = substr(line, RSTART + 1, RLENGTH - 2)
+            line = substr(line, RSTART + RLENGTH)
+            if (match(spec, /^[A-Za-z0-9][A-Za-z0-9._-]*/)) {
+              print substr(spec, RSTART, RLENGTH) "\t" prefix "pyproject.toml"
+            }
+          }
+        }
+        ind && /\]/ { ind = 0 }
+      ' "$dir/pyproject.toml"
+    )"
+  fi
+
+  if [ -f "$dir/go.mod" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /^require[[:space:]]*\(/ { ind = 1; next }
+        ind && /^\)/ { ind = 0; next }
+        ind {
+          if ($0 ~ /\/\/[[:space:]]*indirect/) next
+          if (NF >= 2) print $1 "\t" prefix "go.mod"
+          next
+        }
+        /^require[[:space:]]+[^(]/ {
+          if ($0 ~ /\/\/[[:space:]]*indirect/) next
+          print $2 "\t" prefix "go.mod"
+        }
+      ' "$dir/go.mod"
+    )"
+  fi
+
+  if [ -f "$dir/Cargo.toml" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /^\[dependencies\]/ { ind = 1; next }
+        /^\[dependencies\./ {
+          name = $0
+          sub(/^\[dependencies\./, "", name)
+          sub(/\].*$/, "", name)
+          if (name != "") print name "\t" prefix "Cargo.toml"
+          ind = 0
+          next
+        }
+        /^\[/ { ind = 0; next }
+        ind && /^[A-Za-z0-9_-]+[[:space:]]*=/ {
+          name = $0
+          sub(/[[:space:]]*=.*$/, "", name)
+          if (name != "") print name "\t" prefix "Cargo.toml"
+        }
+      ' "$dir/Cargo.toml"
+    )"
+  fi
+
+  if [ -f "$dir/Gemfile" ]; then
+    add_deps "$(
+      awk -v prefix="$prefix" '
+        /^[[:space:]]*gem[[:space:]]+["'\'']/ {
+          line = $0
+          sub(/^[[:space:]]*gem[[:space:]]+["'\'']/, "", line)
+          if (match(line, /^[^"'\'']+/)) {
+            print substr(line, RSTART, RLENGTH) "\t" prefix "Gemfile"
+          }
+        }
+      ' "$dir/Gemfile"
+    )"
+  fi
+}
+
+collect_manifests "$root" ""
+for sub in "${manifest_dirs[@]+"${manifest_dirs[@]}"}"; do
+  sub=${sub%/}
+  if [ ! -d "$root/$sub" ]; then
+    echo "Manifest directory not found under project root: $sub" >&2
+    exit 2
+  fi
+  collect_manifests "$root/$sub" "$sub/"
+done
 
 # Deduplicate (a name can legitimately appear in two manifests; keep both
 # labels but collapse exact duplicates).
@@ -253,7 +296,7 @@ if [ -n "$deps" ]; then
 fi
 
 if [ -z "$deps" ]; then
-  echo "No declared third-party dependencies found in root-level manifests; nothing to verify."
+  echo "No declared third-party dependencies found in the scanned manifests; nothing to verify."
   exit 0
 fi
 
@@ -268,9 +311,11 @@ if [ ! -f "$inventory" ]; then
   echo "Create it from constitution/templates/docs/OTS_SOFTWARE.md and document each dependency."
   if [ "$strict" = "true" ]; then
     echo "FAIL: missing inventory (--strict)."
+    ci_annotate error "check_ots_inventory.sh: $dep_count dependency(ies) declared but docs/OTS_SOFTWARE.md is missing"
     exit 1
   fi
   echo "WARN: missing inventory (pass --strict to enforce)."
+  ci_annotate warning "check_ots_inventory.sh: $dep_count dependency(ies) declared but docs/OTS_SOFTWARE.md is missing (pass --strict to enforce)"
   exit 0
 fi
 
@@ -374,8 +419,10 @@ echo "Checked $dep_count declared dependency(ies); $covered documented, $missing
 if [ "$missing" -gt 0 ]; then
   if [ "$strict" = "true" ]; then
     echo "FAIL: undocumented dependencies (--strict). Add rows to docs/OTS_SOFTWARE.md in the same change that adds the dependency."
+    ci_annotate error "check_ots_inventory.sh: $missing undocumented dependency(ies) in docs/OTS_SOFTWARE.md"
     exit 1
   fi
   echo "WARN: undocumented dependencies (pass --strict to enforce)."
+  ci_annotate warning "check_ots_inventory.sh: $missing undocumented dependency(ies) in docs/OTS_SOFTWARE.md (pass --strict to enforce)"
 fi
 exit 0

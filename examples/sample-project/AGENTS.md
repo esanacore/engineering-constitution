@@ -13,6 +13,9 @@ Before beginning work, read:
 - `README.md`
 - `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history, read on demand
 - `CHANGELOG.md` — the `Unreleased` section and the most recent release; older sections are history, read on demand
+- `docs/MEMORY.md` — project memory: codebase learnings, decisions, and user preferences
+
+Before implementing, check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there.
 
 Before completing work:
 
@@ -21,3 +24,5 @@ Before completing work:
 - Update TODO.md.
 - Update CHANGELOG.md.
 - Suggest future improvements.
+- Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md`.
+- Clear or archive `docs/SESSION_PLAN.md`.

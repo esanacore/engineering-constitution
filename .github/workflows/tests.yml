@@ -1,0 +1,69 @@
+name: Tests and Self-Governance
+
+# Runs the framework's own test suites and its own governance checkers on every
+# pull request and push to main. Until this workflow existed, the suites under
+# scripts/test_*.sh passed only because someone ran them by hand before a
+# release — the same gap the constitution's TESTING.md ("Governance Tooling
+# Must Be Tested") tells adopters to close. The `self-governance` job is the
+# constitution holding itself to the checkers it ships.
+#
+# Actions are pinned by commit SHA (see SECURITY.md, "CI/CD Supply Chain");
+# Dependabot keeps the pins current.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-suites:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Run the declared full suite (docs/TEST_PLAN.md)
+        shell: bash
+        run: bash scripts/run_declared_tests.sh --strict .
+
+  self-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Secrets sweep
+        shell: bash
+        run: bash scripts/check_secrets.sh --strict .
+
+      - name: Instruction files carry the same guidance (root, templates, sample project)
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/check_instruction_templates.sh --strict .
+          bash scripts/check_instruction_templates.sh --strict templates
+          bash scripts/check_instruction_templates.sh --strict examples/sample-project
+
+      - name: Skills are well-formed
+        shell: bash
+        run: bash scripts/check_skills.sh --strict .
+
+      - name: Wiki link integrity
+        shell: bash
+        run: bash scripts/check_wiki_links.sh --strict .
+
+      - name: OTS inventory covers the MCP server's dependencies
+        shell: bash
+        run: bash scripts/check_ots_inventory.sh --strict --manifest-dir mcp-server .
+
+      - name: Version references agree
+        shell: bash
+        run: bash scripts/test_release_docs.sh

@@ -14,11 +14,24 @@ repository. Notable groups:
 - **Documentation scaffolds** under `templates/docs/` — `SETUP.md`,
   `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`,
   `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`,
-  `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md`, `ENV_VARS.md`, `MEMORY.md`,
-  `SESSION_PLAN.md`, `AGENT_HANDOFF.md`, and `MVP_BACKLOG.md`.
+  `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md` (now with a License
+  column), `ENV_VARS.md`, `MEMORY.md`, `SESSION_PLAN.md`, `AGENT_HANDOFF.md`,
+  `INCIDENT_POSTMORTEM.md`, and `MVP_BACKLOG.md`.
 - **GitHub automation** under `templates/.github/` — Copilot instructions,
-  Dependabot configuration, the Solon agent, and the `constitution-*.yml`
-  workflow templates (including `constitution-wiki.yml`; see [[Home]]).
+  Dependabot configuration (submodule *and* SHA-pinned GitHub Actions), the
+  Solon agent, a `pull_request_template.md` carrying the Completion Checklist
+  and the trivial-change declaration, a commented `CODEOWNERS` example, and
+  the `constitution-*.yml` workflow templates (including
+  `constitution-wiki.yml`; see [[Home]]). Every action in every workflow is
+  pinned by full commit SHA (`SECURITY.md`, "CI/CD Supply Chain").
+- **Agent runtime guardrails** — `templates/.claude/settings.json` (installed
+  with `--agents=claude`) carries a `permissions.deny` list that refuses
+  `sudo`, recursive deletes from `/` or `~`, force pushes, hard resets, and
+  branch or tag deletion, and refuses to read credential-shaped files; see
+  `SECURITY.md`, "Agent Runtime Security".
+- **Incident postmortems** — `templates/docs/INCIDENT_POSTMORTEM.md`, copied
+  per incident into `docs/incidents/`, with corrective actions that become
+  `TODO.md` items (`OPERATIONS.md`, "Incident Response").
 
 A template is a starting point, not a finished document. `check_compliance.sh`
 flags recommended and product-facing docs that still hold copied placeholder

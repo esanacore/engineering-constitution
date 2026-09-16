@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify the integrity of a wiki directory's internal links (constitution
 # DOCUMENTATION.md "Wiki", ADR-0001). Two kinds of rot are caught:
 #
@@ -192,7 +200,9 @@ fi
 echo "Findings: ${#dangling[@]} dangling link(s), ${#orphans[@]} orphan page(s)."
 if [ "$strict" = "true" ]; then
   echo "Failing because --strict was passed."
+  ci_annotate error "check_wiki_links.sh: ${#dangling[@]} dangling link(s), ${#orphans[@]} orphan page(s)"
   exit 1
 fi
+ci_annotate warning "check_wiki_links.sh: ${#dangling[@]} dangling link(s), ${#orphans[@]} orphan page(s) (pass --strict to enforce)"
 echo "Not failing (pass --strict to enforce this). Dangling links are the more serious of the two -- a published wiki renders them as broken links."
 exit 0

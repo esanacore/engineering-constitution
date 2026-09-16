@@ -11,3 +11,5 @@ Engineering Constitution Framework, per `CONSTITUTION.md` Principle 6 and
 | ADR | Title | Status |
 | --- | --- | --- |
 | [0001](0001-wiki-subsystem.md) | A Wiki Subsystem That Stays Current | Accepted |
+| [0002](0002-framework-compatibility-policy.md) | A Compatibility Policy for the Framework's Own Releases | Accepted |
+| [0003](0003-proportionate-workflow.md) | A Proportionate Workflow for Trivial Changes | Accepted |

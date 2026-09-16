@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Flag a pull request that changes source files but never touches README.md
 # or CHANGELOG.md, so documentation drift is caught in CI instead of relying
 # on an agent remembering to update docs (constitution AI_WORKFLOW.md,
@@ -160,7 +168,9 @@ done
 echo
 if [ "$strict" = "true" ]; then
   echo "Failing because --strict was passed."
+  ci_annotate error "check_doc_freshness.sh: source changed but neither README.md nor CHANGELOG.md was touched"
   exit 1
 fi
+ci_annotate warning "check_doc_freshness.sh: source changed but neither README.md nor CHANGELOG.md was touched (pass --strict to enforce)"
 echo "Not failing (pass --strict to enforce this). This is a blunt heuristic — verify the omission is a real gap before enabling --strict."
 exit 0

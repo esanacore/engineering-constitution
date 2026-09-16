@@ -71,7 +71,11 @@ The goal: a fresh clone on a compliant machine either passes the prerequisite ch
 
 - Define who gets notified when a service fails or data is at risk.
 - Capture the first-response checklist, escalation path, and stakeholder communication expectations.
-- Follow up significant incidents with documented corrective actions.
+- Follow up significant incidents with documented corrective actions,
+  written as a postmortem from `templates/docs/INCIDENT_POSTMORTEM.md` and
+  kept under `docs/incidents/` (one file per incident, dated). Corrective
+  actions become `TODO.md` items so they are tracked to completion rather
+  than remembered.
 
 ## Agent Responsibilities
 

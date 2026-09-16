@@ -4,6 +4,11 @@ version: 2
 # Eric's Engineering Constitution advances on the branch the submodule tracks.
 # Paired with .github/workflows/constitution-version.yml, which fails the build
 # until that pull request is merged.
+#
+# Also keeps the SHA-pinned GitHub Actions in .github/workflows/ current (see
+# constitution/SECURITY.md, "CI/CD Supply Chain"): actions are pinned by full
+# commit SHA so a moved tag cannot change what CI runs, and Dependabot is the
+# reviewable way to move a pin.
 updates:
   - package-ecosystem: "gitsubmodule"
     directory: "/"
@@ -17,3 +22,12 @@ updates:
     # submodules are not churned by this configuration.
     allow:
       - dependency-name: "constitution"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
