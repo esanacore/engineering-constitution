@@ -1,4 +1,4 @@
-# ADR-0002: A Compatibility Policy for the Framework's Own Releases
+# ADR-0003: A Compatibility Policy for the Framework's Own Releases
 
 Status: Accepted
 

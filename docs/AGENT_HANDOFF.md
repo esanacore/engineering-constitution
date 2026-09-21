@@ -20,14 +20,14 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 ### Session: 2026-09-16
 
 - **Accomplishments**: the approved improvement batch (see `CHANGELOG.md`
-  `Unreleased` / 1.47.0): own tests in CI, self-compliance docs, instruction
+  `Unreleased` / 1.48.0): own tests in CI, self-compliance docs, instruction
   template and skills checkers, checker contract meta-test with CI
-  annotations, MCP server drift fix, ADR rule plus ADR-0002/0003, agent-facing
+  annotations, MCP server drift fix, ADR rule plus ADR-0003/0004, agent-facing
   security, CI supply chain, proportionate workflow, PR/CODEOWNERS templates,
   commit conventions, product-facing definition, postmortem template, data
   classification, OTS license column, framework SemVer semantics, fleet bump
   script.
-- **Pending Work**: tag `v1.47.0` and publish the GitHub Release after merge
+- **Pending Work**: tag `v1.48.0` and publish the GitHub Release after merge
   (maintainer); run `scripts/bump_adopters.sh` for the fleet.
 - **Verification Run**: `bash scripts/run_all_tests.sh` (all suites green) and
   every self-governance checker in `--strict` mode.

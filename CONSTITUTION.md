@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.47.0
+Version: 1.48.0
 
 ## Purpose
 
@@ -30,6 +30,7 @@ Review:
 - API documentation
 - Deployment documentation
 - Wiki content
+- Demo page (`demo.html`) for product-facing repositories — a reader who finishes the documentation should also be able to see the product work
 - Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
 
 A task is not complete until documentation impact has been evaluated.
@@ -209,7 +210,7 @@ the maintained registry of canonical style guides by language/platform.
 ## Required Workflow
 
 See `AI_WORKFLOW.md` for the complete step-by-step workflow, including the
-proportionate fast path for trivial changes (ADR-0003): a change that alters
+proportionate fast path for trivial changes (ADR-0004): a change that alters
 no behavior and touches no sensitive area may skip the planning, critique, and
 release-evaluation steps, but never the secrets sweep, and when in doubt it is
 not trivial.

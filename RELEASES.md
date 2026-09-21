@@ -14,7 +14,7 @@ Follow semantic versioning (SemVer) for all repositories:
 
 SemVer is defined in terms of an API. A governance framework's API is the
 contract its adopters' CI depends on, so for *this* repository the terms mean
-(ADR-0002):
+(ADR-0003):
 
 - **MAJOR** — an adopter's CI can turn red, or a documented invocation can
   stop working, without any change on the adopter's side: a new **required**

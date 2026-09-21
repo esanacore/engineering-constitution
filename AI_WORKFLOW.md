@@ -43,7 +43,7 @@ The thirty steps above are sized for a change that alters behavior. Applied
 unchanged to a typo fix, they cost more than the fix and teach agents that the
 workflow is ceremony — the failure mode `sources/summaries/articles/the-harness-is-the-thing.md`
 warns about. So the workflow is proportionate, by rule rather than by
-judgment call (ADR-0003):
+judgment call (ADR-0004):
 
 A change is **trivial** only when *all* of the following hold:
 

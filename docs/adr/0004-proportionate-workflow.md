@@ -1,4 +1,4 @@
-# ADR-0003: A Proportionate Workflow for Trivial Changes
+# ADR-0004: A Proportionate Workflow for Trivial Changes
 
 Status: Accepted
 

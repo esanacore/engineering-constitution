@@ -56,6 +56,7 @@ Creates or installs:
   - docs/SESSION_PLAN.md
   - docs/MEMORY.md
   - docs/ARCHITECTURE.md
+  - demo.html
   - wiki/Home.md
   - .constitution-bootstrap/adoption-report.md
   - .constitution-bootstrap/templates/ for skipped existing files
@@ -369,6 +370,12 @@ copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"
 copy_file "$template_dir/docs/MEMORY.md" "$project_path/docs/MEMORY.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
+
+# A product-facing repository shows its product, not only describes it
+# (constitution DOCUMENTATION.md "Demo Page", ADR-0002). The scaffold is a
+# working single-file page carrying a placeholder marker, so check_compliance.sh
+# reports it as unfinished until the adopter fills it in.
+copy_file "$template_dir/demo.html" "$project_path/demo.html"
 
 # A wiki is a required governance artifact (constitution DOCUMENTATION.md
 # "Required Files", ADR-0001). Install the Home page scaffold; the adopter

@@ -17,7 +17,7 @@ This is deliberately stored in the repository rather than only in a chat window.
 ## 2a. Scale the workflow to the change
 
 Not every change is a feature. `AI_WORKFLOW.md`'s "Proportionate Workflow"
-(ADR-0003) defines a **trivial** change by four tests that must all hold — no
+(ADR-0004) defines a **trivial** change by four tests that must all hold — no
 behavior change, small enough for one screen, nothing on the sensitive list
 (dependencies, environment variables, secrets, auth, CI, instruction files,
 checkers, templates), and nobody has asked for the full workflow — and names

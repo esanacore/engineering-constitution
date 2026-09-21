@@ -33,7 +33,7 @@ the pull request UI rather than only in the job log.
 
 | Script | What it verifies |
 | --- | --- |
-| `check_compliance.sh` | The repository carries the required, recommended, and product-facing governance files, and that recommended/product docs are not still template placeholders. |
+| `check_compliance.sh` | The repository carries the required, recommended, and product-facing governance files — including `demo.html` in the product-facing tier — and that recommended/product docs are not still template placeholders. |
 | `check_traceability.sh` | Every requirement ID in `docs/PRODUCT_REQUIREMENTS.md` has a non-gap verifying-test row in `docs/REQUIREMENTS_TRACEABILITY.md`, matched by exact value so a layered ID never satisfies a system-layer ID. |
 | `run_declared_tests.sh` | Runs the "Full suite" command declared in `docs/TEST_PLAN.md`, so "run all automated tests" is enforced in CI. |
 | `check_doc_freshness.sh` | Flags a PR that changes source but never touches `README.md`/`CHANGELOG.md`. Blunt tripwire. |

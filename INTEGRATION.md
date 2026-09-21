@@ -665,7 +665,7 @@ Release", step 9):
 
 ```bash
 # One clone URL per line; blank lines and # comments are ignored.
-bash scripts/bump_adopters.sh --sha v1.47.0 --repos adopters.txt
+bash scripts/bump_adopters.sh --sha v1.48.0 --repos adopters.txt
 ```
 
 For each repository this clones, creates `constitution/bump-v<version>`,

@@ -35,6 +35,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/wiki/Home.md`: Wiki landing-page scaffold installed into every adopter as the required `wiki/Home.md` (see `docs/adr/0001-wiki-subsystem.md`).
 - `templates/docs/INCIDENT_POSTMORTEM.md`: Blameless postmortem template, copied per incident into `docs/incidents/`.
 - `templates/.github/pull_request_template.md` and `templates/.github/CODEOWNERS`: Installed by bootstrap so every pull request carries the Completion Checklist and the trivial-change declaration, and code ownership is a host-enforced setting rather than a memory.
+- `templates/demo.html`: Single-file demo-page scaffold installed into every adopter; product-facing repositories fill it in and publish it (see `DOCUMENTATION.md` "Demo Page" and `docs/adr/0002-demo-page-requirement.md`).
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
@@ -127,7 +128,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.47.0
+Current version: 1.48.0
 
 See `VERSION`.
 
