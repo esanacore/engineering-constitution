@@ -82,6 +82,7 @@ test_new_project() {
   [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
   [ -f "docs/MEMORY.md" ] || { echo "FAIL: MEMORY.md missing"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
+  [ -f "demo.html" ] || { echo "FAIL: demo.html missing"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }
   # Verify requirement traceability wiring
   grep -q "FR-001" docs/PRODUCT_REQUIREMENTS.md || { echo "FAIL: PRODUCT_REQUIREMENTS.md missing requirement IDs"; exit 1; }
@@ -90,6 +91,17 @@ test_new_project() {
   grep -q "OTS Software Inventory" docs/OTS_SOFTWARE.md || { echo "FAIL: OTS_SOFTWARE.md missing inventory heading"; exit 1; }
   grep -q "Environment & Configuration Contract" docs/ENV_VARS.md || { echo "FAIL: ENV_VARS.md missing contract heading"; exit 1; }
   grep -q "Layer Boundaries" docs/ARCHITECTURE.md || { echo "FAIL: ARCHITECTURE.md missing Layer Boundaries section"; exit 1; }
+  # The demo scaffold must be recognizable as unfinished and must not reach for
+  # the network, which would break the file:// promise in DOCUMENTATION.md.
+  grep -q "constitution-demo-template-placeholder" demo.html || { echo "FAIL: demo.html missing template placeholder marker"; exit 1; }
+  if grep -Eq '(src|href)="(https?:)?//|url\((["'"'"']?)(https?:)?//|@import' demo.html; then
+    echo "FAIL: demo.html scaffold loads a remote asset"
+    exit 1
+  fi
+  if grep -Eq '\b(fetch|XMLHttpRequest|EventSource|WebSocket)\b' demo.html; then
+    echo "FAIL: demo.html scaffold makes a network request"
+    exit 1
+  fi
   # The shipped layer table is commented out so a fresh adopter is not failed by
   # a template's example paths; check_architecture.sh must treat it as absent.
   bash "$repo_root/scripts/check_architecture.sh" --strict . >/dev/null 2>&1 || { echo "FAIL: fresh bootstrap does not pass check_architecture.sh --strict"; exit 1; }

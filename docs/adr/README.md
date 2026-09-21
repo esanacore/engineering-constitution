@@ -11,3 +11,4 @@ Engineering Constitution Framework, per `CONSTITUTION.md` Principle 6 and
 | ADR | Title | Status |
 | --- | --- | --- |
 | [0001](0001-wiki-subsystem.md) | A Wiki Subsystem That Stays Current | Accepted |
+| [0002](0002-demo-page-requirement.md) | A Demo Page for Product-Facing Repositories | Accepted |

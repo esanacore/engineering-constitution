@@ -39,8 +39,8 @@ Arguments:
 
 Options:
   --strict    Treat missing recommended files as failures, not warnings.
-  --product   Treat the product-facing files (docs/PRODUCT_REQUIREMENTS.md and
-              docs/REQUIREMENTS_TRACEABILITY.md) as required.
+  --product   Treat the product-facing files (docs/PRODUCT_REQUIREMENTS.md,
+              docs/REQUIREMENTS_TRACEABILITY.md, and demo.html) as required.
   -h, --help  Show this help.
 
 Tiers:
@@ -52,7 +52,8 @@ Tiers:
                 docs/AGENT_PROMPTS.md, docs/AGENT_HANDOFF.md, docs/OPERATIONS.md,
                 docs/TEST_PLAN.md, docs/OTS_SOFTWARE.md, docs/SESSION_PLAN.md,
                 docs/MEMORY.md, docs/ENV_VARS.md.
-  Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md.
+  Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md,
+                demo.html.
 
 Relocated files:
   HELP.md, SECURITY.md, CONTRIBUTING.md, and SYSTEM_PROMPT.md moved out of the
@@ -197,10 +198,20 @@ recommended_skip_placeholder_check() {
 product_files=(
   docs/PRODUCT_REQUIREMENTS.md
   docs/REQUIREMENTS_TRACEABILITY.md
+  demo.html
 )
 
 contains_placeholder_content() {
   local file=$1
+
+  # demo.html is HTML, where a comment is ordinary markup rather than a
+  # template prompt, so the Markdown placeholder patterns below would flag
+  # every honestly finished page. It carries its own marker instead, written
+  # into templates/demo.html and removed when the adopter fills the page in.
+  if [ "$(basename "$file")" = "demo.html" ]; then
+    grep -q 'constitution-demo-template-placeholder' "$file"
+    return
+  fi
 
   grep -Eq \
     '(<add here>|<command>|<YYYY-MM-DD>|<untested behavior>|<requirement description>|describe the observable condition|Briefly describe the product, target users, and current release goal|# e.g., make doctor|<!--)' \
@@ -254,9 +265,11 @@ if [ "$product" = "true" ]; then
 else
   echo "Product-facing (recommended for product-facing repositories):"
 fi
+# Every product-facing entry is a file, so a directory of that name is a gap
+# wearing the right label rather than a satisfied requirement.
 for f in "${product_files[@]}"; do
-  if [ -e "$root/$f" ]; then
-    if [ -f "$root/$f" ] && contains_placeholder_content "$root/$f"; then
+  if [ -f "$root/$f" ]; then
+    if contains_placeholder_content "$root/$f"; then
       if [ "$product" = "true" ]; then
         echo "  MISSING  $f (product placeholder, --product)"
       else

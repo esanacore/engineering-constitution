@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.46.0
+Version: 1.47.0
 
 ## Purpose
 
@@ -30,6 +30,7 @@ Review:
 - API documentation
 - Deployment documentation
 - Wiki content
+- Demo page (`demo.html`) for product-facing repositories — a reader who finishes the documentation should also be able to see the product work
 - Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
 
 A task is not complete until documentation impact has been evaluated.

@@ -9,7 +9,8 @@ This page is a map; the source files are authoritative.
 `CONSTITUTION.md` defines twelve principles:
 
 1. **Documentation is part of the deliverable** — including the "what can it do
-   today?" capabilities list, and wiki content.
+   today?" capabilities list, wiki content, and a demo page for product-facing
+   repositories.
 2. **Testing is required** — new behavior gets tests, bug fixes get regression
    tests, coverage is evaluated against declared targets, gaps are recorded.
 3. **TODO management** — `TODO.md` is the living roadmap.
@@ -37,7 +38,7 @@ This page is a map; the source files are authoritative.
 | --- | --- |
 | `AI_WORKFLOW.md` | The required step-by-step workflow for AI-assisted changes. |
 | `TESTING.md` | Test pyramid, coverage, and CI enforcement expectations. |
-| `DOCUMENTATION.md` | Required/encouraged documents, requirements traceability, ADRs, and the wiki. |
+| `DOCUMENTATION.md` | Required/encouraged documents, requirements traceability, ADRs, the wiki, and the demo page. |
 | `SECURITY.md` | Security review expectations and the secrets sweep. |
 | `ARCHITECTURE.md` | SOLID, the Dependency Rule and how it is enforced, design patterns, and visual architecture. |
 | `OPERATIONS.md` | Deployment, monitoring, backup/restore, rollback, incident response. |

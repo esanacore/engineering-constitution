@@ -66,6 +66,7 @@ Repositories should also include:
 - docs/AGENT_HANDOFF.md
 - docs/PRODUCT_REQUIREMENTS.md for product-facing applications
 - docs/REQUIREMENTS_TRACEABILITY.md for product-facing applications
+- demo.html for product-facing applications
 - docs/TEST_PLAN.md for repositories with automated tests
 - docs/OTS_SOFTWARE.md for repositories with third-party dependencies
 - docs/ENV_VARS.md for documenting environment variable requirements
@@ -166,6 +167,7 @@ For each meaningful change, review whether updates are needed for:
 - Architecture documentation
 - Product requirements
 - Requirements traceability matrix
+- Demo page (`demo.html`) for product-facing repositories
 - Test plan and coverage records
 - OTS software inventory (when dependencies were added, removed, or upgraded)
 - Environment contract (when environment variables were added or removed)
@@ -188,6 +190,8 @@ README.md should explain:
 - Who it is for
 - How to install or set it up
 - How to run it
+- Where to see it working — link `demo.html`, and its published URL when the
+  repository is product-facing; see "Demo Page" below
 - How to test it
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
@@ -213,6 +217,64 @@ a new contributor or an AI agent orienting itself.
   touching README.md/CHANGELOG.md. It can only verify the file was *touched*,
   never that the content is actually accurate — treat it as a backstop for
   the mechanical case, never as the standard itself.
+
+## Demo Page
+
+A README tells a reader what a project does. A demo page shows them. Every
+product-facing repository carries `demo.html` in its root: one self-contained
+page that a reader can open — from a clone, or from the project's published
+site — and come away understanding the product without installing it, standing
+up a service, or owning the hardware it normally runs on.
+
+This is a documentation artifact, not marketing. The distance between "I read
+the README" and "I understand what this does" is where a project loses the
+non-technical stakeholder, the evaluating engineer, and the agent orienting
+itself in an unfamiliar repository. A page that demonstrates the product
+closes that distance in a way prose cannot, and it does so for the audience
+least able to read the code.
+
+- **One file, no build, no backend, no network.** `demo.html` is a single file
+  with its styles and scripts inline. It opens correctly from `file://` and
+  from a static host. No npm install, no bundler, no CDN fonts or scripts, no
+  API the reader must have running. Principle 7 (Dependency Hygiene) applies
+  to the demo exactly as it applies to the product.
+- **Honest about what is real.** A demo that fabricates output without saying
+  so is a lie told in HTML. Simulated transcripts, canned data, and
+  pre-recorded results are legitimate — a demo of a service nobody can reach
+  is worth more than no demo — but the page must label them plainly, in the
+  interface itself and not only in a footnote, and must say what the real
+  thing requires.
+- **Current with the product.** The demo is covered by the Documentation
+  Review Checklist below: a change to user-facing behavior that leaves the
+  demo showing the old behavior is an incomplete change. A stale demo is worse
+  than none, because it is believed.
+- **Published where the audience already is.** When the hosting platform
+  offers static publishing, publish it — GitHub Pages from the default branch
+  is the usual path — and link it from `README.md` so the page is one click
+  from the front door.
+- **Public-artifact safety rules apply.** A published demo is world-readable.
+  It carries no credentials, tokens, private hostnames, internal IP addresses,
+  or customer data, and `SECURITY.md`'s review applies to it like any other
+  shipped surface.
+
+Automated behavior with real data is the ideal, a scripted simulation is the
+normal case, and an interactive explanation of the system is the floor.
+Repositories that are not product-facing — internal libraries, pure
+configuration repositories, research scratch space — are not expected to carry
+one, which is why this sits in the product-facing tier rather than the
+required one.
+
+Enforcement follows the framework's usual shape.
+`scripts/check_compliance.sh` treats `demo.html` as a product-facing file
+alongside `docs/PRODUCT_REQUIREMENTS.md` and
+`docs/REQUIREMENTS_TRACEABILITY.md`: a warning for every repository, a failure
+under `--product`. `scripts/bootstrap.sh` installs the `templates/demo.html`
+scaffold so a freshly bootstrapped repository starts with a working page
+rather than a blank requirement. The scaffold carries a placeholder marker,
+so an unedited copy is reported as a placeholder in the same way a
+template-shaped Markdown file is — copying the template is the start of the
+work, not the end of it. The decision is recorded in
+`docs/adr/0002-demo-page-requirement.md`.
 
 ## CHANGELOG Expectations
 
