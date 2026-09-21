@@ -8,6 +8,9 @@
   - [ ] Generate the mechanical wiki pages from source of truth (e.g. a Governance Checkers page built from the `scripts/check_*.sh` headers) so they cannot drift.
   - [ ] Scheduled agent regeneration: a cadence/on-release GitHub Action that invokes Solon to reconcile the wiki against current source and open a PR — the genuinely self-updating layer, built on the foundation above.
 
+- [~] Make a demo page a framework practice rather than one repository's habit. Shipped in 1.47.0: ADR-0002 (`docs/adr/0002-demo-page-requirement.md`, Accepted), `DOCUMENTATION.md`'s "Demo Page" section + Principle 1 review bullet, `demo.html` in `check_compliance.sh`'s product-facing tier (with an HTML-aware placeholder marker so finished pages carrying comments are not reported as templates), `templates/demo.html` installed by `bootstrap.sh`, and cases 5a/5b in `test_check_compliance.sh`. Follow-ups:
+  - [ ] Add `scripts/check_demo_page.sh` to verify mechanically what the standard asks for in prose: single file, no remote `src`/`href`, no build artifact references, and a link from `README.md`. Presence is all `check_compliance.sh` can currently see, and a demo that loads a CDN font passes today.
+  - [ ] Roll the product-facing tier entry across the adopter fleet with `audit_adopters.sh`, so existing product repositories see the warning before their CI starts passing `--product`.
 - [x] Generate 25 constitution-enforcing agent skills and integrate them locally. Shipped in 1.37.0.
 - [x] Generate a premium visual infographic (`assets/diagrams/constitution_infographic.jpg`) and an interactive HTML demo dashboard (`demo.html`) for exploring the constitution framework.
 - [x] Recommend AI-specific firewalls (Claw Patrol) for agent runtime security in SECURITY.md and OPERATIONS.md.

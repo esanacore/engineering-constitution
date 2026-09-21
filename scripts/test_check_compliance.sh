@@ -38,6 +38,10 @@ make_compliant_repo() {
     echo "placeholder" > "$dest/docs/$f"
   done
   echo "placeholder" > "$dest/docs/adr/0001-record-architecture-decisions.md"
+  # A finished demo page: HTML, and deliberately carrying an HTML comment, which
+  # the Markdown placeholder patterns would otherwise flag.
+  printf '<!doctype html>\n<!-- a finished page may still have comments -->\n<title>Demo</title>\n' \
+    > "$dest/demo.html"
   mkdir -p "$dest/wiki"
   echo "placeholder" > "$dest/wiki/Home.md"
   echo "v1" > "$dest/constitution/VERSION"
@@ -181,6 +185,69 @@ echo "$output"
 [ "$status" -eq 1 ] || { echo "FAIL(5): expected exit 1 under --product with a product gap, got $status"; exit 1; }
 echo "$output" | grep -q "MISSING  docs/REQUIREMENTS_TRACEABILITY.md (product, --product)" || { echo "FAIL(5): product failure not shown"; exit 1; }
 echo "SUCCESS(5): product-facing files warn by default and fail under --product."
+
+# ---------------------------------------------------------------------------
+# 5a. A product-facing repository shows its product (DOCUMENTATION.md
+#     "Demo Page", ADR-0002). A missing demo.html warns by default and fails
+#     under --product, like the other product-facing artifacts.
+# ---------------------------------------------------------------------------
+repo="$test_dir/missing-demo"
+make_compliant_repo "$repo"
+rm "$repo/demo.html"
+
+run_check "$repo"
+echo "$output"
+[ "$status" -eq 0 ] || { echo "FAIL(5a): expected exit 0 when demo.html is missing by default, got $status"; exit 1; }
+echo "$output" | grep -q "WARN     demo.html (product-facing)" || { echo "FAIL(5a): demo.html warning not shown"; exit 1; }
+
+run_check --product "$repo"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(5a): expected exit 1 under --product without demo.html, got $status"; exit 1; }
+echo "$output" | grep -q "MISSING  demo.html (product, --product)" || { echo "FAIL(5a): demo.html failure not shown"; exit 1; }
+echo "SUCCESS(5a): demo.html warns by default and fails under --product."
+
+# ---------------------------------------------------------------------------
+# 5b. The placeholder check is Markdown-shaped: an HTML comment is ordinary
+#     markup, not a template prompt. A finished demo page containing comments
+#     must pass, and only the scaffold's own marker counts as a placeholder.
+# ---------------------------------------------------------------------------
+repo="$test_dir/demo-placeholder"
+make_compliant_repo "$repo"
+
+run_check --product "$repo"
+echo "$output"
+[ "$status" -eq 0 ] || { echo "FAIL(5b): a finished demo.html with comments must pass --product, got $status"; exit 1; }
+echo "$output" | grep -q "OK       demo.html" || { echo "FAIL(5b): finished demo.html not reported OK"; exit 1; }
+
+printf '<!doctype html>\n<body data-demo-state="constitution-demo-template-placeholder">\n' \
+  > "$repo/demo.html"
+
+run_check "$repo"
+echo "$output"
+[ "$status" -eq 0 ] || { echo "FAIL(5b): expected exit 0 for an unedited scaffold by default, got $status"; exit 1; }
+echo "$output" | grep -q "WARN     demo.html (product placeholder)" || { echo "FAIL(5b): scaffold placeholder warning not shown"; exit 1; }
+
+run_check --product "$repo"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(5b): expected exit 1 under --product for an unedited scaffold, got $status"; exit 1; }
+echo "$output" | grep -q "MISSING  demo.html (product placeholder, --product)" || { echo "FAIL(5b): scaffold placeholder failure not shown"; exit 1; }
+echo "SUCCESS(5b): only the scaffold marker counts as a demo-page placeholder."
+
+# ---------------------------------------------------------------------------
+# 5c. A directory carrying a product-facing file's name is a gap wearing the
+#     right label. Presence checks that accept any filesystem entry would
+#     report it OK.
+# ---------------------------------------------------------------------------
+repo="$test_dir/demo-directory"
+make_compliant_repo "$repo"
+rm "$repo/demo.html"
+mkdir "$repo/demo.html"
+
+run_check --product "$repo"
+echo "$output"
+[ "$status" -eq 1 ] || { echo "FAIL(5c): expected exit 1 when demo.html is a directory, got $status"; exit 1; }
+echo "$output" | grep -q "MISSING  demo.html (product, --product)" || { echo "FAIL(5c): directory not reported as missing"; exit 1; }
+echo "SUCCESS(5c): a directory does not satisfy a product-facing file."
 
 # ---------------------------------------------------------------------------
 # 6. Unknown option / missing root -> usage error exit 2.

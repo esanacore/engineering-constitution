@@ -16,6 +16,10 @@ repository. Notable groups:
   `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`,
   `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md`, `ENV_VARS.md`, `MEMORY.md`,
   `SESSION_PLAN.md`, `AGENT_HANDOFF.md`, and `MVP_BACKLOG.md`.
+- **Demo page** — `templates/demo.html`, a working single-file page (inline
+  styles and scripts, no build, no backend, no network) that product-facing
+  repositories fill in and publish. See `DOCUMENTATION.md`'s "Demo Page" and
+  `docs/adr/0002-demo-page-requirement.md`.
 - **GitHub automation** under `templates/.github/` — Copilot instructions,
   Dependabot configuration, the Solon agent, and the `constitution-*.yml`
   workflow templates (including `constitution-wiki.yml`; see [[Home]]).
@@ -23,7 +27,10 @@ repository. Notable groups:
 A template is a starting point, not a finished document. `check_compliance.sh`
 flags recommended and product-facing docs that still hold copied placeholder
 text, so adoption is not "done" until each template has been customized or
-trimmed to describe the real repository.
+trimmed to describe the real repository. `demo.html` is checked the same way
+but by a different signal: HTML comments are ordinary markup rather than
+template prompts, so the scaffold carries an explicit
+`constitution-demo-template-placeholder` marker that the adopter deletes.
 
 ## Example project
 

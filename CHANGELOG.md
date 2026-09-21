@@ -6,6 +6,20 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.47.0 - 2026-09-21
+
+### Added
+
+- **A demo page is now a product-facing expectation** (`docs/adr/0002-demo-page-requirement.md`, Accepted). The framework's documentation standards were entirely textual: a fully compliant repository could be read cover to cover without a reader ever seeing the product work. This repository has shipped `demo.html` for months — published through GitHub Pages, linked from `README.md`, and load-bearing enough that `RELEASES.md` step 2 updates its version badge — but no standard asked adopters for one. `DOCUMENTATION.md` gains a "Demo Page" section defining the artifact: one self-contained `demo.html` in the repository root with inline styles and scripts, opening correctly from `file://` with no build, no backend, and no network (Principle 7 applies to the demo as it does to the product); plain in-interface labelling of anything simulated, because a demo that fabricates output without saying so is a lie told in HTML; currency with the product, enforced through a new Documentation Review Checklist entry; publication through the platform's static hosting when available, linked from the README; and the same no-secrets rule as any other published artifact. `CONSTITUTION.md` Principle 1 gains the matching review bullet, and `README Expectations` now asks for the link.
+
+- **`scripts/check_compliance.sh` checks `demo.html` in the product-facing tier**, alongside `docs/PRODUCT_REQUIREMENTS.md` and `docs/REQUIREMENTS_TRACEABILITY.md`: a warning for every repository, a failure under `--product`. Product-facing, not required — an internal library or a pure configuration repository has no product to demonstrate, and a required tier would produce ceremonial empty pages or fail honest repositories. The placeholder check needed a second shape to do this correctly: the existing grep treats `<!--` as evidence of an unfinished template, which is true of Markdown and false of HTML, where a comment is ordinary markup. `demo.html` therefore carries its own explicit marker (`constitution-demo-template-placeholder`), written into the scaffold and deleted by the adopter, so finished pages with comments pass and unedited copies do not. `scripts/test_check_compliance.sh` gains cases 5a and 5b covering the new tier entry and both halves of that distinction.
+
+- **`templates/demo.html`, installed by `scripts/bootstrap.sh`** into every adopting repository: a working, dependency-free single-file page — overview, capability panels, and a scripted example interaction — so a freshly bootstrapped repository starts from something that runs rather than from a blank requirement. It carries the placeholder marker, so `check_compliance.sh` reports it as unfinished until it is filled in. `scripts/test_bootstrap.sh` asserts the file is installed, still carries the marker, loads no remote asset, and issues no request, which is the mechanical half of the `file://` promise.
+
+### Fixed
+
+- **`scripts/check_compliance.sh` no longer accepts a directory in place of a product-facing file.** The tier tested for any filesystem entry, so a directory named `docs/PRODUCT_REQUIREMENTS.md` — or, under the new entry, `demo.html` — reported `OK`. Every product-facing entry is a file, so the tier now requires one, and `test_check_compliance.sh` case 5c covers it. Found while reviewing the demo-page change; it applies to all three product entries, not only the new one.
+
 ## 1.46.0 - 2026-09-10
 
 ### Changed

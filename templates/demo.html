@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Demo</title>
+    <!--
+      Demo page scaffold from Eric's Engineering Constitution
+      (DOCUMENTATION.md, "Demo Page").
+
+      Replace every <bracketed> value below with the real project, then delete
+      the placeholder marker in the <body> data attribute. Until that marker is
+      gone, scripts/check_compliance.sh reports this file as an unfinished
+      template, exactly as it does for a copied Markdown template.
+
+      House rules for this page:
+        - One file. Styles and scripts stay inline; no build step, no CDN, no
+          network call, no backend. It must work opened from file://.
+        - Say what is simulated. If the interactive part replays a canned
+          transcript or fixture data, label it in the interface, not only here.
+        - Keep it current. A demo showing last release's behavior is worse
+          than no demo, because readers believe it.
+        - Nothing secret. This page is published; treat it as world-readable.
+    -->
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --surface: #141c30;
+        --border: #27334d;
+        --text: #f2f5fa;
+        --muted: #9aa8bc;
+        --accent: #7dd3fc;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: clamp(24px, 5vw, 64px);
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.65;
+      }
+
+      main {
+        width: min(100%, 900px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -0.03em;
+      }
+
+      .tagline {
+        margin: 0 0 32px;
+        max-width: 60ch;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .notice {
+        margin: 0 0 32px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .panels {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        margin: 0 0 32px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .panels li {
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+
+      .panels strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .panels span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .stage {
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+
+      .stage output {
+        display: block;
+        min-height: 4.5rem;
+        margin-top: 14px;
+        white-space: pre-wrap;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 0.9rem;
+      }
+
+      button {
+        padding: 10px 16px;
+        color: #07101e;
+        border: 0;
+        border-radius: 10px;
+        background: var(--accent);
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      button:focus-visible,
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      footer {
+        margin-top: 40px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body data-demo-state="constitution-demo-template-placeholder">
+    <main>
+      <h1>&lt;Project Name&gt;</h1>
+      <p class="tagline">&lt;One sentence a non-technical reader understands: what this does and who it is for.&gt;</p>
+
+      <p class="notice">
+        This demo runs entirely in your browser against a recorded example.
+        &lt;State what the real thing needs — an account, a server, specific
+        hardware — and link the setup guide.&gt;
+      </p>
+
+      <ul class="panels">
+        <li>
+          <strong>&lt;Capability one&gt;</strong>
+          <span>&lt;What a reader gets from it.&gt;</span>
+        </li>
+        <li>
+          <strong>&lt;Capability two&gt;</strong>
+          <span>&lt;What a reader gets from it.&gt;</span>
+        </li>
+        <li>
+          <strong>&lt;Capability three&gt;</strong>
+          <span>&lt;What a reader gets from it.&gt;</span>
+        </li>
+      </ul>
+
+      <section class="stage" aria-labelledby="stage-title">
+        <h2 id="stage-title">Try it</h2>
+        <p>&lt;Replace this with the smallest interaction that shows the product working.&gt;</p>
+        <button id="run" type="button">Run the example</button>
+        <p class="notice" hidden id="running">Playing the recorded example…</p>
+        <output id="result" role="status" aria-live="polite"></output>
+      </section>
+
+      <footer>
+        <p>
+          Source and setup: <a href="README.md">README</a>.
+          Built to <a href="constitution/DOCUMENTATION.md">Eric's Engineering Constitution</a>.
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      // Replace with the real scripted interaction. Keep it dependency-free
+      // and keep any simulated output visibly labelled as simulated.
+      const transcript = [
+        "> example input",
+        "recorded response line one",
+        "recorded response line two",
+      ];
+
+      const runButton = document.getElementById("run");
+      const running = document.getElementById("running");
+      const result = document.getElementById("result");
+
+      // Guarded against a second click mid-playback: without this, two runs
+      // interleave their lines and the demo looks broken.
+      runButton.addEventListener("click", () => {
+        runButton.disabled = true;
+        running.hidden = false;
+        result.textContent = "";
+
+        transcript.forEach((line, index) => {
+          window.setTimeout(() => {
+            result.textContent += `${line}\n`;
+            if (index === transcript.length - 1) {
+              runButton.disabled = false;
+              running.hidden = true;
+            }
+          }, (index + 1) * 350);
+        });
+      });
+    </script>
+  </body>
+</html>

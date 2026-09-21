@@ -33,6 +33,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
 - `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `templates/wiki/Home.md`: Wiki landing-page scaffold installed into every adopter as the required `wiki/Home.md` (see `docs/adr/0001-wiki-subsystem.md`).
+- `templates/demo.html`: Single-file demo-page scaffold installed into every adopter; product-facing repositories fill it in and publish it (see `DOCUMENTATION.md` "Demo Page" and `docs/adr/0002-demo-page-requirement.md`).
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
@@ -115,7 +116,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.46.0
+Current version: 1.47.0
 
 See `VERSION`.
 
