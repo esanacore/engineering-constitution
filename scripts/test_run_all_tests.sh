@@ -70,7 +70,12 @@ echo "Test 6: under GitHub Actions a failure emits an ::error:: annotation"
 status=0
 output=$(GITHUB_ACTIONS=true "$runner" --quiet --dir "$tmp/one-fail") || status=$?
 grep -q '^::error::run_all_tests.sh: 1 of 2 suites failed: test_bad.sh' <<< "$output" || { echo "FAIL: no ::error:: annotation under GITHUB_ACTIONS"; echo "$output"; exit 1; }
-output=$("$runner" --quiet --dir "$tmp/all-pass")
+# Clear GITHUB_ACTIONS explicitly (it is set for real when this runs in CI) and
+# use the failing fixture, so the case proves the helper is silent rather than
+# passing because nothing was annotated anyway.
+status=0
+output=$(env -u GITHUB_ACTIONS "$runner" --quiet --dir "$tmp/one-fail") || status=$?
+[ "$status" -eq 1 ] || { echo "FAIL: expected exit 1, got $status"; exit 1; }
 if grep -q '^::' <<< "$output"; then
   echo "FAIL: annotation emitted outside GitHub Actions"; echo "$output"; exit 1
 fi

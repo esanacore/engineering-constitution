@@ -74,7 +74,9 @@ mkdir -p "$tmp/empty"
 status=0; out=$(GITHUB_ACTIONS=true scripts/check_compliance.sh "$tmp/empty" 2>&1) || status=$?
 [ "$status" -eq 1 ] || fail "check_compliance.sh on an empty repo exited $status, expected 1"
 grep -q '^::error::check_compliance.sh: required missing:' <<< "$out" || { echo "$out"; fail "no ::error:: annotation from check_compliance.sh"; }
-out=$(scripts/check_compliance.sh "$tmp/empty" 2>&1 || true)
+# GitHub sets GITHUB_ACTIONS=true for real when this suite runs in CI, so the
+# "outside Actions" case must clear it explicitly rather than assume it is unset.
+out=$(env -u GITHUB_ACTIONS scripts/check_compliance.sh "$tmp/empty" 2>&1 || true)
 if grep -q '^::' <<< "$out"; then fail "check_compliance.sh emitted an annotation outside GitHub Actions"; fi
 
 mkdir -p "$tmp/wiki-repo/wiki"
