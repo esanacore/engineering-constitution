@@ -1,0 +1,14 @@
+# Code owners are requested for review automatically on every pull request
+# that touches a matching path, and branch protection can require their
+# approval. This answers OPERATIONS.md's "document who can deploy, rotate
+# credentials, approve production changes" for the repository itself.
+#
+# The last matching pattern wins. Uncomment and fill in; a CODEOWNERS file
+# with only comments does nothing, which is a safe default until owners are
+# named. Examples:
+#
+# *                         @your-org/maintainers
+# /.github/                 @your-org/platform
+# /docs/OPERATIONS.md       @your-org/on-call
+# /docs/SECURITY.md         @your-org/security
+# /constitution             @your-org/maintainers

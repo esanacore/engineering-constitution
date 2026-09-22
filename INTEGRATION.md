@@ -249,6 +249,55 @@ your Copilot client (click the **Tools** icon in Copilot Chat to see them). Tool
 names can vary across Copilot platforms, so verify them before relying on the
 agent in CI-adjacent workflows.
 
+## Agent Skills
+
+The framework ships 25 agent skills under `skills/`, one directory per skill
+with a `SKILL.md` (YAML front matter `name` + `description`, then the
+instructions). Each one executes a constitution rule autonomously — running
+the secrets sweep before completion, scaffolding a threat model when a trust
+boundary moves, proposing `docs/MEMORY.md` entries, keeping README
+capabilities in sync — and they reference the checkers through the
+`constitution/scripts/` path an adopter has. They are validated by
+`scripts/check_skills.sh` (front-matter name matches its directory,
+description present, every script a skill names actually exists).
+
+Skills are loaded by the tool, not by the constitution, so wiring is per tool:
+
+- **Claude Code** reads project skills from `.claude/skills/<name>/SKILL.md`.
+  Point it at the submodule once per adopting repository:
+
+  ```bash
+  mkdir -p .claude/skills
+  for d in constitution/skills/*/; do                        # macOS/Linux
+    ln -s "../../$d" ".claude/skills/$(basename "$d")"
+  done
+  ```
+
+  (One symlink per skill, so each lands at `.claude/skills/<name>/SKILL.md`
+  exactly where the tool looks; a single link to the whole directory would
+  nest them one level too deep.)
+
+  On Windows (or wherever symlinks are unavailable), copy instead and re-copy
+  after each submodule bump:
+
+  ```bash
+  mkdir -p .claude/skills && cp -R constitution/skills/. .claude/skills/
+  ```
+
+  Commit the symlink or the copies; `.claude/*` is gitignored by the
+  framework's own `.gitignore` for per-developer state, so allowlist
+  `.claude/skills` in the adopter's if it inherits that pattern.
+- **Cursor, Continue.dev, Copilot, and other tools** without a skills
+  directory get the same effect by referencing the skill you want in the
+  prompt (`Follow constitution/skills/secrets-sweep-enforcer/SKILL.md`) or by
+  pasting a skill's body into a project rule. `AGENTS.md` already directs
+  agents at the checkers the skills wrap, so nothing is lost without them.
+- **Goose** can be pointed at the directory through its `.goosehints`
+  (installed by `bootstrap.sh --agents=goose`).
+
+A skill is guidance, not enforcement: the CI checkers hold regardless of
+whether a tool loaded the skill.
+
 ## Goose and Goosetown
 
 [Goose](https://github.com/aaif-goose/goose) is an extensible AI agent, and [goosetown](https://github.com/aaif-goose/goosetown) orchestrates flocks of goose agents (researchers, workers, writers, reviewers) to build software in parallel. Because goosetown wraps the goose CLI, supporting goose automatically extends the constitution to goosetown's multi-agent runs.
@@ -303,6 +352,8 @@ extensions:
 ```
 
 Or interactively, run `goose configure`, choose **Add Extension → Command-line Extension**, and use `node constitution/mcp-server/index.js`. Run `npm install` in `constitution/mcp-server/` first so the SDK dependency is available.
+
+The server reports the pinned constitution's `VERSION` as its own version and exposes every root standards document (`CONSTITUTION.md`, `AI_WORKFLOW.md`, `TESTING.md`, `DOCUMENTATION.md`, `SECURITY.md`, `OPERATIONS.md`, `ARCHITECTURE.md`, `RELEASES.md`, `CODE_STYLE.md`, `TODO_GUIDELINES.md`, `KNOWLEDGE_SOURCES.md`, `INTEGRATION.md`) plus the style-guide registry and every knowledge-source summary as resources; `scripts/test_mcp_resources.sh` fails if a standards document is missing from that list.
 
 ## gstack and gbrain
 
@@ -604,6 +655,26 @@ If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
 `.constitution-bootstrap/templates/` for manual merging.
 
+### Bumping the Fleet After a Release
+
+Every constitution release leaves each adopter one tag behind, and any
+adopter whose version gate is a required status check is blocked until its
+submodule moves. Rather than waiting for each repository's Dependabot run,
+the maintainer bumps the fleet as a release step (`RELEASES.md`, "Cutting a
+Release", step 9):
+
+```bash
+# One clone URL per line; blank lines and # comments are ignored.
+bash scripts/bump_adopters.sh --sha v1.48.0 --repos adopters.txt
+```
+
+For each repository this clones, creates `constitution/bump-v<version>`,
+re-pins the `constitution/` gitlink to the release commit, pushes the branch,
+and opens a pull request with `gh` (or prints the compare URL with
+`--no-pr`). It is idempotent: an adopter already at the commit, or one whose
+bump branch already exists, is skipped, so a partial run can simply be
+re-run. It never touches a default branch and never force-pushes.
+
 ## Migrating Existing Repositories to New Framework Versions
 
 When Dependabot opens a constitution submodule update PR, merging it bumps the submodule pointer but does **not** automatically update your local project files (like `CLAUDE.md`, `.goosehints`, or any newly added templates). After merging, follow this checklist to pick up everything the new version ships.
@@ -672,7 +743,9 @@ Some hygiene is enforced by host-side repository settings, not by files in the r
 
 - **Enable "Automatically delete head branches."** After a pull request merges, the host deletes the merged feature branch server-side. This keeps `origin/*` free of stale merged branches regardless of whether a contributor or agent has permission to push branch deletions.
 - **Protect the default branch** with required status checks (including the constitution version gate) and required review.
-- **Enable Dependabot / submodule update PRs** so the pinned `constitution/` submodule stays current (the bootstrap script installs `.github/dependabot.yml`).
+- **Enable Dependabot / submodule update PRs** so the pinned `constitution/` submodule stays current (the bootstrap script installs `.github/dependabot.yml`, which also keeps the SHA-pinned GitHub Actions current).
+- **Fill in `.github/CODEOWNERS`** (installed as a commented example) and require a code-owner review on the default branch, so "who can approve production changes" is enforced by the host rather than remembered.
+- **Keep the pull request template** (`.github/pull_request_template.md`, installed by bootstrap): it carries the constitution's Completion Checklist and the trivial-change declaration from `AI_WORKFLOW.md`'s "Proportionate Workflow", so every pull request states what workflow it took.
 
 ## Verifying Adoption Compliance
 

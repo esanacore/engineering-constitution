@@ -36,7 +36,7 @@ Initializes an existing Git repository with the constitution submodule and local
 
 - Adds `constitution/` as a fixed-path Git submodule
 - Copies templates such as `AGENTS.md`, `HELP.md`, `SECURITY.md`, `VERSION`, and docs under `docs/`
-- Installs automation like `.github/dependabot.yml`, `.github/workflows/constitution-version.yml`, and `.github/workflows/constitution-compliance.yml`
+- Installs automation like `.github/dependabot.yml`, `.github/pull_request_template.md`, `.github/CODEOWNERS`, `.github/workflows/constitution-version.yml`, and `.github/workflows/constitution-compliance.yml`
 - Preserves existing files by default, writing merge-ready copies to `.constitution-bootstrap/templates/`
 - Injects or refreshes the standardized README adoption badge
 - Generates `.constitution-bootstrap/adoption-report.md`
@@ -63,6 +63,15 @@ Sweeps tracked and untracked-but-not-gitignored files for secrets that should ne
 
 A real hit (filename or content) always fails, with or without `--strict`. It is a zero-dependency (bash + Git only) baseline, not a replacement for a dedicated scanner like gitleaks or trufflehog on projects with unusually sensitive credentials. `scripts/bootstrap.sh` wires it in twice: a `pre-push`-stage `pre-commit` hook and the `constitution-secrets.yml` CI workflow.
 
+### `scripts/run_all_tests.sh` and `.github/workflows/tests.yml`
+The framework's own "Full suite" and the workflow that runs it, plus a `self-governance` job that runs the shipped checkers against this repository on every pull request. `scripts/test_checker_contract.sh` holds every `check_*.sh` to the shared checker contract, and every checker emits GitHub Actions annotations so findings surface in the pull request UI.
+
+### `scripts/check_instruction_templates.sh` and `scripts/check_skills.sh`
+The first verifies that every agent instruction file present carries the same guidance (session planning, project memory), so a rule added to one vendor file cannot be silently missing from another; the second validates the 25 skills under `skills/`. See [[Governance Checkers]].
+
+### `scripts/bump_adopters.sh`
+Step 9 of cutting a release: re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`.
+
 ### `scripts/setup-machine.sh`
 One-time, per-machine installer for Bun, gstack, goose, and goosetown. Deliberately **not** wired into `scripts/bootstrap.sh` — provisioning a machine's global AI-agent toolchain and bootstrapping a repository's governance files are different concerns with different blast radii; see `INTEGRATION.md` "Provisioning a Machine in One Step." Idempotent (skips anything already installed), supports `--skip-bun`/`--skip-gstack`/`--skip-goose`/`--skip-goosetown`, and automatically detects and works around gstack's Playwright browser-install gap on Linux distros newer than Playwright's support matrix.
 
@@ -77,6 +86,10 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_setup_machine.sh`
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
+- `scripts/test_checker_contract.sh` (the contract every checker must honor)
+- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`
+
+The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.md` and run in CI by `.github/workflows/tests.yml`.
 
 ## Templates and examples
 
@@ -95,12 +108,16 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 
 The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprotocol/sdk`. It exposes:
 
-- Resources for the core constitution, AI workflow, testing standards, code style, and the style guide registry
+- Resources for every root standards document (constitution, AI workflow, integration, testing, documentation, security, operations, architecture, releases, code style, TODO guidelines, knowledge sources) and the style guide registry, reporting the framework's `VERSION` as the server version
 - A `validate_project_structure` tool that checks whether a target project contains `AGENTS.md`, `CHANGELOG.md`, `TODO.md`, and `VERSION`
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.47.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.48.0`. Recent releases have focused on:
+
+- The framework holding itself to its own rules (1.48.0): its suites and checkers run in CI on every pull request; the compliance checker's recommended docs exist for this repository; the MCP server cannot drift; instruction files are kept consistent mechanically; every checker honors one tested contract and annotates pull requests; and changes to the Required Files, Required Workflow, checker contract, or compatibility policy require an ADR
+- New standards (1.48.0): untrusted content reaching AI agents and a shipped deny list, CI/CD supply chain (SHA-pinned actions, Dependabot for actions), data classification and synthetic test data, a proportionate fast path for trivial changes (ADR-0004), Conventional Commit messages, a definition of "product-facing", pull request and CODEOWNERS templates, an incident postmortem template, and a License column in the OTS inventory
+- Framework governance (1.48.0): what "breaking" means for a governance framework and the deprecation window (ADR-0003), and the fleet bump as a release step with `scripts/bump_adopters.sh`
 
 - A demo page as a product-facing expectation (`DOCUMENTATION.md` "Demo Page", `templates/demo.html`, `docs/adr/0002-demo-page-requirement.md`): one self-contained `demo.html` that opens from `file://` with no build, no backend, and no network, labels anything simulated in the interface itself, and is checked by `check_compliance.sh` in the same tier as product requirements and traceability — the framework asking adopters for the artifact it already ships itself
 - OTS software tracking (`templates/docs/OTS_SOFTWARE.md`, `check_ots_inventory.sh`, `constitution-ots.yml`): an FDA OTS / IEC 62304 SOUP-informed third-party dependency inventory, with a checker that cross-references actual dependency manifests against it so documentation stays complete as dependencies evolve

@@ -14,6 +14,20 @@ The agent writes or updates `docs/SESSION_PLAN.md` before implementation begins.
 
 This is deliberately stored in the repository rather than only in a chat window. If an agent session crashes or context is lost, another agent or human can recover the intended direction.
 
+## 2a. Scale the workflow to the change
+
+Not every change is a feature. `AI_WORKFLOW.md`'s "Proportionate Workflow"
+(ADR-0004) defines a **trivial** change by four tests that must all hold — no
+behavior change, small enough for one screen, nothing on the sensitive list
+(dependencies, environment variables, secrets, auth, CI, instruction files,
+checkers, templates), and nobody has asked for the full workflow — and names
+exactly which steps such a change may skip: the session plan, the
+implementation plan, coverage evaluation, the isolated critique, traceability
+and inventory updates, release evaluation, and memory proposals. The scoped
+reads, the secrets sweep, and the pull request never shrink to nothing, and
+the pull request says the fast path was taken so a reviewer can disagree.
+When in doubt, it is not trivial.
+
 ## 3. Implement within the existing architecture
 
 Changes should follow the repository's established conventions and architectural boundaries. The Constitution discourages unrelated refactoring and speculative abstractions while still requiring agents to recognize genuine coupling, security, or maintainability problems.

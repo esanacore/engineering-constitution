@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that a repository carries the governance files Eric's Engineering
 # Constitution expects of an adopting project.
 #
@@ -298,6 +306,10 @@ fail=0
 [ "$product" = "true" ] && [ "$product_missing" -gt 0 ] && fail=1
 
 if [ "$fail" -ne 0 ]; then
+  ci_annotate error "check_compliance.sh: required missing: $required_missing; recommended missing: $recommended_missing; product missing: $product_missing"
   exit 1
+fi
+if [ "$recommended_missing" -gt 0 ] || [ "$product_missing" -gt 0 ]; then
+  ci_annotate warning "check_compliance.sh: recommended missing: $recommended_missing; product missing: $product_missing (pass --strict / --product to enforce)"
 fi
 exit 0

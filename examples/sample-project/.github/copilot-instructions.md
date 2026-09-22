@@ -13,6 +13,8 @@ Read:
 - `README.md` — project purpose and setup
 - `TODO.md` — current roadmap and known issues (open items only; completed entries are history)
 - `CHANGELOG.md` — recent changes (`Unreleased` + the most recent release only)
+- `docs/MEMORY.md` — project memory: codebase learnings, decisions, and user preferences
+- `docs/SESSION_PLAN.md` — check it for a previous interrupted session, then write your own plan there before implementing
 
 ## Development Standards
 

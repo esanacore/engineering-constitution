@@ -53,6 +53,15 @@ test_new_project() {
     fi
   done
   [ -f ".github/dependabot.yml" ] || { echo "FAIL: dependabot.yml missing"; exit 1; }
+  grep -q 'package-ecosystem: "github-actions"' ".github/dependabot.yml" || { echo "FAIL: dependabot.yml does not manage github-actions pins"; exit 1; }
+  [ -f ".github/pull_request_template.md" ] || { echo "FAIL: pull_request_template.md missing"; exit 1; }
+  grep -q 'Completion Checklist' ".github/pull_request_template.md" || { echo "FAIL: PR template lacks the Completion Checklist"; exit 1; }
+  [ -f ".github/CODEOWNERS" ] || { echo "FAIL: CODEOWNERS missing"; exit 1; }
+  for wf in .github/workflows/constitution-*.yml; do
+    if grep -vE '^[[:space:]]*#' "$wf" | grep -qE 'uses: actions/[a-z-]+@v[0-9]'; then
+      echo "FAIL: $wf pins an action by tag instead of commit SHA"; exit 1
+    fi
+  done
   [ -f ".github/workflows/constitution-version.yml" ] || { echo "FAIL: constitution-version.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-compliance.yml" ] || { echo "FAIL: constitution-compliance.yml workflow missing"; exit 1; }
   [ -f ".github/workflows/constitution-tests.yml" ] || { echo "FAIL: constitution-tests.yml workflow missing"; exit 1; }
@@ -267,6 +276,8 @@ test_agents_selection() {
   [ -f "CLAUDE.md" ] || { echo "FAIL: --agents=claude did not install CLAUDE.md"; exit 1; }
   [ -f ".claude/settings.json" ] || { echo "FAIL: --agents=claude did not install .claude/settings.json"; exit 1; }
   grep -q "check_constitution_freshness.sh" ".claude/settings.json" || { echo "FAIL: .claude/settings.json missing SessionStart freshness hook"; exit 1; }
+  grep -q '"deny"' ".claude/settings.json" || { echo "FAIL: .claude/settings.json missing the permissions deny list"; exit 1; }
+  grep -q 'Bash(git push --force:\*)' ".claude/settings.json" || { echo "FAIL: .claude/settings.json deny list does not block force pushes"; exit 1; }
   [ -f ".cursorrules" ] || { echo "FAIL: --agents=cursor did not install .cursorrules"; exit 1; }
   [ -f ".cursor/rules/project.mdc" ] || { echo "FAIL: --agents=cursor did not install project.mdc"; exit 1; }
 

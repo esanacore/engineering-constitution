@@ -292,6 +292,15 @@ TODO.md is the living roadmap. It should reflect the best current understanding 
 
 ## Product Requirements Expectations
 
+A repository is **product-facing** when it ships behavior to people other than
+its own maintainers — an application, a service, an API, or a library with
+consumers outside the team — so that someone outside the team can hold it to
+a promise. Internal tooling, personal utilities, and this framework are not.
+When unsure, treat the repository as product-facing: the cost is a
+requirements document and a traceability matrix, and the alternative is
+discovering the promise after it is broken. `scripts/check_compliance.sh
+--product` enforces the product-facing tier.
+
 Product-facing repositories should include `docs/PRODUCT_REQUIREMENTS.md` when implementation needs a clear contract between product intent and engineering work.
 
 Product requirements should define:
@@ -374,3 +383,25 @@ Major decisions are recorded as Architecture Decision Records in `docs/adr/` usi
 - **Promotion criteria**: while an ADR is `Proposed`, it lists the concrete evidence, reviews, or outcomes required to move it to `Accepted`, and who gates the transition. The criteria are removed or marked met once the ADR is `Accepted`.
 
 Maintain an ADR index so decisions and their provenance are discoverable.
+
+### ADR Triggers for the Framework Itself
+
+The framework holds itself to Principle 6. A change to any of the following is
+a "major design change" for every adopter at once and gets an ADR in
+`docs/adr/` before it ships:
+
+- The **Required Files** list above, or the required tier of
+  `scripts/check_compliance.sh`.
+- The **Required Workflow** in `AI_WORKFLOW.md` — adding, removing, reordering
+  in a way that changes meaning, or making a step conditional.
+- The **checker contract** in `TESTING.md`'s "CI Enforcement" — the
+  warn-by-default / `--strict` rollout, the exit-code meanings, or an
+  exception to them.
+- The framework's own **compatibility policy** (`RELEASES.md`, "Versioning
+  the Framework Itself").
+
+ADR-0001 (the wiki), ADR-0002 (the demo page), ADR-0003 (compatibility
+policy), and ADR-0004 (the proportionate workflow) are the worked examples. Earlier decisions of this
+kind — the root relocation in 1.38.0, the required critique pass in 1.45.0,
+the reading-order scoping in 1.46.0 — shipped without one, which is the
+reason this rule now exists.

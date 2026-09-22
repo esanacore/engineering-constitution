@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that adopter-facing constitution version references stay aligned with
 # the actual pinned constitution version.
 #
@@ -149,6 +157,7 @@ for relative_path in "${candidate_files[@]}"; do
 done
 
 if [ "$fail" -ne 0 ]; then
+  ci_annotate error "check_version_alignment.sh: stale constitution version references found (expected $expected_version)"
   exit 1
 fi
 

@@ -7,12 +7,30 @@ set -euo pipefail
 # recommend the current project version and any necessary bumps.
 
 usage() {
-  echo "Usage: version_analyzer.sh <project-path>"
+  cat <<'USAGE'
+Usage:
+  version_analyzer.sh <project-path>
+
+Description:
+  Suggest the next Semantic Version for a repository from the Conventional
+  Commit prefixes in its history since the latest tag (see RELEASES.md,
+  "Commit Messages"): a `!` after the type or a "BREAKING CHANGE" footer
+  suggests MAJOR, `feat:` suggests MINOR, `fix:` suggests PATCH. Prefixes are
+  matched at the start of a line, so a commit that merely mentions the word
+  "fix" (or "prefix") does not count.
+USAGE
 }
 
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+esac
+
 if [ "$#" -ne 1 ]; then
-  usage
-  exit 1
+  usage >&2
+  exit 2
 fi
 
 project_path=$1
@@ -49,9 +67,13 @@ fi
 
 echo "Analyzing commits in range: $commit_range"
 
-breaking_changes=$(git log "$commit_range" --grep="BREAKING CHANGE" --grep="!" --oneline | wc -l)
-features=$(git log "$commit_range" --grep="feat" --oneline | wc -l)
-fixes=$(git log "$commit_range" --grep="fix" --oneline | wc -l)
+# Conventional Commit prefixes, anchored at the start of a line: `type(scope)!:`
+# or a BREAKING CHANGE footer for MAJOR; `feat(scope)?:` for MINOR;
+# `fix(scope)?:` for PATCH. Unanchored matching counted "prefix cleanup" as a
+# fix and any commit containing "!" as breaking.
+breaking_changes=$(git log "$commit_range" --extended-regexp --grep='^[A-Za-z]+(\([^)]*\))?!:' --grep='^BREAKING CHANGE:' --oneline | wc -l | tr -d ' ')
+features=$(git log "$commit_range" --extended-regexp --grep='^feat(\([^)]*\))?!?:' --oneline | wc -l | tr -d ' ')
+fixes=$(git log "$commit_range" --extended-regexp --grep='^fix(\([^)]*\))?!?:' --oneline | wc -l | tr -d ' ')
 
 echo "Potential Breaking Changes (MAJOR): $breaking_changes"
 echo "Potential New Features (MINOR): $features"
@@ -72,4 +94,4 @@ fi
 
 echo "-------------------------------"
 echo "To apply a version, run:"
-echo "echo 'X.Y.Z' > VERSION && git add VERSION && git commit -m 'chore: bump version to X.Y.Z'"
+echo "echo 'X.Y.Z' > VERSION && git add VERSION && git commit -m 'chore(release): cut X.Y.Z'"

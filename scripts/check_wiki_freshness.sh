@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Flag a pull request that ADDS or REMOVES source files -- a structural change
 # to what the repository contains -- without touching the wiki that catalogues
 # them (constitution DOCUMENTATION.md "Wiki", AI_WORKFLOW.md, ADR-0001).
@@ -191,7 +199,9 @@ done
 echo
 if [ "$strict" = "true" ]; then
   echo "Failing because --strict was passed."
+  ci_annotate error "check_wiki_freshness.sh: files were added or removed but nothing under $wiki_dir/ was updated"
   exit 1
 fi
+ci_annotate warning "check_wiki_freshness.sh: files were added or removed but nothing under $wiki_dir/ was updated (pass --strict to enforce)"
 echo "Not failing (pass --strict to enforce this). This is a blunt heuristic -- confirm whether the added/removed surface belongs in the wiki before enabling --strict."
 exit 0

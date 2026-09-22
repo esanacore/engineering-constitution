@@ -10,6 +10,58 @@ Follow semantic versioning (SemVer) for all repositories:
 - **MINOR**: Backward-compatible functionality (new features)
 - **PATCH**: Backward-compatible fixes (bug fixes, maintenance)
 
+## Versioning the Framework Itself
+
+SemVer is defined in terms of an API. A governance framework's API is the
+contract its adopters' CI depends on, so for *this* repository the terms mean
+(ADR-0003):
+
+- **MAJOR** — an adopter's CI can turn red, or a documented invocation can
+  stop working, without any change on the adopter's side: a new **required**
+  file or required tier entry in `check_compliance.sh`; a checker whose
+  default flips from warn to fail; a removed or renamed script, template, or
+  workflow that adopters invoke; a changed exit-code meaning or option in a
+  script that a shipped workflow template or a documented CI invocation
+  depends on. (An on-demand tool such as `version_analyzer.sh` or
+  `measure_instruction_weight.sh` is not on that path; changing its usage
+  exit code is PATCH-shaped.)
+- **MINOR** — a new standard, checker, template, workflow, or skill that
+  warns by default; a new recommended file; a new Required Workflow step;
+  new advisory guidance.
+- **PATCH** — a fix that changes no contract.
+
+**The deprecation window.** A MAJOR-shaped change may still ship as MINOR
+when adopters were warned first: the requirement ships warn-by-default in one
+release with a `Deprecation` notice in `CHANGELOG.md` naming the release that
+will enforce it, and the enforcing change lands no sooner than the next MINOR
+release. A change that skips the window is MAJOR, however small it looks —
+making the wiki required in 1.44.0 turned every adopter's compliance gate
+red the moment they bumped, and this section exists so that does not happen
+again by accident.
+
+**Fleet effect.** Cutting any release strands every adopter one tag behind:
+their `constitution-version.yml` gate compares the pinned submodule against
+the latest tag, and where that gate is a required status check, every pull
+request in that repository blocks until the submodule is bumped. The fleet
+bump is therefore a release step, not an afterthought (see "Cutting a
+Release", step 9).
+
+## Commit Messages
+
+Commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/)
+form, `type(scope)?: summary`, with `!` after the type or a `BREAKING CHANGE:`
+footer for an incompatible change:
+
+- `feat:` new behavior (MINOR), `fix:` a bug fix (PATCH), `docs:`, `test:`,
+  `ci:`, `refactor:`, `chore:` for changes that do not alter shipped
+  behavior; `chore(release): cut X.Y.Z` for the release commit.
+- The summary line states what changed in the imperative; the body says why.
+
+`scripts/version_analyzer.sh` reads exactly these prefixes to suggest the
+next version, and the analyzer is only as good as the history it reads.
+`CHANGELOG.md` remains the human-facing record; commit messages are its raw
+material, not a replacement for it.
+
 ## The VERSION File
 
 Every repository must include a root-level `VERSION` file. This file:
@@ -119,8 +171,12 @@ list as a gate, not a suggestion — a release is not done until every box is ch
    - Any embedded version string in the project's primary doc (for this
      framework, `CONSTITUTION.md`'s `Version:` header).
    - The interactive `demo.html` badge text.
+   - `wiki/Home.md`'s current-version line.
+   - `mcp-server/package.json` and `mcp-server/package-lock.json` (the two
+     root `version` fields); `scripts/test_release_docs.sh` and
+     `scripts/test_mcp_resources.sh` enforce all of these.
    - Grep for the previous version string to catch stragglers:
-     `grep -rn "$(previous version)" --include='*.md' --include='*.html' .`
+     `grep -rn "$(previous version)" --include='*.md' --include='*.html' --include='*.json' .`
 3. **Update `CHANGELOG.md`** with a dated section for the new version under the
    correct categories.
 4. **Update `TODO.md`** — mark shipped items done, record discovered follow-ups.
@@ -129,6 +185,14 @@ list as a gate, not a suggestion — a release is not done until every box is ch
 7. **Tag** the commit `vMAJOR.MINOR.PATCH` and push the tag (see *Git Tags*), then run `bash scripts/check_release_tag_alignment.sh .` so `VERSION`, `HEAD`, and the newest release tag are all proven to agree. The source-repo `release-tag-alignment` GitHub Actions workflow will rerun this automatically once the tag lands on GitHub.
 8. **Publish the GitHub Release** from the changelog section, marked `--latest`
    (see *Publishing a GitHub Release*).
+9. **Bump the adopter fleet.** Every adopter is now one tag behind, and any
+   with a required version gate is blocked. Run
+   `bash scripts/bump_adopters.sh --sha <release-commit> --repos <list>` to
+   open one branch and one pull request per adopter that re-pins
+   `constitution/` to the release commit (idempotent: already-pinned
+   repositories and existing bump branches are skipped), then merge them.
+   A pin *ahead* of the tag is acceptable when `VERSION` at the pinned commit
+   equals the tag's version (see `docs/MEMORY.md`); never re-pin backwards.
 
 ### Pre-release Review
 
@@ -139,3 +203,6 @@ Before cutting, confirm:
 - Documentation updated.
 - Security-sensitive changes reviewed.
 - Migration notes included when required.
+- Anything MAJOR-shaped (see *Versioning the Framework Itself*) either bumps
+  MAJOR or has served its deprecation window.
+- `docs/OTS_SOFTWARE.md`'s Anomaly Review column re-reviewed.

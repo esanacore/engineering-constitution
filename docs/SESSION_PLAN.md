@@ -7,12 +7,14 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Demo page promoted from this repository's habit to a framework standard,
-released as 1.47.0: ADR-0002 (Accepted), `DOCUMENTATION.md`'s "Demo Page"
-section plus the Principle 1 and README/review-checklist entries, `demo.html`
-added to `check_compliance.sh`'s product-facing tier with an HTML-aware
-placeholder marker, `templates/demo.html` installed by `bootstrap.sh`, and
-new cases in `test_check_compliance.sh` (5a, 5b, 5c) and `test_bootstrap.sh`.
-Prompted by an adopting product repository whose readers could finish the
-docs without ever seeing the product work. Tag and GitHub Release still
-pending on merge, per `RELEASES.md` steps 7–8.
+The 1.48.0 improvement batch (approved by Eric in full): own tests and
+checkers in CI, self-compliance docs, instruction-template and skills
+checkers, checker-contract meta-test with CI annotations, MCP drift fix, ADR
+rule + ADR-0003/0004, agent-facing security and deny list, CI supply chain,
+proportionate workflow, PR/CODEOWNERS templates, Conventional Commits,
+"product-facing" defined, postmortem template, data classification, OTS
+License column, framework SemVer semantics, `bump_adopters.sh`. Merged with
+main after the demo-page release (1.47.0, ADR-0002) landed underneath it, so
+the batch was renumbered from 1.47.0 and its ADRs from 0002/0003. Outcomes are
+in `CHANGELOG.md` 1.48.0 and `docs/AGENT_HANDOFF.md`. Tag + GitHub Release +
+fleet bump remain Eric's post-merge steps.

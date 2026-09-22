@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Sweep a project for secrets that should never reach a remote: credential-
 # shaped filenames (.env, id_rsa, *.pem, credentials.json, ...) and
 # high-confidence secret patterns in file content (AWS access keys, GitHub/
@@ -220,11 +228,16 @@ if [ "$filename_hits" -gt 0 ] || [ "$content_hits" -gt 0 ]; then
   echo "Real secret-shaped hits were found above. Remove the file(s) from Git" \
        "(git rm --cached), rotate any exposed credential, and add a matching" \
        "pattern to .gitignore before pushing."
+  ci_annotate error "check_secrets.sh: $filename_hits credential-shaped filename hit(s) and $content_hits content-pattern hit(s) found"
   exit 1
 fi
 
 if [ "$strict" = "true" ] && [ "$gitignore_missing" -gt 0 ]; then
+  ci_annotate error "check_secrets.sh: .gitignore does not cover $gitignore_missing known secret-file pattern(s)"
   exit 1
+fi
+if [ "$gitignore_missing" -gt 0 ]; then
+  ci_annotate warning "check_secrets.sh: .gitignore does not cover $gitignore_missing known secret-file pattern(s) (pass --strict to enforce)"
 fi
 
 exit 0

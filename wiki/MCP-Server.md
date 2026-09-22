@@ -7,12 +7,20 @@ resources instead of guessing at file paths.
 
 ## Resources
 
-The server exposes the core standards as MCP resources, including the
-constitution itself, the AI workflow, testing standards, code style, and the
-canonical style-guide registry (`sources/STYLE_GUIDES.md`). It also surfaces
-distilled knowledge-source summaries as dynamic `constitution://source-summary/*`
-resources, connecting the `sources/` book-digestion workflow to agents at
-runtime.
+The server exposes every root standards document as an MCP resource —
+`CONSTITUTION.md`, `AI_WORKFLOW.md`, `INTEGRATION.md`, `TESTING.md`,
+`DOCUMENTATION.md`, `SECURITY.md`, `OPERATIONS.md`, `ARCHITECTURE.md`,
+`RELEASES.md`, `CODE_STYLE.md`, `TODO_GUIDELINES.md`, `KNOWLEDGE_SOURCES.md` —
+plus the canonical style-guide registry (`sources/STYLE_GUIDES.md`). It also
+surfaces distilled knowledge-source summaries as dynamic
+`constitution://source-summary/*` resources, connecting the `sources/`
+book-digestion workflow to agents at runtime.
+
+The server reports the framework's `VERSION` as its own version, so an MCP
+client can see which constitution release it is talking to, and
+`scripts/test_mcp_resources.sh` fails the build if a standards document is
+missing from the resource list or the package version drifts from `VERSION`
+(it once sat at 1.0.0 while the framework reached 1.46.0).
 
 ## Tools
 

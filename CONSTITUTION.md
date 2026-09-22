@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.47.0
+Version: 1.48.0
 
 ## Purpose
 
@@ -37,7 +37,7 @@ A task is not complete until documentation impact has been evaluated.
 
 Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended. Cumulative codebase learnings, conventions, and approved decisions are preserved across sessions in the project memory bank (`docs/MEMORY.md`) at the user's discretion.
 
-Product-facing repositories should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
+Product-facing repositories — those that ship behavior to people other than their own maintainers; see `DOCUMENTATION.md`'s "Product Requirements Expectations" for the definition — should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
 
 ## Principle 2: Testing Is Required
 
@@ -113,6 +113,8 @@ Create ADRs for:
 
 ADRs follow a lifecycle of `Proposed → Accepted → Superseded` (or `Deprecated`), record their relationships to other ADRs (`extends`, `supersedes`, `related`), and state explicit promotion criteria while `Proposed`. See `DOCUMENTATION.md`.
 
+This framework holds itself to the same rule: a change to its Required Files, its Required Workflow, its checker contract, or its compatibility policy gets an ADR in `docs/adr/` before it ships. See `DOCUMENTATION.md`'s "ADR Triggers for the Framework Itself".
+
 Code-level structure should follow the SOLID principles and the Dependency Rule, applied as pragmatic guardrails rather than ceremony. See `ARCHITECTURE.md`.
 
 The Dependency Rule is enforceable, not merely aspirational: declare the project's layers in `docs/ARCHITECTURE.md` and `scripts/check_architecture.sh` verifies that every import points inward. Compliance is not the same as good structure — a repository can carry every governance document this constitution requires and still have its business rules importing its database. Declaring layers is what closes that gap. See `ARCHITECTURE.md`'s "Enforcing the Dependency Rule".
@@ -172,6 +174,8 @@ Agents should identify release notes when appropriate.
 
 Accumulated user-facing changes should not sit unreleased indefinitely — cut a release (bump `VERSION`, tag, publish) once they build up, following the Required Workflow and RELEASES.md's Cutting a Release process. See `AI_WORKFLOW.md` and `RELEASES.md`.
 
+Commit messages follow the Conventional Commits form (`feat:`, `fix:`, `docs:`, `chore:`, with `!` or a `BREAKING CHANGE` footer for incompatible changes) so that release tooling can read the history; `CHANGELOG.md` remains the human-facing record. See `RELEASES.md`'s "Commit Messages".
+
 ## Principle 11: Opportunity Discovery
 
 Agents should not merely complete assigned work.
@@ -205,7 +209,11 @@ the maintained registry of canonical style guides by language/platform.
 
 ## Required Workflow
 
-See `AI_WORKFLOW.md` for the complete step-by-step workflow.
+See `AI_WORKFLOW.md` for the complete step-by-step workflow, including the
+proportionate fast path for trivial changes (ADR-0004): a change that alters
+no behavior and touches no sensitive area may skip the planning, critique, and
+release-evaluation steps, but never the secrets sweep, and when in doubt it is
+not trivial.
 
 ## Future Roadmap
 

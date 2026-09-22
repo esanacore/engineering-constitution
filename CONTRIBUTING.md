@@ -19,12 +19,15 @@ Before starting, you MUST read:
 - `CONSTITUTION.md` (Universal Principles)
 - `AI_WORKFLOW.md` (Required Workflow)
 - `AGENTS.md` (Project-Specific Rules)
+- `docs/MEMORY.md` (Project Memory)
 
 ### 2. Operational Standards
+- **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there before implementing.
+- **Project Memory**: Read `docs/MEMORY.md` to load project context and preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 - **Testing**: Every change requires updated or new automated tests.
 - **Documentation**: Update `README.md`, `CHANGELOG.md`, and `TODO.md` for every task.
 - **Security**: Perform a security review of your changes.
-- **Handoff**: Record your progress in `docs/AGENT_HANDOFF.md` at the end of your session.
+- **Handoff**: Record your progress in `docs/AGENT_HANDOFF.md` at the end of your session, and clear or archive `docs/SESSION_PLAN.md`.
 
 ## Getting Help
 

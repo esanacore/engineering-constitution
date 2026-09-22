@@ -55,6 +55,19 @@ An aggregate coverage percentage hides which behavior is untested. Coverage gaps
 - Record known untested behavior in the `docs/TEST_PLAN.md` gap log, with a risk level and a follow-up item in `TODO.md` under Testing.
 - For product-facing repositories, any requirement ID with no verifying test is a coverage gap; reconcile gaps against `docs/REQUIREMENTS_TRACEABILITY.md`.
 
+## Test Data
+
+Fixtures, seed scripts, and recorded responses are synthetic. Never copy a
+production record, a real customer, or a real credential into a test, however
+anonymized it looks — a name and a date of birth survive most anonymization,
+and a fixture committed once is in history forever. Generate data that has the
+*shape* of the real thing (the same fields, edge cases, and volume), label it
+as fake where a reader might mistake it, and keep anything that must resemble
+a secret (a signing key for a signature test, an API token for a client test)
+obviously invalid and gitignored when it is not. See `SECURITY.md`'s "Data
+Classification" for the levels this rule protects and the secrets sweep for
+the credential-shaped subset it can catch mechanically.
+
 ## Governance Tooling Must Be Tested
 
 Scripts that enforce the standards — coverage gates, requirements-traceability checkers, version gates, bootstrap and audit scripts — are themselves code, and a silent bug in them removes the protection they appear to provide. Treat governance tooling as production code:
@@ -89,6 +102,12 @@ The framework also ships `scripts/check_wiki_freshness.sh`, a CI Enforcement tri
 
 The framework also ships `scripts/check_wiki_links.sh`, which verifies a wiki directory's internal integrity rather than its freshness: it flags dangling `[[WikiLinks]]` (a link whose target page does not exist) and orphan pages (a non-special page no other page links to). Link resolution follows GitHub's wiki (Gollum) rules — `[[Display|Target]]` resolves to the target, spaces map to hyphens, an `#anchor` is ignored, external `://` targets are skipped, and page names match case-insensitively — so the checker agrees with how the published wiki actually resolves links. Its tests (`scripts/test_check_wiki_links.sh`) prove a clean wiki passes even under `--strict`, that a dangling link and an orphan page are each caught, that the resolution rules do not turn a valid `[[Display|Target]]`/external/case-variant link into a false positive, that special pages (`Home`, `_Sidebar`, `_Footer`, `_Header`) are never reported as orphans, that a custom `--wiki-dir` is honored, and that a bad option reports a usage error — a link checker that silently resolved nothing would pass every wiki, including a broken one.
 
+The framework also ships `scripts/check_instruction_templates.sh`, which verifies that every agent instruction file present in a directory (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.goosehints`, the Solon agent, `docs/HELP.md`, and the rest) carries the same guidance anchors — by default the session-plan and project-memory rules. Keeping the vendor instruction files aligned was a manual grep, and the session-plan rollout missed half of them the first time; the constitution now runs this checker in CI against its root, its `templates/`, and its sample project, and the first run found twelve files that had drifted. Its tests (`scripts/test_check_instruction_templates.sh`) prove a file missing an anchor is named with the anchor it lacks, that files the checker does not know about are ignored, that custom `--anchor` values replace the defaults, and that a directory with no instruction files is not a failure.
+
+The framework also ships `scripts/check_skills.sh`, which validates every `skills/*/SKILL.md`: a front-matter block whose `name` matches its directory (tools load skills by that name, so a mismatch is a skill that never triggers), a non-empty `description`, an H1 body, and no reference to a script that does not exist under `scripts/` or `constitution/scripts/`. Its tests (`scripts/test_check_skills.sh`) prove each of those failures is caught and that an adopter's `constitution/scripts/` path satisfies a script reference.
+
+The framework also ships `scripts/run_all_tests.sh`, its own declared "Full suite": it runs every `scripts/test_*.sh` and names each failing suite. Its tests (`scripts/test_run_all_tests.sh`) prove a failing suite fails the run, `--quiet` still replays failing output, and a directory with no suites is an error rather than a pass. `scripts/test_checker_contract.sh` is the meta-test that holds every `check_*.sh` to the contract below — `--help`, exit `2` on a bad option, `--strict` where documented, the executable bit, a paired negative-case suite, and CI annotations — so the 1.42.0 executable-bit regression and its relatives cannot ship again. `scripts/test_mcp_resources.sh`, `scripts/test_release_docs.sh`, `scripts/test_version_analyzer.sh`, and `scripts/test_bump_adopters.sh` cover the MCP server, the version references, the commit-prefix analyzer, and the fleet-bump script.
+
 ## CI Enforcement
 
 Governance checkers are only as strong as the CI wiring around them. The framework ships CI workflow templates (installed by `scripts/bootstrap.sh` into `.github/workflows/`) for every checker above:
@@ -102,5 +121,9 @@ Governance checkers are only as strong as the CI wiring around them. The framewo
 - `constitution-ots.yml` — the OTS software inventory cross-check (`check_ots_inventory.sh`) on every push and pull request, plus a daily schedule.
 - `constitution-env.yml` — the Environment Contract cross-check (`check_env_vars.sh`) on every push and pull request.
 - `constitution-architecture.yml` — the Dependency Rule check (`check_architecture.sh`) on every push and pull request, plus a daily schedule.
+
+Every checker sources `scripts/lib/ci_annotations.sh` and, when it runs under GitHub Actions, also prints `::warning::` / `::error::` workflow commands for its summary finding, so a warn-mode result surfaces in the pull request's Checks tab and Files-changed view instead of only in a job log. Outside Actions the helper is a no-op, so local output is unchanged.
+
+The constitution runs the same discipline on itself: `.github/workflows/tests.yml` runs `scripts/run_declared_tests.sh --strict` (which reads `docs/TEST_PLAN.md` and runs `scripts/run_all_tests.sh`) and a `self-governance` job that runs the secrets sweep, the instruction-template and skills checkers, the wiki link checker, and the OTS inventory check against this repository in `--strict` mode on every pull request.
 
 All follow the same rollout contract: **warn by default, `--strict` to fail.** A newly bootstrapped or newly updated repository should never go instantly red because it hasn't caught up to a new rule yet — adopters opt into `--strict` per checker, per repository, once they've confirmed it's actually compliant. There are two exceptions, where the check itself is never optional regardless of `--strict`: `run_declared_tests.sh`, once a real test command is declared, always fails on that command's failure (`--strict` only governs the "nothing declared yet" case); and `check_secrets.sh` always fails on a real secret-shaped hit (`--strict` only governs the separate `.gitignore`-coverage recommendation). `check_architecture.sh` runs the exception the other way: its structural signals never fail, with or without `--strict`, because line count is a prompt to look rather than a verdict — only its layer violations respond to `--strict`.

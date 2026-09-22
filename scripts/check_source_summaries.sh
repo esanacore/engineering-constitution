@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Detect drift between dropped book/reference sources and their generated
 # summaries. See KNOWLEDGE_SOURCES.md for the full workflow this supports.
 #
@@ -210,6 +218,7 @@ case "$1" in
     shift
     root=${1:-sources}
     if ! cmd_scan "$root"; then
+      ci_annotate error "check_source_summaries.sh: sources under $root are NEW, CHANGED, or missing a summary"
       exit 1
     fi
     exit 0

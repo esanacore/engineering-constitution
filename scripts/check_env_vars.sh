@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that every environment variable declared in the project's configuration
 # manifests (.env.example, .env.template, docker-compose.yml) has a corresponding
 # entry in the Environment & Configuration Contract (docs/ENV_VARS.md).
@@ -179,9 +187,11 @@ if [ ! -f "$contract" ]; then
   echo "Create it from constitution/templates/docs/ENV_VARS.md and document each variable."
   if [ "$strict" = "true" ]; then
     echo "FAIL: missing ENV_VARS.md (--strict)."
+    ci_annotate error "check_env_vars.sh: $var_count environment variable(s) declared but docs/ENV_VARS.md is missing"
     exit 1
   fi
   echo "WARN: missing ENV_VARS.md (pass --strict to enforce)."
+  ci_annotate warning "check_env_vars.sh: $var_count environment variable(s) declared but docs/ENV_VARS.md is missing (pass --strict to enforce)"
   exit 0
 fi
 
@@ -264,8 +274,10 @@ echo "Checked $var_count declared variable(s); $covered documented, $missing und
 if [ "$missing" -gt 0 ]; then
   if [ "$strict" = "true" ]; then
     echo "FAIL: undocumented environment variables (--strict)."
+    ci_annotate error "check_env_vars.sh: $missing undocumented environment variable(s)"
     exit 1
   fi
   echo "WARN: undocumented environment variables (pass --strict to enforce)."
+  ci_annotate warning "check_env_vars.sh: $missing undocumented environment variable(s) (pass --strict to enforce)"
 fi
 exit 0

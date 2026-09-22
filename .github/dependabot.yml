@@ -1,0 +1,15 @@
+version: 2
+
+# Keeps the SHA-pinned GitHub Actions in this repository's own workflows
+# current (see SECURITY.md, "CI/CD Supply Chain"). The workflow *templates*
+# under templates/.github/workflows/ are not on Dependabot's path; bump their
+# pins in the same pull request when this one lands.
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"

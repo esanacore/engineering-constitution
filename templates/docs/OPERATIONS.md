@@ -31,3 +31,7 @@ service, see the constitution's examples/OPERATIONS.example.md. -->
 2. Check dashboards, logs, and recent deploy history.
 3. Execute rollback or mitigation steps if needed.
 4. Communicate with stakeholders.
+5. For a significant incident, write a postmortem from
+   `constitution/templates/docs/INCIDENT_POSTMORTEM.md` into
+   `docs/incidents/<YYYY-MM-DD>-<slug>.md` and turn its corrective actions
+   into `TODO.md` items.

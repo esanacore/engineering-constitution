@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# GitHub Actions annotations (a no-op everywhere else); see scripts/lib/ci_annotations.sh.
+if [ -f "$(dirname -- "$0")/lib/ci_annotations.sh" ]; then
+  # shellcheck source=lib/ci_annotations.sh
+  . "$(dirname -- "$0")/lib/ci_annotations.sh"
+else
+  ci_annotate() { :; }
+fi
+
 # Verify that a project's source-code dependencies point inward, per the
 # constitution's Dependency Rule (ARCHITECTURE.md, "The Dependency Rule").
 #
@@ -487,9 +495,11 @@ if [ "$layer_violations" -gt 0 ] || [ "$cycle_violations" -gt 0 ]; then
 
   if [ "$strict" = "true" ]; then
     echo "FAIL: $summary (--strict)."
+    ci_annotate error "check_architecture.sh: $summary"
     exit 1
   fi
   echo "WARN: $summary (pass --strict to enforce)."
+  ci_annotate warning "check_architecture.sh: $summary (pass --strict to enforce)"
 fi
 
 exit 0

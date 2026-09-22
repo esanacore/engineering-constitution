@@ -13,10 +13,23 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONSTITUTION_ROOT = path.resolve(__dirname, "..");
 
+// The server reports the framework's own version (the root VERSION file) so an
+// MCP client sees which constitution release it is talking to. A hardcoded
+// server version drifted to 1.0.0 while the framework reached 1.46.0.
+async function readFrameworkVersion() {
+  try {
+    const raw = await fs.readFile(path.join(CONSTITUTION_ROOT, "VERSION"), "utf-8");
+    return raw.trim() || "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+const FRAMEWORK_VERSION = await readFrameworkVersion();
+
 const server = new Server(
   {
     name: "engineering-constitution",
-    version: "1.0.0",
+    version: FRAMEWORK_VERSION,
   },
   {
     capabilities: {
@@ -26,37 +39,24 @@ const server = new Server(
   }
 );
 
+// Every standards document the constitution ships, in the order AGENTS.md asks
+// agents to read them. scripts/test_mcp_resources.sh fails if a root standards
+// document is missing from this list, so the MCP surface cannot drift behind
+// the repository again (it once exposed five of twelve).
 const RESOURCES = [
-  {
-    uri: "constitution://core/constitution",
-    name: "Core Constitution",
-    description: "The main Engineering Constitution document",
-    path: "CONSTITUTION.md",
-  },
-  {
-    uri: "constitution://core/workflow",
-    name: "AI Workflow Guide",
-    description: "Guidelines for AI-assisted development workflows",
-    path: "AI_WORKFLOW.md",
-  },
-  {
-    uri: "constitution://core/testing",
-    name: "Testing Standards",
-    description: "Universal testing requirements and expectations",
-    path: "TESTING.md",
-  },
-  {
-    uri: "constitution://core/code-style",
-    name: "Code Style Standards",
-    description: "Principle requiring official, canonical style guides for code style, docstrings, comments, and diagrams",
-    path: "CODE_STYLE.md",
-  },
-  {
-    uri: "constitution://core/style-guide-registry",
-    name: "Style Guide Registry",
-    description: "Registry of official style guide URLs and docstring conventions by language/platform",
-    path: "sources/STYLE_GUIDES.md",
-  },
+  { uri: "constitution://core/constitution", name: "Core Constitution", description: "The authoritative engineering principles (CONSTITUTION.md)", path: "CONSTITUTION.md" },
+  { uri: "constitution://core/workflow", name: "AI Workflow Guide", description: "The required step-by-step AI agent workflow (AI_WORKFLOW.md)", path: "AI_WORKFLOW.md" },
+  { uri: "constitution://core/integration", name: "Integration Guide", description: "Submodule workflow, reading order, IDE and multi-tool setup (INTEGRATION.md)", path: "INTEGRATION.md" },
+  { uri: "constitution://core/testing", name: "Testing Standards", description: "Testing, coverage, governance-tooling, and CI enforcement standards (TESTING.md)", path: "TESTING.md" },
+  { uri: "constitution://core/documentation", name: "Documentation Standards", description: "Documentation requirements, required files, traceability, ADRs (DOCUMENTATION.md)", path: "DOCUMENTATION.md" },
+  { uri: "constitution://core/security", name: "Security Standards", description: "Security review, secrets, supply chain, agent runtime, threat modeling (SECURITY.md)", path: "SECURITY.md" },
+  { uri: "constitution://core/operations", name: "Operations Standards", description: "Operations, infrastructure, CI/CD, and incident response standards (OPERATIONS.md)", path: "OPERATIONS.md" },
+  { uri: "constitution://core/architecture", name: "Architecture Standards", description: "SOLID, the Dependency Rule, design patterns, ADRs, visual architecture (ARCHITECTURE.md)", path: "ARCHITECTURE.md" },
+  { uri: "constitution://core/releases", name: "Release Standards", description: "Semantic versioning, changelog, tags, cutting a release (RELEASES.md)", path: "RELEASES.md" },
+  { uri: "constitution://core/code-style", name: "Code Style Standards", description: "Official, canonical style guides for code, docstrings, comments, and diagrams (CODE_STYLE.md)", path: "CODE_STYLE.md" },
+  { uri: "constitution://core/todo-guidelines", name: "TODO Guidelines", description: "TODO.md structure and maintenance rules (TODO_GUIDELINES.md)", path: "TODO_GUIDELINES.md" },
+  { uri: "constitution://core/knowledge-sources", name: "Knowledge Sources", description: "How reference sources are dropped in, summarized, and promoted (KNOWLEDGE_SOURCES.md)", path: "KNOWLEDGE_SOURCES.md" },
+  { uri: "constitution://core/style-guide-registry", name: "Style Guide Registry", description: "Registry of official style guide URLs and docstring conventions by language/platform", path: "sources/STYLE_GUIDES.md" },
 ];
 
 const SOURCE_SUMMARY_URI_PREFIX = "constitution://source-summary/";
