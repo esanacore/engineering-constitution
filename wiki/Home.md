@@ -113,7 +113,7 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.48.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.48.1`. Recent releases have focused on:
 
 - The framework holding itself to its own rules (1.48.0): its suites and checkers run in CI on every pull request; the compliance checker's recommended docs exist for this repository; the MCP server cannot drift; instruction files are kept consistent mechanically; every checker honors one tested contract and annotates pull requests; and changes to the Required Files, Required Workflow, checker contract, or compatibility policy require an ADR
 - New standards (1.48.0): untrusted content reaching AI agents and a shipped deny list, CI/CD supply chain (SHA-pinned actions, Dependabot for actions), data classification and synthetic test data, a proportionate fast path for trivial changes (ADR-0004), Conventional Commit messages, a definition of "product-facing", pull request and CODEOWNERS templates, an incident postmortem template, and a License column in the OTS inventory

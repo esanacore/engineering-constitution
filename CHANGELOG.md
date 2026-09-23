@@ -6,6 +6,48 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.48.1 - 2026-09-23
+
+A security patch for the MCP server's dependency tree. No standard, required
+file, checker default, script option, or exit code changed, and no adopter has
+to do anything beyond re-pinning the submodule — this is PATCH under the
+compatibility policy 1.48.0 introduced.
+
+### Security
+
+- **Every transitive advisory in `mcp-server/` is resolved.** Enabling
+  Dependabot alerts on this repository surfaced 23 open advisories, all
+  transitive under the single direct dependency `@modelcontextprotocol/sdk`,
+  and all invisible until now because alerts had never been switched on. Each
+  patched version was already reachable inside its parent's existing range, so
+  every fix is a lockfile bump with no change to `mcp-server/package.json`:
+
+  | Package | From | To | Advisory floor |
+  |---|---|---|---|
+  | `hono` | 4.12.25 | 4.13.8 | >= 4.13.5 |
+  | `fast-uri` | 3.1.2 | 3.1.8 | >= 3.1.6 |
+  | `ip-address` | 10.2.0 | 10.7.2 | >= 10.3.1 |
+  | `qs` | 6.15.2 | 6.16.0 | >= 6.16.0 |
+  | `@hono/node-server` | 1.19.14 | 1.19.17 | >= 1.19.15 |
+  | `body-parser` | 2.2.2 | 2.3.0 | >= 2.3.0 |
+
+  Severities spanned 7 high, 14 medium, and 2 low.
+
+- **Two adopters carried a vendored copy of this same tree.**
+  `SSH_DeviceManager` and `istqb-quiz-simulator` each committed a
+  point-in-time copy of `mcp-server/` on 2026-06-12, froze it at package
+  version `1.0.0`, and never updated it — the same drift 1.48.0 fixed in this
+  repository's own server. Nothing referenced either copy; both were removed
+  upstream rather than patched. Consume the MCP server from
+  `constitution/mcp-server/`, where the submodule pin keeps it current.
+  `SECURITY.md`'s supply-chain section already says never to vendor what a
+  pinned dependency provides; these two predated it.
+
+### Changed
+
+- `docs/OTS_SOFTWARE.md` records the patched floors for the MCP SDK's
+  transitive tree in its Anomaly Review column, per the pre-release checklist.
+
 ## 1.48.0 - 2026-09-21
 
 The framework holds itself to its own rules, gains the standards a 2026 AI-assisted repository needs, and defines what a release of a governance framework means. Everything here is warn-by-default or additive; no required file, no checker default, and no option or exit code of any script a shipped workflow invokes changed (the one exit-code change, `version_analyzer.sh`'s usage error moving from 1 to 2, is in an on-demand tool no workflow runs), so this is MINOR under the compatibility policy it introduces.
