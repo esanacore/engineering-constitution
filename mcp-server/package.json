@@ -1,6 +1,6 @@
 {
   "name": "engineering-constitution-mcp-server",
-  "version": "1.48.0",
+  "version": "1.48.1",
   "description": "MCP server for Eric's Engineering Constitution",
   "main": "index.js",
   "type": "module",
