@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # Re-pin every adopting repository's `constitution/` submodule to a release
-# commit, one branch and one pull request per repository.
+# commit, one branch and one pull request per repository, and move the
+# adopter's own constitution version references along with the pin.
 #
 # Cutting a constitution release strands the whole adopter fleet one tag
 # behind: each adopter's constitution-version.yml gate compares its pinned
@@ -32,10 +33,28 @@ Usage:
 Description:
   For each repository URL listed in <file> (one per line; blank lines and
   lines starting with # are ignored): clone it, create a branch that re-pins
-  the `constitution/` submodule gitlink to <commit>, push the branch, and
+  the `constitution/` submodule gitlink to <commit>, rewrite any adopter-side
+  constitution version reference to the new version, push the branch, and
   open a pull request (with `gh`, when available). The release version is
   read from VERSION at <commit> in the constitution repository, so the branch
   name and commit message name the release.
+
+Version references:
+  A repository that names the constitution version in prose -- "Engineering
+  Constitution v1.48.0" in CLAUDE.md, a CONSTITUTION_VERSION file, a README
+  line -- fails check_version_alignment.sh the moment the pin moves past it.
+  Moving the gitlink alone therefore leaves the adopter's compliance gate red
+  until someone hand-edits that line, which is what happened on two
+  consecutive releases before this existed.
+
+  The rewrite scans exactly what check_version_alignment.sh scans (README.md,
+  AGENTS.md, CLAUDE.md, CONTRIBUTING.md, SYSTEM_PROMPT.md, docs/SETUP.md,
+  docs/INDEX.md, docs/AGENT_HANDOFF.md, docs/AGENT_PROMPTS.md, demo.html,
+  docs/governance/*.md, and CONSTITUTION_VERSION), applies the same
+  "constitution ... X.Y.Z" line rule, and replaces only the first semantic
+  version on a matching line. Rewrites are listed under the repository in the
+  run output and again in the commit body. A repository with no such
+  reference is committed exactly as before.
 
 Required:
   --sha <commit>          The constitution commit to pin (the release commit
@@ -134,6 +153,69 @@ bumped=0; skipped=0; failed=0
 
 record() { echo "  $1  $2"; }
 
+# Rewrite adopter-side constitution version references to $version.
+#
+# check_version_alignment.sh fails a repository whose governance files name a
+# constitution version other than the pinned one, so a bump that moves only the
+# gitlink leaves the adopter's compliance gate red until someone hand-edits a
+# line. AI-Process-Engineer needed exactly that edit on two consecutive
+# releases before this existed.
+#
+# The scanned set and the match rule are deliberately identical to
+# check_version_alignment.sh: the same candidate files, the same
+# "constitution ... X.Y.Z" line grep, and the same "first semantic version on
+# the line" rule. Only that first version on a matching line is rewritten, so
+# an unrelated version elsewhere on the line is left alone.
+#
+# Usage: rewrite_version_references <repo-root> <new-version>
+# Echoes one "path:line old -> new" per rewrite; returns 0 always.
+rewrite_version_references() {
+  vr_root=$1
+  vr_new=$2
+
+  if [ -f "$vr_root/CONSTITUTION_VERSION" ]; then
+    vr_declared=$(tr -d '[:space:]' < "$vr_root/CONSTITUTION_VERSION")
+    if [ -n "$vr_declared" ] && [ "$vr_declared" != "$vr_new" ]; then
+      printf '%s\n' "$vr_new" > "$vr_root/CONSTITUTION_VERSION"
+      echo "CONSTITUTION_VERSION $vr_declared -> $vr_new"
+    fi
+  fi
+
+  vr_files="README.md AGENTS.md CLAUDE.md CONTRIBUTING.md SYSTEM_PROMPT.md docs/SETUP.md docs/INDEX.md docs/AGENT_HANDOFF.md docs/AGENT_PROMPTS.md demo.html"
+  for vr_gov in "$vr_root"/docs/governance/*.md; do
+    [ -f "$vr_gov" ] && vr_files="$vr_files ${vr_gov#"$vr_root"/}"
+  done
+
+  for vr_rel in $vr_files; do
+    vr_full="$vr_root/$vr_rel"
+    [ -f "$vr_full" ] || continue
+
+    while IFS= read -r vr_match; do
+      [ -n "$vr_match" ] || continue
+      vr_lineno=${vr_match%%:*}
+      vr_text=${vr_match#*:}
+      vr_found=$(printf '%s\n' "$vr_text" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1 || true)
+      [ -n "$vr_found" ] || continue
+      [ "$vr_found" = "$vr_new" ] && continue
+
+      # Replace only the first occurrence, only on this line.
+      vr_tmp="$vr_full.bumptmp"
+      awk -v ln="$vr_lineno" -v old="$vr_found" -v new="$vr_new" '
+        NR == ln {
+          i = index($0, old)
+          if (i > 0) $0 = substr($0, 1, i - 1) new substr($0, i + length(old))
+        }
+        { print }
+      ' "$vr_full" > "$vr_tmp" && mv "$vr_tmp" "$vr_full"
+      echo "$vr_rel:$vr_lineno $vr_found -> $vr_new"
+    done < <(
+      grep -nEi '.*constitution.*([0-9]+\.[0-9]+\.[0-9]+).*|.*([0-9]+\.[0-9]+\.[0-9]+).*constitution.*' "$vr_full" || true
+    )
+  done
+
+  return 0
+}
+
 while IFS= read -r url || [ -n "$url" ]; do
   url=$(printf '%s' "$url" | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
   case "$url" in ''|'#'*) continue ;; esac
@@ -164,16 +246,42 @@ while IFS= read -r url || [ -n "$url" ]; do
 
   default_branch=$(git -C "$dest" rev-parse --abbrev-ref HEAD)
   if ! git -C "$dest" checkout -q -b "$branch" \
-     || ! git -C "$dest" update-index --cacheinfo "160000,$full_sha,constitution" \
-     || ! git -C "$dest" -c user.name="${GIT_AUTHOR_NAME:-constitution-bump}" -c user.email="${GIT_AUTHOR_EMAIL:-constitution-bump@users.noreply.github.com}" \
+     || ! git -C "$dest" update-index --cacheinfo "160000,$full_sha,constitution"; then
+    record FAILED "$name: could not create the bump commit"; failed=$((failed + 1)); continue
+  fi
+
+  # Move the adopter's own version references with the pin, so the bump does
+  # not leave check_version_alignment.sh failing on a stale mention.
+  rewrites=$(rewrite_version_references "$dest" "$version" || true)
+  rewrite_note=""
+  if [ -n "$rewrites" ]; then
+    rewrite_count=$(printf '%s\n' "$rewrites" | grep -c . || true)
+    while IFS= read -r line; do [ -n "$line" ] && echo "     ref  $line"; done <<< "$rewrites"
+    rewrite_note=" (+$rewrite_count version reference(s))"
+    if ! git -C "$dest" add -A; then
+      record FAILED "$name: could not stage the rewritten version references"; failed=$((failed + 1)); continue
+    fi
+  fi
+
+  commit_body="Pin constitution/ to $full_sha (v$version). Previously $current."
+  if [ -n "$rewrites" ]; then
+    commit_body="$commit_body
+
+Adopter-side version references updated to match the new pin, so
+check_version_alignment.sh does not fail on a stale mention:
+
+$(printf '%s\n' "$rewrites" | sed 's/^/  /')"
+  fi
+
+  if ! git -C "$dest" -c user.name="${GIT_AUTHOR_NAME:-constitution-bump}" -c user.email="${GIT_AUTHOR_EMAIL:-constitution-bump@users.noreply.github.com}" \
           commit -q -m "constitution: bump to v$version" \
-          -m "Pin constitution/ to $full_sha (v$version). Previously $current." \
+          -m "$commit_body" \
           -m "Generated by constitution/scripts/bump_adopters.sh as step 9 of RELEASES.md \"Cutting a Release\"."; then
     record FAILED "$name: could not create the bump commit"; failed=$((failed + 1)); continue
   fi
 
   if [ "$dry_run" = "true" ]; then
-    record BUMPED "$name: commit created on $branch (dry run, not pushed; base $default_branch)"; bumped=$((bumped + 1)); continue
+    record BUMPED "$name: commit created on $branch$rewrite_note (dry run, not pushed; base $default_branch)"; bumped=$((bumped + 1)); continue
   fi
 
   if ! git -C "$dest" push -q -u origin "$branch" </dev/null 2>"$workdir/$name.push.log"; then
@@ -197,7 +305,7 @@ while IFS= read -r url || [ -n "$url" ]; do
         pr_note="pushed $branch; open https://github.com/$path/compare/$default_branch...$branch?expand=1" ;;
     esac
   fi
-  record BUMPED "$name: $pr_note"; bumped=$((bumped + 1))
+  record BUMPED "$name: $pr_note$rewrite_note"; bumped=$((bumped + 1))
 done < "$repos_file"
 
 echo

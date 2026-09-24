@@ -6,6 +6,25 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- **`bump_adopters.sh` moves adopter-side version references with the pin.**
+  A repository that names the constitution version in prose — `Engineering
+  Constitution v1.48.0` in `CLAUDE.md`, a `CONSTITUTION_VERSION` file, a README
+  line — fails `check_version_alignment.sh` the moment the gitlink moves past
+  it. The fleet bump moved only the gitlink, so every release left such an
+  adopter's compliance gate red until someone hand-edited one line;
+  AI-Process-Engineer needed exactly that commit on 1.48.0 and again on
+  1.48.1. The bump now rewrites those references in the same commit as the
+  gitlink, scanning precisely what `check_version_alignment.sh` scans and
+  applying the same "first semantic version on a line that mentions the
+  constitution" rule, so an unrelated version on the same line is left alone.
+  Rewrites are listed per repository in the run output and recorded in the
+  commit body. Three new cases in `scripts/test_bump_adopters.sh` (8 total)
+  cover the rewrite, a repository with no references being committed
+  untouched, and — the case that matters — `check_version_alignment.sh`
+  exiting 0 against the bumped result.
+
 ## 1.48.1 - 2026-09-23
 
 A security patch for the MCP server's dependency tree. No standard, required
