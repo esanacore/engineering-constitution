@@ -25,6 +25,33 @@ This project follows semantic versioning.
   untouched, and — the case that matters — `check_version_alignment.sh`
   exiting 0 against the bumped result.
 
+### Fixed
+
+- **`check_version_alignment.sh` no longer treats a session log as a stale
+  claim, and `bump_adopters.sh` no longer rewrites one.** The checker flagged
+  any line naming the constitution and a version other than the pinned one,
+  which is wrong for `docs/AGENT_HANDOFF.md`: `DOCUMENTATION.md` defines that
+  file as capturing "state after work", one entry per session, so a version it
+  names is a historical fact rather than a claim about the current pin. In a
+  real adopter it reported three mismatches for `## Last Session — 2026-08-27:
+  Constitution 1.46.0`, its scope line, and `**Branch**:
+  `chore/constitution-1.46.0`` — all true as written.
+
+  The file is no longer scanned, by either script. This matters most for the
+  version-reference rewrite added above: sharing the checker's rule meant it
+  inherited the checker's blind spot, so the next fleet bump would have
+  silently rewritten those lines across every adopter — falsifying handoff
+  records and inventing branch names that never existed. The rewrite had not
+  yet run against a release, so nothing was altered.
+
+  For a historical mention inside a file that *is* otherwise current, a line
+  containing `version-alignment:ignore` is skipped by both scripts. The opt-out
+  is explicit: an unmarked stale mention still fails, so this is not a blanket
+  exemption. `scripts/test_check_version_alignment.sh` gains four cases
+  (10 total) and `scripts/test_bump_adopters.sh` gains assertions inside its
+  rewrite case, including a mechanical guard that fails if the two scripts'
+  scanned sets ever drift apart again.
+
 ## 1.48.1 - 2026-09-23
 
 A security patch for the MCP server's dependency tree. No standard, required

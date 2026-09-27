@@ -47,8 +47,16 @@ Checks:
 
 Scanned files when present:
   README.md, AGENTS.md, CLAUDE.md, CONTRIBUTING.md, SYSTEM_PROMPT.md,
-  docs/SETUP.md, docs/INDEX.md, docs/AGENT_HANDOFF.md, docs/AGENT_PROMPTS.md,
-  demo.html, docs/governance/*.md.
+  docs/SETUP.md, docs/INDEX.md, docs/AGENT_PROMPTS.md, demo.html,
+  docs/governance/*.md.
+
+  docs/AGENT_HANDOFF.md is deliberately NOT scanned. DOCUMENTATION.md
+  defines it as capturing "state after work", with a "Session: [Date/Time]"
+  template and one entry per session -- it is a log of past sessions, so a
+  version it names is a historical fact, not a claim about the current pin.
+
+  A line containing the marker "version-alignment:ignore" is skipped, for a
+  historical mention inside a file that is otherwise current.
 USAGE
 }
 
@@ -125,7 +133,6 @@ candidate_files=(
   SYSTEM_PROMPT.md
   docs/SETUP.md
   docs/INDEX.md
-  docs/AGENT_HANDOFF.md
   docs/AGENT_PROMPTS.md
   demo.html
 )
@@ -144,6 +151,12 @@ for relative_path in "${candidate_files[@]}"; do
     [ -n "$match" ] || continue
     line_number=${match%%:*}
     line_text=${match#*:}
+
+    # An explicit opt-out for a historical mention in an otherwise current file.
+    case $line_text in
+      *version-alignment:ignore*) continue ;;
+    esac
+
     version_found=$(printf '%s\n' "$line_text" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1 || true)
     [ -n "$version_found" ] || continue
 

@@ -49,10 +49,15 @@ Version references:
 
   The rewrite scans exactly what check_version_alignment.sh scans (README.md,
   AGENTS.md, CLAUDE.md, CONTRIBUTING.md, SYSTEM_PROMPT.md, docs/SETUP.md,
-  docs/INDEX.md, docs/AGENT_HANDOFF.md, docs/AGENT_PROMPTS.md, demo.html,
-  docs/governance/*.md, and CONSTITUTION_VERSION), applies the same
-  "constitution ... X.Y.Z" line rule, and replaces only the first semantic
-  version on a matching line. Rewrites are listed under the repository in the
+  docs/INDEX.md, docs/AGENT_PROMPTS.md, demo.html, docs/governance/*.md, and
+  CONSTITUTION_VERSION), applies the same "constitution ... X.Y.Z" line rule,
+  honours the same "version-alignment:ignore" line marker, and replaces only
+  the first semantic version on a matching line.
+
+  docs/AGENT_HANDOFF.md is excluded, in both scripts, because it is a log of
+  past sessions: rewriting "Last Session -- 2026-08-27: Constitution 1.46.0"
+  or "Branch: chore/constitution-1.46.0" would falsify a handoff record and
+  invent a branch that never existed. Rewrites are listed under the repository in the
   run output and again in the commit body. A repository with no such
   reference is committed exactly as before.
 
@@ -181,7 +186,7 @@ rewrite_version_references() {
     fi
   fi
 
-  vr_files="README.md AGENTS.md CLAUDE.md CONTRIBUTING.md SYSTEM_PROMPT.md docs/SETUP.md docs/INDEX.md docs/AGENT_HANDOFF.md docs/AGENT_PROMPTS.md demo.html"
+  vr_files="README.md AGENTS.md CLAUDE.md CONTRIBUTING.md SYSTEM_PROMPT.md docs/SETUP.md docs/INDEX.md docs/AGENT_PROMPTS.md demo.html"
   for vr_gov in "$vr_root"/docs/governance/*.md; do
     [ -f "$vr_gov" ] && vr_files="$vr_files ${vr_gov#"$vr_root"/}"
   done
@@ -194,6 +199,10 @@ rewrite_version_references() {
       [ -n "$vr_match" ] || continue
       vr_lineno=${vr_match%%:*}
       vr_text=${vr_match#*:}
+      # Same opt-out the checker honours, so the two cannot disagree.
+      case $vr_text in
+        *version-alignment:ignore*) continue ;;
+      esac
       vr_found=$(printf '%s\n' "$vr_text" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1 || true)
       [ -n "$vr_found" ] || continue
       [ "$vr_found" = "$vr_new" ] && continue
