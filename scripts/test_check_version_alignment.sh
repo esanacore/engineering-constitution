@@ -98,4 +98,68 @@ run_check "$test_dir/does-not-exist"
 [ "$status" -eq 2 ] || { echo "FAIL(5): expected missing root to exit 2, got $status"; exit 1; }
 echo "SUCCESS(5): usage errors report exit 2."
 
+# ---------------------------------------------------------------------------
+# docs/AGENT_HANDOFF.md is a log of past sessions (DOCUMENTATION.md: it
+# captures "state after work", one entry per session). A version it names is a
+# historical fact, not a claim about the current pin, so it is not scanned.
+# ---------------------------------------------------------------------------
+repo="$test_dir/handoff-history"
+make_repo "$repo"
+mkdir -p "$repo/docs"
+cat > "$repo/docs/AGENT_HANDOFF.md" <<'EOF'
+## Last Session — 2026-08-27: Constitution 1.24.0 & keyring integration
+- **Scope**: Constitution 1.24.0 alignment.
+- **Branch**: `chore/constitution-1.24.0`.
+EOF
+run_check "$repo"
+[ "$status" -eq 0 ] || { echo "$output"; echo "FAIL(7): a historical version in docs/AGENT_HANDOFF.md must not fail, got $status"; exit 1; }
+echo "$output" | grep -q "AGENT_HANDOFF" && { echo "$output"; echo "FAIL(7): docs/AGENT_HANDOFF.md must not be scanned"; exit 1; }
+echo "SUCCESS(7): docs/AGENT_HANDOFF.md is not scanned."
+
+# ---------------------------------------------------------------------------
+# A historical mention inside an otherwise current file opts out per line.
+# ---------------------------------------------------------------------------
+repo="$test_dir/ignore-marker"
+make_repo "$repo"
+cat >> "$repo/README.md" <<'EOF'
+
+## History
+
+Adopted the constitution at 1.20.0 in June. <!-- version-alignment:ignore -->
+EOF
+run_check "$repo"
+[ "$status" -eq 0 ] || { echo "$output"; echo "FAIL(8): version-alignment:ignore line must be skipped, got $status"; exit 1; }
+echo "$output" | grep -q "1.20.0" && { echo "$output"; echo "FAIL(8): ignored line was still reported"; exit 1; }
+echo "SUCCESS(8): a version-alignment:ignore line is skipped."
+
+# Without the marker, that same line must still fail -- the opt-out is explicit,
+# not a blanket exemption for anything under a "History" heading.
+repo="$test_dir/ignore-marker-absent"
+make_repo "$repo"
+cat >> "$repo/README.md" <<'EOF'
+
+Adopted the constitution at 1.20.0 in June.
+EOF
+run_check "$repo"
+[ "$status" -eq 1 ] || { echo "$output"; echo "FAIL(8): an unmarked stale mention must still fail, got $status"; exit 1; }
+echo "$output" | grep -q "mentions 1.20.0" || { echo "$output"; echo "FAIL(8): unmarked stale mention not reported"; exit 1; }
+echo "SUCCESS(8): the opt-out is explicit, not implied."
+
+# ---------------------------------------------------------------------------
+# bump_adopters.sh rewrites what this checker scans. If the two lists drift,
+# the bump either rewrites something unchecked or misses something checked --
+# and the AGENT_HANDOFF case above is exactly what drift would reintroduce.
+# ---------------------------------------------------------------------------
+checker_set=$(sed -n '/^candidate_files=(/,/^)/p' "$check_script" \
+  | sed '1d;$d' | tr -d '[:space:]' | tr ',' ' ')
+bump_set=$(grep -oE '^  vr_files="[^"]*"' "$script_dir/bump_adopters.sh" \
+  | sed 's/^  vr_files="//; s/"$//' | tr -d '[:space:]')
+[ "$checker_set" = "$bump_set" ] || {
+  echo "checker: $checker_set"
+  echo "bump:    $bump_set"
+  echo "FAIL(9): check_version_alignment.sh and bump_adopters.sh scan different files"; exit 1; }
+grep -q 'version-alignment:ignore' "$script_dir/bump_adopters.sh" || {
+  echo "FAIL(9): bump_adopters.sh does not honour the version-alignment:ignore marker"; exit 1; }
+echo "SUCCESS(9): the checker and the bump rewriter scan the same files and share the opt-out."
+
 echo "ALL TESTS PASSED"

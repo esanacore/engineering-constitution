@@ -44,7 +44,12 @@ make_adopter() {
     printf '1.0.0\n' > CONSTITUTION_VERSION
     # A version that has nothing to do with the constitution must not move.
     printf 'Requires Python 3.11.7 and pytest 8.0.0.\n' > CONTRIBUTING.md
-    git add CLAUDE.md docs/SETUP.md docs/governance/alignment.md CONSTITUTION_VERSION CONTRIBUTING.md
+    # A log of past sessions: these versions are historical facts, not claims
+    # about the current pin, so the rewrite must leave them alone.
+    printf '## Last Session -- 2026-08-27: Constitution 1.0.0 rollout\n- **Branch**: `chore/constitution-1.0.0`.\n' > docs/AGENT_HANDOFF.md
+    # An explicit per-line opt-out inside an otherwise current file.
+    printf 'Adopted the constitution at 1.0.0 in June. <!-- version-alignment:ignore -->\n' > docs/INDEX.md
+    git add CLAUDE.md docs/SETUP.md docs/governance/alignment.md CONSTITUTION_VERSION CONTRIBUTING.md docs/AGENT_HANDOFF.md docs/INDEX.md
   fi
   if [ "$pin" != "none" ]; then
     printf '[submodule "constitution"]\n\tpath = constitution\n\turl = ../constitution\n' > .gitmodules
@@ -127,6 +132,12 @@ grep -q '1.0.0' CLAUDE.md && fail "a stale 1.0.0 reference survived in CLAUDE.md
 # An unrelated version on a line that never mentions the constitution stays put.
 grep -q 'Python 3.11.7' CONTRIBUTING.md || { cat CONTRIBUTING.md; fail "an unrelated version was rewritten"; }
 grep -q 'pytest 8.0.0' CONTRIBUTING.md || fail "an unrelated version was rewritten"
+# docs/AGENT_HANDOFF.md is a session log; rewriting it would falsify the record
+# and invent a branch name that never existed.
+grep -q 'Constitution 1.0.0 rollout' docs/AGENT_HANDOFF.md || { cat docs/AGENT_HANDOFF.md; fail "a historical handoff entry was rewritten"; }
+grep -q 'chore/constitution-1.0.0' docs/AGENT_HANDOFF.md || fail "a historical branch name was rewritten"
+# An explicitly marked line opts out.
+grep -q 'at 1.0.0 in June' docs/INDEX.md || { cat docs/INDEX.md; fail "a version-alignment:ignore line was rewritten"; }
 # The rewrite rides in the same commit as the gitlink, not a second one.
 [ "$(git rev-list --count "origin/main..HEAD")" = "1" ] || fail "expected exactly one bump commit"
 git show --stat --oneline HEAD | grep -q 'CLAUDE.md' || fail "CLAUDE.md is not part of the bump commit"
