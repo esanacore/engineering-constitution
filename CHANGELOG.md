@@ -6,6 +6,14 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.49.0 - 2026-09-27
+
+The fleet bump carries the adopter's own version references with it, and the
+alignment checker stops mistaking a session log for a stale claim. Both changes
+are additive or strictly less likely to fail than before, so no adopter's CI can
+turn red on this release and no documented invocation changes — MINOR under the
+compatibility policy.
+
 ### Changed
 
 - **`bump_adopters.sh` moves adopter-side version references with the pin.**
