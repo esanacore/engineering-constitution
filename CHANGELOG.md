@@ -6,6 +6,43 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.49.1 - 2026-09-27
+
+A correction to 1.49.0's version-reference rewrite, caught by the 1.49.0 fleet
+bump's own dry run before it wrote anything.
+
+### Fixed
+
+- **`bump_adopters.sh` rewrites only the version the bump is moving away from.**
+  1.49.0's rewrite replaced any stale version on a line mentioning the
+  constitution. The 1.49.0 dry run showed `patients-served` taking 23 rewrites,
+  most of them into a governance review log — `` `CONSTITUTION_VERSION` moved
+  `1.44.0` → `1.44.1` ``, `` `v1.45.0` adds `LICENSE` (Apache-2.0) ``, `At
+  review time (2026-06-22) … release `1.15.0``, and a completed checklist item
+  naming the tag it was pinned at. Rewriting those produces "moves 1.49.1 →
+  1.49.1" and the claim that this release shipped Apache-2.0 licensing.
+
+  It is the fault 1.49.0 fixed for `docs/AGENT_HANDOFF.md`, in a different
+  file. Excluding `docs/governance/*.md` wholesale is not available: a line
+  there reading `Reviewed constitution release: X` is a real current claim, and
+  the checker's own fixture depends on it. The rule was too broad rather than
+  the file list too long, so in prose the rewrite now moves only the version at
+  the repository's current gitlink. `patients-served` drops from 23 rewrites to
+  one — `CONSTITUTION_VERSION`, a declaration that must equal the pin rather
+  than prose about one, deliberately exempt from the narrowing.
+
+  Where the outgoing version cannot be resolved, the prose rewrite is skipped
+  and the repository reported with a `NOTE`: leaving a stale reference for a
+  human is recoverable, rewriting the wrong line is not.
+
+  This makes the rewrite deliberately more conservative than
+  `check_version_alignment.sh`, which can still report historical lines the
+  bump declines to fix. That asymmetry is the design — the checker reports, and
+  a human either updates the text or marks the line `version-alignment:ignore`.
+  `scripts/test_bump_adopters.sh` goes from 9 cases to 11, including a
+  governance review log modelled on `patients-served` whose four historical
+  forms must survive verbatim while its one current claim moves.
+
 ## 1.49.0 - 2026-09-27
 
 The fleet bump carries the adopter's own version references with it, and the

@@ -128,7 +128,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.49.0
+Current version: 1.49.1
 
 See `VERSION`.
 
