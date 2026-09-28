@@ -49,6 +49,17 @@ make_adopter() {
     printf '## Last Session -- 2026-08-27: Constitution 1.0.0 rollout\n- **Branch**: `chore/constitution-1.0.0`.\n' > docs/AGENT_HANDOFF.md
     # An explicit per-line opt-out inside an otherwise current file.
     printf 'Adopted the constitution at 1.0.0 in June. <!-- version-alignment:ignore -->\n' > docs/INDEX.md
+    # A governance review log. These name versions the bump is NOT moving away
+    # from, so they are historical records and must survive verbatim. Modelled
+    # on patients-served, where the unnarrowed rewrite would have falsified 23
+    # lines of a compliance record.
+    cat > docs/governance/history.md <<'GOV'
+Reviewed constitution release: `1.0.0`
+`CONSTITUTION_VERSION` moved `0.9.0` -> `0.9.1` during the June review.
+`v0.5.0` adds LICENSE (Apache-2.0) and NOTICE to the constitution.
+At review time (2026-06-22) the constitution identified release `0.2.0`.
+GOV
+    git add docs/governance/history.md
     git add CLAUDE.md docs/SETUP.md docs/governance/alignment.md CONSTITUTION_VERSION CONTRIBUTING.md docs/AGENT_HANDOFF.md docs/INDEX.md
   fi
   if [ "$pin" != "none" ]; then
@@ -156,7 +167,7 @@ git checkout -q "constitution/bump-v$ver_b"
 cd "$tmp"
 echo "PASS"
 
-echo "Test 8: the rewrite satisfies check_version_alignment.sh"
+echo "Test 8: the rewrite clears every outgoing-pin finding, and only historical lines remain"
 checker="$repo_root/scripts/check_version_alignment.sh"
 make_adopter aligned "$sha_a" with-refs
 printf '%s\n' "$tmp/aligned.git" > "$tmp/repos-aligned.txt"
@@ -164,8 +175,68 @@ printf '%s\n' "$tmp/aligned.git" > "$tmp/repos-aligned.txt"
 git clone -q "$tmp/aligned.git" "$tmp/aligned-check" && cd "$tmp/aligned-check"
 git checkout -q "constitution/bump-v$ver_b"
 mkdir -p constitution && printf '%s\n' "$ver_b" > constitution/VERSION
-status=0; "$checker" . >/dev/null 2>&1 || status=$?
-[ "$status" -eq 0 ] || { "$checker" .; fail "check_version_alignment.sh still fails after the bump (exit $status)"; }
+set +e; checker_out=$("$checker" . 2>&1); status=$?; set -e
+
+# No finding may name the version the bump moved away from: those are exactly
+# the references the rewrite exists to fix, and none may survive it.
+echo "$checker_out" | grep -q "mentions $ver_a" && { echo "$checker_out"; fail "an outgoing-pin reference survived the bump"; }
+
+# The rewrite is deliberately more conservative than the checker, so the
+# checker may still report historical lines. That is the designed asymmetry:
+# it reports, and a human either updates the text or marks the line with
+# version-alignment:ignore. What must never happen is the bump falsifying them.
+if [ "$status" -ne 0 ]; then
+  while IFS= read -r line; do
+    case $line in
+      *MISMATCH*) echo "$line" | grep -qE 'mentions 0\.(9|5|2)\.[0-9]+' \
+        || { echo "$checker_out"; fail "an unexpected finding survived: $line"; } ;;
+    esac
+  done <<< "$checker_out"
+  echo "  (remaining findings are historical governance lines, as designed)"
+fi
+cd "$tmp"
+echo "PASS"
+
+echo "Test 10: only the outgoing pin is rewritten in prose"
+make_adopter outgoing "$sha_a" with-refs
+printf '%s\n' "$tmp/outgoing.git" > "$tmp/repos-outgoing.txt"
+out=$("$bump" --sha "$sha_b" --repos "$tmp/repos-outgoing.txt" --constitution "$tmp/constitution" --workdir "$tmp/w10" --no-pr)
+grep -q 'BUMPED  outgoing' <<< "$out" || { echo "$out"; fail "outgoing adopter was not bumped"; }
+
+git clone -q "$tmp/outgoing.git" "$tmp/outgoing-check" && cd "$tmp/outgoing-check"
+git checkout -q "constitution/bump-v$ver_b"
+
+# The outgoing pin (1.0.0) moves; it is what this bump is leaving behind.
+grep -q "Engineering Constitution v$ver_b" CLAUDE.md || { cat CLAUDE.md; fail "the outgoing version was not rewritten"; }
+
+# A governance review log names other versions. Every one must survive verbatim.
+grep -q 'moved `0.9.0` -> `0.9.1`' docs/governance/history.md || { cat docs/governance/history.md; fail "a historical transition was rewritten"; }
+grep -q '`v0.5.0` adds LICENSE' docs/governance/history.md || fail "a historical release claim was rewritten"
+grep -q 'identified release `0.2.0`' docs/governance/history.md || fail "a dated historical review was rewritten"
+# The one current claim on the outgoing pin does move.
+grep -q "Reviewed constitution release: \`$ver_b\`" docs/governance/history.md || { cat docs/governance/history.md; fail "a current claim on the outgoing pin was not rewritten"; }
+
+# CONSTITUTION_VERSION is a declaration, not prose: it must equal the new pin
+# regardless of what it previously held.
+[ "$(cat CONSTITUTION_VERSION)" = "$ver_b" ] || fail "CONSTITUTION_VERSION must always match the new pin"
+cd "$tmp"
+echo "PASS"
+
+echo "Test 11: a staleness predating the bump is left for review, not rewritten"
+make_adopter predates "$sha_a"
+cd "$tmp/work-predates"
+printf 'Built against Eric'"'"'s Engineering Constitution v0.4.0.\n' > CLAUDE.md
+# Stage only this file. `commit -a` would see the gitlink's absent directory as
+# a deletion and drop the submodule from the index.
+git add CLAUDE.md
+gitc commit -q -m "stale reference that predates this bump" && git push -q origin main
+cd "$tmp"
+printf '%s\n' "$tmp/predates.git" > "$tmp/repos-predates.txt"
+out=$("$bump" --sha "$sha_b" --repos "$tmp/repos-predates.txt" --constitution "$tmp/constitution" --workdir "$tmp/w11" --no-pr)
+grep -q 'version reference(s)' <<< "$out" && { echo "$out"; fail "rewrote a version this bump is not moving away from"; }
+git clone -q "$tmp/predates.git" "$tmp/predates-check" && cd "$tmp/predates-check"
+git checkout -q "constitution/bump-v$ver_b"
+grep -q 'v0.4.0' CLAUDE.md || { cat CLAUDE.md; fail "a pre-existing stale reference was rewritten"; }
 cd "$tmp"
 echo "PASS"
 

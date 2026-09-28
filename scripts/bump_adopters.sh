@@ -54,6 +54,15 @@ Version references:
   honours the same "version-alignment:ignore" line marker, and replaces only
   the first semantic version on a matching line.
 
+  In prose it rewrites ONLY the version this bump is moving away from -- the
+  VERSION at the repository's current gitlink. It is deliberately more
+  conservative than the checker here. A line naming some other version is
+  either a historical record ("CONSTITUTION_VERSION moved 1.44.0 -> 1.44.1",
+  "v1.45.0 adds LICENSE (Apache-2.0)") or a staleness predating this bump;
+  rewriting either produces a false statement, while leaving it produces a
+  checker finding a human can act on. CONSTITUTION_VERSION is exempt from that
+  narrowing: it is a declaration that must equal the pin, not prose about one.
+
   docs/AGENT_HANDOFF.md is excluded, in both scripts, because it is a log of
   past sessions: rewriting "Last Session -- 2026-08-27: Constitution 1.46.0"
   or "Branch: chore/constitution-1.46.0" would falsify a handoff record and
@@ -172,11 +181,12 @@ record() { echo "  $1  $2"; }
 # the line" rule. Only that first version on a matching line is rewritten, so
 # an unrelated version elsewhere on the line is left alone.
 #
-# Usage: rewrite_version_references <repo-root> <new-version>
+# Usage: rewrite_version_references <repo-root> <new-version> <outgoing-version>
 # Echoes one "path:line old -> new" per rewrite; returns 0 always.
 rewrite_version_references() {
   vr_root=$1
   vr_new=$2
+  vr_old=$3
 
   if [ -f "$vr_root/CONSTITUTION_VERSION" ]; then
     vr_declared=$(tr -d '[:space:]' < "$vr_root/CONSTITUTION_VERSION")
@@ -206,6 +216,13 @@ rewrite_version_references() {
       vr_found=$(printf '%s\n' "$vr_text" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1 || true)
       [ -n "$vr_found" ] || continue
       [ "$vr_found" = "$vr_new" ] && continue
+      # Only the version this bump is moving away from. A line naming some
+      # other version is either a historical record or a staleness that
+      # predates this bump; neither is this script's to rewrite. Without this,
+      # a governance review log reading "CONSTITUTION_VERSION moved 1.44.0 ->
+      # 1.44.1" becomes "moved <new> -> <new>", and "v1.45.0 adds LICENSE
+      # (Apache-2.0)" becomes a claim about a release that did no such thing.
+      [ -n "$vr_old" ] && [ "$vr_found" != "$vr_old" ] && continue
 
       # Replace only the first occurrence, only on this line.
       vr_tmp="$vr_full.bumptmp"
@@ -261,7 +278,20 @@ while IFS= read -r url || [ -n "$url" ]; do
 
   # Move the adopter's own version references with the pin, so the bump does
   # not leave check_version_alignment.sh failing on a stale mention.
-  rewrites=$(rewrite_version_references "$dest" "$version" || true)
+  # The version this repository is moving away from, read from VERSION at its
+  # current gitlink. When it cannot be resolved -- a pin outside the
+  # constitution's history, or a commit predating the VERSION file -- the prose
+  # rewrite is skipped rather than guessed at: leaving a stale reference for a
+  # human is recoverable, rewriting the wrong line is not.
+  outgoing=""
+  if [ -n "$current" ]; then
+    outgoing=$(git -C "$constitution" show "${current}:VERSION" 2>/dev/null | tr -d '[:space:]' || true)
+  fi
+  if [ -z "$outgoing" ]; then
+    record NOTE "$name: outgoing version unresolved at ${current:-<none>}; prose references left for review"
+  fi
+
+  rewrites=$(rewrite_version_references "$dest" "$version" "$outgoing" || true)
   rewrite_note=""
   if [ -n "$rewrites" ]; then
     rewrite_count=$(printf '%s\n' "$rewrites" | grep -c . || true)
