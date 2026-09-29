@@ -6,6 +6,36 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **`scripts/check_demo_page.sh` checks the Demo Page standard, not just the
+  file's presence.** `check_compliance.sh` can only see that `demo.html`
+  exists, so a demo that pulled its fonts from a CDN or called an API on
+  `localhost` passed. The new checker reports remote resource loads (scripts,
+  stylesheets, preconnects, images, frames, media, SVG `<use>`/`<image>`, a
+  remote `<base>`, CSS `url()`/`@import`, and JavaScript `import`/`fetch`/
+  `Worker`/`WebSocket` calls with a literal URL), scripts or stylesheets kept
+  in separate files, references into build output (`dist/`, `node_modules/`,
+  ...), URLs in markup or scripts naming `localhost` or a private network
+  address, and a `README.md` that never links the page. Navigation links,
+  local images, and page text are allowed, so a labeled simulated transcript
+  can still show `curl http://localhost:8080`; HTML comments are ignored. Warn
+  by default, `--strict` to block; paired with
+  `scripts/test_check_demo_page.sh` (9 tests, including one regression case
+  per finding from the change's own critique pass).
+- **`constitution-compliance.yml` runs the demo page check** in warn mode
+  whenever `demo.html` exists, and skips cleanly on constitution pins that
+  predate the checker. Adopters see findings as annotations before anything
+  turns red.
+
+### Changed
+
+- **The constitution's own `demo.html` no longer loads Google Fonts.** The new
+  checker's first finding was the framework's own page: three requests to
+  `fonts.googleapis.com`/`fonts.gstatic.com`, the exact dependency the
+  standard forbids. It now uses system font stacks, and `tests.yml`'s
+  self-governance job runs `check_demo_page.sh --strict` against it.
+
 ## 1.49.1 - 2026-09-27
 
 A correction to 1.49.0's version-reference rewrite, caught by the 1.49.0 fleet

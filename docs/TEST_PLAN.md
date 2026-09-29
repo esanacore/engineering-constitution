@@ -52,6 +52,7 @@ percentage:
 | Date | Suites | Notes |
 | --- | --- | --- |
 | 2026-09-16 | 27 | Baseline: first run under `run_all_tests.sh` in CI. |
+| 2026-09-29 | 28 | `test_check_demo_page.sh` added; structural floors still 100% (checker contract passes). |
 
 ## Coverage Gap Log
 

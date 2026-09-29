@@ -38,6 +38,7 @@ cd mcp-server && npm install && cd ..   # optional, MCP server only
 bash scripts/run_all_tests.sh --quiet
 bash scripts/check_instruction_templates.sh --strict .
 bash scripts/check_skills.sh --strict .
+bash scripts/check_demo_page.sh --strict .
 bash scripts/check_wiki_links.sh --strict .
 ```
 
