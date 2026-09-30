@@ -115,6 +115,13 @@ echo
 # One awk pass prints "<kind>\t<detail>" findings and a final "STEPS\t<n>\t<h>"
 # summary line. POSIX awk only (mawk, gawk, BSD awk).
 scan=$(printf '%s\n' "$input" | awk '
+  function norm(t) {
+    t = tolower(t)
+    gsub(/\*\*|__/, "", t)
+    sub(/^[^a-z0-9]+/, "", t)
+    sub(/[ \t#:]+$/, "", t)
+    return t
+  }
   function finish_step() {
     if (cur == 0) return
     if (human[cur]) {
@@ -137,25 +144,52 @@ scan=$(printf '%s\n' "$input" | awk '
       if (e == 0) { line = substr(line, 1, c - 1); in_comment = 1; break }
       line = substr(line, 1, c - 1) substr(rest, e + 3)
     }
-    # Fenced code blocks.
-    if (line ~ /^[ \t]*(```|~~~)/) { in_fence = !in_fence; next }
-    if (in_fence) next
+    # Fenced code blocks: a fence closes only on the same character, at least
+    # as long, so a ``` line inside a ```` block does not end it early.
+    if (fence == "" && match(line, /^[ \t]*(```+|~~~+)/)) {
+      f = substr(line, RSTART, RLENGTH); sub(/^[ \t]*/, "", f)
+      fence = f; prev = ""; next
+    }
+    if (fence != "") {
+      t = line; sub(/^[ \t]*/, "", t); sub(/[ \t]*$/, "", t)
+      if (t ~ /^(```+|~~~+)$/ && substr(t, 1, 1) == substr(fence, 1, 1) && length(t) >= length(fence)) fence = ""
+      next
+    }
 
-    if (match(line, /^#+[ \t]/)) {
-      level = RLENGTH - 1
-      title = tolower(line); sub(/^#+[ \t]+/, "", title); sub(/[ \t#]+$/, "", title)
+    # Headings: ATX (# Title), setext (Title over === or ---), and a bold
+    # line standing alone as a pseudo-heading (**Next Steps:**). Titles are
+    # compared case-insensitively, ignoring leading emoji or punctuation and
+    # a trailing colon.
+    level = 0
+    if (match(line, /^ ? ? ?#+[ \t]/)) {
+      h = line; sub(/^ */, "", h); match(h, /^#+/); level = RLENGTH
+      title = norm(substr(h, level + 1))
+    } else if (line ~ /^ ? ? ?(=+|-+)[ \t]*$/ && prev !~ /^[ \t]*$/ && prev !~ /^[ \t]*([-*+]|[0-9]+\.)[ \t]/) {
+      level = (line ~ /=/) ? 1 : 2
+      title = norm(prev)
+    } else if (line ~ /^[ \t]*\*\*[^*]+\*\*:?[ \t]*$/ && norm(line) == "next steps") {
+      level = 7; title = "next steps"
+    }
+    prev = line
+    if (level > 0) {
       if (state == "in" && level <= sec_level) { finish_step(); state = "done" }
       if (state == "" && title == "next steps") { state = "in"; sec_level = level; found = 1; next }
     }
     if (state != "in") next
 
-    if (match(line, /^ ? ? ?[0-9]+\.[ \t]/)) {
+    # The call-out line may sit anywhere in the section; before the steps is
+    # the documented place.
+    if (tolower(line) ~ /^[ \t>]*(\*\*|__)?[ \t]*human action required/) { summary = tolower(line); has_summary = 1; next }
+
+    # Steps are top-level list items (column 0). Anything indented belongs to
+    # the step above it, including a nested numbered procedure.
+    if (match(line, /^[0-9]+\.[ \t]/)) {
       finish_step()
       n++
-      num = line; sub(/^[ \t]*/, "", num); sub(/\..*/, "", num)
+      num = line; sub(/\..*/, "", num)
       if (num + 0 != n) print "order\tstep " n " is numbered " num " (number steps 1, 2, 3, ... in order)"
       cur = n
-      rest = line; sub(/^[ \t]*[0-9]+\.[ \t]+/, "", rest)
+      rest = line; sub(/^[0-9]+\.[ \t]+/, "", rest)
       if (rest !~ /^\[[ xX]\][ \t]/) print "checkbox\tstep " n " has no checkbox (write \"" n ". [ ] ...\")"
       sub(/^\[[ xX]\][ \t]+/, "", rest)
       if (match(rest, /^\*\*(HUMAN|AGENT|AUTOMATED)\*\*/)) {
@@ -167,8 +201,7 @@ scan=$(printf '%s\n' "$input" | awk '
       body = line
       next
     }
-    if (cur > 0) { body = body "\n" line; next }
-    if (tolower(line) ~ /human action required/) { summary = tolower(line); has_summary = 1 }
+    if (cur > 0) body = body "\n" line
   }
   END {
     if (state == "in") finish_step()
@@ -176,13 +209,22 @@ scan=$(printf '%s\n' "$input" | awk '
     if (n == 0) print "empty\tthe Next Steps section has no numbered steps (offer at least one, marked _(suggestion)_ if optional)"
 
     # The "Human action required" line must name exactly the HUMAN steps.
-    listed = ""
+    # Parenthetical notes are ignored, the list ends at the end of its
+    # sentence, and ranges ("steps 1-3", "1 to 3") are expanded.
     if (has_summary) {
       t = summary; sub(/.*human action required[^a-z0-9]*/, "", t)
-      sub(/[.(].*/, "", t)   # "steps 1 and 3 (by 10am)." names 1 and 3 only
+      gsub(/\([^)]*\)/, " ", t)
+      sub(/\.([ \t]+[^0-9 \t].*)?[ \t]*$/, "", t)
+      while (match(t, /[0-9]+[ \t]*(-|–|—|to|through)[ \t]*[0-9]+/)) {
+        r = substr(t, RSTART, RLENGTH); pre = substr(t, 1, RSTART - 1); post = substr(t, RSTART + RLENGTH)
+        match(r, /^[0-9]+/); lo = substr(r, 1, RLENGTH) + 0
+        match(r, /[0-9]+$/); hi = substr(r, RSTART) + 0
+        r = ""; for (k = lo; k <= hi && k <= lo + 100; k++) r = r " " k
+        t = pre r post
+      }
       while (match(t, /[0-9]+/)) {
         k = substr(t, RSTART, RLENGTH) + 0; t = substr(t, RSTART + RLENGTH)
-        named[k] = 1; listed = listed " " k
+        named[k] = 1
         if (!human[k]) print "summary\t\"Human action required\" names step " k ", which is not a HUMAN step"
       }
     }
@@ -191,7 +233,7 @@ scan=$(printf '%s\n' "$input" | awk '
       if (has_summary) print "summary\tstep " k " is HUMAN but the \"Human action required\" line does not name it"
     }
     if (hcount > 0 && !has_summary)
-      print "summary\tno \"**Human action required:** steps ...\" line under the heading, though " hcount " step(s) are HUMAN"
+      print "summary\tno \"**Human action required:** steps ...\" line directly under the Next Steps heading, though " hcount " step(s) are HUMAN"
     print "STEPS\t" n "\t" hcount + 0
   }
 ')

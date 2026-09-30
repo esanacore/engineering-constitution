@@ -207,7 +207,8 @@ The rules:
   a schedule, or a bot does it; the step says what to watch for).
 - **Human steps are called out, then described.** When any step is
   `HUMAN`, the line directly under the heading reads `**Human action
-  required:** steps …` and names every one of them. Each `HUMAN` step
+  required:** steps …` and names every one of them (ranges such as `steps
+  1–3` are fine; write `none` when no step is `HUMAN`). Each `HUMAN` step
   carries **Why a human** (what makes it impossible to delegate) and **Done
   when** (how the person knows they are finished); a step that takes more
   than one action adds **You need** (hardware, access, accounts) and a

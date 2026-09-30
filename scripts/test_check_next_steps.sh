@@ -177,7 +177,67 @@ status=0; printf '# No steps here\n' | "$checker" --strict --file - "$tmp" >/dev
 [ "$status" -eq 1 ] || fail "a PR body with no Next Steps should fail --strict via stdin, got $status"
 echo "PASS"
 
-echo "Test 9: this repository's and the template's handoffs pass; absent default is not a failure; usage errors exit 2"
+echo "Test 9: regressions from the critique pass"
+# A numbered sub-procedure indented under a step (3 spaces is a valid nested
+# list in CommonMark) belongs to that step, not the top level.
+make_handoff "$tmp/nested" '## Next Steps
+
+**Human action required:** step 1.
+
+1. [ ] **HUMAN** — Wire the board
+   1. Plug it in.
+   2. Power it on.
+   - **Why a human:** physical access.
+   - **Done when:** the LED is green.
+2. [ ] **AGENT** — Enable the tests'
+out=$("$checker" --strict "$tmp/nested") || { echo "$out"; fail "a nested numbered procedure was read as top-level steps"; }
+grep -q '2 step(s)' <<< "$out" || { echo "$out"; fail "expected 2 steps with a nested procedure"; }
+# Heading variants people actually write, especially in pull request bodies.
+for heading in '## Next Steps:' '## 👉 Next steps' '**Next Steps**' '**Next Steps:**' ' ## Next Steps' $'Next Steps\n----------'; do
+  printf '%s\n\n1. [ ] **AGENT** — the step\n' "$heading" > "$tmp/heading.md"
+  "$checker" --strict --file "$tmp/heading.md" "$tmp" >/dev/null || fail "heading variant not recognized: $heading"
+done
+printf '## Next Steps Later\n\n1. [ ] **AGENT** — the step\n' > "$tmp/heading.md"
+status=0; "$checker" --strict --file "$tmp/heading.md" "$tmp" >/dev/null || status=$?
+[ "$status" -eq 1 ] || fail "a heading that only starts with 'Next Steps' should not count"
+# The call-out line after the list is still found; ranges and notes parse.
+make_handoff "$tmp/after" "## Next Steps
+
+1. [ ] **HUMAN** — Plug it in
+$human_step
+2. [ ] **HUMAN** — Approve it
+$human_step
+3. [ ] **HUMAN** — Ship it
+$human_step
+
+**Human action required:** steps 1–3 (today). The rest is automatic after 4pm."
+"$checker" --strict "$tmp/after" >/dev/null || { "$checker" "$tmp/after"; fail "a call-out after the list, with a range, should pass"; }
+make_handoff "$tmp/range-to" "## Next Steps
+
+**Human action required:** steps 1 to 2.
+
+1. [ ] **HUMAN** — Plug it in
+$human_step
+2. [ ] **HUMAN** — Approve it
+$human_step"
+"$checker" --strict "$tmp/range-to" >/dev/null || fail "\"steps 1 to 2\" should name steps 1 and 2"
+# A longer fence is not closed by a shorter one inside it.
+make_handoff "$tmp/fence-mixed" '## Next Steps
+
+1. [ ] **AGENT** — first
+
+````markdown
+```
+## Not a heading
+```
+````
+
+2. [ ] **AGENT** — second'
+out=$("$checker" --strict "$tmp/fence-mixed") || { echo "$out"; fail "a nested fence ended the section early"; }
+grep -q '2 step(s)' <<< "$out" || { echo "$out"; fail "expected 2 steps around a nested fence"; }
+echo "PASS"
+
+echo "Test 10: this repository's and the template's handoffs pass; absent default is not a failure; usage errors exit 2"
 "$checker" --strict "$repo_root" >/dev/null || fail "docs/AGENT_HANDOFF.md does not carry a well-formed Next Steps procedure"
 mkdir -p "$tmp/template/docs"; cp "$repo_root/templates/docs/AGENT_HANDOFF.md" "$tmp/template/docs/AGENT_HANDOFF.md"
 "$checker" --strict "$tmp/template" >/dev/null || fail "templates/docs/AGENT_HANDOFF.md fails its own checker"

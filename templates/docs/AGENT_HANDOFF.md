@@ -27,9 +27,11 @@ format.
 
 #### Next Steps
 
-<!-- Replace the example steps below with the real procedure. Keep the
-"Human action required" line naming every HUMAN step (or "none"), and
-always leave at least one step, marked _(suggestion)_ if it is optional. -->
+<!-- Replace the example steps below with the real procedure; the example
+is well-formed, so the checker cannot tell it from a real one. Keep the
+"Human action required" line naming every HUMAN step (write "none" when no
+step is HUMAN), and always leave at least one step, marked _(suggestion)_ if
+it is optional. -->
 
 **Human action required:** step 1.
 
