@@ -5,6 +5,7 @@ name: Constitution Compliance
 #   - check_compliance.sh   — the repository carries the required governance files.
 #   - check_traceability.sh — every declared requirement has a verifying test.
 #   - check_demo_page.sh    — demo.html is self-contained and linked from README.md.
+#   - check_next_steps.sh   — docs/AGENT_HANDOFF.md ends with a Next Steps procedure.
 #
 # The traceability check runs only when the product-facing documents exist, so
 # non-product repositories are not forced to maintain them. Runs on every pull
@@ -54,6 +55,17 @@ jobs:
             bash constitution/scripts/check_demo_page.sh .
           else
             echo "::notice::No demo.html (or no demo page checker in this constitution pin); skipping the demo page check."
+          fi
+
+      - name: Verify the handoff's Next Steps procedure (when present)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Older constitution pins predate the Next Steps checker.
+          if [ -f docs/AGENT_HANDOFF.md ] && [ -e constitution/scripts/check_next_steps.sh ]; then
+            bash constitution/scripts/check_next_steps.sh .
+          else
+            echo "::notice::No docs/AGENT_HANDOFF.md (or no Next Steps checker in this constitution pin); skipping the Next Steps check."
           fi
 
       - name: Verify requirements traceability (product-facing repositories)

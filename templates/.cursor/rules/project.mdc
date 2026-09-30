@@ -16,6 +16,7 @@ Read:
 - `TODO.md` — roadmap and known issues (open items only; completed entries are history)
 - `CHANGELOG.md` — recent changes (`Unreleased` + the most recent release only)
 - `docs/SESSION_PLAN.md` — check for a previous interrupted session before implementing
+- End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 - `docs/MEMORY.md` — read to load project context, codebase memory, and user preferences
 
 ## Standards

@@ -56,6 +56,9 @@ Hold every change to the Constitution's principles:
   before implementation (and cleared or archived after), and any new codebase
   learnings, user preferences, or major decisions proposed to the user and, on
   approval, recorded in `docs/MEMORY.md`. Flag work that skipped either.
+- Expect every push to end with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps
+  Procedure"): steps tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with human-only
+  steps called out and described; flag a pull request or handoff without one.
 - Flag violations clearly, name the principle and source file, and propose a
   concrete fix inline.
 - Distinguish **must-fix** (a Constitution requirement is unmet) from

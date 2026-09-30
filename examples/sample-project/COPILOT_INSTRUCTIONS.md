@@ -11,3 +11,4 @@ Use these files as context:
 - `constitution/CONSTITUTION.md`
 - `docs/MEMORY.md` — project memory (learnings, decisions, user preferences)
 - `docs/SESSION_PLAN.md` — the current session's plan; check it for a previous interrupted session and write your own before implementing
+- End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.

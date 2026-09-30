@@ -15,7 +15,7 @@ Before beginning work, read:
 - `CHANGELOG.md` — the `Unreleased` section and the most recent release; older sections are history, read on demand
 - `docs/MEMORY.md` — project memory: codebase learnings, decisions, and user preferences
 
-Before implementing, check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there.
+Before implementing, check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there. End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 
 Before completing work:
 

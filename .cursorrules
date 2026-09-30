@@ -10,3 +10,4 @@ This repository follows [Eric's Engineering Constitution](CONSTITUTION.md).
 4. Follow the project conventions in `AGENTS.md`.
 5. Update tests, docs, `TODO.md`, and `CHANGELOG.md` as part of every change.
 6. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
+7. End every push with a Next Steps procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.

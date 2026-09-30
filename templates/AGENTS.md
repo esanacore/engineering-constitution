@@ -23,6 +23,7 @@ Read:
 ## Required Work Habits
 
 - Check `docs/SESSION_PLAN.md` for an existing plan from a crashed previous session.
+- End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 - Write or update `docs/SESSION_PLAN.md` before beginning implementation.
 - Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences.
 - Understand the task before changing files.

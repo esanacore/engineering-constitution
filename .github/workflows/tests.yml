@@ -48,9 +48,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          bash scripts/check_instruction_templates.sh --strict .
-          bash scripts/check_instruction_templates.sh --strict templates
-          bash scripts/check_instruction_templates.sh --strict examples/sample-project
+          # The default anchors plus the Next Steps procedure (ADR-0005). Passed
+          # explicitly rather than made a default, so adopters' strict runs do
+          # not change without a deprecation window (ADR-0003).
+          anchors=(--anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure")
+          bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" .
+          bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" templates
+          bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" examples/sample-project
 
       - name: Skills are well-formed
         shell: bash
@@ -59,6 +63,10 @@ jobs:
       - name: Demo page is self-contained and linked from README.md
         shell: bash
         run: bash scripts/check_demo_page.sh --strict .
+
+      - name: The latest handoff ends with a Next Steps procedure
+        shell: bash
+        run: bash scripts/check_next_steps.sh --strict .
 
       - name: Wiki link integrity
         shell: bash

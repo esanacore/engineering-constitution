@@ -6,6 +6,30 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **Every push ends with a Next Steps procedure** (`AI_WORKFLOW.md`, "Next
+  Steps Procedure"; ADR-0005). The closing summary, the pull request
+  description, and `docs/AGENT_HANDOFF.md` now end with the same numbered
+  checklist of what happens next, in order. Every step says who acts —
+  **HUMAN**, **AGENT**, or **AUTOMATED** — and the steps only a person can do
+  (connecting hardware, entering a credential, a UI-only setting, an
+  approval) are named up front in a `**Human action required:**` line and
+  then described: why a human, what you need, the procedure, and how you know
+  it is done. The procedure is never empty: with nothing pending it still
+  offers a suggestion. Trivial changes do not skip it.
+- **`scripts/check_next_steps.sh`** verifies that shape in
+  `docs/AGENT_HANDOFF.md`, or in a pull request body piped with `--file -`.
+  Warn by default, `--strict` to block; paired with
+  `scripts/test_check_next_steps.sh`. `tests.yml` runs it `--strict` on this
+  repository's handoff, and `constitution-compliance.yml` runs it in warn
+  mode on adopters' handoffs, skipping pins that predate it.
+- **Every agent instruction file, both pull request templates, and the
+  handoff template carry the rule.** `tests.yml` enforces the instruction
+  files with an explicit `check_instruction_templates.sh --anchor`; the
+  checker's default anchors are unchanged, so no adopter's strict run
+  changes behavior in this release.
+
 ## 1.50.0 - 2026-09-30
 
 The demo page standard, checked rather than assumed. 1.47.0 made `demo.html`
