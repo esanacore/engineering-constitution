@@ -15,4 +15,4 @@ constitution's own `demo.html` dropped its Google Fonts to pass. An isolated
 critique pass surfaced missed loads (ES-module imports, SVG, `<base>`, `>` in
 quoted attributes) and false positives (page text, mid-path `out/`); all fixed
 with regression tests, and a quadratic scan (56s on a 5.5 MB page) was made
-linear (0.7s). Outcomes are in `CHANGELOG.md` `Unreleased`. Not yet released.
+linear (0.7s). Released as 1.50.0 (`CHANGELOG.md`); tag, GitHub Release, and fleet bump are Eric's post-merge steps.

@@ -6,6 +6,13 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.50.0 - 2026-09-30
+
+The demo page standard, checked rather than assumed. 1.47.0 made `demo.html`
+a product-facing expectation, but the only mechanical check was that the file
+existed; the framework's own page failed the standard it shipped, and nothing
+noticed.
+
 ### Added
 
 - **`scripts/check_demo_page.sh` checks the Demo Page standard, not just the
