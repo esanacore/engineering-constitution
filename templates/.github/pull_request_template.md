@@ -20,6 +20,7 @@
 - [ ] `docs/OTS_SOFTWARE.md` updated if dependencies changed.
 - [ ] `docs/ENV_VARS.md` updated if environment variables changed.
 - [ ] Documentation updated, including README's current capabilities and the wiki.
+- [ ] `demo.html` updated if user-facing behavior changed and the repository has one (DOCUMENTATION.md, "Demo Page").
 - [ ] `TODO.md` updated with discovered or completed work.
 - [ ] `CHANGELOG.md` updated for user-facing changes.
 - [ ] Security impact considered; secrets sweep (`constitution/scripts/check_secrets.sh`) run.

@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.51.0
+Version: 1.52.0
 
 ## Purpose
 

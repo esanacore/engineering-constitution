@@ -6,6 +6,26 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.52.0 - 2026-09-30
+
+The demo page kept current. `DOCUMENTATION.md` has said since 1.47.0 that a
+demo still showing old behavior is an incomplete change, but the rule lived
+only there — the workflow steps and checklists agents actually follow never
+mentioned `demo.html`, so nothing prompted the update. This release puts it
+where agents look.
+
+### Changed
+
+- **Agents are told to keep the demo page current.** `DOCUMENTATION.md`
+  already said a demo still showing old behavior is an incomplete change, but
+  nothing an agent works from said so. Now `AI_WORKFLOW.md` Required Workflow
+  step 20 and "Before Completing Work", every agent instruction file and
+  template, the Solon reviewer, and both pull request templates carry the
+  rule: when a change alters user-facing behavior and the repository has a
+  `demo.html`, update it in the same change. `tests.yml` enforces the rule
+  across instruction files with a `demo page current` anchor; the checker's
+  default anchors are unchanged, so no adopter's strict run changes behavior.
+
 ## 1.51.0 - 2026-09-30
 
 A Next Steps procedure at the end of every push. Sessions kept ending with the

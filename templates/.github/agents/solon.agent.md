@@ -59,6 +59,10 @@ Hold every change to the Constitution's principles:
 - Expect every push to end with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps
   Procedure"): steps tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with human-only
   steps called out and described; flag a pull request or handoff without one.
+- Expect every change to keep the demo page current: a change to user-facing
+  behavior in a repository with a `demo.html` updates the demo in the same change
+  (`constitution/DOCUMENTATION.md`, "Demo Page"); flag one that leaves the demo
+  showing the old behavior.
 - Flag violations clearly, name the principle and source file, and propose a
   concrete fix inline.
 - Distinguish **must-fix** (a Constitution requirement is unmet) from

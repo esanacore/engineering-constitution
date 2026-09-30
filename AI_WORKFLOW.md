@@ -23,7 +23,7 @@ This document defines the required workflow for AI-assisted software development
 17. Update requirements traceability for product-facing repositories.
 18. Update the OTS software inventory (`docs/OTS_SOFTWARE.md`) when third-party dependencies were added, removed, or upgraded — in the same change, not a later documentation pass. Run `bash constitution/scripts/check_ots_inventory.sh .` to confirm the manifests and the inventory agree. See DOCUMENTATION.md's "OTS Software Inventory" section.
 19. Update the Environment & Configuration Contract (`docs/ENV_VARS.md`) when environment variables are added to, modified in, or removed from manifests (like `.env.example` or `docker-compose.yml`) — in the same change. Run `bash constitution/scripts/check_env_vars.sh .` to confirm the manifests and the contract agree.
-20. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section.
+20. Update documentation, including README.md's current features/capabilities list — the "what can it do today?" answer is never optional just because the task wasn't explicitly about docs, and it goes stale fastest on projects that are actively growing. See CONSTITUTION.md Principle 1 and DOCUMENTATION.md's "Current Capabilities" section. If the repository has a `demo.html`, keep the demo page current in the same change: a demo still showing the old behavior is an incomplete change (DOCUMENTATION.md, "Demo Page").
 21. Update TODO.md.
 22. Update CHANGELOG.md.
 23. Evaluate whether this work should trigger a release (see RELEASES.md's *Semantic Versioning* and *Cutting a Release* sections). If user-facing changes have accumulated in CHANGELOG.md's `Unreleased` section, cut a release — bump `VERSION`, tag, and publish — rather than leaving it there indefinitely. If a release is not appropriate right now, state why rather than silently skipping the check.
@@ -119,6 +119,7 @@ Agents must verify:
 - The OTS software inventory (`docs/OTS_SOFTWARE.md`) is updated if this work touched third-party dependencies (`bash constitution/scripts/check_ots_inventory.sh .` agrees).
 - The Environment Contract (`docs/ENV_VARS.md`) is updated if this work touched environment variables (`bash constitution/scripts/check_env_vars.sh .` agrees).
 - Documentation impact has been evaluated, including whether README.md's current features/capabilities list still answers "what can it do today?" — not just whether the task was doc-focused.
+- If user-facing behavior changed and the repository has a `demo.html`, the demo page shows the new behavior — keep the demo page current (DOCUMENTATION.md, "Demo Page").
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.
 - Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.
