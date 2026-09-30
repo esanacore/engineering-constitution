@@ -39,32 +39,30 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 **Human action required:** steps 1, 2, 3, and 5.
 
 1. [ ] **HUMAN** — Tag the 1.50.0 release commit
-   - **Why a human:** the remote session cannot push tags.
-   - **You need:** a local clone with push access to `esanacore/engineering-constitution`.
+   - **Why a human:** this cloud session can't push tags.
+   - **You need:** a local clone with push access.
    - **Procedure:**
      1. `git fetch origin`
      2. `git tag -a v1.50.0 485b5df5f01424d5769157f9d6eaddc40c86d024 -m "v1.50.0 — the demo page standard, checked"`
-     3. `git show v1.50.0^{commit}:VERSION` — must print `1.50.0`.
+     3. `git show v1.50.0^{commit}:VERSION` must print `1.50.0`.
      4. `git push origin v1.50.0`
-   - **Done when:** `release-tag-alignment` passes on the tag in the Actions tab.
+   - **Done when:** `release-tag-alignment` passes on the tag.
 2. [ ] **HUMAN** — Publish the v1.50.0 GitHub Release _(blocked by step 1)_
-   - **Why a human:** GitHub Releases are published from the web UI; agent sessions have no release tool.
+   - **Why a human:** releases are published from the web UI.
    - **Procedure:**
      1. Open `https://github.com/esanacore/engineering-constitution/releases/new?tag=v1.50.0`.
-     2. Title it `v1.50.0 — the demo page standard, checked`.
-     3. Paste the `## 1.50.0` section of `CHANGELOG.md` (without its heading) as the notes.
-     4. Tick "Set as the latest release" and publish.
-   - **Done when:** the release page shows v1.50.0 marked Latest.
-3. [ ] **HUMAN** — Bump the adopter fleet to 1.50.0 _(blocked by step 1)_
-   - **Why a human:** the remote session cannot attach adopter repositories; the script runs from a local clone with `gh` authenticated.
-   - **You need:** `gh auth status` green, and the list of adopter repositories.
-   - **Procedure:**
-     1. `bash scripts/bump_adopters.sh --sha 485b5df5f01424d5769157f9d6eaddc40c86d024 --repos <list> --dry-run` and read the planned rewrites.
-     2. Re-run without `--dry-run` to open one pull request per adopter.
-     3. Merge them; `gentle-table` and `patients-served` need a squash merge.
-   - **Done when:** every adopter's `version-gate` check is green on its default branch.
-4. [ ] **AUTOMATED** — `tests.yml` runs on this branch's pull request; watch `self-governance` for red.
-5. [ ] **HUMAN** — Review and merge the Next Steps procedure pull request
+     2. Paste the `## 1.50.0` section of `CHANGELOG.md` as the notes.
+     3. Tick "Set as the latest release" and publish.
+   - **Done when:** v1.50.0 shows as Latest.
+3. [ ] **HUMAN** — Review and merge this pull request
    - **Why a human:** merging is the maintainer's decision, and this changes the Required Workflow (ADR-0005).
-   - **Done when:** the pull request is merged and CI on `main` is green.
-6. [ ] **AGENT** _(suggestion)_ — Run `check_demo_page.sh` across the adopters' existing `demo.html` files (TODO.md) before any repository flips it to `--strict`.
+   - **Done when:** the PR is merged and CI on `main` is green.
+4. [ ] **AGENT** — Cut v1.51.0 with this change _(blocked by steps 1 and 3)_
+5. [ ] **HUMAN** — Bump the adopter fleet to the newest release _(blocked by step 4)_
+   - **Why a human:** this session can't attach the adopter repositories, so the script runs from a local clone with `gh` signed in.
+   - **Procedure:**
+     1. `bash scripts/bump_adopters.sh --sha <release merge commit> --repos <list> --dry-run` and read the output.
+     2. Run it again without `--dry-run`, then merge the PRs it opens. gentle-table and patients-served need squash merges.
+   - **Done when:** every adopter's `version-gate` check is green.
+6. [ ] **AUTOMATED** — `tests.yml` runs on this PR. Watch `self-governance`, which now includes the Next Steps check.
+7. [ ] **AGENT** _(suggestion)_ — Add the Claude Code `Stop` hook from `TODO.md` so a missing procedure is caught when a session ends.
