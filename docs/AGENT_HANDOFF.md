@@ -21,45 +21,48 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 ### Session: 2026-09-30
 
-- **Accomplishments**: `v1.50.0` and `v1.51.0` tagged by SHA (`485b5df`,
-  `eee5984`) and published as GitHub Releases from a local session. The
-  1.51.0 fleet bump opened 18 PRs; the 8 public adopters merged. On this
-  branch: 1.52.0 — "keep the demo page current" in the Required Workflow,
-  every instruction file and template, Solon, and both PR templates; three
-  approved `docs/MEMORY.md` entries; GAP-001 mitigated.
+- **Accomplishments**: `v1.50.0`, `v1.51.0`, and `v1.52.0` tagged by SHA
+  (`485b5df`, `eee5984`, `93510ce`) and published as GitHub Releases from a
+  local session. 1.52.0 puts "keep the demo page current" into the Required
+  Workflow, every instruction file and template, Solon, and both PR templates.
+  1.51.0 fleet bump: 18 PRs opened; the 8 public adopters merged.
+  SSH_DeviceManager (the only adopter with a `demo.html`) carries the demo
+  rule in its own instruction files (PR #46) and passes `check_demo_page.sh`
+  with 0 findings.
 - **Verification Run**: `bash scripts/run_all_tests.sh` (29/29),
-  `test_release_docs.sh`, `test_mcp_resources.sh`,
-  `check_instruction_templates.sh --strict` with the new `demo page current`
-  anchor on `.`, `templates`, and `examples/sample-project`,
-  `check_next_steps.sh --strict`, `check_secrets.sh --strict`.
+  `check_next_steps.sh --strict`, `check_secrets.sh --strict`;
+  `release-tag-alignment` green on all three tags.
 - **Known Blockers**: GitHub Actions does not start jobs in the 10 private
   adopters ("recent account payments have failed or your spending limit needs
-  to be increased"), so their 1.51.0 bump PRs are red without running.
+  to be increased"); their 1.51.0 bump PRs are open and red without running.
 - **Context Hints**: the adopter list is at
   `~/.config/engineering-constitution/adopters.txt` on the maintainer's
-  machine. Only SSH_DeviceManager has a `demo.html` today; adopters keep their
-  own copies of instruction files, so it needs its own PR for the new rule.
+  machine (`docs/MEMORY.md`). Open 1.51.0 bump PRs: patients-served #59,
+  Project-Greenhouse #66, AI_Workstation_Blueprints #33, GPU4HIRE_AI #30,
+  MultiplatformTestApp #17, gentle-table #23, smart-teleprompter #20,
+  AI-Process-Engineer #61, mfi-mpower-pro-toolkit #24, claude-drive-bridge #12.
 
 #### Next Steps
 
-**Human action required:** steps 1, 3, and 5.
+**Human action required:** steps 1, 2, and 4.
 
-1. [ ] **HUMAN** — Approve merging the 1.52.0 pull request
-   - **Why a human:** merging a release is the maintainer's decision.
+1. [ ] **HUMAN** — Review and merge this pull request
+   - **Why a human:** merging is the maintainer's decision.
    - **Done when:** the PR is merged and CI on `main` is green.
-2. [ ] **AGENT** — Tag the merge commit `v1.52.0` by SHA and publish the GitHub Release marked Latest _(blocked by step 1)_
-3. [ ] **HUMAN** — Restore GitHub Actions for private repositories
+2. [ ] **HUMAN** — Restore GitHub Actions for private repositories
    - **Why a human:** billing and spending limits are account settings only the owner can change.
    - **You need:** the GitHub account owner's login and a working payment method.
    - **Procedure:**
      1. Open github.com → Settings → Billing and licensing (Billing & plans).
      2. Fix the failed payment, or raise the Actions spending limit above $0.
    - **Done when:** a re-run of any private adopter's check actually starts a job.
-4. [ ] **AGENT** — Close the 10 open 1.51.0 bump PRs as superseded, then dry-run `bump_adopters.sh --sha <v1.52.0 merge SHA>` across all 18 adopters _(blocked by steps 2 and 3)_
-5. [ ] **HUMAN** — Approve the 1.52.0 fleet bump and merging its green PRs _(blocked by step 4)_
+3. [ ] **AGENT** — Close the 10 open 1.51.0 bump PRs as superseded, then dry-run `bash scripts/bump_adopters.sh --sha 93510ce07fecb5e1eb941264db22b5c69fb48431 --repos ~/.config/engineering-constitution/adopters.txt --dry-run` _(blocked by step 2)_
+4. [ ] **HUMAN** — Approve the 1.52.0 fleet bump and merging its green PRs _(blocked by step 3)_
    - **Why a human:** the bump opens a pull request in every adopter repository, some private, and merging them is the maintainer's call.
-   - **You need:** the dry-run summary from step 4.
+   - **You need:** the dry-run summary from step 3.
+   - **Procedure:**
+     1. Read the dry run: skipped repos, each version-reference rewrite, any `NOTE` lines.
+     2. Approve the real run, then approve merging the green PRs (gentle-table and patients-served squash; the rest merge).
    - **Done when:** every adopter's `version-gate` check is green.
-6. [ ] **AGENT** — Open a PR in SSH_DeviceManager adding the "keep the demo page current" line to its own instruction files
-7. [ ] **AGENT** — Audit the fleet's `demo.html` files with `scripts/check_demo_page.sh` (read-only) and propose fixes
-8. [ ] **AUTOMATED** — `tests.yml` runs on this PR; `self-governance` enforces the new instruction-file anchor.
+5. [ ] **AUTOMATED** — `tests.yml` runs on this PR; `self-governance` includes the strict Next Steps check.
+6. [ ] **AGENT** _(suggestion)_ — Give the remaining product-facing adopters a `demo.html` (`TODO.md`); each new page picks up the "keep the demo page current" rule from the templates only if its instruction files are refreshed too.

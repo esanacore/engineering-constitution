@@ -33,6 +33,7 @@ This file contains durable memories, codebase learnings, user preferences, and k
 - **Remote sessions can't push tags or publish releases.** Remote Claude Code sessions can push branches but not tags (the git proxy drops tag pushes), and have no release tool. Tagging, GitHub Releases, and fleet bumps belong to a local session with `gh` signed in.
 - **Time any new governance checker on a few-MB input.** `check_demo_page.sh` was quadratic — 56 s on a 5.5 MB page — until it was rewritten to stream.
 - **The adopter list lives outside this repository** at `~/.config/engineering-constitution/adopters.txt` (the repo is public; some adopters are private). Rebuild it by listing every esanacore repository whose `.gitmodules` points at engineering-constitution (18 as of 1.51.0), and pass it to `bump_adopters.sh --repos`.
+- **Private adopters' CI stops when GitHub Actions billing fails.** During the 1.51.0 fleet bump every private adopter's jobs were "not started because recent account payments have failed or your spending limit needs to be increased", while every public one ran. The tell is a failed check with zero steps and that annotation. It is not a bump failure: fix billing, then re-run.
 
 ## Active Project Decisions
 
