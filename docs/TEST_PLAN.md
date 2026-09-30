@@ -58,7 +58,7 @@ percentage:
 
 | Gap ID | Area / behavior | Risk | Related requirement | Status | TODO ref |
 | --- | --- | --- | --- | --- | --- |
-| GAP-001 | `scripts/bump_adopters.sh` is exercised only against local bare repositories; the GitHub pull-request step (`--no-pr` skipped in tests) is verified by hand during fleet rollouts. | Medium | n/a | Open | TODO.md → Testing |
+| GAP-001 | `scripts/bump_adopters.sh` is exercised only against local bare repositories; the GitHub pull-request step (`--no-pr` skipped in tests) is verified by hand during fleet rollouts; first verified in the 1.51.0 rollout (18 PRs, 0 failures). | Low | n/a | Mitigated | TODO.md → Testing |
 | GAP-002 | `scripts/audit_adopters.sh` and `scripts/setup-machine.sh` have suites, but their network paths (`--fetch`, real installers) are stubbed with fixtures. | Low | n/a | Open | TODO.md → Testing |
 | GAP-003 | `mcp-server/index.js` has a resource-coverage test but no runtime test of the MCP protocol handlers (would need Node and the SDK in CI). | Low | n/a | Open | TODO.md → Testing |
 

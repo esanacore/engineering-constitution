@@ -51,7 +51,7 @@ jobs:
           # The default anchors plus the Next Steps procedure (ADR-0005). Passed
           # explicitly rather than made a default, so adopters' strict runs do
           # not change without a deprecation window (ADR-0003).
-          anchors=(--anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure")
+          anchors=(--anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" --anchor "demo page current")
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" .
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" templates
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" examples/sample-project

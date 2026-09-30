@@ -14,3 +14,4 @@ Deliver high-quality, documented, and tested software by following the project's
 6. **State Management**: Update `TODO.md` and `CHANGELOG.md` as you work.
 7. **Security First**: Review all changes for potential security implications as defined in `SECURITY.md`.
 8. **Next Steps**: End every push with a Next Steps procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
+9. **Demo Page**: Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`DOCUMENTATION.md`, "Demo Page").

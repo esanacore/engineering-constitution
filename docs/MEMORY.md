@@ -30,6 +30,9 @@ This file contains durable memories, codebase learnings, user preferences, and k
 - **The Claude Code deny list is prefix-matched.** Reordering flags (`git push origin main --force`) slips past it, and `Bash(rm -rf /:*)` also matched `/tmp/...`, so the shipped list uses exact rules for `rm -rf` targets. The protocol firewall is the real enforcement; the list is a floor.
 - **Version references live in six places as of 1.48.0**: the five above plus `mcp-server/package.json` and its lockfile's two root `version` fields; `test_release_docs.sh` (README, CONSTITUTION, wiki/Home, demo.html) and `test_mcp_resources.sh` (package files) enforce all of them.
 - **Cutting a constitution release immediately strands the fleet one tag behind**: adopter `version-gate` checks compare the pinned submodule against the latest release tag, so repos where that gate is *required* (gentle-table, patients-served) block all PRs until the submodule is bumped — fold the bump into whatever PR is in flight, or roll a fleet-wide bump right after tagging.
+- **Remote sessions can't push tags or publish releases.** Remote Claude Code sessions can push branches but not tags (the git proxy drops tag pushes), and have no release tool. Tagging, GitHub Releases, and fleet bumps belong to a local session with `gh` signed in.
+- **Time any new governance checker on a few-MB input.** `check_demo_page.sh` was quadratic — 56 s on a 5.5 MB page — until it was rewritten to stream.
+- **The adopter list lives outside this repository** at `~/.config/engineering-constitution/adopters.txt` (the repo is public; some adopters are private). Rebuild it by listing every esanacore repository whose `.gitmodules` points at engineering-constitution (18 as of 1.51.0), and pass it to `bump_adopters.sh --repos`.
 
 ## Active Project Decisions
 

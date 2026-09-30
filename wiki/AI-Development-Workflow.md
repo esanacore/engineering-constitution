@@ -56,6 +56,7 @@ Implementation is only part of the change. Depending on impact, the same work ma
 - architecture documentation and ADRs;
 - operations/runbook documentation;
 - README capabilities;
+- the demo page (`demo.html`), when user-facing behavior changed;
 - TODO roadmap;
 - changelog and version information.
 

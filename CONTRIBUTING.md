@@ -24,6 +24,7 @@ Before starting, you MUST read:
 ### 2. Operational Standards
 - **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan there before implementing.
 - **Next Steps**: End every push with a Next Steps procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
+- **Demo Page**: Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`DOCUMENTATION.md`, "Demo Page").
 - **Project Memory**: Read `docs/MEMORY.md` to load project context and preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 - **Testing**: Every change requires updated or new automated tests.
 - **Documentation**: Update `README.md`, `CHANGELOG.md`, and `TODO.md` for every task.
