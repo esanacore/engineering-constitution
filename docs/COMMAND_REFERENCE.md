@@ -16,6 +16,7 @@ fail, `--help` for usage, exit `2` on a usage error.
 - `bash scripts/check_secrets.sh --strict .`
 - `bash scripts/check_instruction_templates.sh --strict .` (also `templates` and `examples/sample-project`)
 - `bash scripts/check_skills.sh --strict .`
+- `bash scripts/check_demo_page.sh --strict .`
 - `bash scripts/check_wiki_links.sh --strict .`
 - `bash scripts/check_ots_inventory.sh --strict --manifest-dir mcp-server .`
 - `bash scripts/test_release_docs.sh`

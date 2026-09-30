@@ -4,6 +4,7 @@ name: Constitution Compliance
 # pinned `constitution/` submodule:
 #   - check_compliance.sh   — the repository carries the required governance files.
 #   - check_traceability.sh — every declared requirement has a verifying test.
+#   - check_demo_page.sh    — demo.html is self-contained and linked from README.md.
 #
 # The traceability check runs only when the product-facing documents exist, so
 # non-product repositories are not forced to maintain them. Runs on every pull
@@ -43,6 +44,17 @@ jobs:
       - name: Verify required governance files are present
         shell: bash
         run: bash constitution/scripts/check_compliance.sh .
+
+      - name: Verify the demo page is self-contained (when present)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Older constitution pins predate the demo page checker.
+          if [ -f demo.html ] && [ -e constitution/scripts/check_demo_page.sh ]; then
+            bash constitution/scripts/check_demo_page.sh .
+          else
+            echo "::notice::No demo.html (or no demo page checker in this constitution pin); skipping the demo page check."
+          fi
 
       - name: Verify requirements traceability (product-facing repositories)
         shell: bash

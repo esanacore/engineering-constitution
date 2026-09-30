@@ -47,6 +47,7 @@ the pull request UI rather than only in the job log.
 | `check_constitution_freshness.sh` | Warns at session start when the pinned `constitution/` submodule is behind the latest release. |
 | `check_source_summaries.sh` | Detects drift between dropped knowledge sources (`sources/raw/`) and their generated summaries. |
 | `check_instruction_templates.sh` | Every agent instruction file present (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, the Solon agent, `docs/HELP.md`, ...) carries the same guidance anchors — session planning and project memory by default — so a rule added to one vendor file is not silently missing from the others. |
+| `check_demo_page.sh` | `demo.html` makes no network requests (no CDN scripts, fonts, or stylesheets; no remote images or frames), keeps scripts and styles inline, references no build output, names no localhost or private-network URL, and is linked from `README.md`. No `demo.html` means nothing to verify. |
 | `check_skills.sh` | Every `skills/*/SKILL.md` has front matter whose `name` matches its directory, a description, an H1 body, and references only scripts that exist. |
 | `run_all_tests.sh` | The framework's own "Full suite": runs every `scripts/test_*.sh` and names each failing suite; run by `.github/workflows/tests.yml`. |
 | `bump_adopters.sh` | Not a checker but a release step: re-pins every adopter's `constitution/` submodule to a release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`, "Cutting a Release", step 9. |

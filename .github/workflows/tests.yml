@@ -56,6 +56,10 @@ jobs:
         shell: bash
         run: bash scripts/check_skills.sh --strict .
 
+      - name: Demo page is self-contained and linked from README.md
+        shell: bash
+        run: bash scripts/check_demo_page.sh --strict .
+
       - name: Wiki link integrity
         shell: bash
         run: bash scripts/check_wiki_links.sh --strict .

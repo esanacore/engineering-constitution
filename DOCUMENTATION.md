@@ -276,6 +276,19 @@ template-shaped Markdown file is — copying the template is the start of the
 work, not the end of it. The decision is recorded in
 `docs/adr/0002-demo-page-requirement.md`.
 
+`scripts/check_demo_page.sh` checks what the first and fourth bullets make
+mechanical: no remote resource loads (scripts, stylesheets, fonts, images,
+frames, CSS `url()`/`@import`, JavaScript module imports and `fetch` calls),
+scripts and styles inline rather than in separate files, no references into
+build output (`dist/`, `node_modules/`, ...), no URLs in markup or scripts
+naming `localhost` or a private network address, and a link to the page from
+`README.md`. Navigation links, local images, and page text (a labeled
+simulated transcript showing `localhost`, say) are allowed.
+`constitution-compliance.yml` runs it in warn mode whenever `demo.html`
+exists; pass `--strict` to make it blocking. Honest labeling and currency with
+the product remain review questions — no checker can tell a simulation that
+says so from one that does not.
+
 ## CHANGELOG Expectations
 
 CHANGELOG.md should capture user-facing changes using release categories:

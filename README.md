@@ -42,6 +42,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `scripts/lib/`: Libraries sourced by the two largest scripts, one file per concern. For `bootstrap.sh`: `bootstrap_readme.sh` (constitution badge), `bootstrap_migrate.sh` (seeding TODO.md/CHANGELOG.md from a project's existing backlog or release notes), `bootstrap_report.sh` (the adoption report and project detection). For `check_architecture.sh`: `architecture_languages.sh` (how each language spells imports and what it resolves them against), `architecture_layers.sh` (the declared layer table as a graph), `architecture_signals.sh` (advisory structural heuristics that never fail a build). Sourced, never executed directly.
 - `scripts/run_all_tests.sh`: The framework's own "Full suite" — runs every `scripts/test_*.sh` and names each failing suite; run in CI by `.github/workflows/tests.yml` alongside a `self-governance` job that turns the shipped checkers on this repository.
 - `scripts/check_instruction_templates.sh`: Reference checker that verifies every agent instruction file present (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, the Solon agent, ...) carries the same guidance anchors, so a rule added to one vendor file is not silently missing from another.
+- `scripts/check_demo_page.sh`: Reference checker that verifies `demo.html` meets the mechanical half of `DOCUMENTATION.md`'s "Demo Page" standard — no remote resource loads, scripts and styles inline, no build-output references, no localhost/private-network URLs, linked from `README.md`.
 - `scripts/check_skills.sh`: Reference checker that validates every `skills/*/SKILL.md` (front-matter name matches its directory, description present, referenced scripts exist).
 - `scripts/test_checker_contract.sh`: Meta-test holding every `check_*.sh` to the shared checker contract (`--help`, exit `2` on a bad option, `--strict` where documented, executable bit, a paired negative-case suite, CI annotations). Every checker sources `scripts/lib/ci_annotations.sh` and emits `::warning::` / `::error::` under GitHub Actions.
 - `scripts/bump_adopters.sh`: Fleet bump for step 9 of cutting a release — re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently.
@@ -128,7 +129,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.49.1
+Current version: 1.50.0
 
 See `VERSION`.
 

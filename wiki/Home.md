@@ -87,7 +87,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 - `scripts/test_checker_contract.sh` (the contract every checker must honor)
-- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`
+- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`
 
 The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.md` and run in CI by `.github/workflows/tests.yml`.
 
@@ -113,8 +113,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.49.1`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.50.0`. Recent releases have focused on:
 
+- The demo page standard checked mechanically (1.50.0): `scripts/check_demo_page.sh` verifies that `demo.html` makes no network requests, keeps scripts and styles inline, references no build output or private-network URL, and is linked from `README.md` — run `--strict` against the constitution's own page and in warn mode by the adopter compliance workflow
 - The framework holding itself to its own rules (1.48.0): its suites and checkers run in CI on every pull request; the compliance checker's recommended docs exist for this repository; the MCP server cannot drift; instruction files are kept consistent mechanically; every checker honors one tested contract and annotates pull requests; and changes to the Required Files, Required Workflow, checker contract, or compatibility policy require an ADR
 - New standards (1.48.0): untrusted content reaching AI agents and a shipped deny list, CI/CD supply chain (SHA-pinned actions, Dependabot for actions), data classification and synthetic test data, a proportionate fast path for trivial changes (ADR-0004), Conventional Commit messages, a definition of "product-facing", pull request and CODEOWNERS templates, an incident postmortem template, and a License column in the OTS inventory
 - Framework governance (1.48.0): what "breaking" means for a governance framework and the deprecation window (ADR-0003), and the fleet bump as a release step with `scripts/bump_adopters.sh`
