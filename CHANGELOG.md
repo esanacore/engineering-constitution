@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.51.0 - 2026-09-30
+
+A Next Steps procedure at the end of every push. Sessions kept ending with the
+work that only the maintainer could do — pushing a tag, publishing a release,
+bumping the fleet — mixed in with loose follow-up ideas, and the 1.45.0 and
+1.50.0 tag steps lived only in chat scrollback (ADR-0005). Now every summary,
+pull request, and handoff ends with the same ordered checklist that says who
+acts on each step, and a checker holds it to that shape.
+
 ### Added
 
 - **Every push ends with a Next Steps procedure** (`AI_WORKFLOW.md`, "Next
