@@ -25,6 +25,7 @@ Use these files as primary context:
 - Add regression tests for bug fixes.
 - Update documentation for changed behavior, setup, architecture, or operations.
 - Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan before implementing.
+- End every push with a Next Steps procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 - Update TODO.md with discovered follow-up work.
 - Update CHANGELOG.md for user-facing changes.
 - Avoid adding unnecessary dependencies.

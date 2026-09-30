@@ -30,6 +30,7 @@ Read:
 - Document user-facing changes in `CHANGELOG.md`.
 - Record future framework opportunities in `TODO.md`.
 - When editing workflow or template files, verify that `docs/SESSION_PLAN.md` and `docs/MEMORY.md` guidance stays consistent across all agent instruction templates.
+- End every push with a Next Steps procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 
 ## Before Completing Work
 

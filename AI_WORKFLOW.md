@@ -31,9 +31,9 @@ This document defines the required workflow for AI-assisted software development
 25. Suggest future improvements.
 26. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md`.
 27. Clear or archive `docs/SESSION_PLAN.md` — the session's outcomes should be captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md` before the plan is cleared.
-28. Summarize work.
+28. Summarize work, ending with the Next Steps procedure (see "Next Steps Procedure" below), and record the same procedure in `docs/AGENT_HANDOFF.md` so it outlives the session.
 29. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
-30. Merge completed work (or open a pull request for it), then clean up Git state (branches, worktrees).
+30. Merge completed work (or open a pull request for it, with the Next Steps procedure in its description), then clean up Git state (branches, worktrees). Every later push to the same work ends with an updated procedure.
 
 The scoped reads in steps 4–5 are deliberate: unbounded history files dominate session-start cost, while the rule documents themselves are comparatively lean — measured, not assumed (run `bash constitution/scripts/measure_instruction_weight.sh .` to see any repository's numbers). Scoping trims roughly half of a mature repository's reading-order cost with no information loss for a fresh task.
 
@@ -69,7 +69,9 @@ applies whenever the change is user-visible; step 21 applies when work was
 discovered; step 22 applies when the change is user-facing; step 24 shrinks
 to "does this touch anything on the sensitive list?"; and **step 29, the
 secrets sweep, is never skipped** — a one-line change is exactly the size at
-which a pasted token goes unnoticed.
+which a pasted token goes unnoticed. Nor is the **Next Steps procedure** in
+step 28: a trivial change's procedure may be a single suggestion, but it is
+never absent.
 
 A trivial change still opens a pull request (step 30) and still says in its
 description that it took the fast path, so a reviewer can disagree.
@@ -122,6 +124,7 @@ Agents must verify:
 - Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.
 - Security impact has been reviewed, including a secrets sweep (`constitution/scripts/check_secrets.sh`) before pushing.
 - Future improvements are identified when useful.
+- The summary, the pull request description, and `docs/AGENT_HANDOFF.md` end with a Next Steps procedure (see "Next Steps Procedure"), with every step only a person can do called out and described (`bash constitution/scripts/check_next_steps.sh .` agrees).
 - Any new codebase learnings, preferences, or decisions have been proposed to the user and recorded in `docs/MEMORY.md` upon approval.
 - `docs/SESSION_PLAN.md` has been cleared or archived — the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`.
 - Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
@@ -158,4 +161,68 @@ Final summaries should include:
 - Tests run
 - Documentation updated
 - Security considerations
-- Notable follow-up work
+- The Next Steps procedure (below) — last, so it is the part the reader acts on
+
+## Next Steps Procedure
+
+Every push ends with the answer to "what happens now, and who does it?",
+written as a procedure a person can follow without having read the session.
+A list of loose follow-up ideas is not enough: the reader has to be able to
+tell at a glance which steps are waiting on them, and then do those steps
+cold — including the ones an agent can never do, such as wiring up hardware,
+entering a credential, flipping a UI-only setting, or approving a merge.
+
+The procedure appears in three places, with the same content: the end of the
+agent's summary, the end of the pull request description, and the latest
+entry in `docs/AGENT_HANDOFF.md` (so it survives the session). Every later
+push to the same work replaces it with the current state.
+
+```markdown
+## Next Steps
+
+**Human action required:** steps 1 and 3.
+
+1. [ ] **HUMAN** — Connect the test board to the CI runner
+   - **Why a human:** needs physical access to the lab bench.
+   - **You need:** the dev board, a USB-C data cable, the runner host's login.
+   - **Procedure:**
+     1. Plug the board into the runner's front USB port.
+     2. Run `ls /dev/ttyACM*` on the runner and note the device name.
+     3. Set the `BOARD_PORT` repository variable to that name.
+   - **Done when:** the `hardware-smoke` job goes green on the next run.
+2. [ ] **AGENT** — Enable the hardware smoke tests in CI _(blocked by step 1)_
+3. [ ] **HUMAN** — Merge the pull request once CI is green
+   - **Why a human:** merges are the maintainer's decision.
+   - **Done when:** the pull request shows as merged.
+4. [ ] **AUTOMATED** — The release workflow tags and publishes on merge; watch it for a red run.
+5. [ ] **AGENT** _(suggestion)_ — Add a retry to the flaky serial handshake.
+```
+
+The rules:
+
+- **A heading named "Next Steps"**, then a numbered checklist (`1. [ ]`) in
+  the order the steps should happen. The reader ticks the boxes.
+- **Every step starts with who acts**, in bold: `HUMAN` (only a person can
+  do it), `AGENT` (an AI agent can, in a later session), or `AUTOMATED` (CI,
+  a schedule, or a bot does it; the step says what to watch for).
+- **Human steps are called out, then described.** When any step is
+  `HUMAN`, the line directly under the heading reads `**Human action
+  required:** steps …` and names every one of them (ranges such as `steps
+  1–3` are fine; write `none` when no step is `HUMAN`). Each `HUMAN` step
+  carries **Why a human** (what makes it impossible to delegate) and **Done
+  when** (how the person knows they are finished); a step that takes more
+  than one action adds **You need** (hardware, access, accounts) and a
+  numbered **Procedure**. Physical setup, credentials and secrets, payments,
+  legal or licensing choices, UI-only settings, approvals, merges, and
+  product decisions are always `HUMAN`.
+- **Dependencies are explicit**: `_(blocked by step N)_` on a step that
+  cannot start until another finishes.
+- **Never empty.** If nothing is required, the procedure still offers at
+  least one step marked `_(suggestion)_` — the most useful follow-up the
+  agent can see. "None" is not a next step.
+
+`scripts/check_next_steps.sh` verifies the format of a file's Next Steps
+section (by default the one in `docs/AGENT_HANDOFF.md`; `--file -` reads a
+pull request body from standard input). Whether the steps are the right
+ones remains a review question. The decision is recorded in
+`docs/adr/0005-next-steps-procedure.md`.

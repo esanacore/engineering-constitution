@@ -7,12 +7,10 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-`scripts/check_demo_page.sh` + `scripts/test_check_demo_page.sh`: the Demo
-Page standard checked mechanically rather than by presence. Wired into
-`tests.yml` (`--strict`, self-governance) and the adopter
-`constitution-compliance.yml` template (warn mode, skips older pins). The
-constitution's own `demo.html` dropped its Google Fonts to pass. An isolated
-critique pass surfaced missed loads (ES-module imports, SVG, `<base>`, `>` in
-quoted attributes) and false positives (page text, mid-path `out/`); all fixed
-with regression tests, and a quadratic scan (56s on a 5.5 MB page) was made
-linear (0.7s). Released as 1.50.0 (`CHANGELOG.md`); tag, GitHub Release, and fleet bump are Eric's post-merge steps.
+The Next Steps procedure (ADR-0005): `AI_WORKFLOW.md` "Next Steps Procedure",
+`scripts/check_next_steps.sh` + tests, every instruction file, both PR
+templates, the handoff template and this repository's handoff, CI wiring.
+An isolated critique pass surfaced nested-list misreads, unrecognized heading
+variants, call-out placement and range parsing, nested-fence handling, and
+five misplaced instruction-file lines; all fixed with regression tests.
+Outcomes are in `CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.

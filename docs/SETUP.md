@@ -36,7 +36,8 @@ cd mcp-server && npm install && cd ..   # optional, MCP server only
 
 ```bash
 bash scripts/run_all_tests.sh --quiet
-bash scripts/check_instruction_templates.sh --strict .
+bash scripts/check_instruction_templates.sh --strict --anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" .
+bash scripts/check_next_steps.sh --strict .
 bash scripts/check_skills.sh --strict .
 bash scripts/check_demo_page.sh --strict .
 bash scripts/check_wiki_links.sh --strict .

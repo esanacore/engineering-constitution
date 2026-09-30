@@ -27,6 +27,7 @@ Read:
 - Update documentation when behavior or setup changes.
 - Update `TODO.md` with discovered work.
 - Update `CHANGELOG.md` for user-facing changes.
+- End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 
 ## Project-Specific Rules
 

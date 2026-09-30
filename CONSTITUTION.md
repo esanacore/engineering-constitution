@@ -215,6 +215,13 @@ no behavior and touches no sensitive area may skip the planning, critique, and
 release-evaluation steps, but never the secrets sweep, and when in doubt it is
 not trivial.
 
+Every push, trivial or not, ends with a **Next Steps procedure** (ADR-0005): a
+numbered checklist of what happens next, each step tagged `HUMAN`, `AGENT`, or
+`AUTOMATED`, with the steps only a person can do — hardware, credentials,
+UI-only settings, approvals — called out first and described well enough to
+follow without having read the session. It closes the summary, the pull
+request description, and `docs/AGENT_HANDOFF.md`, and is never empty.
+
 ## Future Roadmap
 
 Potential future additions:

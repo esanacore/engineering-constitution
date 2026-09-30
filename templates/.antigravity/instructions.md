@@ -11,6 +11,7 @@ As an autonomous agent in this workspace, you MUST:
 4. Read `docs/MEMORY.md` to load project context and user preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 5. Maintain the `TODO.md` and `CHANGELOG.md` as living documents.
 6. Follow the architectural standards in `docs/adr/`.
+7. End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 
 ## Command Execution
 

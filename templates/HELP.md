@@ -41,6 +41,7 @@ Full per-IDE setup steps and Visual Studio / Solon details live in
 - **Entry Point**: Read `AGENTS.md` and `constitution/CONSTITUTION.md`.
 - **Workflow**: Follow `constitution/AI_WORKFLOW.md`.
 - **Session Planning**: Check `docs/SESSION_PLAN.md` for a previous interrupted session; write your own plan there before implementing.
+- **Next Steps**: End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 - **Project Memory**: Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md` before completing work.
 - **Command Help**: See `docs/COMMAND_REFERENCE.md`.
 - **Troubleshooting**: See `docs/TROUBLESHOOTING.md`.

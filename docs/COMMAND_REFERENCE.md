@@ -14,7 +14,8 @@ fail, `--help` for usage, exit `2` on a usage error.
 ## Self-Governance (what CI runs against this repository)
 
 - `bash scripts/check_secrets.sh --strict .`
-- `bash scripts/check_instruction_templates.sh --strict .` (also `templates` and `examples/sample-project`)
+- `bash scripts/check_instruction_templates.sh --strict --anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" .` (also `templates` and `examples/sample-project`; CI passes the Next Steps anchor explicitly)
+- `bash scripts/check_next_steps.sh --strict .` (or `--file -` to check a pull request body piped on standard input)
 - `bash scripts/check_skills.sh --strict .`
 - `bash scripts/check_demo_page.sh --strict .`
 - `bash scripts/check_wiki_links.sh --strict .`
