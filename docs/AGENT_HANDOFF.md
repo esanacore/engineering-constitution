@@ -23,10 +23,11 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 - **Accomplishments**: `v1.50.0`, `v1.51.0`, and `v1.52.0` tagged and
   released; all 18 adopters pin `constitution/` at `93510ce` (v1.52.0).
-  Demo pages added and merged in seven product-facing adopters
+  Demo pages added and merged in nine more product-facing adopters
   (DevLaunchpad, istqb-quiz-simulator, Project-Greenhouse,
-  AI-Process-Engineer, smart-teleprompter, PicklesToys, 702_with_the_view),
-  each with the "keep the demo page current" rule in its instruction files.
+  AI-Process-Engineer, smart-teleprompter, gentle-table, patients-served,
+  PicklesToys, 702_with_the_view), so all ten now carry one, each with the
+  "keep the demo page current" rule in its instruction files.
 - **Verification Run**: every demo PR passed `check_demo_page.sh --strict`,
   `check_instruction_templates.sh --anchor "demo page current"`, and
   `check_next_steps.sh --strict` from a fresh clone; CI on each adopter's
@@ -36,8 +37,7 @@ kept; history lives in `CHANGELOG.md` and the commit log):
   as of 2026-10-02, after the account moved to GitHub Free.
 - **Context Hints**: the adopter list is at
   `~/.config/engineering-constitution/adopters.txt` on the maintainer's
-  machine. gentle-table and patients-served are the product-facing adopters
-  still without a demo page (`TODO.md`).
+  machine. None of the demo pages is published yet (`TODO.md`).
 
 #### Next Steps
 
@@ -46,6 +46,5 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 1. [ ] **HUMAN** — Review and merge this pull request
    - **Why a human:** merging is the maintainer's decision.
    - **Done when:** the PR is merged and CI on `main` is green.
-2. [ ] **AGENT** — Finish demo pages for gentle-table and patients-served through their normal required checks
-3. [ ] **AUTOMATED** — `tests.yml` runs on this PR; `self-governance` includes the strict Next Steps check.
-4. [ ] **AGENT** _(suggestion)_ — Publish the adopters' demo pages (GitHub Pages) and link the published URLs from their READMEs.
+2. [ ] **AUTOMATED** — `tests.yml` runs on this PR; `self-governance` includes the strict Next Steps check.
+3. [ ] **AGENT** _(suggestion)_ — Publish the adopters' demo pages (GitHub Pages) and link the published URLs from their READMEs.
