@@ -19,25 +19,25 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-10-02
+### Session: 2026-10-03
 
-- **Accomplishments**: `v1.50.0`, `v1.51.0`, and `v1.52.0` tagged and
-  released; all 18 adopters pin `constitution/` at `93510ce` (v1.52.0).
-  Demo pages added and merged in nine more product-facing adopters
-  (DevLaunchpad, istqb-quiz-simulator, Project-Greenhouse,
-  AI-Process-Engineer, smart-teleprompter, gentle-table, patients-served,
-  PicklesToys, 702_with_the_view), so all ten now carry one, each with the
-  "keep the demo page current" rule in its instruction files.
-- **Verification Run**: every demo PR passed `check_demo_page.sh --strict`,
-  `check_instruction_templates.sh --anchor "demo page current"`, and
-  `check_next_steps.sh --strict` from a fresh clone; CI on each adopter's
-  default branch was green after merge (smart-teleprompter's Dependency
-  Audit excepted, fixed in its PR #23).
-- **Known Blockers**: none. GitHub Actions runs in private adopters again
-  as of 2026-10-02, after the account moved to GitHub Free.
+- **Accomplishments**: all 18 adopters pin `constitution/` at `93510ce`
+  (v1.52.0). All ten product-facing adopters carry a `demo.html` with the
+  "keep the demo page current" rule in their instruction files. Four demo
+  pages are published: SSH_DeviceManager, DevLaunchpad and
+  istqb-quiz-simulator on GitHub Pages, and gentle-table at
+  `gentletable.com/demo.html`.
+- **Verification Run**: each live URL returns 200 and matches its
+  repository's `demo.html` by SHA-256; CI was green on every merged PR.
+- **Known Blockers**: none.
 - **Context Hints**: the adopter list is at
   `~/.config/engineering-constitution/adopters.txt` on the maintainer's
-  machine. None of the demo pages is published yet (`TODO.md`).
+  machine. `TODO.md` records which demo pages are deliberately unpublished
+  and why. Open findings from the demo work, not yet filed anywhere:
+  DevLaunchpad's PNG assets are corrupted (saved as text) and its README
+  lists four of six custom command types; patients-served's API validation
+  rule 9 conflicts with FR-004-AC-2; AI-Process-Engineer names steps
+  "the application" on live captures.
 
 #### Next Steps
 
@@ -47,4 +47,5 @@ kept; history lives in `CHANGELOG.md` and the commit log):
    - **Why a human:** merging is the maintainer's decision.
    - **Done when:** the PR is merged and CI on `main` is green.
 2. [ ] **AUTOMATED** — `tests.yml` runs on this PR; `self-governance` includes the strict Next Steps check.
-3. [ ] **AGENT** _(suggestion)_ — Publish the adopters' demo pages (GitHub Pages) and link the published URLs from their READMEs.
+3. [ ] **AGENT** _(suggestion)_ — Fix DevLaunchpad's corrupted PNG assets and bring its README's custom-command list in line with the code.
+4. [ ] **AGENT** _(suggestion)_ — Add `demo-pages.yml` to the constitution's workflow templates (`TODO.md`).
