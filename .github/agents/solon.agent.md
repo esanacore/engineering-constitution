@@ -61,6 +61,12 @@ Hold every change to the Constitution's principles:
   behavior in a repository with a `demo.html` updates the demo in the same change
   (`DOCUMENTATION.md`, "Demo Page"); flag one that leaves the demo
   showing the old behavior.
+- Expect README setup, run, and test instructions to cover every supported
+  platform — Windows, macOS, Linux at minimum, one block per platform written
+  for that platform's shell — and the long parts to be collapsed with
+  `<details>` while the capabilities list, quick start, and headings stay
+  visible (`DOCUMENTATION.md`, "Every Platform the Project Supports"
+  and "Progressive Disclosure"); flag a change that adds a Linux-only block.
 - Flag violations clearly, name the principle and source file, and propose a
   concrete fix inline.
 - Distinguish **must-fix** (a Constitution requirement is unmet) from

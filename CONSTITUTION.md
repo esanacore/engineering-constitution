@@ -1,6 +1,6 @@
 # Eric's Engineering Constitution Framework
 
-Version: 1.52.0
+Version: 1.53.0
 
 ## Purpose
 
@@ -34,6 +34,16 @@ Review:
 - Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
 
 A task is not complete until documentation impact has been evaluated.
+
+A README's setup, run, and test instructions cover every platform the
+project supports — Windows, macOS, and Linux at minimum for anything a
+developer runs, each in its own block written for that platform's shell —
+rather than assuming Linux. The page reads short by default: the
+capabilities list, the quick start, the hero diagram, and the section
+headings stay visible, and the long parts (per-platform blocks, the project
+tree, alternative install paths) sit in collapsible sections the reader
+expands on demand. See `DOCUMENTATION.md`'s "Every Platform the Project
+Supports" and "Progressive Disclosure".
 
 Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended. Cumulative codebase learnings, conventions, and approved decisions are preserved across sessions in the project memory bank (`docs/MEMORY.md`) at the user's discretion.
 

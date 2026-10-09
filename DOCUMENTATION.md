@@ -188,14 +188,116 @@ README.md should explain:
 - What the project does
 - Its current features/capabilities — see "Current Capabilities" below
 - Who it is for
-- How to install or set it up
-- How to run it
+- Which platforms it supports, and how to install or set it up on each of
+  them — see "Every Platform the Project Supports" below
+- How to run it, on each supported platform
 - Where to see it working — link `demo.html`, and its published URL when the
   repository is product-facing; see "Demo Page" below
-- How to test it
+- How to test it, on each supported platform
 - How to contribute or work with AI agents
 - Where to find architecture and roadmap information
 - Its project structure, plus at least one infographic (component or flow diagram) whenever possible — this is the default, not only for non-trivial systems; see `ARCHITECTURE.md`'s "Visual Architecture" section
+
+It should say all of that without making the reader scroll past the parts
+that do not apply to them: the page reads short by default and expands on
+demand — see "Progressive Disclosure" below. `templates/README.md` is the
+worked example of both rules, and this repository's own `README.md` follows
+them.
+
+### Every Platform the Project Supports
+
+A README that gives one set of commands is a README written for the author's
+machine. Developers arrive from Windows, macOS, and Linux, and the commands
+differ in ways that stop a newcomer cold: the shell (PowerShell, `cmd`, Git
+Bash, zsh, bash), the package manager (`winget`/`choco`, Homebrew,
+`apt`/`dnf`), path separators and home directories, how a virtual environment
+is activated, how an environment variable is set, line endings, and whether a
+symlink can be created at all. "Assume Linux" is the usual default because
+Linux is what CI runs; it is not what the reader runs.
+
+- **Name the supported platforms up front**, in the quick-start or install
+  section: the operating systems (and versions, where they matter) on which
+  the project is built, run, and tested. A platform the project does not
+  support is named as unsupported rather than left out — silence reads as
+  "probably works".
+- **Break instructions out per platform wherever the commands differ.**
+  Install, setup, run, and test instructions each carry one block per
+  platform — Windows, macOS, and Linux at minimum for anything a developer
+  runs; the platforms the product itself targets (Android and iOS, a board, a
+  browser) for product-facing repositories — not a single `bash` block with a
+  footnote. When a command is identical everywhere, say so once ("same on
+  every platform") rather than repeating it three times.
+- **A Windows block is written for a Windows shell.** It names the shell it
+  assumes (PowerShell, `cmd`, or Git Bash) and uses that shell's syntax —
+  `$env:VAR = "x"` rather than `export VAR=x`, `.\.venv\Scripts\Activate.ps1`
+  rather than `source .venv/bin/activate`. "Use WSL" is a Linux instruction
+  wearing a hat: offer it as an option if it works, but it does not satisfy
+  the Windows block on its own.
+- **Verified, not guessed.** Each platform's block has been run on that
+  platform, by a person or by CI, and the README says which platforms CI
+  covers. An agent that cannot run a platform writes its block from the
+  project's CI configuration and documented behavior, and says so in the
+  pull request, rather than inventing commands.
+- **The same rule covers every document that hands the reader a command** —
+  `docs/SETUP.md`, `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`,
+  the wiki. The README is where it matters most, because the README is where
+  the reader starts.
+
+### Progressive Disclosure
+
+A README that documents everything in one scroll documents nothing in the
+first screen, and per-platform instructions make the scroll longer: three
+blocks where there was one. Use the renderer's collapsible sections —
+`<details>` with a `<summary>` line — so the page reads short by default and
+a reader expands only what applies to them, the way a long post keeps its
+TL;DR visible and tucks the rest away.
+
+**Always visible**, never inside a collapsed block:
+
+- The title, the badges, and the one-paragraph "what this is and who it is
+  for".
+- The current capabilities list ("Current Capabilities" above): it is the
+  first thing a reader looks for and the first thing to go stale.
+- The hero infographic (`ARCHITECTURE.md`, "Visual Architecture") and the
+  link to the demo page.
+- The quick start: the supported-platforms line and the shortest path to a
+  running project. A command that is the same on every platform stays
+  visible; the per-platform variants sit directly under it, one collapsed
+  block each.
+- Every `##` section heading, so the rendered outline still lists the whole
+  document. Collapse the body under a heading, never the heading itself.
+- The version line and the pointers to the rest of the documentation
+  (roadmap, changelog, architecture, contributing).
+
+**Collapsed by default:**
+
+- Per-platform install, run, and test blocks — one `<details>` per platform,
+  its `<summary>` naming the platform and the shell ("Windows (PowerShell)",
+  "macOS (zsh)", "Linux (bash)").
+- The project-structure tree once it runs past a dozen lines (the heading
+  stays visible; the tree is still required, see `CONSTITUTION.md`
+  Principle 6).
+- Alternative installation paths (from source, Docker, manual), long
+  configuration and command references, troubleshooting, and anything most
+  readers will not need on a first visit.
+
+Mechanics, learned the hard way:
+
+- The `<summary>` says what is inside — "Windows (PowerShell)", "Full
+  project structure", "Manual installation" — never "Click to expand" or
+  "More".
+- Leave a blank line after the `<summary>` line and another before
+  `</details>`, or the Markdown inside (fences, lists, tables) will not
+  render.
+- One level of nesting. A collapsed block inside a collapsed block is where
+  content goes to be lost.
+- Headings inside a `<details>` block do not appear in the rendered outline
+  and cannot be linked to reliably; keep `##` and `###` headings outside the
+  block and let the summary line title what is inside.
+- Where `<details>` is not supported — a package-registry page or a terminal
+  renderer that drops HTML — the body is shown inline, so nothing is lost;
+  the always-visible list above is still what a reader must see without a
+  click.
 
 ## Current Capabilities
 
