@@ -27,7 +27,8 @@ The repository root is an architectural surface, not a junk drawer
 the only agent-instruction file every repository needs, so it is the default.
 Vendor files that exist only because a tool hardcodes its own name
 (`CLAUDE.md`, `.cursorrules`, `.goosehints`, `.openhands_instructions`, and the
-rest) are opt-in per tool:
+rest) are opt-in per tool. Run it from bash — Linux, macOS with Homebrew's
+bash, or Windows Git Bash (the README's Quick Start covers all three):
 
 ```bash
 # Just AGENTS.md (default)

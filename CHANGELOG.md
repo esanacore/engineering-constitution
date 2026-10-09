@@ -54,7 +54,8 @@ standard, and applies both to the framework's own README and its template.
   covers, and gives one collapsed block per platform — including that macOS
   ships bash 3.2, which the scripts do not support, and that Windows runs
   them from Git Bash rather than PowerShell. Repository Contents, the project
-  tree, the bootstrap variants, and the sources workflow are collapsed; the
+  tree, the Getting Started subsections, and the sources workflow are
+  collapsed; the
   capabilities, infographic, How It Works diagram, and version stay visible.
 - The `readme-capabilities-sync` skill, the Solon reviewer (root and
   template), the demo page's Principle 1 card, and the wiki carry the rule.

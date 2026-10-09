@@ -18,9 +18,8 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 **Supported platforms:** Linux, macOS, and Windows (through Git Bash). Every
 script here is bash, so the one thing each platform needs is **bash 4 or
 later** and **Git 2.x**; expand your platform below for how to get them. CI
-runs the full suite on Ubuntu; Windows Git Bash is exercised by hand (the
-suites are kept portable to it — see `docs/TROUBLESHOOTING.md`); macOS is not
-covered by CI.
+runs the full suite on Ubuntu only; the suites are kept portable to Windows
+Git Bash (see `docs/TROUBLESHOOTING.md`), and macOS is not covered by CI.
 
 <details>
 <summary>Linux (bash)</summary>
@@ -39,7 +38,7 @@ bash --version | head -n 1 && git --version
 <summary>macOS (zsh)</summary>
 
 macOS ships `/bin/bash` 3.2, which these scripts do not support (they use
-`declare -A` and `mapfile`). Install a current bash with Homebrew and let it
+associative arrays and `${var,,}` case conversion, both bash 4). Install a current bash with Homebrew and let it
 shadow the system one:
 
 ```bash
@@ -85,6 +84,11 @@ cd engineering-constitution
 tool instruction files to install, and manual installation.
 
 ## Repository Contents
+
+Start with `CONSTITUTION.md` (the principles), `AI_WORKFLOW.md` (the agent
+workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
+`TODO.md`, the release history is `CHANGELOG.md`, the release process is
+`RELEASES.md`, and contribution rules are in `CONTRIBUTING.md`.
 
 <details>
 <summary>Every document, directory, and script, and what it is for</summary>

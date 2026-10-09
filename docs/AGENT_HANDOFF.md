@@ -45,8 +45,8 @@ kept; history lives in `CHANGELOG.md` and the commit log):
   isolated critique pass reviewed the final diff. No new tests: the change
   adds no checker (one is recorded in `TODO.md` → Documentation).
 - **Known Blockers**: none. The macOS Quick Start block was written from
-  documented behavior (macOS ships bash 3.2; the scripts use `declare -A` and
-  `mapfile`) and has not been executed on a Mac — recorded in `TODO.md`.
+  documented behavior (macOS ships bash 3.2; the scripts use associative
+  arrays and `${var,,}`, both bash 4) and has not been executed on a Mac — recorded in `TODO.md`.
 - **Context Hints**: `DOCUMENTATION.md` "README Expectations" is the source
   of the rule; `templates/README.md` is the shape to copy. The adopter list
   is at `~/.config/engineering-constitution/adopters.txt` on the maintainer's

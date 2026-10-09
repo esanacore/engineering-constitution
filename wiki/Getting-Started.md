@@ -15,7 +15,9 @@ It is the wiki companion to `README.md`'s "Getting Started" section.
    Constitution somewhere your projects can add it as a submodule.
 
 2. **Bootstrap the target project.** From this repository, run the installer
-   against the project you want to adopt the standard:
+   against the project you want to adopt the standard. The commands are bash,
+   the same on Linux, macOS (Homebrew bash), and Windows Git Bash — the
+   README's Quick Start says how to get bash 4+ on each:
 
    ```bash
    ./scripts/bootstrap.sh /path/to/project <repository-url>

@@ -42,7 +42,7 @@ cd <project-directory>
 
 ```powershell
 # Example
-winget install --id Git.Git -e
+winget install --id <tool>
 .\scripts\setup.ps1
 ```
 
