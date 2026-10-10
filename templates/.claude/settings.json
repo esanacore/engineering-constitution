@@ -30,6 +30,20 @@
           {
             "type": "command",
             "command": "bash constitution/scripts/check_constitution_freshness.sh || true"
+          },
+          {
+            "type": "command",
+            "command": "if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh start; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh stop; fi"
           }
         ]
       }

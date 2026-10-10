@@ -6,6 +6,34 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.54.0 - 2026-10-10
+
+1.51.0 made a Next Steps procedure the end of every push and gave it a
+checker, but the checker ran at pull request time — after the session that
+skipped it was gone. This release moves the check to the moment it matters:
+the end of the Claude Code session itself.
+
+### Added
+
+- **A Claude Code `Stop` hook holds a session until it hands over its Next
+  Steps.** `scripts/next_steps_hook.sh`, registered in
+  `templates/.claude/settings.json` (and dogfooded in this repository's own
+  `.claude/settings.json`), records each session's starting commit at
+  `SessionStart`. At `Stop`, if the session made commits, it checks that
+  `docs/AGENT_HANDOFF.md` was updated and committed, that its procedure passes
+  `check_next_steps.sh --strict`, and that the final reply ends with a Next
+  Steps section — and if not, blocks the stop once and tells the agent what
+  is missing. Sessions that only answered questions are never touched, the
+  second stop always goes through, and `CONSTITUTION_NEXT_STEPS_HOOK=off`
+  disables it. Paired with `scripts/test_next_steps_hook.sh`.
+
+### Changed
+
+- **Existing adopters get the hook by hand.** `bootstrap.sh` does not
+  overwrite an existing `.claude/settings.json`; `INTEGRATION.md` lists the
+  two entries to add. Both are no-ops on a `constitution/` pin that predates
+  the script.
+
 ## 1.53.0 - 2026-10-09
 
 READMEs written for the reader's machine, not the author's. Every README the

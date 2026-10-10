@@ -87,7 +87,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 - `scripts/test_checker_contract.sh` (the contract every checker must honor)
-- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`
+- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_next_steps_hook.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`
 
 The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.md` and run in CI by `.github/workflows/tests.yml`.
 
@@ -113,8 +113,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.53.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.54.0`. Recent releases have focused on:
 
+- The Next Steps procedure enforced where it is skipped (1.54.0): a Claude Code `Stop` hook (`scripts/next_steps_hook.sh`, shipped in `templates/.claude/settings.json`) holds a session that made commits until `docs/AGENT_HANDOFF.md` is updated, its procedure is well-formed, and the final reply ends with it — once, never in a loop
 - READMEs for every platform, read short by default (1.53.0): setup, run, and test instructions cover Windows, macOS, and Linux at minimum, one block per platform written for that platform's shell, and the long parts sit in collapsible `<details>` sections while the capabilities list, quick start, hero diagram, and headings stay visible (`DOCUMENTATION.md`, "Every Platform the Project Supports" and "Progressive Disclosure"; `templates/README.md` and the framework's own README are the worked examples)
 - The demo page kept current (1.52.0): the Required Workflow, every agent instruction file, the Solon reviewer, and both pull request templates tell agents to update `demo.html` in the same change whenever user-facing behavior changes
 - A Next Steps procedure at the end of every push (1.51.0, ADR-0005): the closing summary, the pull request description, and `docs/AGENT_HANDOFF.md` end with the same numbered checklist, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with the human steps named up front and described — verified by `scripts/check_next_steps.sh`

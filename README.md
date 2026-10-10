@@ -122,6 +122,7 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `scripts/check_instruction_templates.sh`: Reference checker that verifies every agent instruction file present (`AGENTS.md`, `CLAUDE.md`, `.cursorrules`, the Solon agent, ...) carries the same guidance anchors, so a rule added to one vendor file is not silently missing from another.
 - `scripts/check_demo_page.sh`: Reference checker that verifies `demo.html` meets the mechanical half of `DOCUMENTATION.md`'s "Demo Page" standard — no remote resource loads, scripts and styles inline, no build-output references, no localhost/private-network URLs, linked from `README.md`.
 - `scripts/check_next_steps.sh`: Reference checker that verifies a handoff (default `docs/AGENT_HANDOFF.md`) or a pull request body (`--file -`) ends with a well-formed Next Steps procedure — numbered checklist, every step tagged HUMAN/AGENT/AUTOMATED, every human-only step named up front and described (`AI_WORKFLOW.md`, "Next Steps Procedure"; ADR-0005).
+- `scripts/next_steps_hook.sh`: Claude Code `SessionStart`/`Stop` hook (registered in `templates/.claude/settings.json` and this repository's `.claude/settings.json`). When a session that made commits tries to end without updating `docs/AGENT_HANDOFF.md`, with a malformed Next Steps procedure, or with a final reply that has no Next Steps section, it blocks the stop once and tells the agent what is missing.
 - `scripts/check_skills.sh`: Reference checker that validates every `skills/*/SKILL.md` (front-matter name matches its directory, description present, referenced scripts exist).
 - `scripts/test_checker_contract.sh`: Meta-test holding every `check_*.sh` to the shared checker contract (`--help`, exit `2` on a bad option, `--strict` where documented, executable bit, a paired negative-case suite, CI annotations). Every checker sources `scripts/lib/ci_annotations.sh` and emits `::warning::` / `::error::` under GitHub Actions.
 - `scripts/bump_adopters.sh`: Fleet bump for step 9 of cutting a release — re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently.
@@ -169,7 +170,7 @@ engineering-constitution/
 │
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
 │   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, ADR, ...)
-│   ├── .claude/settings.json             ← Claude Code SessionStart hook + permissions deny list
+│   ├── .claude/settings.json             ← Claude Code hooks (freshness at start, Next Steps at stop) + permissions deny list
 │   └── .github/
 │       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki, ...), SHA-pinned
 │       ├── agents/                       ← Solon, the Copilot custom agent
@@ -215,7 +216,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.53.0
+Current version: 1.54.0
 
 See `VERSION`.
 

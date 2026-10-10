@@ -1,18 +1,33 @@
 # Session Plan
 
-_No active session. This file is written at the start of a session with its
-goals, approach, expected file changes, and risks (see `AI_WORKFLOW.md`), and
-cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
-`docs/AGENT_HANDOFF.md`._
+## Goals
 
-## Last completed
+Close the TODO "Consider a Claude Code `Stop` hook ... that runs
+`check_next_steps.sh`": catch a missing or stale Next Steps procedure at the
+moment a Claude Code session ends, not at pull request time.
 
-READMEs for every platform, read short by default (1.53.0):
-`DOCUMENTATION.md`'s "Every Platform the Project Supports" and "Progressive
-Disclosure", `CONSTITUTION.md` Principle 1, `templates/README.md` and
-`templates/docs/SETUP.md` as the worked examples, this repository's own README
-and `docs/SETUP.md`, the `readme-capabilities-sync` skill, Solon, the demo
-page, and the wiki. An isolated critique pass corrected the bash-4 features
-named in the macOS block, restored a visible documentation pointer list, and
-extended the rule to this repository's own `docs/SETUP.md` and wiki pages.
-Outcomes are in `CHANGELOG.md` (1.53.0) and `docs/AGENT_HANDOFF.md`.
+## Approach
+
+- `scripts/next_steps_hook.sh start|stop`. `start` (SessionStart) records the
+  session's starting HEAD; `stop` (Stop) does nothing unless this session
+  made commits, then blocks the stop once (exit 2, reason on stderr) when
+  `docs/AGENT_HANDOFF.md` was not updated in those commits, its procedure
+  fails `check_next_steps.sh`, or the final reply has no Next Steps section.
+  `stop_hook_active` lets the second stop through, so it can never loop.
+  Opt-out: `CONSTITUTION_NEXT_STEPS_HOOK=off`.
+- Ship both hooks in `templates/.claude/settings.json`; dogfood with a root
+  `.claude/settings.json` (hooks only).
+- Paired `scripts/test_next_steps_hook.sh`; INTEGRATION.md, README, TESTING,
+  wiki, CHANGELOG, TODO.
+
+## Risks
+
+- Hook input format (fields, exit codes) — verified against the docs.
+- False blocks in sessions that never pushed: only sessions that committed
+  are checked; unknown/absent baseline means no check.
+- Transcript format is internal: the reply check is skipped when the format
+  is not recognized.
+
+## Resumption Notes
+
+- Started 2026-10-10 on a fresh branch from `main` at v1.53.0. Implementation, docs, and the 1.54.0 bump are committed; awaiting the critique pass.
