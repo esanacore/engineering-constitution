@@ -658,15 +658,19 @@ procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"; ADR-0005), backed by
 - At `SessionStart`, it records the session's starting commit (in
   `$TMPDIR/constitution-next-steps/`, keyed by session; a resume keeps the
   first one).
-- At `Stop`, if the session made commits since then, it checks that
-  `docs/AGENT_HANDOFF.md` was updated and committed in them, that its Next
-  Steps procedure passes `check_next_steps.sh --strict`, and that the final
-  reply has a Next Steps section. If any is missing, it blocks the stop
+- At `Stop`, if the turn added commits of the session's own — made after
+  it started, by this clone's `user.email`; a pull or a branch switch does
+  not count — it checks that `docs/AGENT_HANDOFF.md` was updated and
+  committed in the session, that its Next Steps procedure passes
+  `check_next_steps.sh --strict`, and that the final reply ends with a
+  procedure that passes it too. If anything is missing, it blocks the stop
   (exit `2`) and tells the agent exactly what to fix. It blocks at most once
-  per stop — the next attempt goes through — so it can never trap a session.
+  — the next attempt goes through — so it can never trap a session.
 
-Sessions that made no commits, sessions whose start was not recorded, and
-repositories without the checker are never blocked. Set
+Turns that added no commits (a question answered after a push), sessions
+whose start was not recorded, and repositories without the checker are never
+blocked. Both commands `cd` to `$CLAUDE_PROJECT_DIR` first, so they work from
+any subdirectory. Set
 `CONSTITUTION_NEXT_STEPS_HOOK=off` to disable it for a session. Repositories
 bootstrapped before this hook shipped add the `next_steps_hook.sh start`
 entry to `hooks.SessionStart` and a `hooks.Stop` entry from
