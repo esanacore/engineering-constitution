@@ -17,9 +17,14 @@ This project follows semantic versioning.
   line after it or a `</details>` with none before (the content silently
   fails to render); nested or unclosed `<details>`; a summary that says
   "Click to expand"; a `##`/`###` heading inside a collapsed block; and a
-  Windows block that uses `export` or `source`. `--file` points it at
+  PowerShell or cmd Windows block that uses `export` or `source` (a Git
+  Bash block is a bash block, per the standard). `--file` points it at
   `docs/SETUP.md` and the other documents the same rule covers. Warn by
-  default, `--strict` to block; paired with `scripts/test_check_readme.sh`.
+  default, `--strict` to block; paired with `scripts/test_check_readme.sh`
+  (8 tests, one per finding kind plus the critique pass's regressions:
+  multi-line and code-span summaries, word boundaries on platform names,
+  indented code blocks and headings, and a guard against regex interval
+  expressions that older `mawk` builds silently fail to match).
   `tests.yml` runs it `--strict` on this repository's README, the README
   template, and the SETUP template; `constitution-compliance.yml` runs it in
   warn mode for adopters, skipping pins that predate it.

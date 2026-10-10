@@ -194,20 +194,36 @@ text
 expect_finding "$tmp/heading-in" 'heading: line 6: "### Step one" is inside the <details> opened at line 3' "heading inside details"
 echo "PASS"
 
-echo "Test 5: a Windows block written for a POSIX shell is caught; the same commands in a Linux block are fine"
+echo "Test 5: a PowerShell/cmd Windows block written for a POSIX shell is caught; Git Bash and WSL blocks are bash blocks"
 make_readme "$tmp/win-posix" "# P
 
 $platforms
 
 <details>
-<summary>Windows (Git Bash)</summary>
+<summary>Windows (PowerShell)</summary>
 
-\`\`\`bash
+\`\`\`powershell
 export APP_ENV=dev
 \`\`\`
 
 </details>"
-expect_finding "$tmp/win-posix" 'windows: line 9: the Windows block opened at line 5 uses a POSIX shell command' "export in a Windows block"
+expect_finding "$tmp/win-posix" 'windows: line 9: the Windows block opened at line 5 uses a POSIX shell command' "export in a PowerShell block"
+for shell in 'Windows (Git Bash)' 'Windows (WSL, Ubuntu)'; do
+  make_readme "$tmp/win-bash" "# P
+
+$platforms
+
+<details>
+<summary>$shell</summary>
+
+\`\`\`bash
+export APP_ENV=dev
+source .venv/Scripts/activate
+\`\`\`
+
+</details>"
+  expect_clean "$tmp/win-bash" "bash syntax in a '$shell' block was reported"
+done
 make_readme "$tmp/win-activate" "# P
 
 $platforms
@@ -222,6 +238,87 @@ source .venv/bin/activate
 </details>"
 expect_finding "$tmp/win-activate" 'uses a POSIX shell command' "source .../bin/activate in a Windows block"
 out=$("$checker" "$tmp/win-activate"); [ "$(grep -c 'windows:' <<< "$out")" -eq 1 ] || { echo "$out"; fail "one Windows block should produce one finding"; }
+echo "PASS"
+
+echo "Test 5b: regressions from the critique pass (multi-line summary, code spans in a summary, word boundaries, indented code and headings, no interval expressions)"
+make_readme "$tmp/multiline-summary" "# P
+
+$platforms
+
+<details>
+<summary>
+  Windows (PowerShell)
+</summary>
+
+\`\`\`powershell
+export X=1
+\`\`\`
+
+</details>"
+out=$("$checker" "$tmp/multiline-summary")
+if grep -q 'summary:' <<< "$out" || grep -q 'no blank line after' <<< "$out"; then echo "$out"; fail "a multi-line <summary> produced false findings"; fi
+grep -q 'windows: line 11' <<< "$out" || { echo "$out"; fail "Windows detection lost on a multi-line <summary>"; }
+make_readme "$tmp/code-summary" "# P
+
+$platforms
+
+<details>
+<summary>\`docker compose\` details</summary>
+
+text
+
+</details>
+
+<details>
+<summary>\`Windows\` (PowerShell)</summary>
+
+\`\`\`powershell
+export X=1
+\`\`\`
+
+</details>"
+out=$("$checker" "$tmp/code-summary")
+if grep -q 'summary:' <<< "$out"; then echo "$out"; fail "a code span in a summary made it look vague"; fi
+grep -q 'windows: line 16' <<< "$out" || { echo "$out"; fail "Windows detection lost when the summary has a code span"; }
+make_readme "$tmp/xfail" '# Tool
+
+Supported platforms: Linux and Windows. Demos xfail on the CI runner.
+
+```bash
+make
+```'
+expect_finding "$tmp/xfail" 'but never mentions macOS' "\"Demos xfail\" must not count as a macOS mention"
+make_readme "$tmp/indented-code" "# P
+
+$platforms
+
+An example of the pattern, as an indented code block:
+
+    <details>
+    <summary>More</summary>
+
+Back to prose.
+
+\`\`\`bash
+make
+\`\`\`"
+expect_clean "$tmp/indented-code" "an indented code block containing <details> was treated as a real block"
+make_readme "$tmp/indented-heading" '# P
+
+- item
+
+  <details>
+  <summary>Manual installation</summary>
+
+  ### Step one
+
+  text
+
+  </details>'
+expect_finding "$tmp/indented-heading" 'heading: line 8: "### Step one" is inside the <details> opened at line 5' "an indented heading inside a list-item details block"
+if grep -nE '\{[0-9]+(,[0-9]*)?\}' "$checker" | grep -v '^[0-9]*:#' | grep -q .; then
+  grep -nE '\{[0-9]+(,[0-9]*)?\}' "$checker"; fail "an interval expression ({n,m}) is in the checker; older mawk builds silently fail to match them"
+fi
 echo "PASS"
 
 echo "Test 6: tags inside fenced code and HTML comments are ignored"

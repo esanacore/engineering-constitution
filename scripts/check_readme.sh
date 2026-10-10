@@ -29,10 +29,11 @@ fi
 #              what is inside.
 #   heading    A ##/### heading inside a <details> block: it disappears from
 #              the rendered outline.
-#   windows    A <details> block whose summary names Windows but whose body
-#              uses a POSIX shell command (`export VAR=`, `source ...`,
-#              `.../bin/activate`): a Windows block is written for a Windows
-#              shell.
+#   windows    A <details> block whose summary names Windows -- and not Git
+#              Bash or WSL, whose syntax is bash syntax -- but whose body uses
+#              a POSIX shell command (`export VAR=`, `source ...`,
+#              `.../bin/activate`): a PowerShell or cmd block is written for
+#              that shell.
 #
 # Whether each platform's commands are correct stays a review question.
 #
@@ -55,8 +56,8 @@ Description:
   with a supported-platforms statement and mention Windows and macOS (as
   supported or as unsupported); <details> blocks have the blank lines the
   renderer needs, are not nested or left open, carry a summary that says
-  what is inside, and hold no ##/### headings; a Windows block uses no POSIX
-  shell commands. The same rule covers docs/SETUP.md and friends: point
+  what is inside, and hold no ##/### headings; a PowerShell or cmd Windows
+  block uses no POSIX shell commands. The same rule covers docs/SETUP.md and friends: point
   --file at them. A missing default README has nothing to verify.
 
 Arguments:
@@ -115,7 +116,17 @@ echo
 # One awk pass prints "<kind>\t<detail>" findings. POSIX awk only (mawk,
 # gawk, BSD awk), matching the rest of scripts/.
 scan=$(awk '
-  function norm(t) { t = tolower(t); gsub(/^[ \t]+|[ \t]+$/, "", t); return t }
+  function norm(t) { t = tolower(t); gsub(/[ \t]+/, " ", t); gsub(/^ | $/, "", t); return t }
+  # Judge a completed <summary> text (ended at line n).
+  function summary_done(s, n) {
+    s = norm(s); gsub(/[*_`]/, "", s)
+    if (s == "" || s ~ /^(click to )?(expand|more|details|show more|see more|read more|open|here)( ?\.\.\.| ?\.)?$/)
+      print "summary\tline " n ": <summary> says \"" s "\" -- name what is inside (\"Windows (PowerShell)\", \"Full project structure\")"
+    # A Windows block is held to a Windows shell unless it names Git Bash or
+    # WSL, whose syntax is bash syntax.
+    if (s ~ /windows/ && s !~ /git bash|wsl|msys|cygwin/) win_block = 1
+    summary_line = n
+  }
   {
     sub(/\r$/, "")
     line = $0
@@ -128,12 +139,12 @@ scan=$(awk '
 
     # Mentions count wherever they appear, code included: a "Windows:
     # unsupported" note or a PowerShell block both answer the question.
-    if (lc ~ /windows/) has_win = 1
-    if (lc ~ /mac ?os|os x|darwin/) has_mac = 1
+    if (lc ~ /(^|[^a-z])windows([^a-z]|$)/) has_win = 1
+    if (lc ~ /(^|[^a-z])(mac ?os|os x)([^a-z]|$)/) has_mac = 1
     # A platforms statement: the usual phrasings, or one line naming Windows,
     # macOS, and Linux together ("on Linux, macOS, or Windows:").
     if (lc ~ /supported platforms?|platforms? supported|platform support|^[ \t]*(\*\*|_)?platforms?(\*\*|_)?:|supports? (windows|macos|mac os|linux|ubuntu)/) has_stmt = 1
-    else if (lc ~ /windows/ && lc ~ /mac ?os|os x/ && lc ~ /linux|ubuntu/) has_stmt = 1
+    else if (lc ~ /(^|[^a-z])windows([^a-z]|$)/ && lc ~ /(^|[^a-z])(mac ?os|os x)([^a-z]|$)/ && lc ~ /linux|ubuntu/) has_stmt = 1
 
     # Fenced code: the fence closes only on the same character, at least as
     # long. Command blocks are what make the platform rule apply.
@@ -141,7 +152,7 @@ scan=$(awk '
     if (fence == "") {
       if (match(t, /^(```+|~~~+)/)) {
         fence = substr(t, 1, RLENGTH)
-        info = norm(substr(t, RLENGTH + 1)); sub(/[ \t{].*/, "", info)
+        info = norm(substr(t, RLENGTH + 1)); sub(/[ {].*/, "", info)
         if (info ~ /^(bash|sh|shell|zsh|console)$/) cmd_blocks++
         prev = line; next
       }
@@ -150,38 +161,49 @@ scan=$(awk '
       # A Windows block written in a POSIX shell: the one content check that
       # looks inside fences.
       else if (depth > 0 && win_block && !win_reported && (t ~ /^(export|source)[ \t]+[^ \t]/ || t ~ /\/bin\/activate/)) {
-        print "windows\tline " NR ": the Windows block opened at line " open_line " uses a POSIX shell command (`export`/`source`); write it for PowerShell, cmd, or Git Bash"
+        print "windows\tline " NR ": the Windows block opened at line " open_line " uses a POSIX shell command (`export`/`source`); a PowerShell or cmd block uses that shell'"'"'s syntax (name Git Bash in the summary if that is the shell)"
         win_reported = 1
       }
       prev = line; next
     }
+    # An indented code block (four spaces or a tab after a blank line) is
+    # code too, until the first non-blank line with less indent.
+    if (in_indented) {
+      if (line ~ /^(    |\t)/ || line ~ /^[ \t]*$/) { prev = line; next }
+      in_indented = 0
+    }
+    if (line ~ /^(    |\t)/ && prev ~ /^[ \t]*$/ && depth == 0) { in_indented = 1; prev = line; next }
 
     # HTML comments (a commented-out block is not a block).
     if (in_comment) {
       e = index(line, "-->"); if (e == 0) { prev = line; next }
-      line = substr(line, e + 3); in_comment = 0; lc = tolower(line)
+      line = substr(line, e + 3); in_comment = 0
     }
     while ((c = index(line, "<!--")) > 0) {
       rest = substr(line, c + 4); e = index(rest, "-->")
       if (e == 0) { line = substr(line, 1, c - 1); in_comment = 1; break }
       line = substr(line, 1, c - 1) substr(rest, e + 3)
     }
+    raw = line
     # Inline code is prose about a tag, not a tag ("use `<details>`").
     gsub(/`[^`]*`/, "", line)
     lc = tolower(line)
 
+    # A <summary> that spans lines: collect until it closes.
+    if (in_summary) {
+      stext = stext " " raw
+      if (lc ~ /<\/summary>/) { sub(/<\/[Ss][Uu][Mm][Mm][Aa][Rr][Yy]>.*/, "", stext); in_summary = 0; summary_done(stext, NR) }
+      prev = line; next
+    }
     if (lc ~ /<details([ \t>]|$)/) {
       depth++
       if (depth > 1) print "details\tline " NR ": <details> nested inside the one opened at line " open_line " (one level only)"
       else { open_line = NR; win_block = 0; win_reported = 0 }
     }
     if (match(lc, /<summary[^>]*>/)) {
-      s = substr(line, RSTART + RLENGTH); sub(/<\/summary>.*/, "", s); s = norm(s)
-      gsub(/[*_`]/, "", s)
-      if (s == "" || s ~ /^(click to )?(expand|more|details|show more|see more|read more|open|here)( ?\.\.\.| ?\.)?$/)
-        print "summary\tline " NR ": <summary> says \"" s "\" -- name what is inside (\"Windows (PowerShell)\", \"Full project structure\")"
-      if (s ~ /windows/) win_block = 1
-      summary_line = NR
+      stext = substr(raw, RSTART + RLENGTH)
+      if (lc ~ /<\/summary>/) { sub(/<\/[Ss][Uu][Mm][Mm][Aa][Rr][Yy]>.*/, "", stext); summary_done(stext, NR) }
+      else in_summary = 1
       prev = line; next
     }
     if (lc ~ /<\/details>/) {
@@ -189,13 +211,16 @@ scan=$(awk '
       if (depth > 0) depth--
       if (depth == 0) { win_block = 0; win_reported = 0 }
     }
-    if (depth > 0 && line ~ /^#{1,6}[ \t]/) {
-      h = line; sub(/[ \t]+$/, "", h)
+    # ATX headings, up to three spaces of indent. (No interval expressions:
+    # older mawk builds do not support them.)
+    if (depth > 0 && line ~ /^ ? ? ?#(#|##|###|####|#####)?[ \t]/) {
+      h = line; sub(/^ */, "", h); sub(/[ \t]+$/, "", h)
       print "heading\tline " NR ": \"" h "\" is inside the <details> opened at line " open_line "; headings stay outside collapsed blocks"
     }
     prev = line
   }
   END {
+    if (in_summary) print "details\tline " open_line ": <summary> is never closed"
     if (depth > 0) print "details\tline " open_line ": <details> is never closed"
     if (cmd_blocks > 0) {
       what = cmd_blocks " fenced command block(s)"

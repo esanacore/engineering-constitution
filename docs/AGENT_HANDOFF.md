@@ -26,13 +26,18 @@ kept; history lives in `CHANGELOG.md` and the commit log):
   supported-platforms statement or no Windows/macOS mention (naming a
   platform as unsupported counts), `<details>` blocks missing the blank
   lines the renderer needs, nested or unclosed, with a vague summary or a
-  heading inside, and a Windows block using `export`/`source`. `--file`
+  heading inside, and a PowerShell/cmd Windows block using
+  `export`/`source`. `--file`
   covers `docs/SETUP.md` and friends. `tests.yml` runs it `--strict` on
   this repository's README, `docs/SETUP.md`, `docs/TROUBLESHOOTING.md`, the
   README and SETUP templates, and the sample project; the adopter compliance
   template runs it in warn mode. Dogfooding found `docs/TROUBLESHOOTING.md`
   never mentioned macOS (fixed) and that this repository's own README
   mentions `<details>` in inline code (the checker now ignores code spans).
+  The critique pass found a regex interval expression (`#{1,6}`) that older
+  `mawk` builds silently never match, a Git Bash block wrongly held to
+  PowerShell syntax, and multi-line / code-span summaries misread; all fixed
+  with regression tests.
 - **Verification Run**: `bash scripts/run_all_tests.sh --quiet` (31 suites
   green, including the new `test_check_readme.sh`), every `tests.yml`
   self-governance step locally, and an isolated critique pass on the diff.
@@ -57,8 +62,8 @@ kept; history lives in `CHANGELOG.md` and the commit log):
    - **Why a human:** remote sessions cannot push tags, publish releases, or reach adopter repositories.
    - **You need:** the `local-session-handoff-1.54.0.md` prompt from the cloud session, a local clone, `gh` signed in.
    - **Done when:** `gh release list` shows v1.54.0 as Latest and every adopter's `constitution-version.yml` is green.
-4. [ ] **HUMAN** — Decide whether 1.55.0 is cut right after step 3 or waits for more `Unreleased` entries _(blocked by step 3)_
-   - **Why a human:** release cadence is the maintainer's call; `RELEASES.md` says not to let `Unreleased` sit.
-   - **Done when:** either a release PR is open or the decision is recorded in `TODO.md`.
+4. [ ] **HUMAN** — Decide whether 1.55.0 is cut right after step 3 or waits for more `Unreleased` entries, and whether the proposed memory entry (no regex interval expressions in shipped awk: older `mawk` silently never matches them) is recorded _(blocked by step 3)_
+   - **Why a human:** release cadence and `docs/MEMORY.md` entries are the maintainer's call; `RELEASES.md` says not to let `Unreleased` sit.
+   - **Done when:** either a release PR is open or the decision is recorded in `TODO.md`; the memory entry is recorded or declined.
 5. [ ] **AGENT** — Audit the fleet's READMEs with `check_readme.sh` (one shallow clone per adopter, warn mode) and open per-adopter PRs for the findings (`TODO.md` → Documentation) _(blocked by step 3)_.
 6. [ ] **AGENT** _(suggestion)_ — Teach `measure_instruction_weight.sh` to estimate scoped reads (`TODO.md` → Features), the oldest open tooling item.
