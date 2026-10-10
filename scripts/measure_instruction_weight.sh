@@ -33,8 +33,8 @@ set -euo pipefail
 #       open items (`[ ]`, `[~]`) and their continuation lines; completed
 #       (`[x]`) items and theirs are dropped.
 #   "the `Unreleased` section and the most recent release" -> CHANGELOG.md:
-#       the preamble, `## Unreleased`, and the next `## ` section (just the
-#       first `## ` section when there is no Unreleased).
+#       the preamble, the `## Unreleased` section wherever it is, and the
+#       first other `## ` section (a `## ` inside a code fence is not one).
 # A scoped row shows the instructed figure and, for comparison, the whole
 # file's; the report ends with both totals. Any other wording measures the
 # whole file: an unrecognized scope falls back to the larger number, never
@@ -79,22 +79,69 @@ scoped_content() {
   local path=$1 scope=$2
   case "$scope" in
     open)
-      # Each list item decides by its own checkbox; lines that are not list
-      # items (continuations, prose) follow the nearest item or heading above.
+      # List nesting is tracked by indent, so a line belongs to the innermost
+      # item whose content column it reaches: an open child under a completed
+      # parent is kept, the parent's own continuation lines are not. Each item
+      # decides by its own checkbox; a plain bullet follows its parent; prose
+      # under a heading and the preamble are kept; fenced code follows the
+      # item it sits in.
       awk '
-        /^[ \t]*[-*+] \[[ ~]\]/ { keep = 1; print; next }
-        /^[ \t]*[-*+] \[[xX]\]/ { keep = 0; next }
-        /^[-*+] / || /^#/       { keep = 1; print; next }
-        keep { print }
+        BEGIN { keep = 1; depth = 0 }
+        {
+          sub(/\r$/, "")
+          t = $0; sub(/^[ \t]*/, "", t)
+          if (fence != "") {
+            if (t ~ /^(```+|~~~+)[ \t]*$/ && substr(t, 1, 1) == substr(fence, 1, 1) && length(t) >= length(fence)) fence = ""
+            if (keep) print
+            next
+          }
+          if (match(t, /^(```+|~~~+)/)) { fence = substr(t, 1, RLENGTH); if (keep) print; next }
+          ind = 0
+          for (k = 1; k <= length($0); k++) {
+            c = substr($0, k, 1)
+            if (c == " ") ind++; else if (c == "\t") ind += 4; else break
+          }
+          if (t ~ /^[-*+] / || t ~ /^[0-9]+\. /) {
+            while (depth > 0 && stack_ind[depth] >= ind) depth--
+            if (t ~ /^[-*+] \[[xX]\]/) item = 0
+            else if (t ~ /^[-*+] \[[ ~]\]/) item = 1
+            else item = (depth > 0) ? stack_keep[depth] : 1
+            depth++
+            stack_ind[depth] = ind; stack_keep[depth] = item
+            m = t; sub(/ .*/, "", m); stack_col[depth] = ind + length(m) + 1
+            keep = item; if (keep) print
+            next
+          }
+          if ($0 ~ /^#/) { depth = 0; keep = 1; print; next }
+          if (t == "") { if (keep) print; next }
+          keep = 1
+          for (d = depth; d >= 1; d--) if (stack_col[d] <= ind) { keep = stack_keep[d]; break }
+          if (keep) print
+        }
       ' "$path" ;;
     recent)
+      # The preamble, the Unreleased section wherever it is, and the first
+      # other `## ` section; a `## ` line inside a code fence is not a heading.
       awk '
-        /^## / {
-          n++
-          if (n == 1) limit = (tolower($0) ~ /unreleased/) ? 2 : 1
-          if (n > limit) exit
+        BEGIN { keep = 1 }
+        {
+          sub(/\r$/, "")
+          t = $0; sub(/^[ \t]*/, "", t)
+          if (fence != "") {
+            if (t ~ /^(```+|~~~+)[ \t]*$/ && substr(t, 1, 1) == substr(fence, 1, 1) && length(t) >= length(fence)) fence = ""
+            if (keep) print
+            next
+          }
+          if (match(t, /^(```+|~~~+)/)) { fence = substr(t, 1, RLENGTH); if (keep) print; next }
+          if ($0 ~ /^## /) {
+            low = tolower($0)
+            if (low ~ /unreleased/ && !seen_unrel) { keep = 1; seen_unrel = 1 }
+            else if (low !~ /unreleased/ && !seen_rel) { keep = 1; seen_rel = 1 }
+            else keep = 0
+            if (!keep && seen_unrel && seen_rel) exit
+          }
+          if (keep) print
         }
-        { print }
       ' "$path" ;;
     *) cat "$path" ;;
   esac
@@ -173,8 +220,10 @@ reading_list() {
       sub(/`.*$/, "", path)
       rest = tolower(substr(line, length(path) + 2))
       scope = ""
-      if (rest ~ /open \(`\[ \]`\/`\[~\]`\) items|open items/) scope = "open"
-      else if (rest ~ /unreleased.*(most recent|latest) release/) scope = "recent"
+      # Exactly the shipped phrasings: anything looser scoped "open items you
+      # own" to its checkboxes and measured 0 bytes.
+      if (rest ~ /open \(`\[ \]`\/`\[~\]`\) items/) scope = "open"
+      else if (rest ~ /`unreleased` section.*(most recent|latest) release/) scope = "recent"
       print path "\t" scope
     }
   ' "$file"
@@ -227,10 +276,13 @@ else
     echo
     echo "$instr reading order:"
     total_bytes=0; total_words=0; whole_bytes=0; whole_words=0; any_scoped=0
-    seen=$'\n'
+    # A file listed twice is measured once; a scope on either listing wins,
+    # whichever came first.
+    entries=$(printf '%s\n' "$entries" | awk -F'\t' '
+      !($1 in scope) { order[++n] = $1; scope[$1] = "" }
+      $2 != "" { scope[$1] = $2 }
+      END { for (i = 1; i <= n; i++) print order[i] "\t" scope[order[i]] }')
     while IFS=$'\t' read -r rel scope; do
-      case "$seen" in *$'\n'"$rel"$'\n'*) continue ;; esac
-      seen="$seen$rel"$'\n'
       measure_one "$root" "$rel" "$scope" || missing=$((missing + 1))
     done <<< "$entries"
     print_total

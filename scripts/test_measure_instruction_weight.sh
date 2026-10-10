@@ -268,5 +268,63 @@ echo "$output" | grep -q 'TODO.md \[open items\]' || fail "case 13: TODO.md is n
 echo "$output" | grep -q 'CHANGELOG.md \[Unreleased + latest release\]' || fail "case 13: CHANGELOG.md is not measured as Unreleased + latest"
 echo "PASS: repository reading order measured as instructed"
 
+# ---------------------------------------------------------------------------
+# 14. Regressions from the critique pass: loose qualifiers must not scope;
+#     a `## ` inside a fence is not a section; Unreleased need not be first;
+#     an open child under a completed parent does not re-open the parent's
+#     notes; a fence inside an open item is kept whole; prose after a
+#     completed item is kept; a duplicate listing keeps its scope either way.
+# ---------------------------------------------------------------------------
+repo="$test_dir/14"; mkdir -p "$repo"
+printf 'ab\n' > "$repo/FOO.md"
+printf 'cd\n' > "$repo/NOTES.md"
+pad=$(head -c 2000 /dev/zero | tr '\0' 'x')
+{
+  printf '# Changelog\n\n## 1.2.0 - 2026-01-02\n\n- latest\n\n## Unreleased\n\n- pending\n\n```md\n## 9.9.9 not a section\n```\n\n## 1.1.0 - 2026-01-01\n\n'
+  printf '%s\n' "$pad"
+} > "$repo/CHANGELOG.md"
+cat > "$repo/TODO.md" <<EOF
+# TODO
+
+Preamble prose stays.
+
+- [x] done parent $pad
+  - [ ] open child
+  continuation of the done parent $pad
+- [ ] open item
+  \`\`\`bash
+  - [x] looks like a checkbox but is code
+  echo kept
+  \`\`\`
+- [x] done again $pad
+
+Prose after a completed item stays.
+EOF
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `FOO.md` — open items you own
+- `NOTES.md` — the unreleased ideas and the latest release notes
+- `CHANGELOG.md` — the `Unreleased` section and the most recent release
+- `TODO.md`
+- `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 14: expected exit 0, got $status"
+echo "$output" | grep -q 'FOO.md \[' && fail "case 14: 'open items you own' must not scope"
+echo "$output" | grep -q 'NOTES.md \[' && fail "case 14: 'unreleased ideas ... latest release notes' must not scope"
+echo "$output" | grep -qE '^  FOO.md +3 B' || fail "case 14: FOO.md not measured whole"
+row=$(echo "$output" | grep 'CHANGELOG.md \[Unreleased + latest release\]') || fail "case 14: no scoped CHANGELOG row"
+scoped=$(echo "$row" | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole file\).*/\1/')
+[ "$scoped" -lt 60 ] || fail "case 14: CHANGELOG scoped figure $scoped tok includes the old section (fence or ordering misread)"
+[ "$scoped" -gt 20 ] || fail "case 14: CHANGELOG scoped figure $scoped tok dropped Unreleased or the latest release"
+row=$(echo "$output" | grep 'TODO.md \[open items\]') || fail "case 14: no scoped TODO row (the scope on the second listing must win)"
+count=$(echo "$output" | grep -c 'TODO.md' || true)
+[ "$count" -eq 1 ] || fail "case 14: TODO.md reported $count times, expected 1"
+scoped=$(echo "$row" | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole file\).*/\1/')
+[ "$scoped" -lt 80 ] || fail "case 14: TODO scoped figure $scoped tok leaks a completed parent's continuation"
+[ "$scoped" -gt 30 ] || fail "case 14: TODO scoped figure $scoped tok dropped the preamble, the fenced code, or the trailing prose"
+echo "PASS: critique-pass regressions"
+
 echo
 echo "All measure_instruction_weight tests passed."

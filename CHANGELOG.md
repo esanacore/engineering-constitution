@@ -37,11 +37,16 @@ This project follows semantic versioning.
   files, so the reported session-start cost was the file size, not the
   instruction. A reading bullet carrying either qualifier is now measured as
   instructed — `TODO.md` keeps headings, open items and their continuation
-  lines; `CHANGELOG.md` keeps the preamble, `## Unreleased`, and the next
-  `## ` section — with the whole-file figure alongside, `TOTAL (as
+  lines (nesting tracked by indent, so an open child under a completed
+  parent does not re-open the parent's notes); `CHANGELOG.md` keeps the
+  preamble, the `## Unreleased` section wherever it is, and the first other
+  `## ` section, ignoring `## ` lines inside code fences — with the
+  whole-file figure alongside, `TOTAL (as
   instructed)` and `TOTAL (whole files)` at the end, and `HEAVY` judged on
-  the instructed figure. Unrecognized wording still measures the whole file:
-  the fallback is the larger number, never a wrong one. This repository's
+  the instructed figure. Only the two shipped phrasings scope a read;
+  anything else measures the whole file, so the fallback is the larger
+  number, never a wrong one (an isolated critique pass caught the looser
+  first version scoping "open items you own" to its checkboxes). This repository's
   `CLAUDE.md` order reads at ~38k estimated tokens as instructed against
   ~77k whole-file, the figure `TODO.md` had been waiting for.
 
