@@ -25,13 +25,18 @@ kept; history lives in `CHANGELOG.md` and the commit log):
   scoped reads as instructed. A reading bullet carrying "open (`[ ]`/`[~]`)
   items" or "the `Unreleased` section and the most recent release" is
   measured as the instruction says — `TODO.md` keeps headings, open items
-  and their continuation lines; `CHANGELOG.md` keeps the preamble,
-  `## Unreleased`, and the next `## ` section — with the whole-file figure
+  and their continuation lines, nesting tracked by indent; `CHANGELOG.md`
+  keeps the preamble, `## Unreleased` wherever it is, and the first other
+  `## ` section, fences ignored — with the whole-file figure
   alongside, `TOTAL (as instructed)` and `TOTAL (whole files)` at the end,
   and `HEAVY` judged on the instructed figure. Unrecognized wording measures
   the whole file. The figure `TODO.md` had waited for since 1.48.0 is
-  recorded there: the `CLAUDE.md` order reads at ~38.1k estimated tokens as
-  instructed against ~76.8k whole-file; neither `AI_WORKFLOW.md` nor
+  recorded there: the `CLAUDE.md` order reads at ~38.3k estimated tokens as
+  instructed against ~77.3k whole-file; the critique pass's findings (loose
+  qualifier matching that scoped "open items you own" to 0 bytes, `## `
+  lines inside fences, Unreleased not first, a completed parent's notes
+  re-opened by an open child, order-dependent dedup) are fixed with a
+  regression case; neither `AI_WORKFLOW.md` nor
   `SECURITY.md` crossed `HEAVY`; `INTEGRATION.md` (~11.8k, `AGENTS.md`
   order only) is the one remaining heavy read and has its own `TODO.md`
   item now.
@@ -40,8 +45,8 @@ kept; history lives in `CHANGELOG.md` and the commit log):
   dogfood run), every `tests.yml` self-governance step locally, and an
   isolated critique pass on the diff.
 - **Known Blockers**: this work is stacked on the branch behind PR #91
-  (`check_readme.sh`), still open, so it is committed but deliberately not
-  pushed until #91 merges — pushing would widen a reviewed PR. v1.54.0
+  (`check_readme.sh`), still open; it rides that PR, whose title and
+  description now cover both changes. v1.54.0
   remains untagged and v1.53.0 unpublished (the local-session handoff).
 - **Context Hints**: the two qualifier phrasings live in `CLAUDE.md`,
   `AGENTS.md`, and their templates; an adopter that rewords a bullet gets a
@@ -55,7 +60,7 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 1. [ ] **HUMAN** — Merge PR #91 (`check_readme.sh`)
    - **Why a human:** merging is the maintainer's decision.
    - **Done when:** the PR is merged and CI on `main` is green.
-2. [ ] **AGENT** — Push the scoped-reads commits and open their pull request _(blocked by step 1)_; GitHub's merge event wakes the cloud session.
+2. [ ] **AUTOMATED** — `tests.yml` runs the suite and the strict self-governance job on the PR; `wiki-sync.yml` republishes the wiki on merge. Watch for a red run.
 3. [ ] **HUMAN** — Run the local-session handoff for 1.54.0 (tag `v1.54.0`, publish the v1.53.0 and v1.54.0 releases, bump the fleet with the Stop hook rollout)
    - **Why a human:** remote sessions cannot push tags, publish releases, or reach adopter repositories.
    - **You need:** the `local-session-handoff-1.54.0.md` prompt from the cloud session, a local clone, `gh` signed in.
