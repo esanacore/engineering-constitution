@@ -6,6 +6,24 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **`scripts/check_readme.sh` checks the README standard's mechanical half.**
+  1.53.0 asked every README for per-platform instructions and collapsed
+  long sections, and left both to review. The checker now catches what a
+  reviewer skims past: fenced command blocks with no supported-platforms
+  statement, or no mention of Windows or macOS (naming a platform as
+  unsupported counts — silence was the problem); a `<summary>` with no blank
+  line after it or a `</details>` with none before (the content silently
+  fails to render); nested or unclosed `<details>`; a summary that says
+  "Click to expand"; a `##`/`###` heading inside a collapsed block; and a
+  Windows block that uses `export` or `source`. `--file` points it at
+  `docs/SETUP.md` and the other documents the same rule covers. Warn by
+  default, `--strict` to block; paired with `scripts/test_check_readme.sh`.
+  `tests.yml` runs it `--strict` on this repository's README, the README
+  template, and the SETUP template; `constitution-compliance.yml` runs it in
+  warn mode for adopters, skipping pins that predate it.
+
 ## 1.54.0 - 2026-10-10
 
 1.51.0 made a Next Steps procedure the end of every push and gave it a

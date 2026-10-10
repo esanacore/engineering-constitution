@@ -202,7 +202,10 @@ It should say all of that without making the reader scroll past the parts
 that do not apply to them: the page reads short by default and expands on
 demand — see "Progressive Disclosure" below. `templates/README.md` is the
 worked example of both rules, and this repository's own `README.md` follows
-them.
+them. `scripts/check_readme.sh` checks their mechanical half — command
+blocks come with named platforms; collapsed blocks render, stay one level
+deep, are closed, and keep their headings outside — in warn mode from
+`constitution-compliance.yml`, `--strict` on request.
 
 ### Every Platform the Project Supports
 

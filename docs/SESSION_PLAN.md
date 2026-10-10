@@ -7,7 +7,7 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-The Claude Code `Stop` hook for the Next Steps procedure
-(`scripts/next_steps_hook.sh`, `scripts/test_next_steps_hook.sh`, both
-settings files) and release 1.54.0. Outcomes are in `CHANGELOG.md` 1.54.0
-and `docs/AGENT_HANDOFF.md`.
+`scripts/check_readme.sh` + `scripts/test_check_readme.sh`: the README
+standard's mechanical half, wired into `tests.yml` (strict) and the adopter
+compliance template (warn). Outcomes are in `CHANGELOG.md` `Unreleased` and
+`docs/AGENT_HANDOFF.md`.
