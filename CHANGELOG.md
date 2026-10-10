@@ -6,6 +6,50 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **`scripts/check_readme.sh` checks the README standard's mechanical half.**
+  1.53.0 asked every README for per-platform instructions and collapsed
+  long sections, and left both to review. The checker now catches what a
+  reviewer skims past: fenced command blocks with no supported-platforms
+  statement, or no mention of Windows or macOS (naming a platform as
+  unsupported counts — silence was the problem); a `<summary>` with no blank
+  line after it or a `</details>` with none before (the content silently
+  fails to render); nested or unclosed `<details>`; a summary that says
+  "Click to expand"; a `##`/`###` heading inside a collapsed block; and a
+  PowerShell or cmd Windows block that uses `export` or `source` (a Git
+  Bash block is a bash block, per the standard). `--file` points it at
+  `docs/SETUP.md` and the other documents the same rule covers. Warn by
+  default, `--strict` to block; paired with `scripts/test_check_readme.sh`
+  (8 tests, one per finding kind plus the critique pass's regressions:
+  multi-line and code-span summaries, word boundaries on platform names,
+  indented code blocks and headings, and a guard against regex interval
+  expressions that older `mawk` builds silently fail to match).
+  `tests.yml` runs it `--strict` on this repository's README, the README
+  template, and the SETUP template; `constitution-compliance.yml` runs it in
+  warn mode for adopters, skipping pins that predate it.
+
+### Changed
+
+- **`measure_instruction_weight.sh` measures scoped reads as instructed.**
+  1.46.0 scoped the reading order (`TODO.md` → open items; `CHANGELOG.md` →
+  `Unreleased` + the most recent release) but the meter kept measuring whole
+  files, so the reported session-start cost was the file size, not the
+  instruction. A reading bullet carrying either qualifier is now measured as
+  instructed — `TODO.md` keeps headings, open items and their continuation
+  lines (nesting tracked by indent, so an open child under a completed
+  parent does not re-open the parent's notes); `CHANGELOG.md` keeps the
+  preamble, the `## Unreleased` section wherever it is, and the first other
+  `## ` section, ignoring `## ` lines inside code fences — with the
+  whole-file figure alongside, `TOTAL (as
+  instructed)` and `TOTAL (whole files)` at the end, and `HEAVY` judged on
+  the instructed figure. Only the two shipped phrasings scope a read;
+  anything else measures the whole file, so the fallback is the larger
+  number, never a wrong one (an isolated critique pass caught the looser
+  first version scoping "open items you own" to its checkboxes). This repository's
+  `CLAUDE.md` order reads at ~38k estimated tokens as instructed against
+  ~77k whole-file, the figure `TODO.md` had been waiting for.
+
 ## 1.54.0 - 2026-10-10
 
 1.51.0 made a Next Steps procedure the end of every push and gave it a

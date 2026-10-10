@@ -19,58 +19,54 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-10-10
+### Session: 2026-10-10 (scoped instruction weight)
 
-- **Accomplishments**: the Next Steps procedure is now enforced where it is
-  skipped. `scripts/next_steps_hook.sh` is a Claude Code hook: `start`
-  (`SessionStart`) records the session's starting commit and time; `stop`
-  (`Stop`) blocks once when a turn that added the session's own commits
-  leaves `docs/AGENT_HANDOFF.md` stale, uncommitted, or malformed, or ends
-  its reply without a well-formed procedure. The critique pass's false
-  blocks (a pull or branch switch counted as the session's commits; every
-  later question-only turn held) are fixed with regression tests.
-  Registered in `templates/.claude/settings.json` and in this
-  repository's own `.claude/settings.json` (now allowlisted in `.gitignore`).
-  `INTEGRATION.md` documents it and the manual entries for existing
-  adopters. Release 1.54.0 is cut in this change.
-- **Verification Run**: `bash scripts/run_all_tests.sh --quiet` (30 suites
-  green, including the new `test_next_steps_hook.sh`, 11 tests), every `tests.yml`
-  self-governance step locally, and an isolated critique pass on the diff.
-- **Known Blockers**: v1.53.0 is tagged but has no GitHub Release (latest
-  published is v1.52.0); remote sessions cannot publish releases or push
-  tags. Whether the fleet was bumped to 1.53.0 is not visible from here.
-- **Context Hints**: the hook's input fields and exit codes follow the
-  Claude Code hooks reference (`last_assistant_message`, `stop_hook_active`,
-  exit 2 blocks with stderr as the reason). `bootstrap.sh` never overwrites
-  an existing `.claude/settings.json`, so adopters need the two entries added
-  by hand (`TODO.md`).
+- **Accomplishments**: `scripts/measure_instruction_weight.sh` measures
+  scoped reads as instructed. A reading bullet carrying "open (`[ ]`/`[~]`)
+  items" or "the `Unreleased` section and the most recent release" is
+  measured as the instruction says — `TODO.md` keeps headings, open items
+  and their continuation lines, nesting tracked by indent; `CHANGELOG.md`
+  keeps the preamble, `## Unreleased` wherever it is, and the first other
+  `## ` section, fences ignored — with the whole-file figure
+  alongside, `TOTAL (as instructed)` and `TOTAL (whole files)` at the end,
+  and `HEAVY` judged on the instructed figure. Unrecognized wording measures
+  the whole file. The figure `TODO.md` had waited for since 1.48.0 is
+  recorded there: the `CLAUDE.md` order reads at ~38.3k estimated tokens as
+  instructed against ~77.3k whole-file; the critique pass's findings (loose
+  qualifier matching that scoped "open items you own" to 0 bytes, `## `
+  lines inside fences, Unreleased not first, a completed parent's notes
+  re-opened by an open child, order-dependent dedup) are fixed with a
+  regression case; neither `AI_WORKFLOW.md` nor
+  `SECURITY.md` crossed `HEAVY`; `INTEGRATION.md` (~11.8k, `AGENTS.md`
+  order only) is the one remaining heavy read and has its own `TODO.md`
+  item now.
+- **Verification Run**: `bash scripts/run_all_tests.sh --quiet` (31 suites
+  green; `test_measure_instruction_weight.sh` has four new cases including a
+  dogfood run), every `tests.yml` self-governance step locally, and an
+  isolated critique pass on the diff.
+- **Known Blockers**: this work is stacked on the branch behind PR #91
+  (`check_readme.sh`), still open; it rides that PR, whose title and
+  description now cover both changes. v1.54.0
+  remains untagged and v1.53.0 unpublished (the local-session handoff).
+- **Context Hints**: the two qualifier phrasings live in `CLAUDE.md`,
+  `AGENTS.md`, and their templates; an adopter that rewords a bullet gets a
+  whole-file row, never a wrong number. The meter's header comment lists
+  exactly what each scope keeps.
 
 #### Next Steps
 
-**Human action required:** steps 1, 3, 4, and 5.
+**Human action required:** steps 1, 3, and 4.
 
-1. [ ] **HUMAN** — Review and merge this pull request
-   - **Why a human:** merging is the maintainer's decision, and the hook changes how every Claude Code session in an adopting repository ends.
+1. [ ] **HUMAN** — Merge PR #91 (`check_readme.sh`)
+   - **Why a human:** merging is the maintainer's decision.
    - **Done when:** the PR is merged and CI on `main` is green.
 2. [ ] **AUTOMATED** — `tests.yml` runs the suite and the strict self-governance job on the PR; `wiki-sync.yml` republishes the wiki on merge. Watch for a red run.
-3. [ ] **HUMAN** — Tag `v1.54.0` on the merge commit _(blocked by step 1)_
-   - **Why a human:** remote sessions cannot push tags.
-   - **You need:** a local clone with push access.
-   - **Procedure:**
-     1. `git fetch origin main` and take `sha=$(git rev-parse origin/main)`; `git show $sha:VERSION` must print `1.54.0`.
-     2. `git tag -a v1.54.0 $sha -m "v1.54.0 — the Next Steps procedure, enforced at session end"` and `git push origin v1.54.0`.
-   - **Done when:** `release-tag-alignment.yml` is green for the tag.
-4. [ ] **HUMAN** — Publish the GitHub Releases for `v1.53.0` and `v1.54.0` _(blocked by step 3)_
-   - **Why a human:** releases are published with `gh` from a local session or the web UI; remote sessions have no release tool.
-   - **Procedure:**
-     1. For each version, extract its section: `awk '/^## 1\.53\.0 /{f=1;next} /^## [0-9]/{f=0} f' CHANGELOG.md > notes.md` (and the same for `1\.54\.0`).
-     2. `gh release create v1.53.0 --verify-tag --title "v1.53.0 — READMEs for every platform" --notes-file notes.md --latest=false`, then `v1.54.0` with `--latest`.
-   - **Done when:** the releases page shows both, with `v1.54.0` as Latest.
-5. [ ] **HUMAN** — Bump the adopter fleet to the 1.54.0 merge commit _(blocked by step 3)_
-   - **Why a human:** it runs from a local session with `gh` signed in and the adopter list at `~/.config/engineering-constitution/adopters.txt`.
-   - **Procedure:**
-     1. `bash scripts/bump_adopters.sh --sha <sha> --repos ~/.config/engineering-constitution/adopters.txt --dry-run`, read the rewrites, then run without `--dry-run`.
-     2. Merge the PRs; `gentle-table` and `patients-served` need squash merges.
-   - **Done when:** every adopter's `constitution-version.yml` is green.
-6. [ ] **AGENT** — Add the `next_steps_hook.sh` `start` and `stop` entries to each adopter's `.claude/settings.json` (merge, never overwrite) in the same fleet pass _(blocked by step 5)_; `TODO.md` → Features.
-7. [ ] **AGENT** _(suggestion)_ — Add `scripts/check_readme.sh`, the warn-by-default README tripwire recorded in `TODO.md`.
+3. [ ] **HUMAN** — Run the local-session handoff for 1.54.0 (tag `v1.54.0`, publish the v1.53.0 and v1.54.0 releases, bump the fleet with the Stop hook rollout)
+   - **Why a human:** remote sessions cannot push tags, publish releases, or reach adopter repositories.
+   - **You need:** the `local-session-handoff-1.54.0.md` prompt from the cloud session, a local clone, `gh` signed in.
+   - **Done when:** `gh release list` shows v1.54.0 as Latest and every adopter's `constitution-version.yml` is green.
+4. [ ] **HUMAN** — Decide whether 1.55.0 is cut right after step 3 (two `Unreleased` entries are waiting) and whether the proposed memory entry (no regex interval expressions in shipped awk) is recorded _(blocked by step 3)_
+   - **Why a human:** release cadence and `docs/MEMORY.md` entries are the maintainer's call.
+   - **Done when:** either a release PR is open or the decision is recorded in `TODO.md`; the memory entry is recorded or declined.
+5. [ ] **AGENT** — Audit the fleet's READMEs with `check_readme.sh` and open per-adopter PRs for the findings (`TODO.md` → Documentation) _(blocked by step 3)_.
+6. [ ] **AGENT** _(suggestion)_ — Decide and implement the `INTEGRATION.md` scoping recorded in `TODO.md`, the one remaining `HEAVY` read in the `AGENTS.md` order.

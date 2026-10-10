@@ -35,7 +35,7 @@ This document defines the required workflow for AI-assisted software development
 29. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
 30. Merge completed work (or open a pull request for it, with the Next Steps procedure in its description), then clean up Git state (branches, worktrees). Every later push to the same work ends with an updated procedure.
 
-The scoped reads in steps 4–5 are deliberate: unbounded history files dominate session-start cost, while the rule documents themselves are comparatively lean — measured, not assumed (run `bash constitution/scripts/measure_instruction_weight.sh .` to see any repository's numbers). Scoping trims roughly half of a mature repository's reading-order cost with no information loss for a fresh task.
+The scoped reads in steps 4–5 are deliberate: unbounded history files dominate session-start cost, while the rule documents themselves are comparatively lean — measured, not assumed (run `bash constitution/scripts/measure_instruction_weight.sh .` to see any repository's numbers). Scoping trims roughly half of a mature repository's reading-order cost with no information loss for a fresh task — this repository's `CLAUDE.md` order measured ~38k estimated tokens as instructed against ~77k whole-file on 2026-10-10, and the meter reports both figures.
 
 ## Proportionate Workflow (Trivial Changes)
 
