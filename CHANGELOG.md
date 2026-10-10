@@ -29,6 +29,22 @@ This project follows semantic versioning.
   template, and the SETUP template; `constitution-compliance.yml` runs it in
   warn mode for adopters, skipping pins that predate it.
 
+### Changed
+
+- **`measure_instruction_weight.sh` measures scoped reads as instructed.**
+  1.46.0 scoped the reading order (`TODO.md` → open items; `CHANGELOG.md` →
+  `Unreleased` + the most recent release) but the meter kept measuring whole
+  files, so the reported session-start cost was the file size, not the
+  instruction. A reading bullet carrying either qualifier is now measured as
+  instructed — `TODO.md` keeps headings, open items and their continuation
+  lines; `CHANGELOG.md` keeps the preamble, `## Unreleased`, and the next
+  `## ` section — with the whole-file figure alongside, `TOTAL (as
+  instructed)` and `TOTAL (whole files)` at the end, and `HEAVY` judged on
+  the instructed figure. Unrecognized wording still measures the whole file:
+  the fallback is the larger number, never a wrong one. This repository's
+  `CLAUDE.md` order reads at ~38k estimated tokens as instructed against
+  ~77k whole-file, the figure `TODO.md` had been waiting for.
+
 ## 1.54.0 - 2026-10-10
 
 1.51.0 made a Next Steps procedure the end of every push and gave it a

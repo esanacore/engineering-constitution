@@ -113,7 +113,7 @@ cat > "$repo/CLAUDE.md" <<'EOF'
 EOF
 run "$repo"
 [ "$status" -eq 0 ] || fail "case 5: HEAVY advisory must not fail (got $status)"
-echo "$output" | grep -q "HEAVY" || fail "case 5: HEAVY flag absent for 40KB file"
+echo "$output" | grep -q 'tok  HEAVY' || fail "case 5: HEAVY flag absent for 40KB file"
 echo "PASS: heavy file flagged, run still succeeds"
 
 # ---------------------------------------------------------------------------
@@ -178,6 +178,95 @@ run "$repo"
 echo "$output" | grep -q "PROSE_READ.md" || fail "case 9: prose-style reading section not parsed"
 echo "$output" | grep -q "AFTER.md" && fail "case 9: post-section bullet wrongly counted"
 echo "PASS: prose-style reading section parsed"
+
+# ---------------------------------------------------------------------------
+# 10. A scoped TODO bullet ("open items") measures only open items and their
+#     continuation lines; completed items are dropped; both totals appear.
+# ---------------------------------------------------------------------------
+repo="$test_dir/10"; mkdir -p "$repo"
+pad=$(head -c 2000 /dev/zero | tr '\0' 'x')
+cat > "$repo/TODO.md" <<EOF
+# TODO
+
+## Features
+
+- [ ] open one
+  continuation of open one
+  - [ ] open sub-item
+  - [x] done sub-item $pad
+- [x] done one $pad
+  continuation of done one $pad
+- [~] in progress
+EOF
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history, read on demand
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 10: expected exit 0, got $status"
+row=$(echo "$output" | grep 'TODO.md \[open items\]') || fail "case 10: no scoped TODO row"
+scoped=$(echo "$row" | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole file\).*/\1/')
+whole=$(echo "$row" | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole file\).*/\2/')
+[ "$scoped" -lt 60 ] || fail "case 10: scoped figure $scoped tok should exclude the 6000 bytes of completed items"
+[ "$whole" -gt 1500 ] || fail "case 10: whole-file figure $whole tok is implausible"
+echo "$output" | grep -q 'TOTAL (as instructed)' || fail "case 10: no as-instructed total"
+echo "$output" | grep -q 'TOTAL (whole files)' || fail "case 10: no whole-files total"
+echo "PASS: open-items scope measured as instructed"
+
+# ---------------------------------------------------------------------------
+# 11. A scoped CHANGELOG bullet measures Unreleased + the latest release only:
+#     a huge older section no longer makes the file HEAVY.
+# ---------------------------------------------------------------------------
+repo="$test_dir/11"; mkdir -p "$repo"
+{
+  printf '# Changelog\n\n## Unreleased\n\n- pending\n\n## 1.2.0 - 2026-01-02\n\n- latest\n\n## 1.1.0 - 2026-01-01\n\n'
+  head -c 40000 /dev/zero | tr '\0' 'y'; printf '\n'
+} > "$repo/CHANGELOG.md"
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `CHANGELOG.md` — the `Unreleased` section and the most recent release; older sections are history, read on demand
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 11: expected exit 0, got $status"
+echo "$output" | grep -q 'CHANGELOG.md \[Unreleased + latest release\]' || fail "case 11: no scoped CHANGELOG row"
+echo "$output" | grep -q 'tok  HEAVY' && fail "case 11: the instructed read is tiny; HEAVY must judge the scoped figure"
+scoped=$(echo "$output" | grep 'CHANGELOG.md \[' | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole file\).*/\1/')
+[ "$scoped" -lt 40 ] || fail "case 11: scoped figure $scoped tok includes the old section"
+echo "PASS: Unreleased + latest release scope measured as instructed"
+
+# ---------------------------------------------------------------------------
+# 12. Without an Unreleased section, "latest release" is the first section;
+#     an unrecognized qualifier measures the whole file (no scoped row).
+# ---------------------------------------------------------------------------
+repo="$test_dir/12"; mkdir -p "$repo"
+{
+  printf '# Changelog\n\n## 1.2.0 - 2026-01-02\n\n- latest\n\n## 1.1.0 - 2026-01-01\n\n'
+  head -c 40000 /dev/zero | tr '\0' 'y'; printf '\n'
+} > "$repo/CHANGELOG.md"
+printf 'doc\n' > "$repo/OTHER.md"
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `CHANGELOG.md` — the `Unreleased` section and the most recent release
+- `OTHER.md` — skim the bits that matter
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 12: expected exit 0, got $status"
+echo "$output" | grep -q 'tok  HEAVY' && fail "case 12: without Unreleased the first section alone is the instructed read"
+echo "$output" | grep -q 'OTHER.md \[' && fail "case 12: an unrecognized qualifier must not produce a scoped row"
+echo "$output" | grep -qE '^  OTHER.md +[0-9]+ B' || fail "case 12: OTHER.md not measured whole"
+echo "PASS: no-Unreleased fallback and unrecognized qualifiers"
+
+# ---------------------------------------------------------------------------
+# 13. Dogfood: this repository's own reading order has both scoped rows.
+# ---------------------------------------------------------------------------
+run "$script_dir/.."
+[ "$status" -eq 0 ] || fail "case 13: the repository's own reading order failed to measure"
+echo "$output" | grep -q 'TODO.md \[open items\]' || fail "case 13: TODO.md is not measured as open items"
+echo "$output" | grep -q 'CHANGELOG.md \[Unreleased + latest release\]' || fail "case 13: CHANGELOG.md is not measured as Unreleased + latest"
+echo "PASS: repository reading order measured as instructed"
 
 echo
 echo "All measure_instruction_weight tests passed."

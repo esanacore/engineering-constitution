@@ -27,6 +27,19 @@ set -euo pipefail
 # "Before Beginning Work"). Bullets elsewhere in those files (completion
 # checklists, work standards) are deliberately not counted.
 #
+# A bullet may scope the read, and the meter measures what is instructed,
+# not the file. The two qualifiers the framework ships are recognized:
+#   "open (`[ ]`/`[~]`) items"                       -> TODO.md: headings,
+#       open items (`[ ]`, `[~]`) and their continuation lines; completed
+#       (`[x]`) items and theirs are dropped.
+#   "the `Unreleased` section and the most recent release" -> CHANGELOG.md:
+#       the preamble, `## Unreleased`, and the next `## ` section (just the
+#       first `## ` section when there is no Unreleased).
+# A scoped row shows the instructed figure and, for comparison, the whole
+# file's; the report ends with both totals. Any other wording measures the
+# whole file: an unrecognized scope falls back to the larger number, never
+# to a wrong one.
+#
 # Exit status:
 #   0  measured successfully (advisory flags do not fail)
 #   1  at least one listed file does not exist
@@ -43,7 +56,11 @@ Usage:
 Description:
   Report bytes, words, and estimated tokens (bytes/4) for every document in
   the repository's agent required-reading order, per instruction file and in
-  total. Documents over ~8,000 estimated tokens get an advisory HEAVY flag.
+  total. A bullet that scopes its read ("open (`[ ]`/`[~]`) items"; "the
+  `Unreleased` section and the most recent release") is measured as
+  instructed, with the whole-file figure alongside and both totals at the
+  end. Documents over ~8,000 estimated tokens (as instructed) get an
+  advisory HEAVY flag.
   A listed file that does not exist fails the run (broken reading order).
 
 Arguments:
@@ -56,31 +73,83 @@ Options:
 USAGE
 }
 
+# Print the portion of a file that a scoped bullet instructs the agent to
+# read. Unknown scopes print the whole file.
+scoped_content() {
+  local path=$1 scope=$2
+  case "$scope" in
+    open)
+      # Each list item decides by its own checkbox; lines that are not list
+      # items (continuations, prose) follow the nearest item or heading above.
+      awk '
+        /^[ \t]*[-*+] \[[ ~]\]/ { keep = 1; print; next }
+        /^[ \t]*[-*+] \[[xX]\]/ { keep = 0; next }
+        /^[-*+] / || /^#/       { keep = 1; print; next }
+        keep { print }
+      ' "$path" ;;
+    recent)
+      awk '
+        /^## / {
+          n++
+          if (n == 1) limit = (tolower($0) ~ /unreleased/) ? 2 : 1
+          if (n > limit) exit
+        }
+        { print }
+      ' "$path" ;;
+    *) cat "$path" ;;
+  esac
+}
+
+scope_label() {
+  case "$1" in
+    open) printf 'open items' ;;
+    recent) printf 'Unreleased + latest release' ;;
+    *) printf '%s' "$1" ;;
+  esac
+}
+
 measure_one() {
   # Prints one report row; returns 1 if the file is missing.
-  local root=$1 rel=$2
+  local root=$1 rel=$2 scope=${3:-}
   local path="$root/$rel"
   if [ ! -f "$path" ]; then
     printf '  MISSING  %s (listed but does not exist)\n' "$rel"
     return 1
   fi
-  local bytes words tokens flag=""
-  bytes=$(wc -c < "$path")
-  words=$(wc -w < "$path")
+  local whole_b whole_w bytes words tokens label note="" flag=""
+  whole_b=$(wc -c < "$path")
+  whole_w=$(wc -w < "$path")
+  if [ -n "$scope" ]; then
+    bytes=$(scoped_content "$path" "$scope" | wc -c)
+    words=$(scoped_content "$path" "$scope" | wc -w)
+    label="$rel [$(scope_label "$scope")]"
+    note="  (of ~$((whole_b / 4)) tok whole file)"
+    any_scoped=1
+  else
+    bytes=$whole_b; words=$whole_w; label=$rel
+  fi
   tokens=$((bytes / 4))
   [ "$bytes" -gt "$HEAVY_BYTES" ] && flag="  HEAVY"
-  printf '  %-45s %9s B %8s w  ~%7s tok%s\n' "$rel" "$bytes" "$words" "$tokens" "$flag"
+  printf '  %-45s %9s B %8s w  ~%7s tok%s%s\n' "$label" "$bytes" "$words" "$tokens" "$flag" "$note"
   total_bytes=$((total_bytes + bytes))
   total_words=$((total_words + words))
+  whole_bytes=$((whole_bytes + whole_b))
+  whole_words=$((whole_words + whole_w))
   return 0
 }
 
 print_total() {
-  printf '  %-45s %9s B %8s w  ~%7s tok\n' "TOTAL" "$total_bytes" "$total_words" "$((total_bytes / 4))"
+  if [ "${any_scoped:-0}" -eq 1 ]; then
+    printf '  %-45s %9s B %8s w  ~%7s tok\n' "TOTAL (as instructed)" "$total_bytes" "$total_words" "$((total_bytes / 4))"
+    printf '  %-45s %9s B %8s w  ~%7s tok\n' "TOTAL (whole files)" "$whole_bytes" "$whole_words" "$((whole_bytes / 4))"
+  else
+    printf '  %-45s %9s B %8s w  ~%7s tok\n' "TOTAL" "$total_bytes" "$total_words" "$((total_bytes / 4))"
+  fi
 }
 
-# Extract backticked *.md bullet entries from the reading sections of an
-# instruction file. A reading section starts at a heading containing
+# Extract backticked *.md bullet entries (and their scope, if the bullet's
+# text carries a recognized qualifier) from the reading sections of an
+# instruction file, one "path<TAB>scope" line each. A reading section starts at a heading containing
 # "Required Reading" or "Before Beginning Work", or at a prose line of the
 # same intent ("Before beginning work, read:" / "Read:"), and ends at the
 # next heading or at a "Before completing" prose line — the two shapes the
@@ -100,8 +169,13 @@ reading_list() {
     in_section && /^- `[^`]+\.md`/ {
       line = $0
       sub(/^- `/, "", line)
-      sub(/`.*$/, "", line)
-      print line
+      path = line
+      sub(/`.*$/, "", path)
+      rest = tolower(substr(line, length(path) + 2))
+      scope = ""
+      if (rest ~ /open \(`\[ \]`\/`\[~\]`\) items|open items/) scope = "open"
+      else if (rest ~ /unreleased.*(most recent|latest) release/) scope = "recent"
+      print path "\t" scope
     }
   ' "$file"
 }
@@ -138,7 +212,7 @@ missing=0
 if [ "$files_mode" -eq 1 ]; then
   echo
   echo "Explicit file list:"
-  total_bytes=0; total_words=0
+  total_bytes=0; total_words=0; whole_bytes=0; whole_words=0; any_scoped=0
   for f in "${explicit_files[@]}"; do
     measure_one "." "$f" || missing=$((missing + 1))
   done
@@ -152,12 +226,12 @@ else
     found_any=1
     echo
     echo "$instr reading order:"
-    total_bytes=0; total_words=0
+    total_bytes=0; total_words=0; whole_bytes=0; whole_words=0; any_scoped=0
     seen=$'\n'
-    while IFS= read -r rel; do
+    while IFS=$'\t' read -r rel scope; do
       case "$seen" in *$'\n'"$rel"$'\n'*) continue ;; esac
       seen="$seen$rel"$'\n'
-      measure_one "$root" "$rel" || missing=$((missing + 1))
+      measure_one "$root" "$rel" "$scope" || missing=$((missing + 1))
     done <<< "$entries"
     print_total
   done

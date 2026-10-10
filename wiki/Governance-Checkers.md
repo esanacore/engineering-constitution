@@ -54,7 +54,7 @@ the pull request UI rather than only in the job log.
 | `check_skills.sh` | Every `skills/*/SKILL.md` has front matter whose `name` matches its directory, a description, an H1 body, and references only scripts that exist. |
 | `run_all_tests.sh` | The framework's own "Full suite": runs every `scripts/test_*.sh` and names each failing suite; run by `.github/workflows/tests.yml`. |
 | `bump_adopters.sh` | Not a checker but a release step: re-pins every adopter's `constitution/` submodule to a release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`, "Cutting a Release", step 9. |
-| `measure_instruction_weight.sh` | Reports the token weight of the agent required-reading order — bytes, words, and estimated tokens per document and in total, with an advisory `HEAVY` flag. A meter, not a gate: it fails only when the reading list names a file that does not exist. |
+| `measure_instruction_weight.sh` | Reports the token weight of the agent required-reading order — bytes, words, and estimated tokens per document and in total, with an advisory `HEAVY` flag. Scoped bullets (`TODO.md` open items; `CHANGELOG.md` Unreleased + latest release) are measured as instructed, with the whole-file figure alongside and both totals at the end. A meter, not a gate: it fails only when the reading list names a file that does not exist. |
 
 ## Shared libraries (`scripts/lib/`)
 
