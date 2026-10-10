@@ -19,13 +19,15 @@ the end of the Claude Code session itself.
   Steps.** `scripts/next_steps_hook.sh`, registered in
   `templates/.claude/settings.json` (and dogfooded in this repository's own
   `.claude/settings.json`), records each session's starting commit at
-  `SessionStart`. At `Stop`, if the session made commits, it checks that
-  `docs/AGENT_HANDOFF.md` was updated and committed, that its procedure passes
-  `check_next_steps.sh --strict`, and that the final reply ends with a Next
-  Steps section — and if not, blocks the stop once and tells the agent what
-  is missing. Sessions that only answered questions are never touched, the
-  second stop always goes through, and `CONSTITUTION_NEXT_STEPS_HOOK=off`
-  disables it. Paired with `scripts/test_next_steps_hook.sh`.
+  `SessionStart`. At `Stop`, when the turn added commits of the session's own
+  (made after it started, by this clone's git identity; a pull or branch
+  switch does not count), it checks that `docs/AGENT_HANDOFF.md` was updated
+  and committed, that its procedure passes `check_next_steps.sh --strict`,
+  and that the final reply ends with a procedure that passes it too — and if
+  not, blocks the stop once and tells the agent what is missing. Turns that
+  add no commits are never touched, the second stop always goes through, and
+  `CONSTITUTION_NEXT_STEPS_HOOK=off` disables it. Paired with
+  `scripts/test_next_steps_hook.sh` (11 tests).
 
 ### Changed
 

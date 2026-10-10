@@ -33,7 +33,7 @@
           },
           {
             "type": "command",
-            "command": "if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh start; fi"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null; if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh start; fi"
           }
         ]
       }
@@ -43,7 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh stop; fi"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null; if [ -f constitution/scripts/next_steps_hook.sh ]; then bash constitution/scripts/next_steps_hook.sh stop; fi"
           }
         ]
       }

@@ -36,6 +36,7 @@ make_repo() {
   cp "$repo_root/scripts/lib/ci_annotations.sh" "$d/$sub/lib/"
   printf '# Agent Handoff\n\n%s\n' "$good_steps" > "$d/docs/AGENT_HANDOFF.md"
   git -C "$d" init -q -b main
+  git -C "$d" config user.email t@example.com
   git -C "$d" add -A
   git -C "$d" commit -q -m init
 }
@@ -55,7 +56,9 @@ stop_json() {
     printf '{"session_id":"%s","hook_event_name":"Stop","stop_hook_active":%s}' "$1" "$2"
   fi
 }
-reply_ok='Done.\n\n## Next Steps\n\n**Human action required:** step 1.\n\n1. [ ] **HUMAN** — Merge it'
+# A well-formed procedure as Claude Code would pass it: a JSON string with
+# escaped newlines and quotes.
+reply_ok='Done, pushed.\n\n## Next Steps\n\n**Human action required:** step 1.\n\n1. [ ] **HUMAN** — Merge the \"hook\" PR\n   - **Why a human:** merging is the maintainer\u2019s call.\n   - **Done when:** it is merged.\n2. [ ] **AGENT** _(suggestion)_ — Roll it to the fleet.'
 
 echo "Test 1: a session that made no commits is never blocked"
 r="$tmp/r1"; make_repo "$r"
@@ -78,8 +81,11 @@ run "$r" stop "$(stop_json s2 true "$reply_ok")"
 echo "PASS"
 
 echo "Test 3: an updated but uncommitted handoff is called out"
+r="$tmp/r3"; make_repo "$r"
+run "$r" start "$(start_json s3)"
+echo change > "$r/feature.txt"; git -C "$r" add -A; git -C "$r" commit -q -m feat
 echo "- note" >> "$r/docs/AGENT_HANDOFF.md"
-run "$r" stop "$(stop_json s2 false "$reply_ok")"
+run "$r" stop "$(stop_json s3 false "$reply_ok")"
 [ "$status" -eq 2 ] || fail "uncommitted handoff should block, got $status"
 grep -q 'updated but not committed' <<< "$err" || { echo "$err"; fail "uncommitted handoff not named"; }
 echo "PASS"
@@ -102,7 +108,7 @@ printf '# Agent Handoff\n\nUpdated.\n\n%s\n' "$good_steps" > "$r/docs/AGENT_HAND
 git -C "$r" add -A; git -C "$r" commit -q -m "work + handoff"
 run "$r" stop "$(stop_json s5 false 'All done, pushed.')"
 [ "$status" -eq 2 ] || { echo "$err"; fail "reply without Next Steps should block, got $status"; }
-grep -q 'final reply has no "Next Steps" section' <<< "$err" || { echo "$err"; fail "reply finding not named"; }
+grep -q 'final reply does not end with a well-formed Next Steps procedure' <<< "$err" || { echo "$err"; fail "reply finding not named"; }
 run "$r" stop "$(stop_json s5 false "$reply_ok")"
 [ "$status" -eq 0 ] || { echo "$err"; fail "good handoff + reply (adopter layout) should pass, got $status"; }
 run "$r" stop "$(stop_json s5 false)"
@@ -131,7 +137,63 @@ run "$r" stop "$(stop_json s6c false no)"
 [ "$status" -eq 2 ] || fail "a resumed session lost its baseline (commits before the resume no longer count), got $status"
 echo "PASS"
 
-echo "Test 7: the shipped settings register both hooks; usage errors never block"
+echo "Test 8: commits that are not this session's never count (branch switch, pull, older commits)"
+r="$tmp/r8"; make_repo "$r"
+git -C "$r" switch -q -c other
+echo theirs > "$r/theirs.txt"; git -C "$r" add -A
+GIT_COMMITTER_EMAIL=someone@example.com GIT_AUTHOR_EMAIL=someone@example.com git -C "$r" commit -q -m "someone else's work"
+git -C "$r" switch -q -c mine-old main
+echo old > "$r/old.txt"; git -C "$r" add -A
+GIT_COMMITTER_DATE="2020-01-01T00:00:00" git -C "$r" commit -q -m "my commit from long ago"
+git -C "$r" switch -q main
+run "$r" start "$(start_json s8)"
+git -C "$r" switch -q other
+run "$r" stop "$(stop_json s8 false 'Switched branches.')"
+[ "$status" -eq 0 ] || { echo "$err"; fail "switching to someone else's branch was treated as this session's commits"; }
+git -C "$r" switch -q main; git -C "$r" merge -q --ff-only other
+run "$r" stop "$(stop_json s8 false 'Pulled.')"
+[ "$status" -eq 0 ] || { echo "$err"; fail "a fast-forward pull was treated as this session's commits"; }
+git -C "$r" switch -q mine-old
+run "$r" stop "$(stop_json s8 false 'Looked at an old branch.')"
+[ "$status" -eq 0 ] || { echo "$err"; fail "an old commit of mine from before the session was counted"; }
+echo "PASS"
+
+echo "Test 9: after a compliant stop, a question-only turn is not held; a new commit is"
+r="$tmp/r9"; make_repo "$r"
+run "$r" start "$(start_json s9)"
+printf '# Agent Handoff\n\nUpdated.\n\n%s\n' "$good_steps" > "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "work + handoff"
+run "$r" stop "$(stop_json s9 false "$reply_ok")"
+[ "$status" -eq 0 ] || { echo "$err"; fail "compliant stop was blocked"; }
+run "$r" stop "$(stop_json s9 false 'The function returns 3.')"
+[ "$status" -eq 0 ] || { echo "$err"; fail "a question-only turn after a compliant push was held"; }
+echo more > "$r/more.txt"; git -C "$r" add -A; git -C "$r" commit -q -m more
+run "$r" stop "$(stop_json s9 false 'Pushed a fix.')"
+[ "$status" -eq 2 ] || { echo "$err"; fail "a turn that added commits without a procedure in the reply should be held, got $status"; }
+echo "PASS"
+
+echo "Test 10: a reply that only mentions next steps, a null reply, and a subdirectory cwd"
+r="$tmp/r10"; make_repo "$r"
+run "$r" start "$(start_json s10)"
+printf '# Agent Handoff\n\nUpdated.\n\n%s\n' "$good_steps" > "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "work + handoff"
+run "$r" stop "$(stop_json s10 false 'There are no next steps.')"
+[ "$status" -eq 2 ] || fail "a reply merely mentioning next steps should not pass, got $status"
+run "$r" stop "$(printf '{"session_id":"s10","stop_hook_active":false,"last_assistant_message":null}')"
+[ "$status" -eq 0 ] || { echo "$err"; fail "a null last_assistant_message should skip the reply check, got $status"; }
+r="$tmp/r10b"; make_repo "$r"; mkdir -p "$r/src/deep"
+run "$r" start "$(start_json s10b)"
+echo x > "$r/src/deep/x"; git -C "$r" add -A; git -C "$r" commit -q -m x
+status=0; err=$(cd "$r/src/deep" && printf '%s' "$(stop_json s10b false no)" | env -u CLAUDE_PROJECT_DIR bash "$hook" stop 2>&1 >/dev/null) || status=$?
+[ "$status" -eq 2 ] || { echo "$err"; fail "from a subdirectory without CLAUDE_PROJECT_DIR the hook did not find the repository, got $status"; }
+cmd=$(sed -n 's/.*"command": "\(cd .*next_steps_hook.sh stop; fi\)".*/\1/p' "$repo_root/.claude/settings.json" | sed 's/\\"/"/g')
+[ -n "$cmd" ] || fail "could not read the Stop command from .claude/settings.json"
+mkdir -p "$tmp/r10c"; cp -R "$r/." "$tmp/r10c/"; cp "$hook" "$tmp/r10c/scripts/"
+status=0; (cd "$tmp/r10c/src/deep" && printf '%s' "$(stop_json s10b false no)" | CLAUDE_PROJECT_DIR="$tmp/r10c" bash -c "$cmd" >/dev/null 2>&1) || status=$?
+[ "$status" -eq 2 ] || fail "the registered Stop command does not work from a subdirectory, got $status"
+echo "PASS"
+
+echo "Test 11: the shipped settings register both hooks; usage errors never block"
 tpl="$repo_root/templates/.claude/settings.json"
 grep -q '"SessionStart"' "$tpl" && grep -q '"Stop"' "$tpl" || fail "templates/.claude/settings.json does not register SessionStart and Stop"
 grep -q 'constitution/scripts/next_steps_hook.sh start' "$tpl" || fail "template SessionStart does not run next_steps_hook.sh start"

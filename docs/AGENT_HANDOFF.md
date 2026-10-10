@@ -23,15 +23,18 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 - **Accomplishments**: the Next Steps procedure is now enforced where it is
   skipped. `scripts/next_steps_hook.sh` is a Claude Code hook: `start`
-  (`SessionStart`) records the session's starting commit; `stop` (`Stop`)
-  blocks once when a session that made commits leaves `docs/AGENT_HANDOFF.md`
-  stale, uncommitted, or malformed, or ends its reply without a Next Steps
-  section. Registered in `templates/.claude/settings.json` and in this
+  (`SessionStart`) records the session's starting commit and time; `stop`
+  (`Stop`) blocks once when a turn that added the session's own commits
+  leaves `docs/AGENT_HANDOFF.md` stale, uncommitted, or malformed, or ends
+  its reply without a well-formed procedure. The critique pass's false
+  blocks (a pull or branch switch counted as the session's commits; every
+  later question-only turn held) are fixed with regression tests.
+  Registered in `templates/.claude/settings.json` and in this
   repository's own `.claude/settings.json` (now allowlisted in `.gitignore`).
   `INTEGRATION.md` documents it and the manual entries for existing
   adopters. Release 1.54.0 is cut in this change.
 - **Verification Run**: `bash scripts/run_all_tests.sh --quiet` (30 suites
-  green, including the new `test_next_steps_hook.sh`), every `tests.yml`
+  green, including the new `test_next_steps_hook.sh`, 11 tests), every `tests.yml`
   self-governance step locally, and an isolated critique pass on the diff.
 - **Known Blockers**: v1.53.0 is tagged but has no GitHub Release (latest
   published is v1.52.0); remote sessions cannot publish releases or push

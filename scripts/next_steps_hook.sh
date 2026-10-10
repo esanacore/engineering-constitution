@@ -66,32 +66,55 @@ json_field() {
     | sed -E 's/^"//; s/"$//'
 }
 
-root=${CLAUDE_PROJECT_DIR:-$(pwd)}
-cd "$root" 2>/dev/null || exit 0
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
+# Hooks run in Claude Code's current directory, which may be a subdirectory.
+cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+cd "$root" || exit 0
 head=$(git rev-parse -q --verify HEAD 2>/dev/null) || exit 0
 
 session=$(json_field session_id | tr -c 'A-Za-z0-9_-' '_')
 [ -n "$session" ] || exit 0
 state_dir="${TMPDIR:-/tmp}/constitution-next-steps"
-baseline_file="$state_dir/$session.head"
+baseline_file="$state_dir/$session.head"   # "<HEAD at start> <epoch seconds>"
+done_file="$state_dir/$session.done"       # HEAD at the last stop let through
 
 if [ "$mode" = "start" ]; then
-  # Keep the first recorded HEAD: a resumed or compacted session fires
+  # Keep the first recorded start: a resumed or compacted session fires
   # SessionStart again, and its commits so far still count.
   mkdir -p "$state_dir" 2>/dev/null || exit 0
-  [ -f "$baseline_file" ] || printf '%s\n' "$head" > "$baseline_file" 2>/dev/null
+  find "$state_dir" -type f -mtime +14 -exec rm -f {} + 2>/dev/null
+  [ -f "$baseline_file" ] || printf '%s %s\n' "$head" "$(date +%s)" > "$baseline_file" 2>/dev/null
   exit 0
 fi
 
 # --- stop ---
-[ "$(json_field stop_hook_active)" = "true" ] && exit 0
 [ -f "$baseline_file" ] || exit 0
-base=$(head -n 1 "$baseline_file")
-[ -n "$base" ] && [ "$base" != "$head" ] || exit 0
-git cat-file -e "$base^{commit}" 2>/dev/null || exit 0
-# Commits made in this session: reachable from HEAD but not from the baseline.
-[ -n "$(git rev-list -n 1 "$base..HEAD" 2>/dev/null)" ] || exit 0
+read -r base started < "$baseline_file" || true
+[ -n "${base:-}" ] && [ -n "${started:-}" ] || exit 0
+mark_done() { printf '%s\n' "$head" > "$done_file" 2>/dev/null; }
+
+# Once blocked, the next stop goes through: never a loop.
+if [ "$(json_field stop_hook_active)" = "true" ]; then mark_done; exit 0; fi
+
+# This session's commits: reachable from HEAD but not from the start, made
+# after the session started, by this clone's git identity. A branch switch or
+# a pull moves HEAD over other people's (or older) commits; those do not count.
+me=$(git config user.email 2>/dev/null || true)
+session_commits() { # session_commits <from>
+  git cat-file -e "$1^{commit}" 2>/dev/null || return 0
+  git log --format='%H %ct %ce' "$1..HEAD" 2>/dev/null \
+    | awk -v t="$started" -v me="$me" '$2 >= t && (me == "" || $3 == me) { print $1 }'
+}
+all=$(session_commits "$base")
+[ -n "$all" ] || exit 0
+
+# Only a turn that added commits since the last stop let through is checked,
+# so a question answered after a compliant push is not held.
+if [ -f "$done_file" ]; then
+  last=$(head -n 1 "$done_file")
+  [ "$last" = "$head" ] && exit 0
+  [ -n "$(session_commits "$last")" ] || { mark_done; exit 0; }
+fi
 
 checker=""
 for c in constitution/scripts/check_next_steps.sh scripts/check_next_steps.sh; do
@@ -104,33 +127,42 @@ problems=()
 
 if [ ! -f "$handoff" ]; then
   problems+=("$handoff does not exist; it carries the durable copy of the procedure.")
-elif git diff --quiet "$base" HEAD -- "$handoff"; then
-  if git diff --quiet HEAD -- "$handoff"; then
-    problems+=("This session committed changes but did not update $handoff, so its Next Steps describe an older state.")
-  else
-    problems+=("$handoff is updated but not committed; commit and push it with the work it describes.")
+else
+  touched=false
+  for c in $all; do
+    if [ -n "$(git diff-tree --root --no-commit-id --name-only -r "$c" -- "$handoff" 2>/dev/null)" ]; then
+      touched=true; break
+    fi
+  done
+  if [ "$touched" = "false" ]; then
+    if git diff --quiet HEAD -- "$handoff" 2>/dev/null; then
+      problems+=("This session committed changes but did not update $handoff, so its Next Steps describe an older state.")
+    else
+      problems+=("$handoff is updated but not committed; commit and push it with the work it describes.")
+    fi
   fi
-fi
-
-if [ -f "$handoff" ]; then
   report=$(bash "$checker" --strict . 2>&1) || problems+=("$handoff's Next Steps procedure is malformed:
 $(printf '%s\n' "$report" | grep 'PROBLEM' | sed 's/^ *PROBLEM */  - /')")
 fi
 
-# The final reply should end with the procedure too. Claude Code passes the
-# reply as last_assistant_message; an older version that does not is skipped
-# rather than guessed at (the transcript file can lag the conversation).
-if printf '%s' "$input" | grep -q '"last_assistant_message"'; then
-  if ! json_field last_assistant_message | grep -qi 'next steps'; then
-    problems+=("Your final reply has no \"Next Steps\" section; end it with the same procedure as the handoff.")
-  fi
+# The final reply must end with the same procedure. Claude Code passes it as
+# last_assistant_message (a JSON string, decoded here); an older version that
+# does not, or a null message, skips this rather than guessing.
+reply=$(json_field last_assistant_message)
+if [ -n "$reply" ]; then
+  reply=$(printf '%s\n' "$reply" | awk '{
+    gsub(/\\\\/, "\001"); gsub(/\\n/, "\n"); gsub(/\\t/, "\t"); gsub(/\\r/, "")
+    gsub(/\\"/, "\""); gsub(/\001/, "\\"); print }')
+  report=$(printf '%s\n' "$reply" | bash "$checker" --strict --file - . 2>&1) \
+    || problems+=("Your final reply does not end with a well-formed Next Steps procedure:
+$(printf '%s\n' "$report" | grep 'PROBLEM' | sed 's/^ *PROBLEM */  - /')")
 fi
 
-[ "${#problems[@]}" -eq 0 ] && exit 0
+if [ "${#problems[@]}" -eq 0 ]; then mark_done; exit 0; fi
 
 {
   echo "Next Steps procedure needed before this session ends (AI_WORKFLOW.md, \"Next Steps Procedure\"; ADR-0005)."
-  echo "This session made commits ($(git rev-parse --short "$base")..$(git rev-parse --short HEAD)), so it must hand over what happens next:"
+  echo "This session made commits since $(git rev-parse --short "$base"), so it must hand over what happens next:"
   for p in "${problems[@]}"; do echo "- $p"; done
   echo "Write the procedure: a \"Next Steps\" heading, a numbered checklist, every step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, a \"**Human action required:**\" line naming every HUMAN step, and Why a human / Done when on each. Put it in $handoff (commit and push) and at the end of your reply. Check it with: bash $checker --strict ."
 } >&2

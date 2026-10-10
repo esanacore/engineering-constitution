@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/next_steps_hook.sh start"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null; if [ -f scripts/next_steps_hook.sh ]; then bash scripts/next_steps_hook.sh start; fi"
           }
         ]
       }
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/next_steps_hook.sh stop"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null; if [ -f scripts/next_steps_hook.sh ]; then bash scripts/next_steps_hook.sh stop; fi"
           }
         ]
       }
