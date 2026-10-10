@@ -13,7 +13,85 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 [![Eric's Engineering Constitution Framework](assets/diagrams/constitution_infographic.jpg)](https://esanacore.github.io/engineering-constitution/demo.html)
 *Click the infographic above or open [the interactive dashboard](https://esanacore.github.io/engineering-constitution/demo.html) to view it live.*
 
+## Quick Start
+
+**Supported platforms:** Linux, macOS, and Windows (through Git Bash). Every
+script here is bash, so the one thing each platform needs is **bash 4 or
+later** and **Git 2.x**; expand your platform below for how to get them. CI
+runs the full suite on Ubuntu only; the suites are kept portable to Windows
+Git Bash (see `docs/TROUBLESHOOTING.md`), and macOS is not covered by CI.
+
+<details>
+<summary>Linux (bash)</summary>
+
+bash 4+ is standard. Install Git if it is missing:
+
+```bash
+sudo apt install git     # Debian, Ubuntu
+sudo dnf install git     # Fedora
+bash --version | head -n 1 && git --version
+```
+
+</details>
+
+<details>
+<summary>macOS (zsh)</summary>
+
+macOS ships `/bin/bash` 3.2, which these scripts do not support (they use
+associative arrays and `${var,,}` case conversion, both bash 4). Install a current bash with Homebrew and let it
+shadow the system one:
+
+```bash
+brew install bash git
+bash --version | head -n 1     # must report 4.x or 5.x, not 3.2
+```
+
+If it still reports 3.2, Homebrew's `bin` is not first on your `PATH`; run
+`eval "$(brew shellenv)"` (or add it to `~/.zprofile`) and open a new shell.
+
+</details>
+
+<details>
+<summary>Windows (Git Bash)</summary>
+
+Install Git for Windows, which includes Git Bash (bash 5.x), from
+PowerShell:
+
+```powershell
+winget install --id Git.Git -e
+```
+
+Then open a **Git Bash** window and run every command on this page there —
+the scripts are bash, not PowerShell or `cmd`. Git Bash spells Windows paths
+as `/c/Users/you/project`. WSL also works; inside it, follow the Linux block.
+
+```bash
+bash --version | head -n 1 && git --version
+```
+
+</details>
+
+Then, from a bash shell on any platform, bootstrap a project — the command is
+the same everywhere:
+
+```bash
+git clone https://github.com/esanacore/engineering-constitution.git
+cd engineering-constitution
+./scripts/bootstrap.sh /path/to/project <repository-url>
+```
+
+"Getting Started" below covers publishing your own copy, choosing which AI
+tool instruction files to install, and manual installation.
+
 ## Repository Contents
+
+Start with `CONSTITUTION.md` (the principles), `AI_WORKFLOW.md` (the agent
+workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
+`TODO.md`, the release history is `CHANGELOG.md`, the release process is
+`RELEASES.md`, and contribution rules are in `CONTRIBUTING.md`.
+
+<details>
+<summary>Every document, directory, and script, and what it is for</summary>
 
 - `CONSTITUTION.md`: Authoritative engineering principles.
 - `AI_WORKFLOW.md`: Step-by-step AI agent workflow.
@@ -65,7 +143,12 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - `.github/workflows/tests.yml`: Source-repo CI — the full test suite plus the self-governance checkers on every pull request and push to `main`.
 - `docs/adr/`: The framework's own ADRs: 0001 (wiki subsystem), 0002 (compatibility policy — what "breaking" means for a governance framework), 0003 (the proportionate workflow for trivial changes). Changes to the Required Files, Required Workflow, checker contract, or compatibility policy require one (`DOCUMENTATION.md`, "ADR Triggers for the Framework Itself").
 
+</details>
+
 ## Project Structure
+
+<details>
+<summary>Full project structure</summary>
 
 ```text
 engineering-constitution/
@@ -104,6 +187,8 @@ engineering-constitution/
 └── wiki/                                 ← This repo's own wiki (Home + Getting Started, Bootstrap Script, Governance Checkers, ...)
 ```
 
+</details>
+
 `INTEGRATION.md`'s "Project File Structure" section shows the mirror image of this: what an **adopting** project looks like once it pulls this repository in as a `constitution/` submodule.
 
 ## How It Works
@@ -130,7 +215,7 @@ Adopting repositories carry the same guidance in their own `docs/HELP.md`.
 
 ## Version
 
-Current version: 1.52.0
+Current version: 1.53.0
 
 See `VERSION`.
 
@@ -164,6 +249,9 @@ The target project must already be a Git repository. Pass `--force` to overwrite
 
 #### Choosing AI Tool Instruction Files
 
+<details>
+<summary>Which files each `--agents` key installs</summary>
+
 By default, bootstrap installs **one** agent instruction file: `AGENTS.md`, the
 cross-vendor standard that most tools read directly. Tools that hardcode their
 own filename are opt-in, so an adopting repository does not carry instruction
@@ -186,7 +274,12 @@ Supported keys: `claude`, `cursor`, `copilot`, `goose`, `openhands`,
 
 A default bootstrap adds 12 root entries instead of 24.
 
+</details>
+
 #### New Repository
+
+<details>
+<summary>Bootstrapping a brand-new repository</summary>
 
 ```bash
 mkdir my-project
@@ -204,7 +297,12 @@ git add .
 git commit -m "Add Eric's engineering constitution"
 ```
 
+</details>
+
 #### Existing Repository
+
+<details>
+<summary>Bootstrapping an existing repository and merging the report</summary>
 
 ```bash
 ./scripts/bootstrap.sh /path/to/existing-project <repository-url>
@@ -219,7 +317,12 @@ After running it:
 3. Customize generated placeholders.
 4. Commit `.gitmodules`, the `constitution` submodule reference, generated files, and any merged changes.
 
+</details>
+
 ### Adoption Badge
+
+<details>
+<summary>How the badge is added and refreshed</summary>
 
 Every repository the bootstrap script touches gets a standardized adoption badge in its `README.md`:
 
@@ -231,7 +334,12 @@ Every repository the bootstrap script touches gets a standardized adoption badge
 
 The badge is managed between the `CONSTITUTION_START` / `CONSTITUTION_END` markers, so it is added to existing READMEs (after the first heading), refreshed in place when the constitution is updated, and never duplicated on re-runs. The badge link points at the bootstrap source when it is a public Git URL and falls back to the canonical repository otherwise.
 
+</details>
+
 ### Manual Installation
+
+<details>
+<summary>Installing without the bootstrap script</summary>
 
 If you prefer not to use the bootstrap script:
 
@@ -242,7 +350,12 @@ cp constitution/templates/CLAUDE.md CLAUDE.md
 # ...and so on for the other template files; see scripts/bootstrap.sh for the full list
 ```
 
+</details>
+
 ## Adding Reference Sources to the Constitution
+
+<details>
+<summary>The five-step sources workflow</summary>
 
 The constitution deliberately draws on named authoritative sources (see
 `ARCHITECTURE.md`'s citations of *Clean Architecture* and *Design Patterns*)
@@ -268,3 +381,5 @@ the short version, for working in your own clone of this repository:
    `TESTING.md`, etc.), then update `CHANGELOG.md` and `TODO.md` per this
    repository's own Completion Checklist and cut a release per `RELEASES.md`
    once user-facing changes accumulate.
+
+</details>

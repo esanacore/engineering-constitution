@@ -98,7 +98,7 @@ Agents should:
 - Keep changes focused on the task.
 - Respect user preferences and codebase conventions documented in `docs/MEMORY.md`.
 - Add or update tests for behavioral changes, across as many of unit/integration/e2e/regression as genuinely apply — CI's `constitution-tests.yml` workflow runs whatever is declared, but only what's declared.
-- Update documentation as part of the implementation, including README.md's current-features list (see DOCUMENTATION.md's "README Expectations") — CI's `constitution-doc-freshness.yml` workflow is a blunt tripwire for this, not a substitute for actually doing it.
+- Update documentation as part of the implementation, including README.md's current-features list and its per-platform setup/run/test instructions (see DOCUMENTATION.md's "README Expectations") — CI's `constitution-doc-freshness.yml` workflow is a blunt tripwire for this, not a substitute for actually doing it.
 - Record discovered work in TODO.md.
 - When adding, removing, or upgrading a third-party dependency, update `docs/OTS_SOFTWARE.md` in the same change — CI's `constitution-ots.yml` workflow flags manifests that drift from the inventory, but it can only verify a row exists, not that the risk assessment is honest.
 - When adding or changing an environment variable in a manifest (e.g. `.env.example`, `docker-compose.yml`), update `docs/ENV_VARS.md` in the same change — CI's `constitution-env.yml` workflow flags undocumented variables.

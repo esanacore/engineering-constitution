@@ -6,6 +6,60 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.53.0 - 2026-10-09
+
+READMEs written for the reader's machine, not the author's. Every README the
+framework had seen gave one set of commands — bash, on Linux, because that is
+what CI runs — and documented everything in one scroll. This release makes
+per-platform instructions and progressive disclosure part of the README
+standard, and applies both to the framework's own README and its template.
+
+### Added
+
+- **README instructions cover every platform the project supports**
+  (`DOCUMENTATION.md`, "Every Platform the Project Supports"; `CONSTITUTION.md`
+  Principle 1). A README names its supported platforms up front and gives
+  install, setup, run, and test instructions one block per platform —
+  Windows, macOS, and Linux at minimum for anything a developer runs; the
+  platforms the product targets for product-facing repositories — wherever
+  the commands differ. A Windows block is written for a Windows shell
+  (PowerShell, `cmd`, or Git Bash), not for WSL; a command that is identical
+  everywhere is given once; each block has been run on its platform or is
+  written from CI and says so. The same rule covers `docs/SETUP.md`,
+  `docs/COMMAND_REFERENCE.md`, `docs/TROUBLESHOOTING.md`, and any other
+  document that hands the reader a command.
+- **READMEs read short by default** (`DOCUMENTATION.md`, "Progressive
+  Disclosure"). Long sections sit in collapsible `<details>` blocks the reader
+  expands on demand — per-platform instructions (one block per platform, its
+  summary naming the platform and shell), the project tree once it runs past
+  a dozen lines, alternative install paths, long references. What always
+  stays visible is stated: the title and one-paragraph description, the
+  capabilities list, the hero infographic and demo link, the quick start with
+  its supported-platforms line, every `##` heading, the version line, and the
+  pointers to the rest of the documentation. The mechanics that make
+  `<details>` render (a blank line after `<summary>` and before `</details>`,
+  one level of nesting, headings kept outside the block, a summary that says
+  what is inside) are written down.
+
+### Changed
+
+- **`templates/README.md` is the worked example**: a visible capabilities
+  list and quick start with a supported-platforms line, one collapsed block
+  per platform (Windows PowerShell, macOS zsh, Linux bash), a collapsed
+  project tree, and a demo section for product-facing repositories.
+  `templates/docs/SETUP.md` gains a Supported Platforms section, per-platform
+  prerequisite blocks, and a PowerShell variant of the `.env` copy.
+- **The framework's own README follows the rule.** A Quick Start names the
+  supported platforms (Linux, macOS, Windows through Git Bash), says which CI
+  covers, and gives one collapsed block per platform — including that macOS
+  ships bash 3.2, which the scripts do not support, and that Windows runs
+  them from Git Bash rather than PowerShell. Repository Contents, the project
+  tree, the Getting Started subsections, and the sources workflow are
+  collapsed; the
+  capabilities, infographic, How It Works diagram, and version stay visible.
+- The `readme-capabilities-sync` skill, the Solon reviewer (root and
+  template), the demo page's Principle 1 card, and the wiki carry the rule.
+
 ## 1.52.0 - 2026-09-30
 
 The demo page kept current. `DOCUMENTATION.md` has said since 1.47.0 that a

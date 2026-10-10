@@ -10,7 +10,11 @@ repository. Notable groups:
   `.openhands_instructions`, `.project-rules.md`, `SYSTEM_PROMPT.md`, and
   others) installed only for the tools a project actually uses.
 - **Project governance files** — `AGENTS.md`, `CONTRIBUTING.md`, `HELP.md`,
-  `README.md`, `SECURITY.md`, `TODO.md`, `CHANGELOG.md`, and `VERSION`.
+  `README.md`, `SECURITY.md`, `TODO.md`, `CHANGELOG.md`, and `VERSION`. The
+  README template is the worked example of `DOCUMENTATION.md`'s README
+  expectations: a visible capabilities list and quick start, one collapsed
+  install block per platform (Windows, macOS, Linux), and a collapsed
+  project tree.
 - **Documentation scaffolds** under `templates/docs/` — `SETUP.md`,
   `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`,
   `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`,

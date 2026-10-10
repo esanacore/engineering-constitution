@@ -753,7 +753,7 @@
     <header>
       <div class="badge-container">
         <span class="badge-status"></span>
-        <span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.52.0</span>
+        <span class="badge-text">ERIC'S ENGINEERING CONSTITUTION V1.53.0</span>
       </div>
       <h1 class="logo-text">Eric's Engineering Constitution</h1>
       <p class="subtitle">A standardized framework ensuring rigor, security, and automated verification across software projects for humans and AI agents alike.</p>
@@ -979,7 +979,7 @@
             <div class="principle-card" onclick="openPrinciple(1)">
               <div class="principle-num">Principle 1</div>
               <div class="principle-name">Docs are Deliverables</div>
-              <p class="principle-short">All changes must consider documentation impact. Readme and session planning are mandatory.</p>
+              <p class="principle-short">All changes must consider documentation impact. README instructions cover Windows, macOS, and Linux and collapse the long parts; session planning is mandatory.</p>
             </div>
 
             <div class="principle-card" onclick="openPrinciple(2)">
@@ -1092,9 +1092,9 @@
     const principlesData = {
       1: {
         title: "Documentation Is Part of the Deliverable",
-        summary: "All code changes must consider documentation impact. Code is not finished until README, session plans, and api specs reflect correct architecture.",
-        smell: "README is outdated; new configuration variables or commands are undocumented; session resumes with empty plans.",
-        guardrail: "Write doc updates in the same commit. Maintain docs/SESSION_PLAN.md before editing code files."
+        summary: "All code changes must consider documentation impact. Code is not finished until README, session plans, and api specs reflect correct architecture. README setup, run, and test instructions cover every supported platform (Windows, macOS, Linux at minimum) and read short by default, with the long parts collapsed.",
+        smell: "README is outdated; setup instructions assume Linux; a single wall of text that nobody scrolls; new configuration variables or commands are undocumented; session resumes with empty plans.",
+        guardrail: "Write doc updates in the same commit. One install/run/test block per platform, written for that platform's shell, inside collapsible sections; capabilities, quick start, and headings stay visible. Maintain docs/SESSION_PLAN.md before editing code files."
       },
       2: {
         title: "Testing Is Required",

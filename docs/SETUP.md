@@ -5,8 +5,11 @@ How to work on the framework itself. Adopters do not need this; they run
 
 ## Prerequisites
 
-- **bash 4+** and **Git 2.x**. On Windows use Git Bash (MSYS2); the suites are
-  kept portable to it (see `docs/TROUBLESHOOTING.md`).
+- **bash 4+** and **Git 2.x**, on Linux, macOS, or Windows:
+  - **Linux (bash)**: bash 4+ is standard; `sudo apt install git` / `sudo dnf install git` if Git is missing.
+  - **macOS (zsh)**: `/bin/bash` is 3.2, which the scripts do not support (associative arrays, `${var,,}`); `brew install bash git` and make sure Homebrew's `bin` precedes `/bin` on `PATH` (`eval "$(brew shellenv)"`).
+  - **Windows (Git Bash)**: install Git for Windows (`winget install --id Git.Git -e` from PowerShell) and run every command from a Git Bash window, not PowerShell or `cmd`; the suites are kept portable to it (see `docs/TROUBLESHOOTING.md`). WSL also works; follow the Linux line inside it.
+  CI runs the suite on Ubuntu only. The README's Quick Start has the same three blocks.
 - **Node.js 20+** only if you touch `mcp-server/`.
 - **Python 3** is not required by anything shipped, but `pre-commit` (Python)
   is the recommended way to run the pre-push secrets sweep locally.

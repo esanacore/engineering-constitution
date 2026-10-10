@@ -7,10 +7,12 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-The Next Steps procedure (ADR-0005): `AI_WORKFLOW.md` "Next Steps Procedure",
-`scripts/check_next_steps.sh` + tests, every instruction file, both PR
-templates, the handoff template and this repository's handoff, CI wiring.
-An isolated critique pass surfaced nested-list misreads, unrecognized heading
-variants, call-out placement and range parsing, nested-fence handling, and
-five misplaced instruction-file lines; all fixed with regression tests.
-Outcomes are in `CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.
+READMEs for every platform, read short by default (1.53.0):
+`DOCUMENTATION.md`'s "Every Platform the Project Supports" and "Progressive
+Disclosure", `CONSTITUTION.md` Principle 1, `templates/README.md` and
+`templates/docs/SETUP.md` as the worked examples, this repository's own README
+and `docs/SETUP.md`, the `readme-capabilities-sync` skill, Solon, the demo
+page, and the wiki. An isolated critique pass corrected the bash-4 features
+named in the macOS block, restored a visible documentation pointer list, and
+extended the rule to this repository's own `docs/SETUP.md` and wiki pages.
+Outcomes are in `CHANGELOG.md` (1.53.0) and `docs/AGENT_HANDOFF.md`.
