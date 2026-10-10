@@ -651,6 +651,29 @@ overwrite an existing `.claude/settings.json` (it writes a merge copy to
 `.constitution-bootstrap/templates/` instead, same as every other file it
 doesn't overwrite by default).
 
+The same settings file registers a second pair of hooks for the Next Steps
+procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"; ADR-0005), backed by
+`constitution/scripts/next_steps_hook.sh`:
+
+- At `SessionStart`, it records the session's starting commit (in
+  `$TMPDIR/constitution-next-steps/`, keyed by session; a resume keeps the
+  first one).
+- At `Stop`, if the session made commits since then, it checks that
+  `docs/AGENT_HANDOFF.md` was updated and committed in them, that its Next
+  Steps procedure passes `check_next_steps.sh --strict`, and that the final
+  reply has a Next Steps section. If any is missing, it blocks the stop
+  (exit `2`) and tells the agent exactly what to fix. It blocks at most once
+  per stop — the next attempt goes through — so it can never trap a session.
+
+Sessions that made no commits, sessions whose start was not recorded, and
+repositories without the checker are never blocked. Set
+`CONSTITUTION_NEXT_STEPS_HOOK=off` to disable it for a session. Repositories
+bootstrapped before this hook shipped add the `next_steps_hook.sh start`
+entry to `hooks.SessionStart` and a `hooks.Stop` entry from
+`constitution/templates/.claude/settings.json` by hand; both commands check
+that the script exists, so an older `constitution/` pin is a no-op rather
+than an error.
+
 If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
 `.constitution-bootstrap/templates/` for manual merging.
@@ -928,7 +951,7 @@ project/
 ├── .devcontainer/
 │   └── devcontainer.json                 ← Reproducible dev environment
 ├── .claude/
-│   └── settings.json                     ← Claude Code SessionStart hook: freshness check on every session
+│   └── settings.json                     ← Claude Code hooks: freshness check at session start, Next Steps check at session end
 ├── TODO.md                                ← Living roadmap
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation

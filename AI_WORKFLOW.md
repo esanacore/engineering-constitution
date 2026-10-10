@@ -225,5 +225,9 @@ The rules:
 `scripts/check_next_steps.sh` verifies the format of a file's Next Steps
 section (by default the one in `docs/AGENT_HANDOFF.md`; `--file -` reads a
 pull request body from standard input). Whether the steps are the right
-ones remains a review question. The decision is recorded in
-`docs/adr/0005-next-steps-procedure.md`.
+ones remains a review question. In Claude Code, the `Stop` hook shipped in
+`templates/.claude/settings.json` (`scripts/next_steps_hook.sh`) applies the
+same check at the moment a session ends: a session that made commits cannot
+stop without an updated handoff, a well-formed procedure, and a reply that
+ends with it — the agent is told what is missing and finishes the job. The
+decision is recorded in `docs/adr/0005-next-steps-procedure.md`.
