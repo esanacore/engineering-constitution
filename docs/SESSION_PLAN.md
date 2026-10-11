@@ -7,7 +7,6 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-`scripts/measure_instruction_weight.sh` measuring scoped reads as instructed,
-with the real session-start figure recorded in `TODO.md`. Outcomes are in
-`CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`. Committed on the
-branch behind PR #91; pushed once that merges.
+Dependabot cleanup: #87 and #88 merged, #65 closed and replaced by a bump of
+all 12 `actions/checkout` pins to v7.0.1, verified against the upstream tag.
+Outcomes are in `CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.
