@@ -15,6 +15,7 @@ fail, `--help` for usage, exit `2` on a usage error.
 
 - `bash scripts/check_secrets.sh --strict .`
 - `bash scripts/check_instruction_templates.sh --strict --anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" .` (also `templates` and `examples/sample-project`; CI passes the Next Steps anchor explicitly)
+- `bash scripts/check_readme.sh --strict .` (also `--file templates/README.md` and `--file templates/docs/SETUP.md`)
 - `bash scripts/check_next_steps.sh --strict .` (or `--file -` to check a pull request body piped on standard input)
 - `bash scripts/check_skills.sh --strict .`
 - `bash scripts/check_demo_page.sh --strict .`

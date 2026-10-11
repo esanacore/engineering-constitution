@@ -6,6 +6,7 @@ name: Constitution Compliance
 #   - check_traceability.sh — every declared requirement has a verifying test.
 #   - check_demo_page.sh    — demo.html is self-contained and linked from README.md.
 #   - check_next_steps.sh   — docs/AGENT_HANDOFF.md ends with a Next Steps procedure.
+#   - check_readme.sh       — README.md names its platforms and collapses correctly.
 #
 # The traceability check runs only when the product-facing documents exist, so
 # non-product repositories are not forced to maintain them. Runs on every pull
@@ -55,6 +56,17 @@ jobs:
             bash constitution/scripts/check_demo_page.sh .
           else
             echo "::notice::No demo.html (or no demo page checker in this constitution pin); skipping the demo page check."
+          fi
+
+      - name: Verify the README's platform and progressive-disclosure mechanics
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Older constitution pins predate the README checker.
+          if [ -e constitution/scripts/check_readme.sh ]; then
+            bash constitution/scripts/check_readme.sh .
+          else
+            echo "::notice::No README checker in this constitution pin; skipping the README check."
           fi
 
       - name: Verify the handoff's Next Steps procedure (when present)

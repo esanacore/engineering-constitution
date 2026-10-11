@@ -7,7 +7,7 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-The Claude Code `Stop` hook for the Next Steps procedure
-(`scripts/next_steps_hook.sh`, `scripts/test_next_steps_hook.sh`, both
-settings files) and release 1.54.0. Outcomes are in `CHANGELOG.md` 1.54.0
-and `docs/AGENT_HANDOFF.md`.
+`scripts/measure_instruction_weight.sh` measuring scoped reads as instructed,
+with the real session-start figure recorded in `TODO.md`. Outcomes are in
+`CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`. Committed on the
+branch behind PR #91; pushed once that merges.

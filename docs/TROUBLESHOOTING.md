@@ -1,7 +1,9 @@
 # Troubleshooting
 
 Known failure modes when working on the framework itself, most of them
-learned the hard way (see `docs/MEMORY.md` for the fuller history).
+learned the hard way (see `docs/MEMORY.md` for the fuller history). The
+commands below run in bash on Linux, macOS, and Windows (Git Bash) alike;
+`docs/SETUP.md` has the per-platform prerequisites.
 
 ## Common Issues
 
