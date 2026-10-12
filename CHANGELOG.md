@@ -63,6 +63,18 @@ This project follows semantic versioning.
   first version scoping "open items you own" to its checkboxes). This repository's
   `CLAUDE.md` order reads at ~38k estimated tokens as instructed against
   ~77k whole-file, the figure `TODO.md` had been waiting for.
+- **`measure_instruction_weight.sh` reports conditional reads as on demand.**
+  `AGENTS.md` has always listed `INTEGRATION.md` as a read for "when the
+  task touches adopter integration, bootstrap, or IDE/multi-tool setup",
+  and `templates/AGENTS.md` lists `OPERATIONS.md` the same way; the meter
+  counted both whole because it did not recognize the wording. A bullet
+  whose text starts "when the task ..." or "read on demand" is now an
+  on-demand row: 0 in `TOTAL (as instructed)`, never `HEAVY`, the whole-file
+  figure shown alongside and still counted in `TOTAL (whole files)`. The
+  `AGENTS.md` order drops from ~53.8k to ~42.2k estimated tokens as
+  instructed, and no reading-order row is `HEAVY` any more. The reading
+  order itself is unchanged. A file listed both as required reading and as
+  a reference counts as required.
 
 ## 1.54.0 - 2026-10-10
 

@@ -7,6 +7,7 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Dependabot cleanup: #87 and #88 merged, #65 closed and replaced by a bump of
-all 12 `actions/checkout` pins to v7.0.1, verified against the upstream tag.
-Outcomes are in `CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.
+The on-demand reading-bullet qualifier in `measure_instruction_weight.sh`,
+closing the `INTEGRATION.md` instruction-weight item without changing the
+reading order. Outcomes are in `CHANGELOG.md` `Unreleased` and
+`docs/AGENT_HANDOFF.md`.
