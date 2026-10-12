@@ -54,6 +54,9 @@ test_new_project() {
   done
   [ -f ".github/dependabot.yml" ] || { echo "FAIL: dependabot.yml missing"; exit 1; }
   grep -q 'package-ecosystem: "github-actions"' ".github/dependabot.yml" || { echo "FAIL: dependabot.yml does not manage github-actions pins"; exit 1; }
+  # No manifest at the root: only the two shipped entries (commented example excluded).
+  n=$(grep -c '^  - package-ecosystem:' ".github/dependabot.yml")
+  [ "$n" -eq 2 ] || { echo "FAIL: dependabot.yml has $n ecosystem entries for a project without manifests, expected 2"; exit 1; }
   [ -f ".github/pull_request_template.md" ] || { echo "FAIL: pull_request_template.md missing"; exit 1; }
   grep -q 'Completion Checklist' ".github/pull_request_template.md" || { echo "FAIL: PR template lacks the Completion Checklist"; exit 1; }
   [ -f ".github/CODEOWNERS" ] || { echo "FAIL: CODEOWNERS missing"; exit 1; }
@@ -229,6 +232,92 @@ test_force_overwrite() {
   echo "SUCCESS: --force overwrite verified."
 }
 
+test_dependabot_ecosystems() {
+  echo "Testing Dependabot ecosystem detection..."
+  project_path="$test_dir/dependabot-project"
+  mkdir -p "$project_path/web"
+  cd "$project_path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+  echo '{ "name": "x" }' > package.json
+  printf '[package]\nname = "x"\n' > Cargo.toml
+  echo 'requests' > requirements.txt
+  echo '{ "name": "sub" }' > web/package.json   # below the root: not detected
+  git add .
+  git commit -q -m "Manifests"
+
+  out=$("$bootstrap_script" "$project_path" "$constitution_url")
+  grep -qF 'Dependabot ecosystems added (npm pip cargo): .github/dependabot.yml' <<< "$out" \
+    || { echo "$out"; echo "FAIL: bootstrap did not report the added ecosystems"; exit 1; }
+  for eco in gitsubmodule github-actions npm pip cargo; do
+    grep -q "package-ecosystem: \"$eco\"" .github/dependabot.yml || { echo "FAIL: dependabot.yml lacks the $eco entry"; exit 1; }
+  done
+  n=$(grep -c '^  - package-ecosystem:' .github/dependabot.yml)
+  [ "$n" -eq 5 ] || { echo "FAIL: expected 5 ecosystem entries, found $n"; exit 1; }
+  # (the template's commented example names /web too; only live lines count)
+  if grep -v '^[[:space:]]*#' .github/dependabot.yml | grep -q 'directory: "/web"'; then
+    echo "FAIL: a manifest below the root produced an entry"; exit 1
+  fi
+  grep -q 'package.json found at the root' .github/dependabot.yml || { echo "FAIL: the entry is not marked with the manifest that produced it"; exit 1; }
+  if python3 -c 'import yaml' 2>/dev/null; then
+    python3 - <<'PYCHECK'
+import yaml
+d = yaml.safe_load(open(".github/dependabot.yml"))
+assert d["version"] == 2, d
+ecos = [u["package-ecosystem"] for u in d["updates"]]
+assert ecos == ["gitsubmodule", "github-actions", "npm", "pip", "cargo"], ecos
+assert all(u["directory"] == "/" for u in d["updates"]), d["updates"]
+PYCHECK
+  else
+    echo "SKIP: PyYAML not available; the generated dependabot.yml was not parsed"
+  fi
+
+  # A tool-only pyproject.toml is not a pip manifest; one with [project] is;
+  # the alternate filenames are detected; --force re-appends without duplicates.
+  project_path="$test_dir/dependabot-alternates"
+  mkdir -p "$project_path"
+  cd "$project_path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+  printf '[tool.black]\nline-length = 100\n' > pyproject.toml
+  printf 'plugins { kotlin("jvm") }\n' > build.gradle.kts
+  echo 'FROM scratch' > Dockerfile
+  git add .
+  git commit -q -m "Manifests"
+  out=$("$bootstrap_script" "$project_path" "$constitution_url")
+  grep -qF 'Dependabot ecosystems added (gradle docker): ' <<< "$out" \
+    || { echo "$out"; echo "FAIL: a tool-only pyproject.toml, build.gradle.kts, or Dockerfile was mis-detected"; exit 1; }
+  printf '[project]\nname = "x"\n' > pyproject.toml
+  out=$("$bootstrap_script" --force "$project_path" "$constitution_url")
+  grep -qF 'Dependabot ecosystems added (pip gradle docker): ' <<< "$out" \
+    || { echo "$out"; echo "FAIL: a pyproject.toml with [project] was not detected on a --force re-run"; exit 1; }
+  n=$(grep -c '^  - package-ecosystem:' .github/dependabot.yml)
+  [ "$n" -eq 5 ] || { echo "FAIL: --force re-run left $n ecosystem entries, expected 5 (no duplicates)"; exit 1; }
+
+  # An adopter's own dependabot.yml is preserved; the entries go into the merge copy.
+  project_path="$test_dir/dependabot-existing"
+  mkdir -p "$project_path/.github"
+  cd "$project_path"
+  git init -q
+  git config user.email "test@example.com"
+  git config user.name "Test User"
+  echo '{ "name": "x" }' > package.json
+  printf 'version: 2\nupdates: []\n# mine\n' > .github/dependabot.yml
+  git add .
+  git commit -q -m "Own dependabot"
+  out=$("$bootstrap_script" "$project_path" "$constitution_url")
+  [ "$(cat .github/dependabot.yml)" = "$(printf 'version: 2\nupdates: []\n# mine')" ] \
+    || { echo "FAIL: an existing dependabot.yml was modified"; exit 1; }
+  merge_copy=".constitution-bootstrap/templates/.github/dependabot.yml"
+  grep -q 'package-ecosystem: "npm"' "$merge_copy" || { echo "FAIL: the merge copy lacks the npm entry"; exit 1; }
+  grep -qF "Dependabot ecosystems added (npm): $merge_copy" <<< "$out" \
+    || { echo "$out"; echo "FAIL: the report did not point at the merge copy"; exit 1; }
+
+  echo "SUCCESS: Dependabot ecosystems verified."
+}
+
 test_migration_from_backlog() {
   echo "Testing migration from COPILOT_TASK_BACKLOG.md..."
   project_path="$test_dir/backlog-project"
@@ -324,7 +413,7 @@ test_libraries_are_tracked() {
   # only runs against a working tree cannot see this class of bug.
   cd "$repo_root"
 
-  for lib in bootstrap_readme.sh bootstrap_migrate.sh bootstrap_report.sh; do
+  for lib in bootstrap_readme.sh bootstrap_migrate.sh bootstrap_report.sh bootstrap_dependabot.sh; do
     [ -f "scripts/lib/$lib" ] || { echo "FAIL: scripts/lib/$lib is missing from the working tree"; exit 1; }
 
     if ! git ls-files --error-unmatch "scripts/lib/$lib" >/dev/null 2>&1; then
@@ -385,6 +474,7 @@ test_existing_files_preservation
 test_badge_injection
 test_badge_no_heading
 test_force_overwrite
+test_dependabot_ecosystems
 test_migration_from_backlog
 
 echo "ALL TESTS PASSED"

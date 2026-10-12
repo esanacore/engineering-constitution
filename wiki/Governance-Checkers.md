@@ -64,7 +64,7 @@ stay non-executable and are not checkers in their own right:
 
 | Library | Sourced by | Owns |
 | --- | --- | --- |
-| `bootstrap_readme.sh`, `bootstrap_migrate.sh`, `bootstrap_report.sh` | `bootstrap.sh` | badge injection; seeding `TODO.md`/`CHANGELOG.md` from a project's existing backlog or release notes; the adoption report. |
+| `bootstrap_readme.sh`, `bootstrap_migrate.sh`, `bootstrap_report.sh`, `bootstrap_dependabot.sh` | `bootstrap.sh` | badge injection; seeding `TODO.md`/`CHANGELOG.md` from a project's existing backlog or release notes; the adoption report; one Dependabot entry per dependency manifest at the project root. |
 | `architecture_languages.sh`, `architecture_layers.sh`, `architecture_signals.sh` | `check_architecture.sh` | how each language spells imports and what it resolves them against; the declared layer table as a graph; advisory heuristics that never fail a build. |
 | `ci_annotations.sh` | every `check_*.sh` and `run_all_tests.sh` | the `ci_annotate` helper that prints GitHub Actions `::warning::` / `::error::` workflow commands when `GITHUB_ACTIONS=true`, and nothing otherwise. |
 

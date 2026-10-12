@@ -22,6 +22,25 @@ This project follows semantic versioning.
 
 ### Added
 
+- **`bootstrap.sh` configures Dependabot for the manifests it finds.**
+  Dependabot cannot discover manifests, and the shipped
+  `templates/.github/dependabot.yml` only watched the constitution submodule
+  and the action pins, so an adopter's npm, pip, or Cargo dependencies got
+  security updates at best and version updates never. The bootstrap now
+  appends one `updates:` entry per dependency manifest at the project root
+  (npm, pip, cargo, gomod, maven, gradle, swift, bundler, composer, docker;
+  weekly, `deps` prefix, `dependencies` label; a `pyproject.toml` counts
+  only when it declares dependencies), each marked with the manifest
+  that produced it, and reports the ecosystems it added. A preserved adopter
+  file is still never edited: the entries go into the
+  `.constitution-bootstrap/templates/` merge copy. The template documents the
+  mechanism and ends with a commented example for manifests below the root.
+  This repository's own `.github/dependabot.yml` gains an `npm` entry for
+  `/mcp-server`, whose two recent advisories arrived only as security PRs.
+  `scripts/lib/bootstrap_dependabot.sh`; `test_bootstrap.sh` gained a
+  three-manifest fixture, a no-manifest count, a preserved-file case, and
+  the tool-only `pyproject.toml` / alternate-filename / `--force` re-run
+  cases from the critique pass.
 - **`scripts/check_readme.sh` checks the README standard's mechanical half.**
   1.53.0 asked every README for per-platform instructions and collapsed
   long sections, and left both to review. The checker now catches what a

@@ -7,7 +7,7 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-The on-demand reading-bullet qualifier in `measure_instruction_weight.sh`,
-closing the `INTEGRATION.md` instruction-weight item without changing the
-reading order. Outcomes are in `CHANGELOG.md` `Unreleased` and
-`docs/AGENT_HANDOFF.md`.
+Dependabot coverage for adopters' own dependencies: `bootstrap.sh` appends
+one entry per dependency manifest at the project root, closing the
+`templates/.github/dependabot.yml` item in `TODO.md`. Outcomes are in
+`CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.

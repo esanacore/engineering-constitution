@@ -205,7 +205,10 @@ privilege than most libraries. Treat them that way:
 - **Let Dependabot move the pins.** `templates/.github/dependabot.yml`
   declares the `github-actions` ecosystem alongside the constitution
   submodule, so a pin is bumped by a reviewable pull request rather than
-  going stale or being edited by hand.
+  going stale or being edited by hand. `bootstrap.sh` adds an entry for
+  every dependency manifest at the repository root, so application
+  dependencies get the same reviewable updates and not only the security
+  ones GitHub opens on its own.
 - **Declare the least token permissions** at the top of every workflow
   (`permissions: contents: read`), widening only the job that needs more.
   The publish job in `constitution-wiki.yml` is the worked example: `write`

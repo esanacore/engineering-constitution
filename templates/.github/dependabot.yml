@@ -9,6 +9,14 @@ version: 2
 # constitution/SECURITY.md, "CI/CD Supply Chain"): actions are pinned by full
 # commit SHA so a moved tag cannot change what CI runs, and Dependabot is the
 # reviewable way to move a pin.
+#
+# Dependabot cannot discover manifests on its own, so
+# constitution/scripts/bootstrap.sh appends one entry per dependency manifest
+# it finds at the repository root (npm, pip, cargo, gomod, maven, gradle,
+# swift, bundler, composer, docker), each marked with the manifest that
+# produced it. Manifests in subdirectories are yours to add; copy the
+# commented example below (after the two shipped entries) and set
+# `directory`.
 updates:
   - package-ecosystem: "gitsubmodule"
     directory: "/"
@@ -31,3 +39,13 @@ updates:
       prefix: "ci"
     labels:
       - "dependencies"
+
+  # Example for a manifest below the root (a package.json in web/):
+  # - package-ecosystem: "npm"
+  #   directory: "/web"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "deps"
+  #   labels:
+  #     - "dependencies"

@@ -602,7 +602,15 @@ repositories stay on the latest release, the framework ships three layers that
 1. **Auto-update pull requests** — `.github/dependabot.yml` (using the
    `gitsubmodule` ecosystem) makes GitHub open a pull request whenever the
    `constitution/` submodule falls behind the branch it tracks. The submodule
-   moves forward without anyone running git commands by hand.
+   moves forward without anyone running git commands by hand. The same file
+   keeps the SHA-pinned GitHub Actions current, and `bootstrap.sh` appends
+   one entry per dependency manifest it finds at the repository root
+   (`package.json`; `requirements.txt`, a `pyproject.toml` that declares
+   dependencies, `Pipfile`, `setup.py`, or `setup.cfg`; `Cargo.toml`;
+   `go.mod`; `pom.xml`; `build.gradle` or `build.gradle.kts`;
+   `Package.swift`; `Gemfile`; `composer.json`; `Dockerfile`), because Dependabot cannot
+   discover manifests on its own. Manifests below the root are yours to add;
+   the template ends with a commented example.
 2. **A CI version gate** — `.github/workflows/constitution-version.yml` runs on
    every pull request, on pushes to the default branch, and on a daily schedule.
    It fetches the constitution's release tags and **fails the build** when the
@@ -680,7 +688,8 @@ than an error.
 
 If a repository already has its own `.github/dependabot.yml`, the bootstrap
 script preserves it and writes the constitution version to
-`.constitution-bootstrap/templates/` for manual merging.
+`.constitution-bootstrap/templates/` for manual merging, with the
+detected-manifest entries appended there rather than to your file.
 
 ### Bumping the Fleet After a Release
 
