@@ -236,8 +236,14 @@ reading_list() {
       else if (rest ~ /`unreleased` section.*(most recent|latest) release/) scope = "recent"
       # A conditional read ("`X.md` when the task touches ...", "`X.md` — read
       # on demand") is not session-start reading. Checked last, so the "read
-      # on demand" tail of the TODO/CHANGELOG bullets keeps its scope.
-      else if (rest ~ /^[ \t]*(\xe2\x80\x94|-)?[ \t]*(when the task|(read )?on demand)/) scope = "ondemand"
+      # on demand" tail of the TODO/CHANGELOG bullets keeps its scope. Any
+      # leading punctuation (a dash of any width, a colon, a parenthesis) is
+      # skipped without naming its bytes: BSD awk reads \x escapes as code
+      # points. "when the task" needs a subject verb ("when the task is done,
+      # update it" is not a conditional read) and "on demand" must end the
+      # bullet.
+      else if (rest ~ /^[^a-z`]*(only )?when the task (touches|affects|involves|concerns|changes|needs|requires|is about|relates to)/) scope = "ondemand"
+      else if (rest ~ /^[^a-z`]*(read |consult |see )?on demand[ \t.,;)]*$/) scope = "ondemand"
       print path "\t" scope
     }
   ' "$file"
@@ -290,12 +296,22 @@ else
     echo
     echo "$instr reading order:"
     total_bytes=0; total_words=0; whole_bytes=0; whole_words=0; any_scoped=0
-    # A file listed twice is measured once; a scope on either listing wins,
-    # whichever came first.
+    # A file listed twice is measured once, at the first listing's position.
+    # A scoped read (open items, Unreleased + latest) wins over a whole-file
+    # listing; a whole-file listing wins over on demand, because a file that
+    # is required reading and also a reference is still required reading.
     entries=$(printf '%s\n' "$entries" | awk -F'\t' '
-      !($1 in scope) { order[++n] = $1; scope[$1] = "" }
-      $2 != "" { scope[$1] = $2 }
-      END { for (i = 1; i <= n; i++) print order[i] "\t" scope[order[i]] }')
+      !($1 in seen) { order[++n] = $1; seen[$1] = 1; scope[$1] = "" }
+      $2 == "" { plain[$1] = 1 }
+      $2 == "ondemand" { ondemand[$1] = 1 }
+      $2 != "" && $2 != "ondemand" { scope[$1] = $2 }
+      END {
+        for (i = 1; i <= n; i++) {
+          f = order[i]; s = scope[f]
+          if (s == "" && ondemand[f] && !plain[f]) s = "ondemand"
+          print f "\t" s
+        }
+      }')
     while IFS=$'\t' read -r rel scope; do
       measure_one "$root" "$rel" "$scope" || missing=$((missing + 1))
     done <<< "$entries"

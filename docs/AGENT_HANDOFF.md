@@ -35,7 +35,13 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 - **Verification Run**: `bash scripts/run_all_tests.sh --quiet` (31 suites
   green; `test_measure_instruction_weight.sh` gained an on-demand case and a
   dogfood case), every `tests.yml` self-governance step locally, and an
-  isolated critique pass on the diff.
+  isolated critique pass on the diff, which found three things now fixed
+  with a regression case: the em dash written as `\x` escape bytes, which
+  the UTF-8-aware BSD awk reads as a code point (any leading punctuation is
+  skipped instead); "when the task is done, update it" and "on demand we may
+  add" wrongly scoped (a subject verb is required, and "on demand" must end
+  the bullet); and a file listed both as required reading and as a reference
+  counted as on demand (required wins).
 - **Known Blockers**: v1.54.0 untagged, v1.53.0 unpublished; four
   `Unreleased` entries now wait on the local-session handoff.
 - **Context Hints**: the three qualifier phrasings are exactly the ones the

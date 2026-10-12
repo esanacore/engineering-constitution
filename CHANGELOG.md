@@ -73,7 +73,8 @@ This project follows semantic versioning.
   figure shown alongside and still counted in `TOTAL (whole files)`. The
   `AGENTS.md` order drops from ~53.8k to ~42.2k estimated tokens as
   instructed, and no reading-order row is `HEAVY` any more. The reading
-  order itself is unchanged.
+  order itself is unchanged. A file listed both as required reading and as
+  a reference counts as required.
 
 ## 1.54.0 - 2026-10-10
 

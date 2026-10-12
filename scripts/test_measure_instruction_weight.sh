@@ -354,6 +354,32 @@ inst=$(echo "$output" | grep 'TOTAL (as instructed)' | sed -E 's/.*~ *([0-9]+) t
 whole=$(echo "$output" | grep 'TOTAL (whole files)' | sed -E 's/.*~ *([0-9]+) tok.*/\1/')
 [ "$inst" -lt 20 ] || fail "case 15: instructed total $inst tok includes the on-demand file"
 [ "$whole" -gt 10000 ] || fail "case 15: whole-files total $whole tok should still count the on-demand file"
+# Critique-pass regressions: the qualifier needs a subject verb and "on
+# demand" must end the bullet; punctuation before it may vary; a file listed
+# as required reading and as a reference is required reading.
+repo="$test_dir/15b"; mkdir -p "$repo"
+for f in DONE ADD P C O R Q; do printf 'ten bytes\n' > "$repo/$f.md"; done
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `DONE.md` — when the task is done, update it
+- `ADD.md` — on demand we may add more here
+- `P.md` (when the task touches parsing)
+- `C.md`: consult on demand.
+- `O.md` – only when the task affects operations
+- `R.md`
+- `R.md` — read on demand
+- `Q.md` — read on demand
+- `Q.md`
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 15b: expected exit 0, got $status"
+for f in DONE ADD R Q; do
+  echo "$output" | grep -qE "^  $f.md +10 B" || { echo "$output"; fail "case 15b: $f.md should be measured whole"; }
+done
+for f in P C O; do
+  echo "$output" | grep -qE "^  $f.md \[on demand\] +0 B" || { echo "$output"; fail "case 15b: $f.md should be on demand"; }
+done
 echo "PASS: on-demand qualifier"
 
 # ---------------------------------------------------------------------------
