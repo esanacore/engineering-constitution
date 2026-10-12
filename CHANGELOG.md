@@ -6,6 +6,20 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Security
+
+- **`actions/checkout` pinned to v7.0.1 everywhere.** All 12 workflows — the
+  4 under `.github/workflows/` and the 8 adopter templates under
+  `templates/.github/workflows/` — move from the v4.3.0 SHA to
+  `3d3c42e5aac5ba805825da76410c181273ba90b1`, verified against the upstream
+  `v7.0.1` tag with `git ls-remote` rather than trusted from the Dependabot
+  diff. Dependabot PR #65 was closed: it bumped the 4 and not the 8, which
+  would have left the framework and its templates on two different pins.
+  v5+ needs a runner with Node 24; every GitHub-hosted runner has it.
+  `docs/OTS_SOFTWARE.md` OTS-104 re-reviewed. Dependabot #87
+  (`@modelcontextprotocol/sdk` 1.29.0 -> 1.31.0) and #88 (`proxy-addr`
+  2.0.7 -> 2.0.8, CVE-2026-90711) merged alongside; OTS-001 updated.
+
 ### Added
 
 - **`scripts/check_readme.sh` checks the README standard's mechanical half.**
