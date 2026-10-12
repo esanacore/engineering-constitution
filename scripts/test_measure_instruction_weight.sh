@@ -326,5 +326,43 @@ scoped=$(echo "$row" | sed -E 's/.*~ *([0-9]+) tok .*\(of ~([0-9]+) tok whole fi
 [ "$scoped" -gt 30 ] || fail "case 14: TODO scoped figure $scoped tok dropped the preamble, the fenced code, or the trailing prose"
 echo "PASS: critique-pass regressions"
 
+# ---------------------------------------------------------------------------
+# 15. A conditional bullet ("when the task ...", "read on demand") is on
+#     demand: 0 in the instructed total, never HEAVY, still in the whole-files
+#     total. The "read on demand" tail of a TODO bullet keeps the open scope.
+# ---------------------------------------------------------------------------
+repo="$test_dir/15"; mkdir -p "$repo"
+head -c 40000 /dev/zero | tr '\0' 'z' > "$repo/BIG.md"
+printf 'notes\n' > "$repo/NOTES.md"
+printf 'rules\n' > "$repo/RULES.md"
+printf '# TODO\n\n- [ ] open\n- [x] done\n' > "$repo/TODO.md"
+cat > "$repo/CLAUDE.md" <<'EOF'
+## Required Reading
+
+- `RULES.md`
+- `BIG.md` when the task touches the big subsystem — a reference, not session-start reading
+- `NOTES.md` — read on demand
+- `TODO.md` — open (`[ ]`/`[~]`) items; completed entries are history, read on demand
+EOF
+run "$repo"
+[ "$status" -eq 0 ] || fail "case 15: expected exit 0, got $status"
+echo "$output" | grep -qE '^  BIG.md \[on demand\] +0 B' || fail "case 15: 'when the task ...' bullet not reported on demand with 0 B"
+echo "$output" | grep -qE '^  NOTES.md \[on demand\] +0 B' || fail "case 15: 'read on demand' bullet not reported on demand"
+echo "$output" | grep -q 'TODO.md \[open items\]' || fail "case 15: the TODO bullet lost its open-items scope to the on-demand qualifier"
+echo "$output" | grep -q 'tok  HEAVY' && fail "case 15: an on-demand file must never be HEAVY"
+inst=$(echo "$output" | grep 'TOTAL (as instructed)' | sed -E 's/.*~ *([0-9]+) tok.*/\1/')
+whole=$(echo "$output" | grep 'TOTAL (whole files)' | sed -E 's/.*~ *([0-9]+) tok.*/\1/')
+[ "$inst" -lt 20 ] || fail "case 15: instructed total $inst tok includes the on-demand file"
+[ "$whole" -gt 10000 ] || fail "case 15: whole-files total $whole tok should still count the on-demand file"
+echo "PASS: on-demand qualifier"
+
+# ---------------------------------------------------------------------------
+# 16. Dogfood: AGENTS.md lists INTEGRATION.md as a conditional read.
+# ---------------------------------------------------------------------------
+run "$script_dir/.."
+[ "$status" -eq 0 ] || fail "case 16: the repository's own reading order failed to measure"
+echo "$output" | grep -q 'INTEGRATION.md \[on demand\]' || fail "case 16: AGENTS.md's conditional INTEGRATION.md read is not reported on demand"
+echo "PASS: repository conditional read reported on demand"
+
 echo
 echo "All measure_instruction_weight tests passed."

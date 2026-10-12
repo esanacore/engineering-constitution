@@ -35,6 +35,9 @@ set -euo pipefail
 #   "the `Unreleased` section and the most recent release" -> CHANGELOG.md:
 #       the preamble, the `## Unreleased` section wherever it is, and the
 #       first other `## ` section (a `## ` inside a code fence is not one).
+#   "when the task touches ..." / "read on demand"       -> on demand: not
+#       session-start reading. Counted as 0 in the instructed total, never
+#       HEAVY, still counted in the whole-files total.
 # A scoped row shows the instructed figure and, for comparison, the whole
 # file's; the report ends with both totals. Any other wording measures the
 # whole file: an unrecognized scope falls back to the larger number, never
@@ -58,8 +61,9 @@ Description:
   the repository's agent required-reading order, per instruction file and in
   total. A bullet that scopes its read ("open (`[ ]`/`[~]`) items"; "the
   `Unreleased` section and the most recent release") is measured as
-  instructed, with the whole-file figure alongside and both totals at the
-  end. Documents over ~8,000 estimated tokens (as instructed) get an
+  instructed, and one that makes the read conditional ("when the task
+  touches ..."; "read on demand") counts as 0, with the whole-file figure
+  alongside and both totals at the end. Documents over ~8,000 estimated tokens (as instructed) get an
   advisory HEAVY flag.
   A listed file that does not exist fails the run (broken reading order).
 
@@ -151,6 +155,7 @@ scope_label() {
   case "$1" in
     open) printf 'open items' ;;
     recent) printf 'Unreleased + latest release' ;;
+    ondemand) printf 'on demand' ;;
     *) printf '%s' "$1" ;;
   esac
 }
@@ -166,7 +171,12 @@ measure_one() {
   local whole_b whole_w bytes words tokens label note="" flag=""
   whole_b=$(wc -c < "$path")
   whole_w=$(wc -w < "$path")
-  if [ -n "$scope" ]; then
+  if [ "$scope" = "ondemand" ]; then
+    bytes=0; words=0
+    label="$rel [on demand]"
+    note="  (~$((whole_b / 4)) tok whole file; not session-start reading)"
+    any_scoped=1
+  elif [ -n "$scope" ]; then
     bytes=$(scoped_content "$path" "$scope" | wc -c)
     words=$(scoped_content "$path" "$scope" | wc -w)
     label="$rel [$(scope_label "$scope")]"
@@ -224,6 +234,10 @@ reading_list() {
       # own" to its checkboxes and measured 0 bytes.
       if (rest ~ /open \(`\[ \]`\/`\[~\]`\) items/) scope = "open"
       else if (rest ~ /`unreleased` section.*(most recent|latest) release/) scope = "recent"
+      # A conditional read ("`X.md` when the task touches ...", "`X.md` — read
+      # on demand") is not session-start reading. Checked last, so the "read
+      # on demand" tail of the TODO/CHANGELOG bullets keeps its scope.
+      else if (rest ~ /^[ \t]*(\xe2\x80\x94|-)?[ \t]*(when the task|(read )?on demand)/) scope = "ondemand"
       print path "\t" scope
     }
   ' "$file"
