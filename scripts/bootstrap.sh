@@ -208,7 +208,7 @@ fi
 # can never affect which files load.
 lib_dir="$script_dir/lib"
 
-for lib in bootstrap_readme.sh bootstrap_migrate.sh bootstrap_report.sh; do
+for lib in bootstrap_readme.sh bootstrap_migrate.sh bootstrap_report.sh bootstrap_dependabot.sh; do
   if [ ! -f "$lib_dir/$lib" ]; then
     echo "Missing required library: $lib_dir/$lib" >&2
     echo "The constitution checkout looks incomplete; re-clone or update the submodule." >&2
@@ -327,7 +327,24 @@ copy_file "$template_dir/SECURITY.md" "$project_path/.github/SECURITY.md"
 copy_file "$template_dir/HELP.md" "$project_path/docs/HELP.md"
 mkdir -p "$project_path/.github/agents"
 copy_file "$template_dir/.github/agents/solon.agent.md" "$project_path/.github/agents/solon.agent.md"
+# Dependabot cannot discover manifests, so the installed copy gains one
+# `updates:` entry per dependency manifest at the project root (see
+# scripts/lib/bootstrap_dependabot.sh). A preserved adopter file is never
+# edited; the entries go into the merge copy instead.
+dependabot_existed=false
+if [ -e "$project_path/.github/dependabot.yml" ] && [ "$force" != "true" ]; then
+  dependabot_existed=true
+fi
 copy_file "$template_dir/.github/dependabot.yml" "$project_path/.github/dependabot.yml"
+if [ "$dependabot_existed" = "true" ]; then
+  dependabot_target="$bootstrap_dir/templates/.github/dependabot.yml"
+else
+  dependabot_target="$project_path/.github/dependabot.yml"
+fi
+dependabot_added=$(dependabot_append_ecosystems "$dependabot_target" "$project_path")
+if [ -n "$dependabot_added" ]; then
+  echo "Dependabot ecosystems added ($dependabot_added): ${dependabot_target#$project_path/}"
+fi
 copy_file "$template_dir/.github/pull_request_template.md" "$project_path/.github/pull_request_template.md"
 copy_file "$template_dir/.github/CODEOWNERS" "$project_path/.github/CODEOWNERS"
 copy_file "$template_dir/.github/workflows/constitution-version.yml" "$project_path/.github/workflows/constitution-version.yml"

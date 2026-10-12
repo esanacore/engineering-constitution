@@ -13,3 +13,15 @@ updates:
       prefix: "ci"
     labels:
       - "dependencies"
+
+  # The MCP server's npm dependencies. Until this entry existed, #87 and #88
+  # arrived only because they were security updates; ordinary version updates
+  # were never configured.
+  - package-ecosystem: "npm"
+    directory: "/mcp-server"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    labels:
+      - "dependencies"
