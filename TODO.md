@@ -123,6 +123,7 @@
 - [x] Add a checker that verifies the constitution source repo's `VERSION`, release tag, and `HEAD` stay aligned. Implemented as `scripts/check_release_tag_alignment.sh` with `scripts/test_check_release_tag_alignment.sh`, prompted by `VERSION 1.30.0` landing on `main` while the latest tag still sat at `v1.29.0`.
 - [x] Add a project-wide secrets sweep with negative-case tests, per the "Governance Tooling Must Be Tested" standard. Implemented as `scripts/check_secrets.sh` with `scripts/test_check_secrets.sh` (7 cases: tracked secret filename, tracked content match, untracked-but-not-gitignored content match, `.env.example` exclusion, full `.gitignore` coverage, missing `.gitignore` coverage under default vs. `--strict`, and the non-Git-directory usage error).
 - [x] Ship a CI workflow template that runs the secrets sweep. Implemented as `templates/.github/workflows/constitution-secrets.yml` running `scripts/check_secrets.sh`; installed by `scripts/bootstrap.sh` and covered by `scripts/test_bootstrap.sh`. A real hit always fails this gate, unlike the other CI templates' pure warn-by-default behavior.
+- [x] Fix `templates/.github/workflows/constitution-env.yml`, which called `scripts/check_env_vars.sh` (a path that exists only in this repository) without checking out submodules, so it skipped silently in every adopter. Reported from the `lightkeeper` adopter. Guarded by `scripts/test_workflow_templates.sh`, which checks every adopter template calls checkers through `constitution/scripts/` and checks out submodules when it does.
 
 ## Documentation
 
