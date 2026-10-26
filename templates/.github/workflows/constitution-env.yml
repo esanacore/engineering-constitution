@@ -1,24 +1,37 @@
 name: Constitution - Environment Contract
 
+# Confirms every environment variable declared in a root-level configuration
+# manifest has an entry in docs/ENV_VARS.md, using the checker that ships in
+# the pinned `constitution/` submodule (check_env_vars.sh).
+
 on:
   push:
     branches: [ "master", "main" ]
   pull_request:
     branches: [ "master", "main" ]
 
+permissions:
+  contents: read
+
 jobs:
   check-env:
     name: Documented Configurations
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Check out repository with submodules
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+
+      - name: Confirm constitution submodule is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -e constitution/scripts/check_env_vars.sh ]; then
+            echo "::error::No 'constitution/' submodule found (or it is too old to ship the environment contract checker). This repository does not appear to adopt Eric's Engineering Constitution, or the submodule needs updating."
+            exit 1
+          fi
 
       - name: Check Environment Contract
-        run: |
-          if [ -f "scripts/check_env_vars.sh" ]; then
-            bash scripts/check_env_vars.sh --strict
-          else
-            echo "Skipping: scripts/check_env_vars.sh not found."
-            echo "(This is normal if the project hasn't updated its constitution submodule.)"
-          fi
+        shell: bash
+        run: bash constitution/scripts/check_env_vars.sh --strict .

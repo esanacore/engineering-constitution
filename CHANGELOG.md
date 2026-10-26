@@ -6,6 +6,18 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Fixed
+
+- **`constitution-env.yml` template now actually runs the check in adopters.**
+  It called `scripts/check_env_vars.sh`, a path that exists only in this
+  repository, and checked out without submodules, so in every adopter the
+  step printed "Skipping" and passed. It now checks out submodules, fails
+  with an error if `constitution/` is missing (like the OTS template), and
+  runs `constitution/scripts/check_env_vars.sh --strict .`. New
+  `scripts/test_workflow_templates.sh` fails if any adopter template calls a
+  checker without the `constitution/` prefix or uses one without checking
+  out submodules. Adopters that copied the old template should re-copy it.
+
 ### Security
 
 - **`actions/checkout` pinned to v7.0.1 everywhere.** All 12 workflows — the
