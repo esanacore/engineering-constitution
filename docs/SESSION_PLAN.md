@@ -7,7 +7,10 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Dependabot coverage for adopters' own dependencies: `bootstrap.sh` appends
-one entry per dependency manifest at the project root, closing the
-`templates/.github/dependabot.yml` item in `TODO.md`. Outcomes are in
-`CHANGELOG.md` `Unreleased` and `docs/AGENT_HANDOFF.md`.
+Codified three adopter-proven demo-page conventions into the framework
+(chiefly from `ate-harness-demo`): Solarized Dark theming for code in rendered
+docs, an offline PDF brief twin built from repo sources, and page-level
+progressive disclosure. `DOCUMENTATION.md`, `CONSTITUTION.md`, `CODE_STYLE.md`,
+and `templates/demo.html` updated; outcomes in `CHANGELOG.md` `Unreleased`,
+`TODO.md`, and `docs/AGENT_HANDOFF.md`. Working tree only — not yet branched,
+committed, or pushed.

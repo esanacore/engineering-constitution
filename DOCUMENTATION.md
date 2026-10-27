@@ -302,6 +302,14 @@ Mechanics, learned the hard way:
   the always-visible list above is still what a reader must see without a
   click.
 
+This is a documentation-wide pattern, not a README-only one. Any long rendered
+document — the demo page ("Demo Page" below), a reference doc, a brief — leads
+with the short version a reader needs and tucks the depth behind `<details>`.
+The worked shape is a "why this matters" or "details" expander beneath the
+thing it explains: the headline claim stays visible, the reasoning is one click
+away. The always-visible / collapsed split and the mechanics above are the
+same wherever the renderer honors `<details>`.
+
 ## Current Capabilities
 
 Every project that grows over time needs a living, accurate answer to "what
@@ -361,6 +369,19 @@ least able to read the code.
   It carries no credentials, tokens, private hostnames, internal IP addresses,
   or customer data, and `SECURITY.md`'s review applies to it like any other
   shipped surface.
+- **Short by default, deep on demand.** A demo page is a long document, and
+  the same progressive-disclosure rule the README follows applies to it: the
+  first screen is what the product is and the smallest interaction that shows
+  it working, and the deeper material — "why this matters", architecture
+  detail, methodology, the caveats behind a number — sits in collapsible
+  `<details>` sections the reader opens only if they want it. See "Progressive
+  Disclosure" above for the mechanics, which are identical. When the page has
+  a PDF twin (below), those expand sections are what becomes its appendix:
+  detail that is one click away on screen and one page-turn away on paper.
+- **Code it shows is themed consistently.** A demo that displays source,
+  output, or a transcript themes it with the single canonical palette described
+  in "Code Snippets in Rendered Documentation" below, so code reads the same on
+  the page, in the PDF twin, and across the page's own light and dark themes.
 
 Automated behavior with real data is the ideal, a scripted simulation is the
 normal case, and an interactive explanation of the system is the floor.
@@ -368,6 +389,44 @@ Repositories that are not product-facing — internal libraries, pure
 configuration repositories, research scratch space — are not expected to carry
 one, which is why this sits in the product-facing tier rather than the
 required one.
+
+### Offline PDF Brief
+
+`demo.html` assumes a browser. A PDF brief is the same demonstration for the
+reader who wants to read, print, annotate, or attach it — the stakeholder who
+lives in email, the reviewer who prints, the evaluator who files it. A
+product-facing repository should offer its demo as a paginated PDF brief
+alongside the page, living under `docs/` (for example `docs/<Project>.pdf`) and
+linked from `README.md` beside the demo link.
+
+The brief earns its place only if it cannot drift from the product, and the
+discipline that makes that true is the point of this standard:
+
+- **Generated from the repository's own sources, not hand-authored.** A build
+  step produces the page and the PDF from one source of truth, so they tell the
+  same story. Hand-maintaining a second artifact is how the version on the
+  cover ends up three releases stale.
+- **Code excerpts pulled from the real files at build time.** A code sample a
+  human pasted into a brief is wrong the moment the file changes. The build
+  reads the excerpt out of the actual source, so a brief that shows code shows
+  the code that ships.
+- **Guarded against drift mechanically.** The build has a check mode (run in
+  CI) that fails when the page's content changed without the PDF being rebuilt
+  — a fingerprint of the page's expand sections and excerpts stamped into the
+  output, compared on every check. Page and PDF cannot diverge without the
+  build noticing, which is the only reason a second artifact is safe to keep.
+- **Same currency and safety rules as the page.** The Documentation Review
+  Checklist covers it, and it is a published, world-readable artifact: no
+  credentials, hostnames, or customer data, exactly as for `demo.html`.
+
+The build step is the repository's own — Principle 7 still rules out dragging a
+toolchain into the demo itself, but the brief is a build output, not a runtime
+dependency of the page, so a generator script (in whatever language the project
+already uses) is the expected mechanism. `ate-harness-demo` is the worked
+example: `scripts/build_publish.py` emits `demo.html` and
+`docs/ATE-Harness-Demo.pdf` from the same sources, highlights the C# excerpts at
+build time, carries the page's "why this matters" sections into the PDF
+appendix, and refuses to pass `--check` when the two would disagree.
 
 Enforcement follows the framework's usual shape.
 `scripts/check_compliance.sh` treats `demo.html` as a product-facing file
@@ -393,6 +452,56 @@ simulated transcript showing `localhost`, say) are allowed.
 exists; pass `--strict` to make it blocking. Honest labeling and currency with
 the product remain review questions — no checker can tell a simulation that
 says so from one that does not.
+
+## Code Snippets in Rendered Documentation
+
+A rendered-HTML documentation artifact that shows source code — the demo page,
+a published brief, an HTML report — presents that code in one canonical dark
+theme: **Solarized Dark** (Ethan Schoonover's palette). It is applied the same
+way regardless of the surrounding page's light or dark theme, and the same way
+on screen and in any PDF rendering, so a snippet reads identically everywhere
+it appears.
+
+This is Principle 12 applied to code *presentation*. The same reasoning that
+makes a project follow the language's canonical style guide rather than a house
+style (`CODE_STYLE.md`) makes it theme code with a documented, deliberately
+contrast-tuned palette rather than an invented set of colors: Solarized is a
+published standard with fixed hex values and a designed relationship between
+them, so "the code blocks are Solarized Dark" is a reviewable fact, not one
+person's taste. Pinning code to its own dark theme, independent of the page
+chrome, is deliberate: code is read as code in every context, and a snippet
+that re-themes itself with the page is a snippet a reader has to re-learn on
+each visit.
+
+The palette, as CSS custom properties (the exact Schoonover values):
+
+| Role | Variable | Hex | Solarized name |
+| --- | --- | --- | --- |
+| Background | `--code-bg` | `#002b36` | base03 |
+| Line highlight / rule | `--code-line` | `#073642` | base02 |
+| Body text | `--code-text` | `#93a1a1` | base1 |
+| Comments, prompts | `--code-dim` | `#839496` | base0 |
+| Keywords | `--code-kw` | `#859900` | green |
+| Types | `--code-type` | `#b58900` | yellow |
+| Function / method calls | `--code-fn` | `#268bd2` | blue |
+| Strings | `--code-str` | `#2aa198` | cyan |
+| Numbers | `--code-num` | `#d33682` | magenta |
+| Errors / failures | `--code-err` | `#dc322f` | red |
+
+Mechanics, following the same constraints the demo page lives under:
+
+- **Highlight at build time, not in the browser.** A single-file demo page and
+  an offline PDF both forbid a CDN script, so the spans that carry these colors
+  are emitted by the build (the same generator that produces the PDF brief),
+  not by a highlighter library loaded at view time. Principle 7 (Dependency
+  Hygiene) applies to the page exactly as it applies to the product.
+- **Define the palette once, as variables.** Declaring the colors as CSS custom
+  properties keeps them out of individual spans and makes "is this Solarized?" a
+  one-place check rather than a hunt through the markup.
+- **The highlighter is code, so it is tested.** A build-time highlighter has
+  the usual failure modes — escaping, `//` inside a string literal, an entity
+  in an identifier — and a snippet rendered wrong is a documentation defect.
+  Cover it like any other code (`TESTING.md`).
 
 ## CHANGELOG Expectations
 
