@@ -34,6 +34,35 @@ This project follows semantic versioning.
 
 ### Added
 
+- **Demo-page conventions, codified from adopter practice (chiefly
+  `ate-harness-demo`).** `DOCUMENTATION.md` gains three refinements to the
+  demo-page standard (ADR-0002), each proven in a shipping adopter before being
+  written down:
+  - A new **"Code Snippets in Rendered Documentation"** section: rendered-HTML
+    documentation (the demo page, a published brief, an HTML report) themes any
+    code it shows with **Solarized Dark** (Ethan Schoonover's palette), applied
+    identically across the page's own light/dark themes and in any PDF
+    rendering, and highlighted at build time rather than with a CDN script. The
+    section carries the exact palette as a CSS-variable table and frames the
+    choice as Principle 12 (canonical source over house style) applied to code
+    *presentation*; `CODE_STYLE.md` gains a pointer to it.
+  - An **"Offline PDF Brief"** subsection under "Demo Page": a product-facing
+    demo may carry a paginated PDF twin under `docs/`, built from the
+    repository's own sources with code excerpts pulled from the real files and
+    a build-time freshness guard (a `--check` mode in CI) so page and PDF cannot
+    drift. `ate-harness-demo`'s `scripts/build_publish.py` is cited as the
+    worked example.
+  - Progressive disclosure is generalized **beyond the README**: the demo page
+    and any long rendered document lead with the short version and tuck depth
+    behind `<details>` (the "why this matters" expander is the worked shape),
+    with those sections becoming the PDF twin's appendix when one exists.
+  `CONSTITUTION.md` Principle 1's demo clause cross-references all three, and
+  `templates/demo.html` now embodies them — a Solarized-themed code snippet, a
+  "Why this matters" expander, and house-rule comments — while staying a single
+  dependency-free file (passes `check_demo_page.sh --strict`) and keeping its
+  placeholder marker. No Required File, Required Workflow step, or checker
+  contract changed, so no new ADR is triggered.
+
 - **`bootstrap.sh` configures Dependabot for the manifests it finds.**
   Dependabot cannot discover manifests, and the shipped
   `templates/.github/dependabot.yml` only watched the constitution submodule

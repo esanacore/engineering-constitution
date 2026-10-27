@@ -65,6 +65,17 @@ ecosystem. Mermaid supports standard sequence, class, and state diagram
 syntax and remains the preferred renderer; the guidance here is about
 *notation*, not about switching tools away from Mermaid.
 
+## Code in Rendered Documentation
+
+The same instinct — follow a documented, canonical source rather than invent a
+house convention — governs how code is *displayed* in rendered-HTML
+documentation (a demo page, a published brief, an HTML report), not only how it
+is *written*. Such artifacts theme their code snippets with the Solarized Dark
+palette, applied identically across the page's own light and dark themes and in
+any PDF rendering. The palette and the build-time mechanics live in
+`DOCUMENTATION.md`'s "Code Snippets in Rendered Documentation" section; this
+pointer records that it is the same principle, aimed at presentation.
+
 ## The Style Guide Registry
 
 `sources/STYLE_GUIDES.md` is the living, tracked registry of canonical style

@@ -21,6 +21,16 @@
         - Keep it current. A demo showing last release's behavior is worse
           than no demo, because readers believe it.
         - Nothing secret. This page is published; treat it as world-readable.
+        - Short by default. Lead with what this is and the interaction; put
+          depth in the <details> "Why this matters" block below, so the first
+          screen stays short. See DOCUMENTATION.md "Progressive Disclosure".
+        - Theme code with Solarized Dark. Any code, output, or transcript uses
+          the --code-* palette below — the same in light and dark themes and in
+          a PDF rendering. See DOCUMENTATION.md "Code Snippets in Rendered
+          Documentation". Highlight at build time, never with a CDN script.
+        - Optional PDF twin. A product-facing demo may also ship an offline PDF
+          brief built from the repo's own sources (DOCUMENTATION.md "Offline
+          PDF Brief"); this single file is the on-screen half.
     -->
     <style>
       :root {
@@ -32,6 +42,20 @@
         --muted: #9aa8bc;
         --accent: #7dd3fc;
         font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        /* Code snippets: Solarized Dark (Ethan Schoonover's palette), the same
+           here as in a PDF rendering and regardless of the page theme. See
+           DOCUMENTATION.md "Code Snippets in Rendered Documentation". */
+        --code-bg: #002b36;    /* base03 */
+        --code-line: #073642;  /* base02 */
+        --code-text: #93a1a1;  /* base1  */
+        --code-dim: #839496;   /* base0: comments, prompts */
+        --code-kw: #859900;    /* green:   keywords */
+        --code-type: #b58900;  /* yellow:  types */
+        --code-fn: #268bd2;    /* blue:    function/method calls */
+        --code-str: #2aa198;   /* cyan:    strings */
+        --code-num: #d33682;   /* magenta: numbers */
+        --code-err: #dc322f;   /* red:     errors */
+        --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
       }
 
       * {
@@ -143,6 +167,50 @@
       a {
         color: var(--accent);
       }
+
+      /* Solarized Dark code block. The colors are page-theme-independent on
+         purpose: code reads as code everywhere. Spans are written by hand here;
+         in a real project a build step emits them (and the PDF twin). */
+      pre.code {
+        margin: 0 0 32px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        border: 1px solid var(--code-line);
+        border-radius: 12px;
+        background: var(--code-bg);
+        color: var(--code-text);
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+
+      pre.code .c { color: var(--code-dim); font-style: italic; }
+      pre.code .k { color: var(--code-kw); }
+      pre.code .t { color: var(--code-type); }
+      pre.code .fn { color: var(--code-fn); }
+      pre.code .s { color: var(--code-str); }
+      pre.code .n { color: var(--code-num); }
+
+      /* "Why this matters" expander: headline visible, depth one click away. */
+      details.more {
+        margin: 0 0 32px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+
+      details.more summary {
+        padding: 14px 16px;
+        color: var(--accent);
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      details.more div {
+        padding: 0 16px 14px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
     </style>
   </head>
   <body data-demo-state="constitution-demo-template-placeholder">
@@ -178,6 +246,28 @@
         <p class="notice" hidden id="running">Playing the recorded example…</p>
         <output id="result" role="status" aria-live="polite"></output>
       </section>
+
+      <!--
+        Code sample, themed Solarized Dark. Replace this with a real excerpt
+        from the project's source. In a real build the spans (and the PDF twin)
+        are emitted from the actual file, never pasted by hand — see
+        DOCUMENTATION.md "Offline PDF Brief".
+      -->
+      <pre class="code"><span class="c">// &lt;Replace with a real excerpt from this project's source.&gt;</span>
+<span class="k">function</span> <span class="fn">evaluate</span>(reading, limit) {
+  <span class="k">const</span> margin = limit.<span class="fn">upper</span>() - reading;
+  <span class="k">return</span> margin &gt;= <span class="n">0</span> ? <span class="s">"PASS"</span> : <span class="s">"FAIL"</span>;
+}</pre>
+
+      <details class="more">
+        <summary>Why this matters</summary>
+        <div>
+          <p>&lt;The headline stays on the page; the reasoning, caveats, or
+          deeper context go here, one click away. Keep the first screen short —
+          see DOCUMENTATION.md "Progressive Disclosure". When this page has a
+          PDF twin, these sections become its appendix.&gt;</p>
+        </div>
+      </details>
 
       <footer>
         <p>

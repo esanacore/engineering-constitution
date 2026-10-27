@@ -30,7 +30,7 @@ Review:
 - API documentation
 - Deployment documentation
 - Wiki content
-- Demo page (`demo.html`) for product-facing repositories — a reader who finishes the documentation should also be able to see the product work
+- Demo page (`demo.html`) for product-facing repositories — a reader who finishes the documentation should also be able to see the product work. Like the README, it reads short by default (depth behind `<details>`), themes any code it shows with one canonical palette, and may carry an offline PDF brief built from the repository's own sources. See `DOCUMENTATION.md`'s "Demo Page" and "Code Snippets in Rendered Documentation".
 - Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
 
 A task is not complete until documentation impact has been evaluated.
