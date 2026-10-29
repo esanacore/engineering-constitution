@@ -7,10 +7,13 @@ cleared once the outcomes are captured in commit messages, `CHANGELOG.md`, or
 
 ## Last completed
 
-Codified three adopter-proven demo-page conventions into the framework
-(chiefly from `ate-harness-demo`): Solarized Dark theming for code in rendered
-docs, an offline PDF brief twin built from repo sources, and page-level
-progressive disclosure. `DOCUMENTATION.md`, `CONSTITUTION.md`, `CODE_STYLE.md`,
-and `templates/demo.html` updated; outcomes in `CHANGELOG.md` `Unreleased`,
-`TODO.md`, and `docs/AGENT_HANDOFF.md`. Working tree only — not yet branched,
-committed, or pushed.
+Dogfooded the framework's own front-facing visuals to its demo-page standard.
+Rebuilt `demo.html` with a clean, professional, accessible dark theme (dropped
+the AI-slop gradient text / neon glow / glass blur), real Solarized Dark code
+snippets using the canonical `--code-*` palette, and page-level progressive
+disclosure; replaced the AI-generated raster hero
+(`assets/diagrams/constitution_infographic.jpg`) with a hand-authored,
+themeable `assets/diagrams/constitution-infographic.svg`. Outcomes in
+`CHANGELOG.md` `Unreleased`, `TODO.md`, and `docs/AGENT_HANDOFF.md`. Deferred:
+the offline PDF brief + source-driven generator + Solarized/PDF drift checker.
+Committed on `docs/demo-visual-overhaul`.

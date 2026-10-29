@@ -6,6 +6,30 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- **The framework's own `demo.html` now follows the demo-page standard it
+  publishes.** Rebuilt with a clean, professional, accessible dark theme — the
+  gradient-clipped headings, neon glows, radial background blobs, and glass
+  blur (the AI-slop tells a design review flags) are gone — and it now shows
+  real **Solarized Dark** code using the canonical `--code-*` palette from
+  `DOCUMENTATION.md`: a `bootstrap.sh` run, the `check_architecture.sh` layer
+  table with a failing case, and a Next Steps excerpt. Depth moved behind
+  `<details>` "why this matters" expanders so the page reads short by default,
+  and the principles grid is now generated from a single data source. Still one
+  self-contained file with inline styles and scripts; passes
+  `check_demo_page.sh --strict`.
+- **README hero is now a hand-authored SVG.** Replaced the AI-generated raster
+  infographic (`assets/diagrams/constitution_infographic.jpg`) with
+  `assets/diagrams/constitution-infographic.svg` — themeable, crisp at any
+  size, diffable, and self-describing (its own dark panel reads on GitHub light
+  and dark), matching the repo's own "diagram source + rendered image" ethos.
+
+### Removed
+
+- `assets/diagrams/constitution_infographic.jpg` — the AI-generated raster
+  hero, superseded by the hand-authored SVG above.
+
 ### Fixed
 
 - **`constitution-env.yml` template now actually runs the check in adopters.**

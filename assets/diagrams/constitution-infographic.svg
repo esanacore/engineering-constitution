@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img"
+     aria-labelledby="title desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="title">Eric's Engineering Constitution — framework blueprint</title>
+  <desc id="desc">The validation triad — requirements traceability, the test suite, and the OTS software inventory — feeds a central governance core of CI gates and checkers, which holds human contributors and AI agents to one standard.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5b6774"/>
+    </marker>
+    <marker id="arrowAccent" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/>
+    </marker>
+  </defs>
+
+  <!-- Self-contained panel so the figure reads on light or dark backgrounds -->
+  <rect x="3" y="3" width="1194" height="614" rx="20" fill="#0f141b" stroke="#2b333f" stroke-width="2"/>
+
+  <!-- Masthead -->
+  <text x="48" y="64" font-size="32" font-weight="700" fill="#e6edf3">Eric's Engineering Constitution</text>
+  <text x="48" y="94" font-size="17" fill="#9aa7b4">One documented standard for humans and AI agents — enforced in CI and locally.</text>
+  <line x1="48" y1="114" x2="1152" y2="114" stroke="#2b333f" stroke-width="1"/>
+
+  <!-- ===== Left: the validation triad ===== -->
+  <text x="48" y="150" font-size="13" font-weight="700" letter-spacing="1.5" fill="#58a6ff">THE VALIDATION TRIAD</text>
+
+  <!-- Card 1 -->
+  <g>
+    <rect x="48" y="166" width="300" height="86" rx="12" fill="#161c24" stroke="#2b333f"/>
+    <rect x="48" y="166" width="5" height="86" rx="2.5" fill="#58a6ff"/>
+    <text x="74" y="203" font-size="19" font-weight="700" fill="#e6edf3">Requirements Traceability</text>
+    <text x="74" y="228" font-size="14" fill="#9aa7b4">Every requirement maps to a test</text>
+  </g>
+  <!-- Card 2 -->
+  <g>
+    <rect x="48" y="266" width="300" height="86" rx="12" fill="#161c24" stroke="#2b333f"/>
+    <rect x="48" y="266" width="5" height="86" rx="2.5" fill="#3fb950"/>
+    <text x="74" y="303" font-size="19" font-weight="700" fill="#e6edf3">Test Suite</text>
+    <text x="74" y="328" font-size="14" fill="#9aa7b4">The declared suite runs in CI</text>
+  </g>
+  <!-- Card 3 -->
+  <g>
+    <rect x="48" y="366" width="300" height="86" rx="12" fill="#161c24" stroke="#2b333f"/>
+    <rect x="48" y="366" width="5" height="86" rx="2.5" fill="#d29922"/>
+    <text x="74" y="403" font-size="19" font-weight="700" fill="#e6edf3">OTS Inventory</text>
+    <text x="74" y="428" font-size="14" fill="#9aa7b4">Every dependency documented</text>
+  </g>
+
+  <!-- Arrows: triad -> core -->
+  <path d="M356,209 C450,209 470,270 556,280" fill="none" stroke="#5b6774" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M356,309 C440,309 470,305 556,305" fill="none" stroke="#5b6774" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M356,409 C450,409 470,345 556,332" fill="none" stroke="#5b6774" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ===== Center: governance core (shield) ===== -->
+  <path d="M572,232 L708,232 L708,322 Q708,356 640,382 Q572,356 572,322 Z"
+        fill="#16222f" stroke="#58a6ff" stroke-width="2"/>
+  <!-- check glyph -->
+  <path d="M616,300 l16,16 l28,-34" fill="none" stroke="#3fb950" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="640" y="266" font-size="17" font-weight="700" fill="#e6edf3" text-anchor="middle">Governance</text>
+  <text x="640" y="286" font-size="17" font-weight="700" fill="#e6edf3" text-anchor="middle">Core</text>
+  <text x="640" y="410" font-size="14" fill="#9aa7b4" text-anchor="middle">CI gates + ~25 checkers</text>
+
+  <!-- Arrow: core -> collaboration loop -->
+  <path d="M712,300 C800,300 840,300 924,300" fill="none" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrowAccent)"/>
+  <text x="818" y="288" font-size="13" fill="#9aa7b4" text-anchor="middle">one standard</text>
+
+  <!-- ===== Right: human <-> AI collaboration loop ===== -->
+  <text x="935" y="150" font-size="13" font-weight="700" letter-spacing="1.5" fill="#58a6ff">ALIGNED CONTRIBUTORS</text>
+
+  <rect x="938" y="178" width="166" height="70" rx="12" fill="#161c24" stroke="#2b333f"/>
+  <text x="1021" y="208" font-size="18" font-weight="700" fill="#e6edf3" text-anchor="middle">Human</text>
+  <text x="1021" y="230" font-size="13" fill="#9aa7b4" text-anchor="middle">contributors</text>
+
+  <rect x="938" y="352" width="166" height="70" rx="12" fill="#161c24" stroke="#2b333f"/>
+  <text x="1021" y="382" font-size="18" font-weight="700" fill="#e6edf3" text-anchor="middle">AI Agents</text>
+  <text x="1021" y="404" font-size="13" fill="#9aa7b4" text-anchor="middle">autonomous</text>
+
+  <!-- cyclical arrows between the two -->
+  <path d="M1116,250 C1150,290 1150,310 1116,350" fill="none" stroke="#5b6774" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M926,350 C892,310 892,290 926,250" fill="none" stroke="#5b6774" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Footer -->
+  <line x1="48" y1="498" x2="1152" y2="498" stroke="#2b333f" stroke-width="1"/>
+  <text x="48" y="536" font-size="15" fill="#9aa7b4">Pinned into a repository as a read-only <tspan fill="#93a1a1" font-family="ui-monospace, Consolas, monospace">constitution/</tspan> submodule.</text>
+  <text x="48" y="562" font-size="15" fill="#9aa7b4"><tspan fill="#93a1a1" font-family="ui-monospace, Consolas, monospace">bootstrap.sh</tspan> installs the local governance files, CI gates, and this demo page.</text>
+</svg>

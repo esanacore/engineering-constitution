@@ -11,6 +11,14 @@ of time to a static SVG that `README.md` embeds as a normal image. See
 
 ## Files
 
+- `constitution-infographic.svg`: The README hero infographic — the validation
+  triad feeding the governance core, feeding the human⇄AI collaboration loop.
+  Hand-authored SVG (not Mermaid-generated), so it is the source *and* the
+  rendered image: edit it directly, no regeneration step. It carries its own
+  dark background panel so it reads on both GitHub light and dark themes, and
+  uses native `<text>` with presentation attributes (no inline CSS) for maximum
+  renderer compatibility. Replaced the previous AI-generated raster JPG, which
+  was neither themeable nor diffable.
 - `how-it-works.mmd`: Mermaid source for the diagram in README.md's "How It
   Works" section.
 - `how-it-works.svg`: Rendered output, embedded directly in `README.md`.

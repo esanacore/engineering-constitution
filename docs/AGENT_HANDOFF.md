@@ -19,65 +19,61 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-10-26 (Demo-page conventions: Solarized code, PDF brief, page-level progressive disclosure)
+### Session: 2026-10-28 (Dogfood the framework's own visuals: clean demo redesign, Solarized code, hand-built hero SVG)
 
-- **Accomplishments**: Codified three demo-page conventions proven in adopter
-  projects (chiefly `ate-harness-demo`) into the framework's standards, all as
-  prose-first refinements to the demo-page standard (ADR-0002), triggering no
-  new ADR (no Required File, Required Workflow step, or checker contract
-  changed). `DOCUMENTATION.md` gains a new **"Code Snippets in Rendered
-  Documentation"** section (Solarized Dark / Schoonover palette for code in
-  rendered HTML + PDF, as a CSS-variable table, highlighted at build time;
-  framed as Principle 12 applied to presentation), an **"Offline PDF Brief"**
-  subsection under "Demo Page" (a PDF twin built from repo sources, code
-  excerpts pulled from real files, build-time freshness guard so page and PDF
-  can't drift), and a generalized **"Progressive Disclosure"** (applies to the
-  demo page and any long rendered doc, not only the README). `CONSTITUTION.md`
-  Principle 1's demo clause and `CODE_STYLE.md` cross-reference the new
-  material. `templates/demo.html` now embodies the conventions — a
-  Solarized-themed snippet, a "Why this matters" expander, house-rule comments
-  — while staying one dependency-free file and keeping its placeholder marker.
-  `CHANGELOG.md` `Unreleased` → Added; `TODO.md` demo-page item gained the
-  shipped entry plus two follow-ups (a mechanical checker; dogfooding the
-  framework's own `demo.html`).
-- **Verification Run**: `scripts/check_demo_page.sh --strict` against the
-  edited `templates/demo.html` staged in a temp root with a linking README —
-  0 findings. Visual render of the template in a browser confirmed the
-  Solarized palette (base03 background, italic comment, green keywords, blue
-  calls, cyan strings, magenta number) and the working expander. The full
-  suite (`run_all_tests.sh`) was **not** run this session — no shell logic
-  changed, only docs, the scaffold, CHANGELOG, and TODO — so CI on the PR is
-  the backstop.
-- **Known Blockers**: Changes are in the working tree only — **not committed,
-  not pushed** (session started on `main`; next step is a branch + PR).
-  Release debt carried over from the prior handoff is still open: v1.54.0
-  untagged, v1.53.0 unpublished, and `Unreleased` now holds the Dependabot
-  work, the `actions/checkout` security pin, **and** this demo-page change. No
-  `VERSION` bump was made here, on purpose, so `check_version_alignment.sh`
-  stays green while work accumulates in `Unreleased`.
-- **Context Hints**: `ate-harness-demo` is the worked reference for all three
-  conventions — `demo.html` (Solarized `--code-*` vars, `details.more`) and
-  `scripts/build_publish.py` (page + PDF from one source, `--check` freshness
-  guard). The follow-up checker extends ADR-0002 and should follow the
-  warn-by-default / `--strict` contract. The own-demo dogfooding follow-up
-  (`TODO.md` → demo-page item) is what makes the framework practice what this
-  change now preaches.
+- **Accomplishments**: Made the framework's own front-facing artifacts follow
+  the demo-page standard it publishes. **`demo.html`** was rebuilt as a clean,
+  professional, accessible dark theme — the gradient-clipped headings, neon
+  glows, radial blobs, and glass blur (AI-slop tells) are gone — and now shows
+  **real Solarized Dark code** using the canonical `--code-*` palette
+  (`DOCUMENTATION.md` "Code Snippets in Rendered Documentation"): a
+  `bootstrap.sh` run, the `check_architecture.sh` layer table with a failing
+  case, and a Next Steps excerpt. Depth moved behind `<details>` "why this
+  matters" expanders (page-level progressive disclosure), and the 12-principle
+  grid is generated from one data object. Still one self-contained file (inline
+  styles + scripts, no network). The **hero infographic** moved from an
+  AI-generated raster JPG to a hand-authored, themeable
+  `assets/diagrams/constitution-infographic.svg` (its own dark panel reads on
+  GitHub light and dark); `README.md` and `assets/diagrams/README.md` updated,
+  JPG `git rm`'d. No ADR: the demo and hero are encouraged artifacts, no
+  Required File / Workflow / checker contract / compatibility policy changed.
+- **Verification Run**: `scripts/check_demo_page.sh --strict .` → 0 findings;
+  `scripts/check_readme.sh --strict .` → passes; all nine Solarized hexes
+  present as `--code-*` vars in `demo.html`. Served the repo locally and
+  verified in a browser: SVG hero renders, Solarized blocks highlight correctly
+  (dim prompt/comment, blue calls, cyan paths, magenta numbers, green `[OK]`,
+  red `[FAIL]`), the principle modal and triad tabs work (JS runs, no console
+  errors), and the layout stacks cleanly at 390px. Fixed a teaser bug where a
+  naive `split(".")` truncated Principle 3 to "TODO.". The full shell suite
+  (`run_all_tests.sh`) was not run — no shell logic changed, only `demo.html`,
+  an SVG, README, CHANGELOG, TODO, and handoff docs — so CI is the backstop.
+- **Known Blockers**: Committed on branch `docs/demo-visual-overhaul`; a PR is
+  open (see the PR for the number). No `VERSION` bump, on purpose, so
+  `check_version_alignment.sh` stays green while work accumulates in
+  `Unreleased` (which now also holds the Dependabot work, the
+  `actions/checkout` pin, and the earlier demo-page-conventions change). The
+  prior handoff's release debt (v1.54.0 untagged, v1.53.0/v1.54.0 unpublished)
+  is unchanged and still a maintainer task.
+- **Context Hints**: The canonical Solarized block + `details.more` pattern
+  reused verbatim from `templates/demo.html`; palette table in
+  `DOCUMENTATION.md:456-505`. The deferred PDF brief has a worked reference in
+  `ate-harness-demo` (`scripts/build_publish.py`: page + PDF from one source,
+  build-time highlight, `--check` drift guard) and pairs with the mechanical
+  Solarized/PDF checker — both still open in `TODO.md` under the demo-page item.
+  That generator introduces a build toolchain and likely warrants its own ADR.
 
 #### Next Steps
 
-**Human action required:** steps 1, 4, and 5.
+**Human action required:** steps 1 and 3.
 
-1. [ ] **HUMAN** — Review the working-tree changes, then branch and open a PR
-   - **Why a human:** the session is on `main`; branching and the merge decision are the maintainer's.
-   - **You need:** a local clone with these edits, `gh` signed in.
-   - **Done when:** a PR is open with CI green.
-2. [ ] **AUTOMATED** — `tests.yml` runs the full suite and the strict self-governance job (including `check_demo_page.sh` and `check_next_steps.sh`) on the PR; `wiki-sync.yml` republishes on merge. Watch for a red run.
-3. [ ] **AGENT** — If CI flags anything in the edited docs/template, fix it in the PR branch.
-4. [ ] **HUMAN** — Decide whether to fold this into the pending 1.55.0 release (it joins the Dependabot work and the security pin already in `Unreleased`) or ship it separately.
-   - **Why a human:** release cadence is the maintainer's call.
-   - **Done when:** the decision is recorded (a release PR is open, or `TODO.md` notes the hold).
-5. [ ] **HUMAN** — Clear the carried-over release debt: tag `v1.54.0`, publish the v1.53.0 and v1.54.0 releases, and bump the fleet (from the prior handoff).
-   - **Why a human:** remote sessions cannot push tags, publish releases, or reach adopter repositories.
+1. [ ] **HUMAN** — Review and merge the PR for `docs/demo-visual-overhaul`.
+   - **Why a human:** this is a subjective visual/design change; the look and the merge decision are the maintainer's.
+   - **You need:** the open PR, CI green.
+   - **Done when:** the PR is merged to `main`.
+2. [ ] **AUTOMATED** — `tests.yml` runs the full suite and the strict self-governance job (including `check_demo_page.sh`, `check_readme.sh`, `check_next_steps.sh`) on the PR; `wiki-sync.yml` republishes on merge. Watch for a red run.
+3. [ ] **HUMAN** — Decide whether to fold this into the pending release or ship it separately, and clear the carried-over release debt (tag `v1.54.0`, publish v1.53.0/v1.54.0, bump the fleet).
+   - **Why a human:** release cadence is the maintainer's call, and remote sessions cannot push tags, publish releases, or reach adopter repositories.
    - **You need:** a local clone, `gh` signed in.
-   - **Done when:** `gh release list` shows v1.54.0 as Latest and every adopter's `constitution-version.yml` is green.
-6. [ ] **AGENT** _(suggestion)_ — Build the mechanical checker for the new conventions and dogfood the framework's own `demo.html` (`TODO.md` → demo-page follow-ups).
+   - **Done when:** the decision is recorded and `gh release list` shows the intended release as Latest.
+4. [ ] **AGENT** — If CI flags anything in the edited files, fix it in the PR branch.
+5. [ ] **AGENT** _(suggestion)_ — Build the deferred offline PDF brief + source-driven generator and the Solarized/PDF drift checker (`TODO.md` → demo-page follow-ups), with its own ADR for the new build toolchain.
