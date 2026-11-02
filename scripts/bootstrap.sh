@@ -11,7 +11,7 @@ set -euo pipefail
 usage() {
   cat <<'USAGE'
 Usage:
-  bootstrap.sh [--force] [--agents=<list>] <project-path> <constitution-repository-url>
+  bootstrap.sh [--force] [--product-discovery] [--agents=<list>] <project-path> <constitution-repository-url>
 
 Description:
   Initialize an existing Git repository with Eric's Engineering Constitution.
@@ -63,6 +63,7 @@ Creates or installs:
 
 Options:
   --force            Overwrite existing generated files.
+  --product-discovery Install optional docs/discovery interview/review/pilot records.
   --agents=<list>    Comma-separated AI tools to generate vendor instruction
                      files for. Default: none -- only AGENTS.md is installed.
 
@@ -88,6 +89,7 @@ USAGE
 }
 
 force=false
+product_discovery=false
 
 # Vendor instruction files are opt-in. AGENTS.md is the cross-vendor standard and
 # is always installed; everything else is generated only when the adopter names
@@ -100,6 +102,10 @@ all_agent_keys="claude cursor copilot goose openhands antigravity continue aider
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    --product-discovery)
+      product_discovery=true
+      shift
+      ;;
     --force)
       force=true
       shift
@@ -378,6 +384,11 @@ copy_file "$template_dir/docs/TROUBLESHOOTING.md" "$project_path/docs/TROUBLESHO
 copy_file "$template_dir/docs/AGENT_PROMPTS.md" "$project_path/docs/AGENT_PROMPTS.md"
 copy_file "$template_dir/docs/AGENT_HANDOFF.md" "$project_path/docs/AGENT_HANDOFF.md"
 copy_file "$template_dir/docs/PRODUCT_REQUIREMENTS.md" "$project_path/docs/PRODUCT_REQUIREMENTS.md"
+if [ "$product_discovery" = true ]; then
+  for discovery_file in BRIEF.md REVIEW.md PILOT.md; do
+    copy_file "$template_dir/docs/discovery/$discovery_file" "$project_path/docs/discovery/$discovery_file"
+  done
+fi
 copy_file "$template_dir/docs/REQUIREMENTS_TRACEABILITY.md" "$project_path/docs/REQUIREMENTS_TRACEABILITY.md"
 copy_file "$template_dir/docs/TEST_PLAN.md" "$project_path/docs/TEST_PLAN.md"
 copy_file "$template_dir/docs/OTS_SOFTWARE.md" "$project_path/docs/OTS_SOFTWARE.md"

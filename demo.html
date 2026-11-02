@@ -469,6 +469,17 @@
         </div>
 
         <div class="card">
+          <details id="product-discovery">
+            <summary>New: guided product discovery for business contributors</summary>
+            <p>Start with a request in ordinary language. An optional discovery workflow helps the contributor and engineering agree on a small scope, identify assumptions, and record decisions. Contributors need no Git or command line.</p>
+            <ol>
+              <li><strong>Discover:</strong> describe the problem, evidence, alternatives, and exclusions.</li>
+              <li><strong>Review:</strong> the contributor corrects the agreement; product approval and engineering readiness are separate human decisions.</li>
+              <li><strong>Reassess:</strong> a scope revision invalidates the old review and flags affected requirements for evidence reassessment.</li>
+            </ol>
+            <p>Synthetic walkthrough: “export reports” becomes a filtered CSV export. Stakeholders disagree about cross-account data; the owner excludes it. A later row-limit change returns approval to pending. No product implementation, customer results, or human approvals are claimed.</p>
+            <p>Included: a tool-neutral skill, facilitator guide, review and pilot templates, and an opt-in structural checker. The checker detects stale records; it cannot judge product quality, authenticate approvers, or prove business outcomes.</p>
+          </details>
           <div class="triad-tabs" role="tablist" aria-label="Validation triad">
             <button class="pillar-card active" role="tab" aria-selected="true" aria-controls="triad-trace" id="tab-trace" onclick="switchTriad('trace', this)">
               <p class="pillar-title">1 · Traceability</p>

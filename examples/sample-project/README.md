@@ -1,5 +1,10 @@
 # Sample Project
 
+For optional guided requirements discovery, see
+[`../product-discovery/README.md`](../product-discovery/README.md). It includes
+a complete synthetic request, disagreement, scope revision, and pending review;
+it does not fabricate a deployed product or successful tests.
+
 <!-- CONSTITUTION_START -->
 [![Eric's Engineering Constitution](https://img.shields.io/badge/Eric's%20Engineering%20Constitution-Adopted-blue)](https://github.com/esanacore/engineering-constitution)
 <!-- CONSTITUTION_END -->

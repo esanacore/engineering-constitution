@@ -519,6 +519,12 @@ TODO.md is the living roadmap. It should reflect the best current understanding 
 
 ## Product Requirements Expectations
 
+For contributors who need help reaching a clear contract, the optional
+[guided discovery workflow](docs/PRODUCT_DISCOVERY.md) supplies interviews,
+review records and a comparative pilot. It adds no required adopter files.
+Keep product approval, engineering readiness, test verification and business
+outcomes separate; a structurally valid record does not certify any of them.
+
 A repository is **product-facing** when it ships behavior to people other than
 its own maintainers — an application, a service, an API, or a library with
 consumers outside the team — so that someone outside the team can hold it to

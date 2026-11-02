@@ -19,61 +19,42 @@ kept; history lives in `CHANGELOG.md` and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-10-28 (Dogfood the framework's own visuals: clean demo redesign, Solarized code, hand-built hero SVG)
+### Session: 2026-11-02 (Optional guided product discovery)
 
-- **Accomplishments**: Made the framework's own front-facing artifacts follow
-  the demo-page standard it publishes. **`demo.html`** was rebuilt as a clean,
-  professional, accessible dark theme — the gradient-clipped headings, neon
-  glows, radial blobs, and glass blur (AI-slop tells) are gone — and now shows
-  **real Solarized Dark code** using the canonical `--code-*` palette
-  (`DOCUMENTATION.md` "Code Snippets in Rendered Documentation"): a
-  `bootstrap.sh` run, the `check_architecture.sh` layer table with a failing
-  case, and a Next Steps excerpt. Depth moved behind `<details>` "why this
-  matters" expanders (page-level progressive disclosure), and the 12-principle
-  grid is generated from one data object. Still one self-contained file (inline
-  styles + scripts, no network). The **hero infographic** moved from an
-  AI-generated raster JPG to a hand-authored, themeable
-  `assets/diagrams/constitution-infographic.svg` (its own dark panel reads on
-  GitHub light and dark); `README.md` and `assets/diagrams/README.md` updated,
-  JPG `git rm`'d. No ADR: the demo and hero are encouraged artifacts, no
-  Required File / Workflow / checker contract / compatibility policy changed.
-- **Verification Run**: `scripts/check_demo_page.sh --strict .` → 0 findings;
-  `scripts/check_readme.sh --strict .` → passes; all nine Solarized hexes
-  present as `--code-*` vars in `demo.html`. Served the repo locally and
-  verified in a browser: SVG hero renders, Solarized blocks highlight correctly
-  (dim prompt/comment, blue calls, cyan paths, magenta numbers, green `[OK]`,
-  red `[FAIL]`), the principle modal and triad tabs work (JS runs, no console
-  errors), and the layout stacks cleanly at 390px. Fixed a teaser bug where a
-  naive `split(".")` truncated Principle 3 to "TODO.". The full shell suite
-  (`run_all_tests.sh`) was not run — no shell logic changed, only `demo.html`,
-  an SVG, README, CHANGELOG, TODO, and handoff docs — so CI is the backstop.
-- **Known Blockers**: Committed on branch `docs/demo-visual-overhaul`; a PR is
-  open (see the PR for the number). No `VERSION` bump, on purpose, so
-  `check_version_alignment.sh` stays green while work accumulates in
-  `Unreleased` (which now also holds the Dependabot work, the
-  `actions/checkout` pin, and the earlier demo-page-conventions change). The
-  prior handoff's release debt (v1.54.0 untagged, v1.53.0/v1.54.0 unpublished)
-  is unchanged and still a maintainer task.
-- **Context Hints**: The canonical Solarized block + `details.more` pattern
-  reused verbatim from `templates/demo.html`; palette table in
-  `DOCUMENTATION.md:456-505`. The deferred PDF brief has a worked reference in
-  `ate-harness-demo` (`scripts/build_publish.py`: page + PDF from one source,
-  build-time highlight, `--check` drift guard) and pairs with the mechanical
-  Solarized/PDF checker — both still open in `TODO.md` under the demo-page item.
-  That generator introduces a build toolchain and likely warrants its own ADR.
+Implemented a tool-neutral discovery skill, facilitator guide, interview/review/
+pilot templates, optional bootstrap installation, synthetic disagreement and
+revision walkthrough, and a structural checker with negative regressions.
+PRODUCT_REQUIREMENTS.md stays canonical; human product approval, engineering
+readiness, test verification and outcomes remain independent. ProductSpec
+exchange is a pinned manual mapping guide, not an automatic converter.
 
-#### Next Steps
+Independent review caught Windows/Linux digest differences and retired-ID
+handling. The digest normalizes CR at line ends; retired requirements remain
+declared as tombstones for evidence reassessment. Desktop/mobile rendered
+inspection passed. Skill, README and demo strict checks passed. The bootstrap
+rerun passed on Windows. The declared full suite passed under Ubuntu WSL:
+33 suites, zero failures. Discovery regressions passed all 32 cases; the checker
+contract suite and secrets sweep passed. No third-party runtime dependency added.
 
-**Human action required:** steps 1 and 3.
+GPT-6 Astra implementation hit a usage limit after planning; implementation and
+independent review continued with the available coding model. No release
+has occurred. Discovery changes are being prepared on their own review
+branch; earlier unfinished stability changes remain uncommitted and preserved.
+VERSION remains unchanged pending merge/release review. The original session
+plan remains because the earlier stability work is unfinished.
 
-1. [ ] **HUMAN** — Review and merge the PR for `docs/demo-visual-overhaul`.
-   - **Why a human:** this is a subjective visual/design change; the look and the merge decision are the maintainer's.
-   - **You need:** the open PR, CI green.
-   - **Done when:** the PR is merged to `main`.
-2. [ ] **AUTOMATED** — `tests.yml` runs the full suite and the strict self-governance job (including `check_demo_page.sh`, `check_readme.sh`, `check_next_steps.sh`) on the PR; `wiki-sync.yml` republishes on merge. Watch for a red run.
-3. [ ] **HUMAN** — Decide whether to fold this into the pending release or ship it separately, and clear the carried-over release debt (tag `v1.54.0`, publish v1.53.0/v1.54.0, bump the fleet).
-   - **Why a human:** release cadence is the maintainer's call, and remote sessions cannot push tags, publish releases, or reach adopter repositories.
-   - **You need:** a local clone, `gh` signed in.
-   - **Done when:** the decision is recorded and `gh release list` shows the intended release as Latest.
-4. [ ] **AGENT** — If CI flags anything in the edited files, fix it in the PR branch.
-5. [ ] **AGENT** _(suggestion)_ — Build the deferred offline PDF brief + source-driven generator and the Solarized/PDF drift checker (`TODO.md` → demo-page follow-ups), with its own ADR for the new build toolchain.
+## Next Steps
+
+**Human action required:** steps 1 and 2.
+
+1. [ ] **HUMAN** — Review and merge the discovery pull request.
+   - **Why a human:** merge approval belongs to the maintainer.
+   - **Done when:** the reviewed pull request is merged with required CI checks green.
+2. [ ] **HUMAN** — Choose an authorized pilot participant, real bounded request,
+   and product decision owner for the November 9 discussion.
+   - **Why a human:** participation, business priorities and data-sharing consent
+     require the people who own them.
+   - **Done when:** the participant and owner agree on a request and permitted
+     material; no customer data is published without permission.
+3. [ ] **AGENT** — Facilitate the pilot using docs/PRODUCT_DISCOVERY.md and record
+   baseline comparison, total effort and all outcomes _(blocked by step 2)_.

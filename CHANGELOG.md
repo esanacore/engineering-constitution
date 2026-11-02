@@ -6,6 +6,28 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Product Discovery
+
+- Added an optional guided discovery workflow, tool-neutral agent skill,
+  interview/review/pilot templates, and a synthetic disagreement-to-revision
+  walkthrough. `bootstrap.sh --product-discovery` installs supporting records
+  while preserving existing files by default.
+- Added opt-in structural review validation and negative regression coverage.
+  Revision/content bindings detect stale records; checks do not authenticate
+  humans, judge product quality, execute product tests, or prove outcomes.
+- Documented manual ProductSpec exchange against a pinned upstream baseline;
+  no automatic converter or external runtime is installed. README, integration
+  guidance, sample project, demo and ADR-0006 describe the optional capability.
+
+### Planning
+
+- Added a draft product-discovery proposal covering guided requirements
+  elicitation, human review, ProductSpec interoperability, and a measured pilot.
+  The optional implementation above follows this proposal; no mandatory
+  adopter workflow is added.
+  Deeper review clarifies existing ProductSpec/gstack overlap and adds a
+  comparative pilot, human review rubric, and explicit continue/stop criteria.
+
 ### Changed
 
 - **The framework's own `demo.html` now follows the demo-page standard it

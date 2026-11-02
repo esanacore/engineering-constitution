@@ -6,6 +6,12 @@ holding itself to `TESTING.md`.
 
 ## Test Strategy
 
+Optional product-discovery review validation is exercised by
+`scripts/test_check_product_discovery.sh`, including negative freshness and
+decision-record cases. Bootstrap tests cover opt-in installation and preservation.
+The synthetic walkthrough has no implementation verification or market results;
+human discovery quality and pilot usefulness remain unvalidated.
+
 The framework is bash governance tooling plus Markdown standards, so the pyramid
 is shallow by nature:
 
@@ -53,6 +59,7 @@ percentage:
 | --- | --- | --- |
 | 2026-09-16 | 27 | Baseline: first run under `run_all_tests.sh` in CI. |
 | 2026-09-29 | 28 | `test_check_demo_page.sh` added; structural floors still 100% (checker contract passes). |
+| 2026-11-02 | Discovery slice | 32 discovery regression cases pass; new checker/helper paired with tests, checker-contract validation passes. Full framework run recorded in session notes. |
 
 ## Coverage Gap Log
 

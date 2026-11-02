@@ -33,6 +33,7 @@ test_new_project() {
   "$bootstrap_script" "$project_path" "$constitution_url"
 
   # Verify files
+  [ ! -e "docs/discovery/REVIEW.md" ] || { echo "FAIL: discovery must be opt-in"; exit 1; }
   [ -d "constitution" ] || { echo "FAIL: constitution submodule missing"; exit 1; }
   [ -f "AGENTS.md" ] || { echo "FAIL: AGENTS.md missing"; exit 1; }
   [ -f ".github/CONTRIBUTING.md" ] || { echo "FAIL: .github/CONTRIBUTING.md missing"; exit 1; }
@@ -465,7 +466,22 @@ test_missing_library() {
   echo "SUCCESS: a missing library fails loudly before touching the project."
 }
 
+test_product_discovery() {
+  echo "Testing optional discovery installation and preservation..."
+  project_path="$test_dir/discovery-project"
+  make_repo "$project_path"
+  "$bootstrap_script" --product-discovery "$project_path" "$constitution_url" >/dev/null
+  for name in BRIEF.md REVIEW.md PILOT.md; do
+    [ -f "$project_path/docs/discovery/$name" ] || { echo "FAIL: missing discovery $name"; exit 1; }
+  done
+  printf '\nLocal contributor note\n' >> "$project_path/docs/discovery/BRIEF.md"
+  "$bootstrap_script" --product-discovery "$project_path" "$constitution_url" >/dev/null
+  grep -q 'Local contributor note' "$project_path/docs/discovery/BRIEF.md" || { echo 'FAIL: local discovery overwritten'; exit 1; }
+  [ -f "$project_path/.constitution-bootstrap/templates/docs/discovery/BRIEF.md" ] || { echo 'FAIL: missing discovery merge template'; exit 1; }
+}
+
 # Run tests
+test_product_discovery
 test_new_project
 test_libraries_are_tracked
 test_agents_selection
