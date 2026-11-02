@@ -11,6 +11,9 @@ When a project adopts this constitution, it gains:
 - Standards for testing, documentation, security, operations, architecture, releases, and roadmap hygiene
 - Bootstrap templates for governance files like `README.md`, `TODO.md`, `CHANGELOG.md`, `AGENTS.md`, `CLAUDE.md`, and ADRs
 - CI-ready governance tooling such as traceability and compliance checks
+- Optional guided product discovery: contributor interviews, revision-bound review
+  records, comparative pilot templates, and a structural checker. Install with
+  `bootstrap.sh --product-discovery`; it adds no mandatory adopter requirement.
 - A standardized Eric's Engineering Constitution adoption badge for project READMEs
 
 ## Repository map
@@ -67,7 +70,7 @@ A real hit (filename or content) always fails, with or without `--strict`. It is
 The framework's own "Full suite" and the workflow that runs it, plus a `self-governance` job that runs the shipped checkers against this repository on every pull request. `scripts/test_checker_contract.sh` holds every `check_*.sh` to the shared checker contract, and every checker emits GitHub Actions annotations so findings surface in the pull request UI.
 
 ### `scripts/check_instruction_templates.sh` and `scripts/check_skills.sh`
-The first verifies that every agent instruction file present carries the same guidance (session planning, project memory), so a rule added to one vendor file cannot be silently missing from another; the second validates the 25 skills under `skills/`. See [[Governance Checkers]].
+The first verifies that every agent instruction file present carries the same guidance (session planning, project memory), so a rule added to one vendor file cannot be silently missing from another; the second validates the 26 skills under `skills/`. See [[Governance Checkers]].
 
 ### `scripts/bump_adopters.sh`
 Step 9 of cutting a release: re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`.

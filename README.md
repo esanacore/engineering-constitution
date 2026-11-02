@@ -104,7 +104,8 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
 - `KNOWLEDGE_SOURCES.md`: How to drop in book/reference sources and turn them into agent-consumable summaries via `sources/`.
-- `skills/`: 25 built-in agent skills that enforce constitution rules autonomously — validated by `scripts/check_skills.sh`; see `INTEGRATION.md`'s "Agent Skills" for how each tool loads them.
+- `skills/`: 26 built-in agent skills — validated by `scripts/check_skills.sh`; see `INTEGRATION.md`'s "Agent Skills" for how each tool loads them.
+- [Guided product discovery](docs/PRODUCT_DISCOVERY.md): optional interviews, contributor read-back, revision-bound review, and comparative pilot records. Bootstrap with `--product-discovery`; try the [synthetic walkthrough](examples/product-discovery/README.md). Structural checks do not certify product quality or human approval.
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
@@ -184,7 +185,7 @@ engineering-constitution/
 │   └── lib/                              ← Concern-scoped libraries sourced by bootstrap.sh
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
-├── skills/                               ← 25 built-in agent skills that execute constitution rules autonomously
+├── skills/                               ← 26 built-in agent skills, including optional product discovery
 ├── mcp-server/                           ← MCP server exposing constitution docs/sources as resources
 └── wiki/                                 ← This repo's own wiki (Home + Getting Started, Bootstrap Script, Governance Checkers, ...)
 ```

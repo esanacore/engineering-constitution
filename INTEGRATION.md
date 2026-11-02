@@ -251,7 +251,7 @@ agent in CI-adjacent workflows.
 
 ## Agent Skills
 
-The framework ships 25 agent skills under `skills/`, one directory per skill
+The framework ships 26 agent skills under `skills/`, one directory per skill
 with a `SKILL.md` (YAML front matter `name` + `description`, then the
 instructions). Each one executes a constitution rule autonomously — running
 the secrets sweep before completion, scaffolding a threat model when a trust
@@ -356,6 +356,26 @@ Or interactively, run `goose configure`, choose **Add Extension → Command-line
 The server reports the pinned constitution's `VERSION` as its own version and exposes every root standards document (`CONSTITUTION.md`, `AI_WORKFLOW.md`, `TESTING.md`, `DOCUMENTATION.md`, `SECURITY.md`, `OPERATIONS.md`, `ARCHITECTURE.md`, `RELEASES.md`, `CODE_STYLE.md`, `TODO_GUIDELINES.md`, `KNOWLEDGE_SOURCES.md`, `INTEGRATION.md`) plus the style-guide registry and every knowledge-source summary as resources; `scripts/test_mcp_resources.sh` fails if a standards document is missing from that list.
 
 ## gstack and gbrain
+
+### Optional Product Discovery
+
+Use `bash scripts/bootstrap.sh --product-discovery <project-path>
+<constitution-repository-url>` from the framework checkout to install supporting
+discovery records alongside the existing requirements template. For existing
+adopters, copy `constitution/templates/docs/discovery/` to `docs/discovery/` and
+read `constitution/docs/PRODUCT_DISCOVERY.md`. Existing files are preserved by
+bootstrap unless `--force` is given. Scaffolds deliberately require completion.
+
+An agent can read `constitution/skills/product-discovery/SKILL.md` directly;
+no vendor-specific skill installer or gstack is required for this workflow.
+Contributors participate through conversation and readable review, without Git
+or CLI setup. gstack remains optional for that path; the conventions below apply
+when its integration is enabled. ProductSpec exchange guidance is documented in
+`docs/PRODUCTSPEC_MAPPING.md`; no converter or runtime dependency is installed.
+
+Opt into CI with `bash constitution/scripts/check_product_discovery.sh --strict .`
+after completing the records. Its result is structural consistency, not a
+quality score, authenticated approval, or proof of product success.
 
 [gstack](https://github.com/garrytan/gstack) (Garry Tan, MIT license) is a browser automation and AI skill toolkit for Claude Code. It ships a library of slash-command skills — `/browse`, `/qa`, `/design-review`, `/ship`, `/review`, `/document-release`, and more — that Claude Code invokes directly. gbrain is gstack's persistent project-memory layer; once initialized in a repository, Claude Code can store and recall project context across sessions.
 

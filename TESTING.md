@@ -70,6 +70,11 @@ the credential-shaped subset it can catch mechanically.
 
 ## Governance Tooling Must Be Tested
 
+The optional product discovery checker has negative regression cases for stale
+revision/digest bindings, incomplete decision records, blocking unknowns and
+requirement references. It does not execute product tests or certify human
+approval. Its suite is discovered by the existing full-suite runner.
+
 Scripts that enforce the standards — coverage gates, requirements-traceability checkers, version gates, bootstrap and audit scripts — are themselves code, and a silent bug in them removes the protection they appear to provide. Treat governance tooling as production code:
 
 - Give every reference checker or gate unit tests, including **negative cases** that prove it fails when it should.
