@@ -11,7 +11,7 @@ trap 'rm -rf "$TMPDIR"' EXIT
 make_repo() {
   local root=$1
 
-  mkdir -p "$root/docs/adr" "$root/constitution" "$root/.github" "$root/wiki"
+  mkdir -p "$root/docs/adr" "$root/docs/sessions" "$root/constitution" "$root/.github" "$root/wiki"
   touch \
     "$root/README.md" \
     "$root/docs/HELP.md" \

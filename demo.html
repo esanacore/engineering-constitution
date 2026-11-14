@@ -590,6 +590,22 @@ resolving imports against the declared layer table ...
 <span class="n">3.</span> [ ] <span class="k">AUTOMATED</span> — tests.yml runs the suite + self-governance on the PR</pre>
           <p class="code-caption">Illustrative excerpt.</p>
 
+          <h4>Every session leaves a summary the next agent can find</h4>
+          <p class="section-lead" style="margin-bottom:0.75rem;">Commits record what changed. The session log (<code>docs/sessions/</code>, ADR-0007) records what was asked, what the conversation established, and why each decision went the way it did — and every agent searches it before planning. <code>check_session_summaries.sh</code> verifies its shape.</p>
+<pre class="code"><span class="p">$</span> bash constitution/scripts/<span class="fn">find_sessions.sh</span> login timeout
+docs/sessions/<span class="s">2026-03-15-login-timeouts.md</span>
+    Session: Stop logging users out after five minutes
+    <span class="t">Topics:</span> auth, session cookie, timeout, src/auth/session.py
+docs/sessions/<span class="s">2026-01-08-auth-refactor.md</span>
+    Session: Split token handling out of the request handler
+    <span class="t">Topics:</span> auth, middleware, token refresh
+
+<span class="c"># docs/sessions/2026-03-15-login-timeouts.md</span>
+<span class="k">## Decisions</span>
+- Sliding expiry, 30 minutes (maintainer's decision). Rejected: a fixed
+  8-hour session, because shared kiosks stay signed in.</pre>
+          <p class="code-caption">Illustrative output. A summary is never a transcript and never carries a secret.</p>
+
           <details class="more">
             <summary>Why Solarized Dark, specifically</summary>
             <div class="more-body">
@@ -632,7 +648,7 @@ resolving imports against the declared layer table ...
             <div class="timeline-item" id="step-2">
               <div class="timeline-phase">Phase 2 · Plan &amp; crash recovery</div>
               <div class="timeline-step">Write docs/SESSION_PLAN.md</div>
-              <p class="timeline-desc">Before editing code, the agent records goals, approach, file boundaries, and risks — a recovery point if the session is interrupted.</p>
+              <p class="timeline-desc">The agent searches the session log (<code>docs/sessions/</code>) for earlier work on the same topic, then records goals, approach, file boundaries, and risks — a recovery point if the session is interrupted.</p>
             </div>
             <div class="timeline-item" id="step-3">
               <div class="timeline-phase">Phase 3 · Implement &amp; test</div>
@@ -646,8 +662,8 @@ resolving imports against the declared layer table ...
             </div>
             <div class="timeline-item" id="step-5">
               <div class="timeline-phase">Phase 5 · Close out</div>
-              <div class="timeline-step">Changelog, roadmap, Next Steps</div>
-              <p class="timeline-desc">Changes are recorded in the changelog and TODO, the handoff ends with a Next Steps procedure, and the session plan is cleared for the next session.</p>
+              <div class="timeline-step">Changelog, roadmap, session summary, Next Steps</div>
+              <p class="timeline-desc">Changes are recorded in the changelog and TODO, the session's request, context, and decisions are summarized in the session log, the handoff ends with a Next Steps procedure, and the session plan is cleared for the next session.</p>
             </div>
           </div>
         </div>

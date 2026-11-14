@@ -38,6 +38,7 @@ Before making changes, read:
 3. `AGENTS.md` — Project-specific rules and overrides.
 4. `README.md`, `TODO.md`, `CHANGELOG.md` — Project context (TODO: open items only; CHANGELOG: `Unreleased` + latest release).
 5. `docs/MEMORY.md` — Project memory (learnings, preferences, decisions).
+6. `docs/sessions/README.md` — Session-log index (newest rows); search the log for the task's topic and read matching summaries on demand.
 
 ## Standards
 
@@ -45,6 +46,7 @@ Before making changes, read:
 - Check `docs/SESSION_PLAN.md` for a previous interrupted session, then write your own plan before implementing.
 - End every push with a Next Steps procedure (`constitution/AI_WORKFLOW.md`, "Next Steps Procedure"): a numbered checklist of what happens next, each step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, with every step only a person can do (hardware, credentials, approvals) called out and described; put it in the pull request and `docs/AGENT_HANDOFF.md`.
 - Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`constitution/DOCUMENTATION.md`, "Demo Page").
+- Consult and extend the session log — before planning, read the newest rows of `docs/sessions/README.md` and search `docs/sessions/` for earlier sessions on the same topic (`bash constitution/scripts/find_sessions.sh <keyword>`), reading the ones that match; before completing work, add this session's summary there (request, context, decisions, discoveries, outcome — a summary, never a transcript, and never a secret) and list it in the index (`constitution/AI_WORKFLOW.md`, "Session Summaries").
 - Read `docs/MEMORY.md` to load project context, codebase learnings, and user preferences.
 - Add or update tests for behavioral changes; evaluate coverage and record gaps.
 - Update `TODO.md` and `CHANGELOG.md` as part of every change.

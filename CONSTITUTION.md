@@ -32,6 +32,7 @@ Review:
 - Wiki content
 - Demo page (`demo.html`) for product-facing repositories — a reader who finishes the documentation should also be able to see the product work. Like the README, it reads short by default (depth behind `<details>`), themes any code it shows with one canonical palette, and may carry an offline PDF brief built from the repository's own sources. See `DOCUMENTATION.md`'s "Demo Page" and "Code Snippets in Rendered Documentation".
 - Project memory (`docs/MEMORY.md`) to record codebase learnings, decisions, and user preferences
+- The session log (`docs/sessions/`) — this session's summary of what was asked, decided, and learned
 
 A task is not complete until documentation impact has been evaluated.
 
@@ -46,6 +47,8 @@ expands on demand. See `DOCUMENTATION.md`'s "Every Platform the Project
 Supports" and "Progressive Disclosure".
 
 Planned work should be documented before implementation begins (see `docs/SESSION_PLAN.md` and `AI_WORKFLOW.md`). If a session is interrupted, the plan enables the next agent or human to resume without guessing what was intended. Cumulative codebase learnings, conventions, and approved decisions are preserved across sessions in the project memory bank (`docs/MEMORY.md`) at the user's discretion.
+
+The code is not the whole record of a session. Each session also leaves a summary in the session log (`docs/sessions/`) — the request, the conversational context, the decisions and their reasoning, and the relevant information it turned up — and each session begins by searching that log for its task, so that what one agent learned is found by the next rather than rediscovered (ADR-0007). A summary is never a transcript and never carries a secret. See `DOCUMENTATION.md`'s "Session Summaries" and `AI_WORKFLOW.md`.
 
 Product-facing repositories — those that ship behavior to people other than their own maintainers; see `DOCUMENTATION.md`'s "Product Requirements Expectations" for the definition — should give each requirement a stable identifier and explicit acceptance criteria, and maintain a requirements traceability matrix mapping each requirement to its verifying tests and status. See `DOCUMENTATION.md`.
 
@@ -231,6 +234,10 @@ numbered checklist of what happens next, each step tagged `HUMAN`, `AGENT`, or
 UI-only settings, approvals — called out first and described well enough to
 follow without having read the session. It closes the summary, the pull
 request description, and `docs/AGENT_HANDOFF.md`, and is never empty.
+
+Every non-trivial session starts by consulting the **session log**
+(`docs/sessions/`) for earlier work on the same topic and ends by adding its
+own summary to it (ADR-0007).
 
 ## Future Roadmap
 

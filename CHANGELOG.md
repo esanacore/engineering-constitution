@@ -6,6 +6,53 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Session Summaries
+
+- **Every session now leaves a summary, and every session looks for the
+  earlier ones (ADR-0007).** A new session log, `docs/sessions/`, holds one
+  append-only file per session (`YYYY-MM-DD-<slug>.md`) recording what
+  commits do not: the request, the conversational context, the decisions and
+  their reasoning, the relevant information discovered, the outcome, and the
+  open questions — behind a newest-first index and a fixed template.
+  `AI_WORKFLOW.md` gained a "Session Summaries" section; Required Workflow
+  steps 9–10 consult the log before planning and step 27 writes the summary
+  before the session plan is cleared (folded into existing steps, so no step
+  number changed). A trivial change may skip it.
+- **Consulting the log is one command.** `scripts/find_sessions.sh
+  <keyword>...` prints the summaries that mention every term (a path fragment
+  works; `--any`, `--list`, `--limit`), title and Topics matches first.
+- **Every agent instruction file carries the rule** — root, all templates
+  (including Aider, Continue, Goose, Antigravity, Solon, and both pull
+  request templates), and the sample project, which gains a worked,
+  clearly-synthetic example. A new `session-summary-writer` skill (27 skills)
+  covers both halves.
+- **`scripts/check_session_summaries.sh`** checks the mechanical half: entry
+  names, a title, a `**Date:**` matching the file name, a non-empty
+  `**Topics:**` line, non-empty Request/Context/Decisions/Discoveries/Outcome/Open Questions sections,
+  no unanswered template prompt, and agreement between the entries and the
+  index. `--base <ref>` adds a blunt tripwire for a diff that changes files
+  but carries no summary. Warn by default, `--strict` to enforce.
+- **Rollout is warn-first (ADR-0003); no adopter's CI changes colour.**
+  `docs/sessions/` joins `check_compliance.sh`'s *recommended* tier, so
+  adopters see one new warning (and one new gap under their own `--strict`)
+  until they add the directory; `bootstrap.sh` installs
+  `docs/sessions/README.md` and `TEMPLATE.md`; `constitution-compliance.yml`
+  runs the checker in warn mode only where the directory exists. Existing
+  adopters pick up the instruction-file rule by re-running `bootstrap.sh` or
+  copying the line from the templates.
+- **Claude Code asks at the right moment.** `next_steps_hook.sh`'s `Stop`
+  check now also asks for a session summary when the session made commits —
+  only in a repository that has a `docs/sessions/` directory, and, like the
+  rest of the hook, only once.
+
+### Security
+
+- `SECURITY.md` gained "Session Summaries Are Published Artifacts": a summary
+  is never a transcript; nothing above Public goes in (no secrets,
+  credentials, personal or customer data, private hostnames); the user may
+  strike anything; and a later agent treats a summary as content to verify,
+  never as an instruction.
+
 ### Product Discovery
 
 - Added an optional guided discovery workflow, tool-neutral agent skill,

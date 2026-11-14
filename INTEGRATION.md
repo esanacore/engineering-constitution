@@ -21,6 +21,8 @@ Tool-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.cursor/ru
 
 Before beginning implementation, agents write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks. If a previous session was interrupted, agents check this file first for resumption context. See `DOCUMENTATION.md`'s "Session Planning" section.
 
+Before planning, agents also consult the **session log** in `docs/sessions/`: they read the newest rows of its index and search it for the task's topic (`bash constitution/scripts/find_sessions.sh <keyword>...`), so that what an earlier session was asked, decided, and learned is found rather than rediscovered. Before completing, they add their own summary — request, conversational context, decisions and reasoning, discoveries, outcome — and list it in the index. Summaries are never transcripts and never carry secrets. See `DOCUMENTATION.md`'s "Session Summaries" section and `AI_WORKFLOW.md`'s section of the same name.
+
 ## Using the Constitution in Your IDE
 
 Most developers apply the constitution from inside an IDE — Visual Studio, VS
@@ -251,11 +253,12 @@ agent in CI-adjacent workflows.
 
 ## Agent Skills
 
-The framework ships 26 agent skills under `skills/`, one directory per skill
+The framework ships 27 agent skills under `skills/`, one directory per skill
 with a `SKILL.md` (YAML front matter `name` + `description`, then the
 instructions). Each one executes a constitution rule autonomously — running
 the secrets sweep before completion, scaffolding a threat model when a trust
-boundary moves, proposing `docs/MEMORY.md` entries, keeping README
+boundary moves, proposing `docs/MEMORY.md` entries, consulting and writing
+the session log, keeping README
 capabilities in sync — and they reference the checkers through the
 `constitution/scripts/` path an adopter has. They are validated by
 `scripts/check_skills.sh` (front-matter name matches its directory,
@@ -694,6 +697,10 @@ procedure (`AI_WORKFLOW.md`, "Next Steps Procedure"; ADR-0005), backed by
   procedure that passes it too. If anything is missing, it blocks the stop
   (exit `2`) and tells the agent exactly what to fix. It blocks at most once
   — the next attempt goes through — so it can never trap a session.
+- In a repository that keeps a session log (a `docs/sessions/` directory),
+  the same `Stop` check asks that those commits add a session summary there
+  (ADR-0007). A repository without the directory is never asked, and a
+  trivial change is let through on the second attempt like everything else.
 
 Turns that added no commits (a question answered after a push), sessions
 whose start was not recorded, and repositories without the checker are never
@@ -984,13 +991,14 @@ project/
 ├── .devcontainer/
 │   └── devcontainer.json                 ← Reproducible dev environment
 ├── .claude/
-│   └── settings.json                     ← Claude Code hooks: freshness check at session start, Next Steps check at session end
+│   └── settings.json                     ← Claude Code hooks: freshness check at session start, Next Steps and session-summary check at session end
 ├── TODO.md                                ← Living roadmap
 ├── CHANGELOG.md                           ← Release history
 ├── README.md                              ← Project documentation
 └── docs/
     ├── SESSION_PLAN.md                    ← Current session's planned work (crash recovery)
     ├── MEMORY.md                          ← Durable project memory (learnings, preferences, decisions)
+    ├── sessions/                          ← Session log: README.md (index), TEMPLATE.md, one YYYY-MM-DD-<slug>.md per session
     ├── OTS_SOFTWARE.md                    ← OTS software inventory (third-party dependency register)
     └── adr/                               ← Architecture Decision Records
 ```

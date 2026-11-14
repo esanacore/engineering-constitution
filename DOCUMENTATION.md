@@ -74,6 +74,7 @@ Repositories should also include:
 - docs/OPERATIONS.md
 - docs/SESSION_PLAN.md for crash-recovery session planning
 - docs/MEMORY.md for user-discretionary project memory (learnings, preferences, decisions)
+- docs/sessions/ for the session log (one summary per session: request, context, decisions, discoveries, outcome)
 - API documentation
 - Wiki content when appropriate
 
@@ -99,7 +100,7 @@ Agent sessions can crash, time out, or be interrupted mid-work. When this happen
 
 - **Write before implementing**: at the start of each session, write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks. See `AI_WORKFLOW.md`'s Required Workflow.
 - **Update during work**: keep the Resumption Notes section current as work progresses, so the plan stays useful if the session is interrupted.
-- **Clear after completing**: once the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`, clear or archive the plan. The file is overwritten at the start of the next session.
+- **Clear after completing**: once the session's outcomes are captured in commit messages, the session summary (below), `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`, clear or archive the plan. The file is overwritten at the start of the next session.
 - **Complementary to AGENT_HANDOFF.md**: the session plan captures *intent before work*; the handoff captures *state after work*. They are bookends of a session lifecycle.
 
 ## Project Memory
@@ -109,6 +110,54 @@ As agents and humans work on a project, they establish codebase learnings, disco
 - **Durable cross-session context**: AI agents read `docs/MEMORY.md` at the start of each session to align with past context, and propose updates at the end of a session.
 - **User-Discretionary Control**: The memory file is strictly under the user's discretion. The agent MUST NOT write to or update `docs/MEMORY.md` without presenting the proposed additions/edits directly to the user for explicit approval at the end of the session.
 - **Complementary to Session Plans and Handoffs**: While `docs/SESSION_PLAN.md` and `docs/AGENT_HANDOFF.md` capture the active/temporary context of a single session, `docs/MEMORY.md` preserves long-term, cumulative learnings and preferences.
+
+## Session Summaries
+
+A repository's history records what changed. It does not record what was
+asked, what the conversation established, which alternatives were weighed, or
+why the one that shipped was chosen — and that context is gone when the
+session ends, exactly when the next agent asked to change the same code needs
+it. The **session log**, `docs/sessions/`, keeps it: one summary per session,
+written before the session completes and consulted before the next one
+plans. The decision is recorded in `docs/adr/0007-session-summaries.md`; the
+workflow steps and the full writing rules are in `AI_WORKFLOW.md`, "Session
+Summaries".
+
+- **One file per session**, `docs/sessions/YYYY-MM-DD-<slug>.md`, copied from
+  `docs/sessions/TEMPLATE.md`. Separate files keep the log append-only, keep
+  concurrent sessions out of each other's way, and let a reader open one
+  session without loading the rest.
+- **The same shape everywhere**: a title; **Date**, **Agent**, **Branch /
+  PR**, **Topics**, and **Related** fields; then **Request**, **Context**,
+  **Decisions**, **Discoveries**, **Outcome**, and **Open Questions**. A
+  heading with nothing under it says "None." rather than disappearing.
+- **Findable is the requirement.** The **Topics** line carries the keywords a
+  later agent would search for — features, components, file paths, error
+  messages — and `docs/sessions/README.md` is an index, newest first, with
+  one row per summary. `scripts/find_sessions.sh <keyword>...` searches the
+  log and ranks title and Topics matches first.
+- **Consulted, not just kept.** Every agent instruction file tells the agent
+  to read the index's newest rows and search the log for its task before
+  planning (`AI_WORKFLOW.md` steps 9–10). Reading is scoped on purpose: the
+  log grows without bound, so it is searched, never read end to end.
+- **A summary, not a transcript, and never a secret.** The log is committed
+  and, in a public repository, published. `SECURITY.md`'s "Session Summaries
+  Are Published Artifacts" applies to every entry.
+- **Append-only history, not current truth.** A summary records what was
+  known then. `docs/MEMORY.md` (what is durably true, written with the
+  user's approval), ADRs (major decisions), and `docs/AGENT_HANDOFF.md`
+  (what happens next) remain the records in force; the summary is the
+  narrative that connects them and is written without a separate approval.
+
+`scripts/check_session_summaries.sh` checks the mechanical half — names,
+fields, sections, unanswered template prompts, and agreement between the
+entries and the index — warn by default, `--strict` on request, with
+`--base <ref>` as a blunt tripwire for a diff that carries no summary.
+`scripts/bootstrap.sh` installs the index and the template,
+`scripts/check_compliance.sh` lists `docs/sessions/` in its recommended tier,
+and `constitution-compliance.yml` runs the checker in warn mode wherever the
+directory exists. Whether a summary is honest and complete remains a review
+question.
 
 ## Wiki
 
@@ -177,6 +226,7 @@ For each meaningful change, review whether updates are needed for:
 - Configuration documentation
 - Troubleshooting guidance
 - Wiki content
+- Session log (`docs/sessions/`): this session's summary and its index row
 
 Also verify that any adopted template files no longer contain placeholder text
 such as `<add here>`, example commands, or HTML comment prompts.
@@ -634,7 +684,8 @@ a "major design change" for every adopter at once and gets an ADR in
   the Framework Itself").
 
 ADR-0001 (the wiki), ADR-0002 (the demo page), ADR-0003 (compatibility
-policy), and ADR-0004 (the proportionate workflow) are the worked examples. Earlier decisions of this
+policy), ADR-0004 (the proportionate workflow), ADR-0005 (the Next Steps
+procedure), and ADR-0007 (session summaries) are the worked examples. Earlier decisions of this
 kind — the root relocation in 1.38.0, the required critique pass in 1.45.0,
 the reading-order scoping in 1.46.0 — shipped without one, which is the
 reason this rule now exists.

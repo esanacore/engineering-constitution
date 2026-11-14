@@ -55,6 +55,8 @@ Creates or installs:
   - docs/OPERATIONS.md
   - docs/SESSION_PLAN.md
   - docs/MEMORY.md
+  - docs/sessions/README.md
+  - docs/sessions/TEMPLATE.md
   - docs/ARCHITECTURE.md
   - demo.html
   - wiki/Home.md
@@ -397,6 +399,10 @@ copy_file "$template_dir/docs/MVP_BACKLOG.md" "$project_path/docs/MVP_BACKLOG.md
 copy_file "$template_dir/docs/OPERATIONS.md" "$project_path/docs/OPERATIONS.md"
 copy_file "$template_dir/docs/SESSION_PLAN.md" "$project_path/docs/SESSION_PLAN.md"
 copy_file "$template_dir/docs/MEMORY.md" "$project_path/docs/MEMORY.md"
+# The session log (constitution DOCUMENTATION.md "Session Summaries", ADR-0007):
+# an index and a template. Summaries themselves are written by sessions.
+copy_file "$template_dir/docs/sessions/README.md" "$project_path/docs/sessions/README.md"
+copy_file "$template_dir/docs/sessions/TEMPLATE.md" "$project_path/docs/sessions/TEMPLATE.md"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
 
 # A product-facing repository shows its product, not only describes it

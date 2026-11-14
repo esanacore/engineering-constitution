@@ -104,12 +104,13 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `RELEASES.md`: Release and changelog standards.
 - `TODO_GUIDELINES.md`: TODO.md structure and maintenance rules.
 - `KNOWLEDGE_SOURCES.md`: How to drop in book/reference sources and turn them into agent-consumable summaries via `sources/`.
-- `skills/`: 26 built-in agent skills — validated by `scripts/check_skills.sh`; see `INTEGRATION.md`'s "Agent Skills" for how each tool loads them.
+- `skills/`: 27 built-in agent skills — validated by `scripts/check_skills.sh`; see `INTEGRATION.md`'s "Agent Skills" for how each tool loads them.
 - [Guided product discovery](docs/PRODUCT_DISCOVERY.md): optional interviews, contributor read-back, revision-bound review, and comparative pilot records. Bootstrap with `--product-discovery`; try the [synthetic walkthrough](examples/product-discovery/README.md). Structural checks do not certify product quality or human approval.
 - `templates/`: Files to copy into projects.
 - `templates/docs/PRODUCT_REQUIREMENTS.md`: Optional product requirements template.
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
+- `templates/docs/sessions/`: The session log's index (`README.md`) and per-session `TEMPLATE.md`, installed into every adopter. Each session leaves a summary there — request, conversational context, decisions and reasoning, discoveries, outcome — and each session searches it before planning (see `DOCUMENTATION.md` "Session Summaries" and `docs/adr/0007-session-summaries.md`).
 - `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `templates/wiki/Home.md`: Wiki landing-page scaffold installed into every adopter as the required `wiki/Home.md` (see `docs/adr/0001-wiki-subsystem.md`).
 - `templates/docs/INCIDENT_POSTMORTEM.md`: Blameless postmortem template, copied per incident into `docs/incidents/`.
@@ -125,6 +126,8 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `scripts/check_next_steps.sh`: Reference checker that verifies a handoff (default `docs/AGENT_HANDOFF.md`) or a pull request body (`--file -`) ends with a well-formed Next Steps procedure — numbered checklist, every step tagged HUMAN/AGENT/AUTOMATED, every human-only step named up front and described (`AI_WORKFLOW.md`, "Next Steps Procedure"; ADR-0005).
 - `scripts/check_readme.sh`: Reference checker for the mechanical half of `DOCUMENTATION.md`'s README standard — fenced command blocks come with a supported-platforms statement and mention Windows and macOS (as supported or unsupported); `<details>` blocks have the blank lines the renderer needs, are not nested or left open, say what is inside, and hold no headings; a PowerShell or cmd Windows block uses no POSIX shell commands (a Git Bash block is a bash block). `--file` points it at `docs/SETUP.md` and friends.
 - `scripts/next_steps_hook.sh`: Claude Code `SessionStart`/`Stop` hook (registered in `templates/.claude/settings.json` and this repository's `.claude/settings.json`). When a session that made commits tries to end without updating `docs/AGENT_HANDOFF.md`, with a malformed Next Steps procedure, or with a final reply that has no Next Steps section, it blocks the stop once and tells the agent what is missing.
+- `scripts/check_session_summaries.sh`: Reference checker for the session log — every `docs/sessions/YYYY-MM-DD-<slug>.md` carries a title, a matching `**Date:**`, a non-empty `**Topics:**` line, and non-empty Request/Context/Decisions/Discoveries/Outcome/Open Questions sections, has no unanswered template prompt, and is linked from the index; `--base <ref>` also notes a diff that carries no summary. Warn by default, `--strict` to enforce.
+- `scripts/find_sessions.sh`: Search helper for the session log — `find_sessions.sh <keyword>...` prints the summaries that mention every term (title and Topics matches first, then newest), so an agent can read what was asked, decided, and learned last time before planning.
 - `scripts/check_skills.sh`: Reference checker that validates every `skills/*/SKILL.md` (front-matter name matches its directory, description present, referenced scripts exist).
 - `scripts/test_checker_contract.sh`: Meta-test holding every `check_*.sh` to the shared checker contract (`--help`, exit `2` on a bad option, `--strict` where documented, executable bit, a paired negative-case suite, CI annotations). Every checker sources `scripts/lib/ci_annotations.sh` and emits `::warning::` / `::error::` under GitHub Actions.
 - `scripts/bump_adopters.sh`: Fleet bump for step 9 of cutting a release — re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently.
@@ -171,21 +174,22 @@ engineering-constitution/
 ├── AGENTS.md, CLAUDE.md, COPILOT_INSTRUCTIONS.md, ...  ← This repo's own agent instructions
 │
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
-│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, ADR, ...)
-│   ├── .claude/settings.json             ← Claude Code hooks (freshness at start, Next Steps at stop) + permissions deny list
+│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, sessions/, ADR, ...)
+│   ├── .claude/settings.json             ← Claude Code hooks (freshness at start, Next Steps + session summary at stop) + permissions deny list
 │   └── .github/
 │       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki, ...), SHA-pinned
 │       ├── agents/                       ← Solon, the Copilot custom agent
 │       └── pull_request_template.md, CODEOWNERS, dependabot.yml
 │
 ├── docs/                                 ← This repo's own governance docs (TEST_PLAN, ARCHITECTURE, OPERATIONS, ...)
-│   └── adr/                              ← Architecture Decision Records for the framework itself
+│   ├── adr/                              ← Architecture Decision Records for the framework itself
+│   └── sessions/                         ← The session log: one summary per session, plus its index and template
 ├── .github/                              ← This repo's own CI (tests, release-tag-alignment, wiki-sync), PR template, CODEOWNERS
 ├── scripts/                              ← bootstrap.sh plus every checker, auditor, and its tests
 │   └── lib/                              ← Concern-scoped libraries sourced by bootstrap.sh
 ├── examples/                             ← A worked sample-project layout + OPERATIONS.example.md
 ├── sources/                              ← Book/reference sources distilled into agent-consumable summaries
-├── skills/                               ← 26 built-in agent skills, including optional product discovery
+├── skills/                               ← 27 built-in agent skills, including optional product discovery
 ├── mcp-server/                           ← MCP server exposing constitution docs/sources as resources
 └── wiki/                                 ← This repo's own wiki (Home + Getting Started, Bootstrap Script, Governance Checkers, ...)
 ```

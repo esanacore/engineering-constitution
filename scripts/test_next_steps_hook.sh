@@ -204,4 +204,43 @@ status=0; bash "$hook" bogus </dev/null >/dev/null 2>&1 || status=$?
 bash "$hook" --help | grep -q '^Usage:' || fail "--help prints no Usage: block"
 echo "PASS"
 
+echo "Test 12: with a session log, commits need a session summary; without one, nothing is asked"
+r="$tmp/r12"; make_repo "$r"
+mkdir -p "$r/docs/sessions"
+printf '# Session Log\n' > "$r/docs/sessions/README.md"
+printf '# Session: <title>\n' > "$r/docs/sessions/TEMPLATE.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "docs: adopt the session log"
+run "$r" start "$(start_json s12)"
+# Touching the index and the template is not a summary.
+printf '# Agent Handoff\n\nUpdated.\n\n%s\n' "$good_steps" > "$r/docs/AGENT_HANDOFF.md"
+echo "| row |" >> "$r/docs/sessions/README.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "work + handoff"
+run "$r" stop "$(stop_json s12 false "$reply_ok")"
+[ "$status" -eq 2 ] || { echo "$err"; fail "a session with no summary should block, got $status"; }
+grep -q 'added no session summary to docs/sessions/' <<< "$err" || { echo "$err"; fail "missing summary not named"; }
+grep -q 'Proportionate Workflow' <<< "$err" || { echo "$err"; fail "the trivial-change exit is not offered"; }
+if grep -q 'did not update docs/AGENT_HANDOFF.md\|Write the procedure' <<< "$err"; then echo "$err"; fail "Next Steps advice was given although only the summary was missing"; fi
+run "$r" stop "$(stop_json s12 true "$reply_ok")"
+[ "$status" -eq 0 ] || fail "the summary check must block only once, got $status"
+r="$tmp/r12b"; cp -R "$tmp/r12" "$r"
+run "$r" start "$(start_json s12b)"
+echo y > "$r/more.txt"; echo "- more" >> "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "more work"
+# A stray file in the log, committed, is not a summary either.
+echo scratch > "$r/docs/sessions/scratch.md"; echo "- again" >> "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "scratch"
+run "$r" stop "$(stop_json s12b false "$reply_ok")"
+[ "$status" -eq 2 ] || fail "a stray file in the log should not count as a summary, got $status"
+grep -q 'added no session summary' <<< "$err" || { echo "$err"; fail "stray file: wrong reason"; }
+echo z > "$r/z.txt"; echo "- third" >> "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "third"
+printf '# Session: More\n' > "$r/docs/sessions/2026-11-14-more.md"
+run "$r" stop "$(stop_json s12b false "$reply_ok")"
+[ "$status" -eq 2 ] || fail "an uncommitted summary should block, got $status"
+grep -q 'written but not committed' <<< "$err" || { echo "$err"; fail "uncommitted summary not named"; }
+git -C "$r" add -A; git -C "$r" commit -q -m "docs: session summary"
+run "$r" stop "$(stop_json s12b false "$reply_ok")"
+[ "$status" -eq 0 ] || { echo "$err"; fail "a committed summary should pass, got $status"; }
+echo "PASS"
+
 echo "ALL TESTS PASSED"

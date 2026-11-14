@@ -7,6 +7,7 @@ name: Constitution Compliance
 #   - check_demo_page.sh    — demo.html is self-contained and linked from README.md.
 #   - check_next_steps.sh   — docs/AGENT_HANDOFF.md ends with a Next Steps procedure.
 #   - check_readme.sh       — README.md names its platforms and collapses correctly.
+#   - check_session_summaries.sh — docs/sessions/ summaries are well-formed and indexed.
 #
 # The traceability check runs only when the product-facing documents exist, so
 # non-product repositories are not forced to maintain them. Runs on every pull
@@ -78,6 +79,25 @@ jobs:
             bash constitution/scripts/check_next_steps.sh .
           else
             echo "::notice::No docs/AGENT_HANDOFF.md (or no Next Steps checker in this constitution pin); skipping the Next Steps check."
+          fi
+
+      - name: Verify the session log (when present)
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          # Older constitution pins predate the session log checker. Warn mode:
+          # on a pull request it also notes a diff that carries no summary; a
+          # base that cannot be diffed falls back to the format check.
+          if [ -d docs/sessions ] && [ -e constitution/scripts/check_session_summaries.sh ]; then
+            if [ -n "$BASE_SHA" ] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+              bash constitution/scripts/check_session_summaries.sh --base "$BASE_SHA" .
+            else
+              bash constitution/scripts/check_session_summaries.sh .
+            fi
+          else
+            echo "::notice::No docs/sessions/ (or no session log checker in this constitution pin); skipping the session log check."
           fi
 
       - name: Verify requirements traceability (product-facing repositories)

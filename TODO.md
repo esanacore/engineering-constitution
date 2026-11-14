@@ -2,6 +2,15 @@
 
 ## Features
 
+- [x] Session summaries in a searchable session log (ADR-0007): `docs/sessions/` (one file per session, index, template), Required Workflow steps 9–10 (consult) and 27 (write), `scripts/check_session_summaries.sh`, `scripts/find_sessions.sh`, the rule in every agent instruction file, the `Stop` hook, bootstrap, the compliance recommended tier, and `SECURITY.md`'s privacy rules. Follow-ups:
+  - [ ] Roll the session log across the adopter fleet with the next fleet bump: `docs/sessions/README.md` + `TEMPLATE.md` and the instruction-file line in each adopter (bootstrap never overwrites existing instruction files, so the line is a hand-merge or a scripted append).
+  - [ ] Make `docs/sessions` a default anchor of `check_instruction_templates.sh` after a `Deprecation` notice (ADR-0003), alongside the "Next Steps procedure" anchor item below.
+  - [ ] Expose an adopter's session log through the MCP server (`constitution://session/*` resources plus a search tool), so tools that cannot run `find_sessions.sh` can still consult it. Today the server exposes only the constitution's own documents.
+  - [ ] Generate `docs/sessions/README.md`'s index table from the entries' Date/title/Topics fields (a `--write-index` mode), so the index cannot drift and concurrent sessions stop conflicting on its top row.
+  - [ ] Decide how the log ages: once a repository holds a few hundred summaries, consider per-year subdirectories (`docs/sessions/2026/`) — `check_session_summaries.sh` and `find_sessions.sh` scan one level today.
+  - [ ] Teach `measure_instruction_weight.sh` to scope `docs/sessions/README.md` (newest rows only), as it does for `TODO.md` and `CHANGELOG.md`; the index is small now but grows without bound.
+  - [ ] Add an opt-in content pattern to `check_secrets.sh` (or a `--paranoid` pass over `docs/sessions/`) for personal data shapes — email addresses, phone numbers — which the secrets sweep does not look for and a conversation summary is the likeliest place to leak.
+
 - [x] Implement optional guided discovery workflow, skill, supporting templates,
   bootstrap opt-in, synthetic revision walkthrough and structural review checker.
 - [ ] Run an authorized discovery pilot against the team's existing process;

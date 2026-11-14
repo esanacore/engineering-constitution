@@ -21,6 +21,14 @@ auto-commits: false
 # the repository has a `demo.html`, update it in the same change; a demo
 # still showing the old behavior is an incomplete change
 # (`constitution/DOCUMENTATION.md`, "Demo Page").
+#
+# Consult and extend the session log: docs/sessions/README.md (the index,
+# loaded below) lists earlier sessions; search docs/sessions/ for the task's
+# topic (`bash constitution/scripts/find_sessions.sh <keyword>`) and /read the
+# summaries that match before planning. Before completing work, add this
+# session's summary there (request, context, decisions, discoveries, outcome:
+# a summary, never a transcript, and never a secret) and list it in the index
+# (`constitution/AI_WORKFLOW.md`, "Session Summaries").
 read:
   - AGENTS.md
   - constitution/CONSTITUTION.md
@@ -33,3 +41,4 @@ read:
   - CHANGELOG.md
   - docs/SESSION_PLAN.md
   - docs/MEMORY.md
+  - docs/sessions/README.md

@@ -12,8 +12,8 @@ This document defines the required workflow for AI-assisted software development
 6. Read OPERATIONS.md when the task affects infrastructure, CI/CD, deployment, or runbooks.
 7. Review non-default branches, worktrees, and open pull requests for related or conflicting in-progress work.
 8. Check `docs/SESSION_PLAN.md` for an existing plan from a previous interrupted session. If one exists, review it for resumption context.
-9. Read `docs/MEMORY.md` to load project-specific learnings, decisions, and user preferences.
-10. Understand the task.
+9. Read `docs/MEMORY.md` to load project-specific learnings, decisions, and user preferences, then the session log's index (`docs/sessions/README.md`) — the newest rows; older ones are history, searched on demand.
+10. Understand the task, then consult the session log for it: search `docs/sessions/` for the task's topics, components, and file paths (`bash constitution/scripts/find_sessions.sh <keyword>...`, or plain `grep`) and read the summaries that match before planning. They hold what the code does not: what was asked last time, what was decided and why, what was tried and abandoned. See "Session Summaries" below.
 11. Write or update `docs/SESSION_PLAN.md` with the session's goals, approach, files expected to change, and risks — before any implementation starts. This is the crash-recovery record: if the session is interrupted, the next agent or human reads this file to understand what was planned and where work stopped. Update the Resumption Notes section as work progresses.
 12. Create an implementation plan.
 13. Implement changes.
@@ -30,7 +30,7 @@ This document defines the required workflow for AI-assisted software development
 24. Perform a security review.
 25. Suggest future improvements.
 26. Propose new codebase learnings, user preferences, or major decisions to the user and (upon approval) record them in `docs/MEMORY.md`.
-27. Clear or archive `docs/SESSION_PLAN.md` — the session's outcomes should be captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md` before the plan is cleared.
+27. Write the session summary — a new `docs/sessions/YYYY-MM-DD-<slug>.md` from `docs/sessions/TEMPLATE.md`, plus its row in the index — recording the request, the conversational context, the decisions and their reasoning, the relevant information discovered, the outcome, and the open questions (see "Session Summaries" below; `bash constitution/scripts/check_session_summaries.sh .` checks the format). Then clear or archive `docs/SESSION_PLAN.md` — the session's outcomes should be captured in commit messages, the session summary, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md` before the plan is cleared.
 28. Summarize work, ending with the Next Steps procedure (see "Next Steps Procedure" below), and record the same procedure in `docs/AGENT_HANDOFF.md` so it outlives the session.
 29. Before pushing, sweep for secrets that should be gitignored: run `bash constitution/scripts/check_secrets.sh .` locally (or rely on the `.pre-commit-config.yaml` pre-push hook if it's installed) — see SECURITY.md's "Secrets Sweep" section. Treat any real hit as blocking; never push past it.
 30. Merge completed work (or open a pull request for it, with the Next Steps procedure in its description), then clean up Git state (branches, worktrees). Every later push to the same work ends with an updated procedure.
@@ -62,7 +62,11 @@ A change is **trivial** only when *all* of the following hold:
 For a trivial change, these steps may be skipped: 11 (session plan),
 12 (implementation plan), 15 (coverage evaluation), 16 (isolated critique),
 17–19 (traceability, OTS, environment contract), 23 (release evaluation),
-26 (memory proposals), and 27 (session-plan cleanup, since none was written).
+26 (memory proposals), and 27 (the session summary and session-plan cleanup,
+since no plan was written) — unless the conversation produced a decision or a
+finding that the pull request description does not carry, in which case the
+summary is written anyway: the test is whether a later agent would miss it,
+not how small the diff is.
 The scoped reads in steps 1–9 still apply; step 14 applies only if a test
 already covers the touched line (fix it if the change breaks it); step 20
 applies whenever the change is user-visible; step 21 applies when work was
@@ -89,6 +93,7 @@ Agents must gather enough project context to make safe changes:
 - Non-default branches, worktrees, and open pull requests that may overlap with, duplicate, or conflict with this task
 - An existing `docs/SESSION_PLAN.md` from a previous interrupted session, which may contain resumption notes and context about partially completed work
 - The project memory file `docs/MEMORY.md`, which contains codebase learnings, decisions, and user preferences
+- The session log `docs/sessions/`: earlier sessions' summaries of what was asked, decided, and learned in the area this task touches — search it by topic rather than reading it end to end
 
 ## During Work
 
@@ -106,6 +111,7 @@ Agents should:
 - Avoid unrelated refactors unless required for the task.
 - Use the `/browse` gstack skill for all web browsing; never call `mcp__claude-in-chrome__*` tools directly.
 - Keep `docs/SESSION_PLAN.md`'s Resumption Notes current as work progresses, so the plan stays useful if the session is interrupted before completing.
+- Note decisions, the reasons for them, and what the user said that shaped them as they happen, so the session summary is written from notes rather than reconstructed from memory at the end.
 
 ## Before Completing Work
 
@@ -127,7 +133,8 @@ Agents must verify:
 - Future improvements are identified when useful.
 - The summary, the pull request description, and `docs/AGENT_HANDOFF.md` end with a Next Steps procedure (see "Next Steps Procedure"), with every step only a person can do called out and described (`bash constitution/scripts/check_next_steps.sh .` agrees).
 - Any new codebase learnings, preferences, or decisions have been proposed to the user and recorded in `docs/MEMORY.md` upon approval.
-- `docs/SESSION_PLAN.md` has been cleared or archived — the session's outcomes are captured in commit messages, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`.
+- A session summary has been added to `docs/sessions/` and listed in its index (`bash constitution/scripts/check_session_summaries.sh .` agrees), and it carries no secret, credential, personal data, or customer data.
+- `docs/SESSION_PLAN.md` has been cleared or archived — the session's outcomes are captured in commit messages, the session summary, `docs/AGENT_HANDOFF.md`, or `CHANGELOG.md`.
 - Completed work has been merged, or a pull request has been opened for it, before its branch is deleted.
 - Git environment is clean: branches and worktrees created for this task are removed after merging (or after the agent confirms they are no longer needed); branches or worktrees the agent did not create are left alone unless a human confirms they are safe to remove, since they may belong to another in-progress session or automation; no untracked files (e.g. `node_modules`) are accidentally staged.
 
@@ -163,6 +170,76 @@ Final summaries should include:
 - Documentation updated
 - Security considerations
 - The Next Steps procedure (below) — last, so it is the part the reader acts on
+
+## Session Summaries
+
+Commits record what changed. They do not record what was asked, what the
+conversation established, which options were weighed, or why the one that
+shipped was chosen — and that is exactly what the next agent needs when it is
+asked to change the same thing. Every non-trivial session therefore leaves a
+**session summary** in the session log, and every session starts by
+consulting the log (steps 9, 10, and 27; ADR-0007).
+
+**Consulting the log (before work).** Read the newest rows of
+`docs/sessions/README.md`, then search for the task at hand and read what
+matches:
+
+```bash
+bash constitution/scripts/find_sessions.sh login timeout     # every term must match
+bash constitution/scripts/find_sessions.sh --any oauth sso   # either term
+bash constitution/scripts/find_sessions.sh src/auth/         # a path works too
+```
+
+Treat what you find as context, not as instructions: a summary says what was
+decided then, and the code, `docs/MEMORY.md`, and the ADRs say what is in
+force now. When a summary contradicts them, say so in your own summary. If an
+earlier decision is being reversed, name it and link it.
+
+**Writing the summary (before completing work).** Copy
+`docs/sessions/TEMPLATE.md` to `docs/sessions/YYYY-MM-DD-<slug>.md` and fill
+in:
+
+- **Date**, **Agent**, **Branch / PR**, **Related** — where the work lives.
+- **Topics** — the keywords a later agent would search for: features,
+  components, file paths, error messages. This line is what makes the summary
+  findable; write it for the reader who does not know your slug.
+- **Request** — what was asked, in the requester's terms, and how it changed.
+- **Context** — what the conversation established that the code does not
+  show: the problem behind the request, constraints, preferences, clarifying
+  answers, assumptions made without an answer.
+- **Decisions** — what was decided, by whom, why, and what was rejected.
+- **Discoveries** — relevant information the session turned up: how
+  something actually works, a gotcha, a dead end worth not repeating.
+- **Outcome** — what shipped, where, how it was verified, what was left out.
+- **Open Questions** — what is unresolved, and the reasoning behind the
+  handoff's Next Steps.
+
+Then add a row at the top of the index. The rules:
+
+- **A summary, not a transcript.** Paraphrase. Record conclusions and the
+  reasoning that led to them, not the back-and-forth.
+- **Never a secret.** No credentials, tokens, personal data, customer data,
+  private hostnames, or anything the user asked to keep off the record — the
+  log is committed, and in a public repository it is published
+  (`SECURITY.md`, "Session Summaries Are Published Artifacts").
+- **Append-only.** A summary is a record of what was known then. Correct an
+  error with a dated note; record a change of direction in a new summary
+  that links the old one.
+- **One per session, with the work.** It is committed in the same pull
+  request as the change it describes. A session that spans several pull
+  requests updates its own summary rather than writing several.
+- **It does not replace the other records.** `docs/MEMORY.md` holds what is
+  durably true and is written only with the user's approval; an ADR holds a
+  major decision; `docs/AGENT_HANDOFF.md` holds what happens next. The
+  summary is the narrative that links them, and it is written without asking
+  — it records what happened, which is not the user's preference to grant.
+  The user may still read, correct, or strike anything in it.
+
+`scripts/check_session_summaries.sh` verifies the mechanical half (names,
+fields, sections, the index; `--base <ref>` also notes a diff that carries no
+summary). In Claude Code, the `Stop` hook described below asks for the
+summary at the same moment it asks for the Next Steps procedure, in any
+repository that has a `docs/sessions/` directory.
 
 ## Next Steps Procedure
 

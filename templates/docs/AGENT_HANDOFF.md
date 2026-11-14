@@ -2,7 +2,7 @@
 
 This document helps transition work between different AI agent sessions or different agents.
 
-**Before starting your session**, check `docs/SESSION_PLAN.md` for the previous agent's planned work and resumption notes, and `docs/MEMORY.md` to load durable codebase learnings and user preferences. The session plan captures *intent before work*; this handoff captures *state after work*.
+**Before starting your session**, check `docs/SESSION_PLAN.md` for the previous agent's planned work and resumption notes, and `docs/MEMORY.md` to load durable codebase learnings and user preferences. The session plan captures *intent before work*; this handoff captures *state after work*. Only the latest handoff lives here: the lasting record of each session — what was asked, decided, and learned — is its summary in `docs/sessions/`, which you search before planning and add to before completing.
 
 ## How to Handoff
 
