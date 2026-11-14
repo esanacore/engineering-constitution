@@ -20,65 +20,62 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (Session summaries and a searchable session log)
+### Session: 2026-11-14 (Release 1.55.0 prepared)
 
-Added the session log (ADR-0007): `docs/sessions/` holds one summary per
-session — request, conversational context, decisions and reasoning,
-discoveries, outcome, open questions — behind a newest-first index. Required
-Workflow steps 9–10 consult it before planning and step 27 writes to it
-before the session plan is cleared; every agent instruction file (root,
-templates, sample project), Solon, and both pull request templates carry the
-rule. New tooling: `scripts/check_session_summaries.sh` (format and index,
-warn by default, `--strict`, `--base` tripwire), `scripts/find_sessions.sh`
-(search), their suites, and a `session-summary-writer` skill. The Claude Code
-`Stop` hook asks for a summary wherever `docs/sessions/` exists.
-`bootstrap.sh` installs the index and template; `docs/sessions` is in the
-compliance checker's recommended tier. `SECURITY.md` carries the privacy
-rules.
+The session log (ADR-0007, pull requests 109 and 110) is merged. This push
+prepares release 1.55.0: every version reference is bumped, the changelog
+section is dated 2026-11-14 with an empty `Unreleased` above it, and
+`docs/OTS_SOFTWARE.md` OTS-001 is re-reviewed (no open Dependabot alerts,
+`npm audit` clean). The release also carries product discovery (ADR-0006)
+and the demo-page overhaul. MINOR: nothing required, no default flipped.
 
-Verified: `bash scripts/run_all_tests.sh` — 35 suites, zero failures; the
-self-governance checkers pass `--strict` (secrets, instruction anchors,
-skills, demo page, README, wiki links, session log, version references). An
-independent review of the diff ran before the pull request; what it found is
-in the session summary, as are the automated reviewers' findings on pull
-request 109, fixed in a second commit. No third-party dependency added. `VERSION` is
-unchanged: no release was cut, because tagging and publishing are the
-maintainer's and this change should be reviewed first.
+Verified: `bash scripts/run_all_tests.sh` — 35 suites, zero failures;
+`test_release_docs.sh` and `test_mcp_resources.sh` agree on 1.55.0; secrets
+sweep clean. No tag was pushed and no GitHub Release published.
 
-Read first: `docs/sessions/2026-11-14-session-summaries.md` (the reasoning
-and the open questions) and `docs/adr/0007-session-summaries.md`.
+**Found while preparing it:** `v1.54.0` was never tagged (newest tag is
+`v1.53.0`) and neither 1.53.0 nor 1.54.0 has a GitHub Release (newest is
+`v1.52.0`). Adopter version gates have been comparing against 1.53.0.
 
-**Known blockers:** none. **Carried over:** the product-discovery pilot
-(step 6) is still waiting on a participant.
+Read first: `docs/sessions/2026-11-14-release-1-55-0.md`.
+
+**Known blockers:** none.
 
 ## Next Steps
 
-**Human action required:** steps 1, 3, and 6.
+**Human action required:** steps 1, 2, 3, and 6.
 
-1. [ ] **HUMAN** — Review and merge the session-log review-fixes pull request
-   - **Why a human:** merge approval belongs to the maintainer. Pull
-     request 109 (the feature) is merged; this follow-up carries the fixes
-     for what the automated reviewers found on it.
-   - **You need:** the follow-up pull request, and
-     `docs/sessions/2026-11-14-session-summaries.md` ("Open Questions") for
-     the two design choices still open: whether summaries should be
-     approval-gated like `docs/MEMORY.md`, and whether `docs/sessions` stays
-     in the recommended tier.
-   - **Done when:** the pull request shows as merged.
-2. [ ] **AGENT** — Prepare the 1.55.0 release (bump every version reference,
-   date the `Unreleased` section, full suite, pull request) _(blocked by
-   step 1)_
-3. [ ] **HUMAN** — Tag `v1.55.0` on the release merge commit and publish the
-   GitHub Release _(blocked by step 2)_
-   - **Why a human:** tags and published releases are the maintainer's
-     decision.
-   - **Done when:** `git ls-remote --tags origin v1.55.0` shows the tag on
-     the merge commit and the release is marked Latest.
-4. [ ] **AGENT** — Roll the fleet: `bump_adopters.sh` to the release, plus
-   `docs/sessions/README.md`, `TEMPLATE.md`, and the instruction-file line in
-   each adopter _(blocked by step 3)_
-5. [ ] **AUTOMATED** — `tests.yml` runs the suite and the self-governance
-   job on the pull request; watch for a red run.
+1. [ ] **HUMAN** — Review and merge the 1.55.0 release pull request
+   - **Why a human:** cutting a release is the maintainer's decision.
+   - **Done when:** the pull request shows as merged with CI green.
+2. [ ] **HUMAN** — Tag `v1.55.0` on the release merge commit and publish the
+   GitHub Release _(blocked by step 1)_
+   - **Why a human:** tags and published releases are the maintainer's.
+   - **You need:** a local clone with `gh` signed in.
+   - **Procedure:**
+     1. `git checkout main && git pull`, then confirm `cat VERSION` prints
+        `1.55.0` and note the merge commit: `git rev-parse HEAD`.
+     2. `git tag -a v1.55.0 <that SHA> -m "v1.55.0"` and
+        `git push origin v1.55.0`.
+     3. `bash scripts/check_release_tag_alignment.sh .`
+     4. Publish the Release from the `## 1.55.0` section of `CHANGELOG.md`,
+        marked Latest.
+   - **Done when:** `git show v1.55.0^{commit}:VERSION` prints `1.55.0` and
+     the Release is marked Latest.
+3. [ ] **HUMAN** — Decide whether to backfill the missing `v1.54.0` tag and
+   the 1.53.0 and 1.54.0 GitHub Releases
+   - **Why a human:** rewriting the public release history is the
+     maintainer's call; 1.55.0 supersedes both either way.
+   - **You need:** the 1.54.0 commit, `2a7ec3c` (`git show 2a7ec3c:VERSION`
+     prints `1.54.0`). Tag it **before** `v1.55.0` if you backfill, so the
+     newest tag is never the older version.
+   - **Done when:** either `v1.54.0` exists on `2a7ec3c`, or you have
+     decided to leave the gap and said so.
+4. [ ] **AGENT** — Roll the fleet: `bump_adopters.sh --sha <release commit>`
+   for all adopters, plus the session-log index, template, and
+   instruction-file line in each _(blocked by step 2)_
+5. [ ] **AUTOMATED** — `release-tag-alignment.yml` runs when the tag lands;
+   watch for a red run.
 6. [ ] **HUMAN** — Choose an authorized pilot participant, a real bounded
    request, and a product decision owner for the discovery pilot.
    - **Why a human:** participation, business priorities, and data-sharing
