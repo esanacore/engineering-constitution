@@ -94,6 +94,9 @@ test_new_project() {
   [ -f "docs/OPERATIONS.md" ] || { echo "FAIL: OPERATIONS.md missing"; exit 1; }
   [ -f "docs/SESSION_PLAN.md" ] || { echo "FAIL: SESSION_PLAN.md missing"; exit 1; }
   [ -f "docs/MEMORY.md" ] || { echo "FAIL: MEMORY.md missing"; exit 1; }
+  [ -f "docs/sessions/README.md" ] || { echo "FAIL: docs/sessions/README.md missing"; exit 1; }
+  [ -f "docs/sessions/TEMPLATE.md" ] || { echo "FAIL: docs/sessions/TEMPLATE.md missing"; exit 1; }
+  grep -q 'constitution/scripts/find_sessions.sh' docs/sessions/README.md || { echo "FAIL: session log index does not point at the adopter-side search helper"; exit 1; }
   [ -f "docs/ARCHITECTURE.md" ] || { echo "FAIL: ARCHITECTURE.md missing"; exit 1; }
   [ -f "demo.html" ] || { echo "FAIL: demo.html missing"; exit 1; }
   [ -f ".constitution-bootstrap/adoption-report.md" ] || { echo "FAIL: Adoption report missing"; exit 1; }

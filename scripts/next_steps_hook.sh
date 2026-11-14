@@ -2,14 +2,18 @@
 set -uo pipefail
 
 # Claude Code hook that enforces AI_WORKFLOW.md's "Next Steps Procedure" at the
-# moment a session ends, instead of at pull request time (ADR-0005).
+# moment a session ends, instead of at pull request time (ADR-0005), and — in a
+# repository that keeps a session log — asks for the session's summary at the
+# same moment (ADR-0007).
 #
 #   next_steps_hook.sh start   SessionStart: record the session's starting HEAD.
 #   next_steps_hook.sh stop    Stop: if this session made commits, require that
 #                              docs/AGENT_HANDOFF.md was updated in them, that its
 #                              Next Steps procedure passes check_next_steps.sh,
 #                              and that the final reply carries a Next Steps
-#                              section. Otherwise block the stop once and say why.
+#                              section; and, when docs/sessions/ exists, that
+#                              the commits add a session summary there.
+#                              Otherwise block the stop once and say why.
 #
 # Both read the hook's JSON input on standard input. Blocking uses Claude Code's
 # Stop-hook contract: exit 2 with the reason on stderr, which Claude reads and
@@ -40,7 +44,9 @@ Description:
   stop blocks the end of a session that made commits when
   docs/AGENT_HANDOFF.md was not updated in them, when its Next Steps
   procedure fails check_next_steps.sh, or when the final reply has no
-  "Next Steps" section. It blocks once; the next stop goes through.
+  "Next Steps" section. In a repository with a docs/sessions/ directory it
+  also blocks when those commits add no session summary. It blocks once; the
+  next stop goes through.
 
 Environment:
   CONSTITUTION_NEXT_STEPS_HOOK=off   Disable both modes.
@@ -145,6 +151,32 @@ else
 $(printf '%s\n' "$report" | grep 'PROBLEM' | sed 's/^ *PROBLEM */  - /')")
 fi
 
+# Where the repository keeps a session log (docs/sessions/), a session that
+# committed work also leaves a summary of what was asked, decided, and learned
+# (DOCUMENTATION.md, "Session Summaries"; ADR-0007). A repository without the
+# directory has not adopted the log and is not asked for one. A trivial change
+# may skip the summary, which is why this — like everything here — blocks once.
+sessions=docs/sessions
+summary_problem=""
+if [ -d "$sessions" ]; then
+  # A summary is an added or modified YYYY-MM-DD-<slug>.md directly in the
+  # log: not the index, the template, a stray file, or a deletion.
+  is_summary() { grep -q -E "^$sessions/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+\\.md$"; }
+  summarized=false
+  for c in $all; do
+    if git diff-tree --root --no-commit-id --name-only --diff-filter=AM -r "$c" -- "$sessions" 2>/dev/null | is_summary; then
+      summarized=true; break
+    fi
+  done
+  if [ "$summarized" = "false" ]; then
+    if { git diff --name-only --diff-filter=AM HEAD -- "$sessions"; git ls-files --others --exclude-standard -- "$sessions"; } 2>/dev/null | is_summary; then
+      summary_problem="A session summary in $sessions/ is written but not committed; commit and push it with the work it describes."
+    else
+      summary_problem="This session committed changes but added no session summary to $sessions/ (copy $sessions/TEMPLATE.md to YYYY-MM-DD-<slug>.md, fill it in, and add it to $sessions/README.md; check it with check_session_summaries.sh). If the change was trivial under AI_WORKFLOW.md's \"Proportionate Workflow\", stop again: this check holds a session only once."
+    fi
+  fi
+fi
+
 # The final reply must end with the same procedure. Claude Code passes it as
 # last_assistant_message (a JSON string, decoded here); an older version that
 # does not, or a null message, skips this rather than guessing.
@@ -158,12 +190,15 @@ if [ -n "$reply" ]; then
 $(printf '%s\n' "$report" | grep 'PROBLEM' | sed 's/^ *PROBLEM */  - /')")
 fi
 
-if [ "${#problems[@]}" -eq 0 ]; then mark_done; exit 0; fi
+if [ "${#problems[@]}" -eq 0 ] && [ -z "$summary_problem" ]; then mark_done; exit 0; fi
 
 {
-  echo "Next Steps procedure needed before this session ends (AI_WORKFLOW.md, \"Next Steps Procedure\"; ADR-0005)."
-  echo "This session made commits since $(git rev-parse --short "$base"), so it must hand over what happens next:"
-  for p in "${problems[@]}"; do echo "- $p"; done
-  echo "Write the procedure: a \"Next Steps\" heading, a numbered checklist, every step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, a \"**Human action required:**\" line naming every HUMAN step, and Why a human / Done when on each. Put it in $handoff (commit and push) and at the end of your reply. Check it with: bash $checker --strict ."
+  echo "This session is not ready to end (AI_WORKFLOW.md, \"Next Steps Procedure\" and \"Session Summaries\"; ADR-0005, ADR-0007)."
+  echo "This session made commits since $(git rev-parse --short "$base"), so it must hand over what happens next and what it learned:"
+  for p in ${problems[@]+"${problems[@]}"}; do echo "- $p"; done
+  [ -n "$summary_problem" ] && echo "- $summary_problem"
+  if [ "${#problems[@]}" -gt 0 ]; then
+    echo "Write the procedure: a \"Next Steps\" heading, a numbered checklist, every step tagged **HUMAN**, **AGENT**, or **AUTOMATED**, a \"**Human action required:**\" line naming every HUMAN step, and Why a human / Done when on each. Put it in $handoff (commit and push) and at the end of your reply. Check it with: bash $checker --strict ."
+  fi
 } >&2
 exit 2

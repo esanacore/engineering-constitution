@@ -59,7 +59,7 @@ Tiers:
                 docs/TROUBLESHOOTING.md, docs/ARCHITECTURE.md, docs/adr/,
                 docs/AGENT_PROMPTS.md, docs/AGENT_HANDOFF.md, docs/OPERATIONS.md,
                 docs/TEST_PLAN.md, docs/OTS_SOFTWARE.md, docs/SESSION_PLAN.md,
-                docs/MEMORY.md, docs/ENV_VARS.md.
+                docs/MEMORY.md, docs/ENV_VARS.md, docs/sessions/.
   Product       docs/PRODUCT_REQUIREMENTS.md, docs/REQUIREMENTS_TRACEABILITY.md,
                 demo.html.
 
@@ -192,6 +192,7 @@ recommended=(
   docs/SESSION_PLAN.md
   docs/MEMORY.md
   docs/ENV_VARS.md
+  docs/sessions
 )
 
 # docs/SESSION_PLAN.md, docs/MEMORY.md, and docs/ENV_VARS.md are deliberately

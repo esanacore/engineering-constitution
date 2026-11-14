@@ -24,7 +24,7 @@ trap cleanup EXIT
 # outside the repository root.
 make_compliant_repo() {
   dest=$1
-  mkdir -p "$dest/docs/adr" "$dest/constitution" "$dest/.github"
+  mkdir -p "$dest/docs/adr" "$dest/docs/sessions" "$dest/constitution" "$dest/.github"
   for f in README.md CHANGELOG.md TODO.md AGENTS.md VERSION; do
     echo "placeholder" > "$dest/$f"
   done
@@ -68,6 +68,7 @@ echo "$output" | grep -q "recommended missing: 0;" || { echo "FAIL(1): expected 
 echo "$output" | grep -q "OK       docs/SESSION_PLAN.md" || { echo "FAIL(1): docs/SESSION_PLAN.md not reported OK"; exit 1; }
 echo "$output" | grep -q "OK       docs/MEMORY.md" || { echo "FAIL(1): docs/MEMORY.md not reported OK"; exit 1; }
 echo "$output" | grep -q "OK       docs/ENV_VARS.md" || { echo "FAIL(1): docs/ENV_VARS.md not reported OK"; exit 1; }
+echo "$output" | grep -q "OK       docs/sessions" || { echo "FAIL(1): docs/sessions not reported OK"; exit 1; }
 echo "SUCCESS(1): fully compliant repository passes."
 
 # ---------------------------------------------------------------------------

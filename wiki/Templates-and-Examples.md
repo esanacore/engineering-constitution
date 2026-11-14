@@ -19,7 +19,8 @@ repository. Notable groups:
   `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`,
   `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`,
   `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md` (now with a License
-  column), `ENV_VARS.md`, `MEMORY.md`, `SESSION_PLAN.md`, `AGENT_HANDOFF.md`,
+  column), `ENV_VARS.md`, `MEMORY.md`, `SESSION_PLAN.md`, `sessions/` (the session
+  log's index and per-session template), `AGENT_HANDOFF.md`,
   `INCIDENT_POSTMORTEM.md`, and `MVP_BACKLOG.md`.
 - **Demo page** — `templates/demo.html`, a working single-file page (inline
   styles and scripts, no build, no backend, no network) that product-facing

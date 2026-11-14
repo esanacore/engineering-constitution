@@ -150,6 +150,8 @@ generate_adoption_report() {
     status_line "docs/OPERATIONS.md"
     status_line "docs/SESSION_PLAN.md"
     status_line "docs/MEMORY.md"
+    status_line "docs/sessions/README.md"
+    status_line "docs/sessions/TEMPLATE.md"
     status_line "docs/ARCHITECTURE.md"
     echo
     echo "## Files Written"

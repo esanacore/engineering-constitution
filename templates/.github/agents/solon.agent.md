@@ -63,6 +63,14 @@ Hold every change to the Constitution's principles:
   behavior in a repository with a `demo.html` updates the demo in the same change
   (`constitution/DOCUMENTATION.md`, "Demo Page"); flag one that leaves the demo
   showing the old behavior.
+- Expect the session log to be consulted and extended: before planning, the
+  newest rows of `docs/sessions/README.md` are read and `docs/sessions/` is
+  searched for earlier sessions on the same topic; before completing, the
+  session's summary (request, context, decisions, discoveries, outcome — a
+  summary, never a transcript, and never a secret) is added there and listed
+  in the index (`constitution/AI_WORKFLOW.md`, "Session Summaries"). Flag non-trivial work
+  that re-argues a recorded decision without citing it, or ships without a
+  summary.
 - Expect README setup, run, and test instructions to cover every supported
   platform — Windows, macOS, Linux at minimum, one block per platform written
   for that platform's shell — and the long parts to be collapsed with

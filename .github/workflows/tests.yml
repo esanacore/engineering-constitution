@@ -51,7 +51,8 @@ jobs:
           # The default anchors plus the Next Steps procedure (ADR-0005). Passed
           # explicitly rather than made a default, so adopters' strict runs do
           # not change without a deprecation window (ADR-0003).
-          anchors=(--anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" --anchor "demo page current")
+          # docs/sessions is the session log (ADR-0007), held to the same rule.
+          anchors=(--anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" --anchor "demo page current" --anchor "docs/sessions")
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" .
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" templates
           bash scripts/check_instruction_templates.sh --strict "${anchors[@]}" examples/sample-project
@@ -78,6 +79,13 @@ jobs:
       - name: The latest handoff ends with a Next Steps procedure
         shell: bash
         run: bash scripts/check_next_steps.sh --strict .
+
+      - name: The session log is well-formed and indexed
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/check_session_summaries.sh --strict .
+          bash scripts/check_session_summaries.sh --strict examples/sample-project
 
       - name: Wiki link integrity
         shell: bash

@@ -70,7 +70,10 @@ A real hit (filename or content) always fails, with or without `--strict`. It is
 The framework's own "Full suite" and the workflow that runs it, plus a `self-governance` job that runs the shipped checkers against this repository on every pull request. `scripts/test_checker_contract.sh` holds every `check_*.sh` to the shared checker contract, and every checker emits GitHub Actions annotations so findings surface in the pull request UI.
 
 ### `scripts/check_instruction_templates.sh` and `scripts/check_skills.sh`
-The first verifies that every agent instruction file present carries the same guidance (session planning, project memory), so a rule added to one vendor file cannot be silently missing from another; the second validates the 26 skills under `skills/`. See [[Governance Checkers]].
+The first verifies that every agent instruction file present carries the same guidance (session planning, project memory), so a rule added to one vendor file cannot be silently missing from another; the second validates the 27 skills under `skills/`. See [[Governance Checkers]].
+
+### `scripts/check_session_summaries.sh` and `scripts/find_sessions.sh`
+The session log (`docs/sessions/`, ADR-0007) keeps what commits do not: each session's request, conversational context, decisions and reasoning, discoveries, and outcome, one file per session behind a newest-first index. The checker verifies names, fields, sections, and index agreement (warn by default, `--strict`, `--base <ref>` as a tripwire for a diff with no summary); the finder is how an agent consults the log before planning. See [[Governance Checkers]] and [[AI Development Workflow]].
 
 ### `scripts/bump_adopters.sh`
 Step 9 of cutting a release: re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently. See `RELEASES.md`.
@@ -90,7 +93,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 - `scripts/test_checker_contract.sh` (the contract every checker must honor)
-- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_check_readme.sh`, `scripts/test_next_steps_hook.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`, `scripts/test_workflow_templates.sh` (adopter workflow templates call checkers through `constitution/`)
+- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_check_session_summaries.sh`, `scripts/test_find_sessions.sh`, `scripts/test_check_readme.sh`, `scripts/test_next_steps_hook.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`, `scripts/test_workflow_templates.sh` (adopter workflow templates call checkers through `constitution/`)
 
 The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.md` and run in CI by `.github/workflows/tests.yml`.
 
@@ -118,6 +121,7 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 The current framework version in `README.md` and `CONSTITUTION.md` is `1.54.0`. Recent releases have focused on:
 
+- Session summaries in a searchable session log (unreleased, ADR-0007): every non-trivial session leaves `docs/sessions/YYYY-MM-DD-<slug>.md` — request, conversational context, decisions and reasoning, discoveries, outcome — and every session searches the log before planning (`scripts/find_sessions.sh`); `scripts/check_session_summaries.sh` checks the format and the index, and every agent instruction file carries the rule
 - The Next Steps procedure enforced where it is skipped (1.54.0): a Claude Code `Stop` hook (`scripts/next_steps_hook.sh`, shipped in `templates/.claude/settings.json`) holds a session that made commits until `docs/AGENT_HANDOFF.md` is updated, its procedure is well-formed, and the final reply ends with it — once, never in a loop
 - READMEs for every platform, read short by default (1.53.0): setup, run, and test instructions cover Windows, macOS, and Linux at minimum, one block per platform written for that platform's shell, and the long parts sit in collapsible `<details>` sections while the capabilities list, quick start, hero diagram, and headings stay visible (`DOCUMENTATION.md`, "Every Platform the Project Supports" and "Progressive Disclosure"; `templates/README.md` and the framework's own README are the worked examples)
 - The demo page kept current (1.52.0): the Required Workflow, every agent instruction file, the Solon reviewer, and both pull request templates tell agents to update `demo.html` in the same change whenever user-facing behavior changes

@@ -16,3 +16,4 @@ Engineering Constitution Framework, per `CONSTITUTION.md` Principle 6 and
 | [0004](0004-proportionate-workflow.md) | A Proportionate Workflow for Trivial Changes | Accepted |
 | [0005](0005-next-steps-procedure.md) | A Next Steps Procedure at the End of Every Push | Accepted |
 | [0006](0006-optional-product-discovery.md) | Optional Guided Product Discovery | Accepted |
+| [0007](0007-session-summaries.md) | Session Summaries in a Searchable Session Log | Accepted |

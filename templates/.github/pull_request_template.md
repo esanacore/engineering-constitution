@@ -27,6 +27,7 @@
 - [ ] Release discipline evaluated (`constitution/RELEASES.md`): release cut, or reason stated below.
 - [ ] `docs/MEMORY.md` proposals surfaced to the user (if any).
 - [ ] Next Steps procedure below filled in, and copied into `docs/AGENT_HANDOFF.md`.
+- [ ] Session summary added to `docs/sessions/` and listed in its index (`constitution/scripts/check_session_summaries.sh`); no secrets or personal data in it.
 - [ ] `docs/SESSION_PLAN.md` cleared or archived.
 
 ## Security
