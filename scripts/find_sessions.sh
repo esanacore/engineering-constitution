@@ -115,8 +115,8 @@ fi
 # Title ("# ..." first heading) and Topics line of a summary.
 title_of() { sed -n 's/^# \{1,\}//p' "$1" | head -n 1 | tr -d '\r'; }
 topics_of() {
-  grep -i -m 1 -E '^[[:space:]]*([-*][[:space:]]+)?\*\*Topics:\*\*' "$1" 2>/dev/null \
-    | sed -E 's/^[[:space:]]*([-*][[:space:]]+)?\*\*[Tt]opics:\*\*[[:space:]]*//' | tr -d '\r' || true
+  grep -i -m 1 -E '^[[:space:]]*([-*][[:space:]]+)?\*\*Topics(:\*\*|\*\*:)' "$1" 2>/dev/null \
+    | sed -E 's/^[[:space:]]*([-*][[:space:]]+)?\*\*[Tt][Oo][Pp][Ii][Cc][Ss](:\*\*|\*\*:)[[:space:]]*//' | tr -d '\r' || true
 }
 
 # Each candidate becomes "<score> <file>"; files are already newest first, and

@@ -243,4 +243,15 @@ run "$r" stop "$(stop_json s12b false "$reply_ok")"
 [ "$status" -eq 0 ] || { echo "$err"; fail "a committed summary should pass, got $status"; }
 echo "PASS"
 
+echo "Test 13: a summary added and then reverted does not count"
+r="$tmp/r13"; cp -R "$tmp/r12" "$r"
+run "$r" start "$(start_json s13)"
+printf '# Session: Gone\n' > "$r/docs/sessions/2026-11-15-gone.md"; echo "- a" >> "$r/docs/AGENT_HANDOFF.md"
+git -C "$r" add -A; git -C "$r" commit -q -m "work + summary"
+git -C "$r" rm -q docs/sessions/2026-11-15-gone.md; git -C "$r" commit -q -m "revert summary"
+run "$r" stop "$(stop_json s13 false "$reply_ok")"
+[ "$status" -eq 2 ] || fail "a reverted summary should not satisfy the hook, got $status"
+grep -q 'added no session summary' <<< "$err" || { echo "$err"; fail "reverted summary: wrong reason"; }
+echo "PASS"
+
 echo "ALL TESTS PASSED"

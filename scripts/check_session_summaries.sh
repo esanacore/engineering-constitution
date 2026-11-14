@@ -139,10 +139,22 @@ while IFS= read -r f; do
 done < <(find "$log" -maxdepth 1 -type f -iname '*.md' ! -name 'README.md' ! -name 'TEMPLATE.md' | LC_ALL=C sort)
 
 # The targets the index links, one per line: "./" and "#fragment" stripped,
-# links inside a one-line HTML comment ignored. Used in both directions below.
+# links inside an HTML comment or a fenced block ignored. Used in both directions below.
 index_targets=""
 if [ -f "$index" ]; then
-  index_targets=$(sed -E 's/<!--.*-->//g' "$index" \
+  index_targets=$(awk '
+      { sub(/\r$/, ""); line = $0 }
+      in_fence { if (line ~ /^[ \t]*(```|~~~)/) in_fence = 0; next }
+      line ~ /^[ \t]*(```|~~~)/ { in_fence = 1; next }
+      {
+        if (in_comment) { e = index(line, "-->"); if (e == 0) next; line = substr(line, e + 3); in_comment = 0 }
+        while ((s = index(line, "<!--")) > 0) {
+          rest = substr(line, s + 4); e = index(rest, "-->")
+          if (e == 0) { line = substr(line, 1, s - 1); in_comment = 1; break }
+          line = substr(line, 1, s - 1) substr(rest, e + 3)
+        }
+        print line
+      }' "$index" \
     | grep -oE '\]\(([.]/)?[^)# ]+\.md(#[^) ]*)?\)' \
     | sed -E 's/^\]\(([.]\/)?//; s/(#[^)]*)?\)$//' | LC_ALL=C sort -u || true)
 fi
@@ -204,7 +216,9 @@ scan_entry() { # scan_entry <file> <date-from-name>
       if (line ~ /<(add[ a-z]*|YYYY-MM-DD|title|topic[s]?|slug)>/) placeholder = 1
 
       if (line ~ /^#[ \t]/) { if (!seen_any) title = 1; seen_any = 1; section = ""; next }
-      if (line ~ /^##+[ \t]/) { seen_any = 1; section = norm(line); present[section] = 1; next }
+      # Only a level-two heading opens a section; deeper headings are part
+      # of the section they sit in.
+      if (line ~ /^##[ \t]/) { seen_any = 1; section = norm(line); present[section] = 1; next }
       if (line ~ /[^ \t]/) {
         if (!seen_any) { seen_any = 1 }
         if (section != "") { if (line ~ /[A-Za-z0-9]/) filled[section] = 1 }

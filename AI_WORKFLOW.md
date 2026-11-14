@@ -214,7 +214,11 @@ in:
 - **Open Questions** — what is unresolved, and the reasoning behind the
   handoff's Next Steps.
 
-Then add a row at the top of the index. The rules:
+Then add a row at the top of the index. A repository that has no
+`docs/sessions/` yet has nothing to consult; the first non-trivial session
+creates the directory by copying `README.md` and `TEMPLATE.md` from
+`constitution/templates/docs/sessions/`, and writes the first entry. The
+rules:
 
 - **A summary, not a transcript.** Paraphrase. Record conclusions and the
   reasoning that led to them, not the back-and-forth.

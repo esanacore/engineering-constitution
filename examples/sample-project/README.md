@@ -20,7 +20,7 @@ This sample shows the expected project structure after integrating Eric's Engine
 - `CHANGELOG.md`
 - `docs/OPERATIONS.md`
 - `docs/adr/`
-- `docs/sessions/` — the session log, with one synthetic summary as a worked example
+- `docs/sessions/` — recommended, not required: the session log, with one synthetic summary as a worked example
 - `src/`
 
 ## Test

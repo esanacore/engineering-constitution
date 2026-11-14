@@ -59,7 +59,7 @@ percentage:
 | --- | --- | --- |
 | 2026-09-16 | 27 | Baseline: first run under `run_all_tests.sh` in CI. |
 | 2026-09-29 | 28 | `test_check_demo_page.sh` added; structural floors still 100% (checker contract passes). |
-| 2026-11-14 | 35 | `test_check_session_summaries.sh` (20 cases) and `test_find_sessions.sh` (7 cases) added; `test_next_steps_hook.sh` gained the session-summary case; checker contract passes with the new checker. |
+| 2026-11-14 | 35 | `test_check_session_summaries.sh` (22 cases) and `test_find_sessions.sh` (8 cases) added; `test_next_steps_hook.sh` gained the session-summary case; checker contract passes with the new checker. |
 | 2026-11-02 | Discovery slice | 32 discovery regression cases pass; new checker/helper paired with tests, checker-contract validation passes. Full framework run recorded in session notes. |
 
 ## Coverage Gap Log
