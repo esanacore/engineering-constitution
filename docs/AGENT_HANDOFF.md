@@ -40,7 +40,8 @@ Verified: `bash scripts/run_all_tests.sh` — 35 suites, zero failures; the
 self-governance checkers pass `--strict` (secrets, instruction anchors,
 skills, demo page, README, wiki links, session log, version references). An
 independent review of the diff ran before the pull request; what it found is
-in the session summary. No third-party dependency added. `VERSION` is
+in the session summary, as are the automated reviewers' findings on pull
+request 109, fixed in a second commit. No third-party dependency added. `VERSION` is
 unchanged: no release was cut, because tagging and publishing are the
 maintainer's and this change should be reviewed first.
 
@@ -54,18 +55,15 @@ and the open questions) and `docs/adr/0007-session-summaries.md`.
 
 **Human action required:** steps 1, 3, and 6.
 
-1. [ ] **HUMAN** — Review and merge the session-summaries pull request
-   - **Why a human:** merge approval belongs to the maintainer, and three
-     design choices in it are yours to confirm or overturn.
-   - **You need:** the pull request, and
-     `docs/sessions/2026-11-14-session-summaries.md` ("Open Questions").
-   - **Procedure:**
-     1. Decide whether summaries may be committed without your approval (as
-        built) or should be approval-gated like `docs/MEMORY.md`.
-     2. Decide whether `docs/sessions` stays in the recommended tier.
-     3. Read `SECURITY.md`, "Session Summaries Are Published Artifacts", and
-        say if anything else must stay out of a public log.
-     4. Merge once the `Tests and Self-Governance` checks are green.
+1. [ ] **HUMAN** — Review and merge the session-log review-fixes pull request
+   - **Why a human:** merge approval belongs to the maintainer. Pull
+     request 109 (the feature) is merged; this follow-up carries the fixes
+     for what the automated reviewers found on it.
+   - **You need:** the follow-up pull request, and
+     `docs/sessions/2026-11-14-session-summaries.md` ("Open Questions") for
+     the two design choices still open: whether summaries should be
+     approval-gated like `docs/MEMORY.md`, and whether `docs/sessions` stays
+     in the recommended tier.
    - **Done when:** the pull request shows as merged.
 2. [ ] **AGENT** — Prepare the 1.55.0 release (bump every version reference,
    date the `Unreleased` section, full suite, pull request) _(blocked by

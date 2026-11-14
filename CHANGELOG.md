@@ -45,6 +45,14 @@ This project follows semantic versioning.
   only in a repository that has a `docs/sessions/` directory, and, like the
   rest of the hook, only once.
 
+- **Review fixes to the session log.** A `###` subheading no longer empties
+  its parent section and a lone `### Request` no longer passes as one; an
+  index link hidden in a multi-line comment or a fence no longer counts;
+  `find_sessions.sh` reads the `**Topics**:` spelling; the `Stop` hook
+  ignores a summary that was added and then reverted; instruction files ask
+  for a summary on non-trivial work; `AI_WORKFLOW.md` says how the first
+  session creates `docs/sessions/`.
+
 ### Security
 
 - `SECURITY.md` gained "Session Summaries Are Published Artifacts": a summary

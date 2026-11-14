@@ -83,4 +83,12 @@ out=$("$finder" --root "$tmp/repo" -- --strict) || fail "a dash-leading term aft
 grep -q 'mention: --strict' <<< "$out" || { echo "$out"; fail "the dash-leading term was not searched literally"; }
 echo "PASS"
 
+echo "Test 8: the **Topics**: spelling is shown and ranked like **Topics:**"
+printf '# Session: Queue tuning\n\n- **Date:** 2026-01-02\n- **Topics**: kafka, lag\n\n## Request\n\nTune it.\n' > "$tmp/repo/docs/sessions/2026-01-02-queue.md"
+printf '# Session: Later\n\n- **Date:** 2026-04-01\n- **Topics:** misc\n\n## Request\n\nkafka came up once.\n' > "$tmp/repo/docs/sessions/2026-04-01-later.md"
+run kafka
+[ "$(order)" = "2026-01-02-queue.md 2026-04-01-later.md " ] || { echo "$out"; fail "alternate Topics spelling not ranked: $(order)"; }
+grep -q '    Topics: kafka, lag' <<< "$out" || { echo "$out"; fail "alternate Topics spelling not shown"; }
+echo "PASS"
+
 echo "ALL TESTS PASSED"

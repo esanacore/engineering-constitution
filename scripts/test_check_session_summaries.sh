@@ -287,4 +287,20 @@ git -C "$repo" add -A && git -C "$repo" commit -q -m "docs: amend summary"
 "$checker" --strict --base "$base" --dir ./docs/sessions "$repo" >/dev/null || fail "an updated summary did not satisfy --base"
 echo "PASS"
 
+echo "Test 21: subheadings belong to their section; a level-three heading is not a section"
+subs="${good/- Token bucket in Redis (requester chose it over a fixed window)./$'### Storage\n\nToken bucket in Redis.'}"
+make_log "$tmp/subs" 2026-03-04-a.md "$subs"
+out=$("$checker" --strict "$tmp/subs") || { echo "$out"; fail "a section made of subsections was reported empty"; }
+make_log "$tmp/h3" 2026-03-04-a.md "${good/\#\# Request/\#\#\# Request}"
+expect_finding "$tmp/h3" 'has no "Request" section' "level-three heading standing in for a section"
+echo "PASS"
+
+echo "Test 22: an index link hidden in a multi-line comment or a fence does not count"
+make_log "$tmp/hidden" 2026-03-04-a.md "$good"
+printf '# Session Log\n\n<!--\n[a](2026-03-04-a.md)\n-->\n' > "$tmp/hidden/docs/sessions/README.md"
+expect_finding "$tmp/hidden" '2026-03-04-a.md: not linked from docs/sessions/README.md' "link in a multi-line comment"
+printf '# Session Log\n\n```markdown\n[a](2026-03-04-a.md)\n```\n' > "$tmp/hidden/docs/sessions/README.md"
+expect_finding "$tmp/hidden" '2026-03-04-a.md: not linked from docs/sessions/README.md' "link in a fence"
+echo "PASS"
+
 echo "ALL TESTS PASSED"

@@ -25,7 +25,7 @@ auto-commits: false
 # Consult and extend the session log: docs/sessions/README.md (the index,
 # loaded below) lists earlier sessions; search docs/sessions/ for the task's
 # topic (`bash constitution/scripts/find_sessions.sh <keyword>`) and /read the
-# summaries that match before planning. Before completing work, add this
+# summaries that match before planning. Before completing non-trivial work, add this
 # session's summary there (request, context, decisions, discoveries, outcome:
 # a summary, never a transcript, and never a secret) and list it in the index
 # (`constitution/AI_WORKFLOW.md`, "Session Summaries").

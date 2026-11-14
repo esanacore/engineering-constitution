@@ -2,7 +2,7 @@
 
 - **Date:** 2026-11-14
 - **Agent:** Claude Code (Claude Fable 5.2)
-- **Branch / PR:** `feat/session-summaries`
+- **Branch / PR:** `feat/session-summaries`, pull request 109
 - **Topics:** session summaries, session log, docs/sessions, conversational context, decisions, agent memory, find_sessions.sh, check_session_summaries.sh, AI_WORKFLOW steps 9 10 27, next_steps_hook.sh, instruction templates, ADR-0007
 - **Related:** `docs/adr/0007-session-summaries.md`; ADR-0003 (warn-first rollout), ADR-0004 (trivial changes), ADR-0005 (Next Steps and the `Stop` hook)
 
@@ -124,6 +124,26 @@ All by the agent, on the maintainer's behalf, unless noted.
 - Left out on purpose: fleet rollout, an MCP surface for the log, a
   generated index, and making the anchor a checker default — all recorded
   in `TODO.md`.
+
+- After the pull request opened (#109), the automated reviewers (CodeRabbit,
+  Cursor Bugbot) reported further findings, fixed in a second commit with
+  regression tests: a `###` subheading emptied its parent section, and a
+  lone `### Request` passed as a section; an index link hidden in a
+  multi-line comment or a fence counted; `find_sessions.sh` ignored the
+  `**Topics**:` spelling the checker accepts; the `Stop` hook accepted a
+  summary that was added and then reverted; the instruction files asked for
+  a summary on every change although trivial ones may skip it (now
+  "non-trivial work"); the workflow did not say what to do when
+  `docs/sessions/` does not exist yet; the sample project listed the log
+  under "Required Files"; the log's README did not name its shell.
+- Bot finding not acted on: platform and shell guidance for
+  `docs/COMMAND_REFERENCE.md`, which predates this change and is tracked in
+  `TODO.md`.
+
+- Note, 2026-11-14 (later the same day): the maintainer merged pull request
+  109 while the automated-review fixes above were still being pushed, so
+  they did not ride along. They ship as a follow-up pull request from
+  `fix/session-log-review`, branched from the merged `main`.
 
 ## Open Questions
 

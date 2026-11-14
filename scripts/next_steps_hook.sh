@@ -161,7 +161,14 @@ summary_problem=""
 if [ -d "$sessions" ]; then
   # A summary is an added or modified YYYY-MM-DD-<slug>.md directly in the
   # log: not the index, the template, a stray file, or a deletion.
-  is_summary() { grep -q -E "^$sessions/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+\\.md$"; }
+  # It must still exist: a summary added and then reverted is not one.
+  is_summary() {
+    local f
+    while IFS= read -r f; do
+      if [[ "$f" =~ ^$sessions/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+\.md$ ]] && [ -f "$f" ]; then return 0; fi
+    done
+    return 1
+  }
   summarized=false
   for c in $all; do
     if git diff-tree --root --no-commit-id --name-only --diff-filter=AM -r "$c" -- "$sessions" 2>/dev/null | is_summary; then
