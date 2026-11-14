@@ -119,9 +119,9 @@ The `mcp-server/` directory is a minimal Node.js module using `@modelcontextprot
 
 ## Versioning and recent direction
 
-The current framework version in `README.md` and `CONSTITUTION.md` is `1.54.0`. Recent releases have focused on:
+The current framework version in `README.md` and `CONSTITUTION.md` is `1.55.0`. Recent releases have focused on:
 
-- Session summaries in a searchable session log (unreleased, ADR-0007): every non-trivial session leaves `docs/sessions/YYYY-MM-DD-<slug>.md` — request, conversational context, decisions and reasoning, discoveries, outcome — and every session searches the log before planning (`scripts/find_sessions.sh`); `scripts/check_session_summaries.sh` checks the format and the index, and every agent instruction file carries the rule
+- Session summaries in a searchable session log (1.55.0, ADR-0007): every non-trivial session leaves `docs/sessions/YYYY-MM-DD-<slug>.md` — request, conversational context, decisions and reasoning, discoveries, outcome — and every session searches the log before planning (`scripts/find_sessions.sh`); `scripts/check_session_summaries.sh` checks the format and the index, and every agent instruction file carries the rule
 - The Next Steps procedure enforced where it is skipped (1.54.0): a Claude Code `Stop` hook (`scripts/next_steps_hook.sh`, shipped in `templates/.claude/settings.json`) holds a session that made commits until `docs/AGENT_HANDOFF.md` is updated, its procedure is well-formed, and the final reply ends with it — once, never in a loop
 - READMEs for every platform, read short by default (1.53.0): setup, run, and test instructions cover Windows, macOS, and Linux at minimum, one block per platform written for that platform's shell, and the long parts sit in collapsible `<details>` sections while the capabilities list, quick start, hero diagram, and headings stay visible (`DOCUMENTATION.md`, "Every Platform the Project Supports" and "Progressive Disclosure"; `templates/README.md` and the framework's own README are the worked examples)
 - The demo page kept current (1.52.0): the Required Workflow, every agent instruction file, the Solon reviewer, and both pull request templates tell agents to update `demo.html` in the same change whenever user-facing behavior changes
