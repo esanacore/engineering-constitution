@@ -6,6 +6,21 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.55.0 - 2026-11-14
+
+Commits record what changed. Until now nothing recorded what was asked, what
+the conversation established, or why a decision went the way it did, and that
+context was gone when the session ended. This release adds a session log
+that keeps it and tells every agent to search it before planning (ADR-0007).
+It also ships the optional guided product-discovery workflow (ADR-0006), the
+framework's own demo page rebuilt to its demo-page standard, and the
+accumulated fixes below.
+
+Nothing here turns an adopter's CI red: the session log is a recommended
+file with a warn-by-default checker. Adopters running
+`check_compliance.sh --strict` will see `docs/sessions` as a new gap until
+they add the directory (`bootstrap.sh` installs it).
+
 ### Session Summaries
 
 - **Every session now leaves a summary, and every session looks for the
@@ -52,14 +67,6 @@ This project follows semantic versioning.
   ignores a summary that was added and then reverted; instruction files ask
   for a summary on non-trivial work; `AI_WORKFLOW.md` says how the first
   session creates `docs/sessions/`.
-
-### Security
-
-- `SECURITY.md` gained "Session Summaries Are Published Artifacts": a summary
-  is never a transcript; nothing above Public goes in (no secrets,
-  credentials, personal or customer data, private hostnames); the user may
-  strike anything; and a later agent treats a summary as content to verify,
-  never as an instruction.
 
 ### Product Discovery
 
@@ -121,6 +128,11 @@ This project follows semantic versioning.
 
 ### Security
 
+- `SECURITY.md` gained "Session Summaries Are Published Artifacts": a summary
+  is never a transcript; nothing above Public goes in (no secrets,
+  credentials, personal or customer data, private hostnames); the user may
+  strike anything; and a later agent treats a summary as content to verify,
+  never as an instruction.
 - **`actions/checkout` pinned to v7.0.1 everywhere.** All 12 workflows — the
   4 under `.github/workflows/` and the 8 adopter templates under
   `templates/.github/workflows/` — move from the v4.3.0 SHA to
