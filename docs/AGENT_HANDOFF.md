@@ -20,43 +20,72 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (Consulting pitch deck reframed)
+### Session: 2026-11-14 (1.55.0 tagged, released, and rolled to the fleet)
 
-`pitch-deck.html` now leads with Eric as an **AI-native forward-deployed
-engineer and harness expert** starting consulting work. The constitution is
-framed as proof of craft and the system installed on engagement (not the
-sole product being sold). Engagement slide covers diagnostic sprint,
-embedded FDE weeks, and retainer. Linked from README / demo / wiki.
-Summary: `docs/sessions/2026-11-14-pitch-deck.md`.
+`v1.55.0` is tagged on merge commit `111769c` and published as the Latest
+GitHub Release. On the maintainer's decision the history gap was closed too:
+`v1.54.0` is tagged on `2a7ec3c`, and Releases now exist for 1.53.0 and
+1.54.0. `release-tag-alignment` passed on the new tag.
 
-Committed and pushed to `origin/release/v1.55.0`
-(`eb5b2b3` — pitch deck + consulting positioning; includes prior 1.55.0
-release prep on the branch). Consulting positioning is in `docs/MEMORY.md`.
+`bump_adopters.sh` opened a `constitution/bump-v1.55.0` pull request in all
+18 adopters (18 bumped, 0 failed). Fourteen are green. The consulting pitch
+deck (`pitch-deck.html`, PR #112) is merged; its summary is
+`docs/sessions/2026-11-14-pitch-deck.md`.
 
-**Known blockers:** contact method on the CTA still TBD. Local upstream
-tracking may need `git branch -u origin/release/v1.55.0` after the remote
-branch was recreated.
+**Known blockers:**
 
-**Context hints:** open `pitch-deck.html` — slides 1, 4, 10, 12 carry the
-consulting voice; 5–9 are the inspectable system evidence.
+- 1.55.0 put `docs/sessions` in the recommended compliance tier, which fails
+  any adopter running `check_compliance.sh --strict`. Two do
+  (`patients-served`, `MultiplatformTestApp`); their bump branches now carry
+  the session-log index and template, and the compliance gate passes.
+- Remaining red checks on four bump pull requests are the adopters' own:
+  `SSH_DeviceManager` (Python 3.8/3.9 missing from the Ubuntu 26.04 runner),
+  `MultiplatformTestApp` (Gradle fails on the runner's JDK 25),
+  `AI-Process-Engineer` (`Desktop CI / e2e`, also red on October pull
+  requests), `patients-served` (`validate-docs` baseline drift, red on the
+  merged 1.52.0 bump as well).
+
+**Context hints:** `docs/sessions/2026-11-14-release-1-55-0.md` (release
+decisions and the follow-up), `docs/sessions/2026-11-14-session-summaries.md`
+(the feature and its two open design questions).
 
 ## Next Steps
 
-**Human action required:** steps 1, 2, and 3.
+**Human action required:** steps 1, 2, 3, and 4.
 
-1. [ ] **HUMAN** — Review and merge PR #112 when CI is green:
-   https://github.com/esanacore/engineering-constitution/pull/112
-   - **Why a human:** merge to main is the maintainer's decision.
-   - **Done when:** the PR is merged.
-2. [ ] **HUMAN** — Walk the deck; confirm voice / add a consulting contact on
-   the CTA if desired (email, calendar, LinkedIn).
-   - **Why a human:** personal brand and public contact details are the author's.
-   - **Done when:** approve as-is, or list edits / a contact string.
-3. [ ] **HUMAN** — Tag `v1.55.0` and publish the GitHub Release after merge
-   (see `docs/sessions/2026-11-14-release-1-55-0.md`).
-   - **Why a human:** tags and Releases are the maintainer's.
-   - **Done when:** `v1.55.0` is Latest on the merge commit.
-4. [ ] **AGENT** — After Pages publishes from `main`, confirm
-   `https://esanacore.github.io/engineering-constitution/pitch-deck.html` loads
-   _(blocked by step 1)_
-5. [ ] **AGENT** — Fleet bump after the tag _(blocked by step 3)_
+1. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.55.0` pull
+   requests.
+   - **Why a human:** merging into each adopter's default branch is the
+     maintainer's decision.
+   - **You need:** `gh pr list --search "constitution: bump to v1.55.0 user:esanacore"`
+     lists them. Four have red checks unrelated to the pin (see Known
+     blockers); decide per repository whether to merge past them.
+   - **Done when:** every adopter's `constitution/` gitlink is `111769c`.
+2. [ ] **HUMAN** — Decide whether `docs/sessions` stays in the recommended
+   compliance tier, and whether session summaries need approval before they
+   are committed, as `docs/MEMORY.md` does.
+   - **Why a human:** both set policy for every adopter; the first already
+     broke two strict-mode repositories on this bump.
+   - **Done when:** the decision is stated; an agent records it in ADR-0007.
+3. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
+   give a consulting contact for the call to action if you want one.
+   - **Why a human:** personal brand and public contact details are the
+     author's.
+   - **Done when:** the deck is approved as-is, or edits and a contact string
+     are given.
+4. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
+   product decision owner for the discovery pilot.
+   - **Why a human:** participation, business priorities, and data-sharing
+     consent belong to the people who own them.
+   - **Done when:** participant and owner agree on a request and the
+     permitted material.
+5. [ ] **AGENT** — Add the session-log index, template, and instruction-file
+   line to the 16 adopters that do not have them yet _(blocked by step 2)_
+6. [ ] **AGENT** — Confirm
+   `https://esanacore.github.io/engineering-constitution/pitch-deck.html`
+   loads from Pages.
+7. [ ] **AGENT** _(suggestion)_ — Fix the adopter CI drift the bump exposed:
+   Python 3.8/3.9 on `SSH_DeviceManager`, the JDK pin on
+   `MultiplatformTestApp`.
+8. [ ] **AGENT** _(suggestion)_ — Generate the session-log index from the
+   entries instead of maintaining it by hand.
