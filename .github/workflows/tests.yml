@@ -86,6 +86,8 @@ jobs:
           set -euo pipefail
           bash scripts/check_session_summaries.sh --strict .
           bash scripts/check_session_summaries.sh --strict examples/sample-project
+          bash scripts/build_session_index.sh --check .
+          bash scripts/build_session_index.sh --check examples/sample-project
 
       - name: Wiki link integrity
         shell: bash

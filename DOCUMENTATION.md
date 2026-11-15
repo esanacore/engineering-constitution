@@ -153,6 +153,9 @@ Summaries".
 fields, sections, unanswered template prompts, and agreement between the
 entries and the index — warn by default, `--strict` on request, with
 `--base <ref>` as a blunt tripwire for a diff that carries no summary.
+`scripts/build_session_index.sh` writes the index table from the entries'
+dates, titles, and Topics lines, so it is generated rather than hand-kept;
+`--check` fails when the two disagree.
 `scripts/bootstrap.sh` installs the index and the template,
 `scripts/check_compliance.sh` lists `docs/sessions/` in its recommended tier,
 and `constitution-compliance.yml` runs the checker in warn mode wherever the

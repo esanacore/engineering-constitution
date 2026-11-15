@@ -8,6 +8,17 @@ This project follows semantic versioning.
 
 ### Added
 
+- **The session log's index is generated (`scripts/build_session_index.sh`).**
+  The table in `docs/sessions/README.md` is now written from the entries —
+  date from the file name, title, and Topics line, newest first, same-day
+  sessions in file-name order — instead of by hand, so it cannot drift from
+  the entries and two sessions that finish together no longer both edit its
+  top row. `--check` exits 1 when the index is stale and writes nothing; the
+  framework's own CI runs it. Only the table under `## Index` is rewritten.
+  `AI_WORKFLOW.md`, `DOCUMENTATION.md`, the session-log README and template,
+  and the `session-summary-writer` skill now say to rebuild the index rather
+  than add a row. `scripts/test_build_session_index.sh` (12 cases).
+
 - **Consulting pitch deck (`pitch-deck.html`).** A self-contained, fullscreen
   slide deck for sales leads and stakeholders — positioned around Eric as an
   AI-native forward-deployed engineer and harness expert, with the

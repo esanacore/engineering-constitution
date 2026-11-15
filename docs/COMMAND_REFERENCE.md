@@ -14,6 +14,7 @@ fail, `--help` for usage, exit `2` on a usage error.
 ## Session Log
 
 - `bash scripts/find_sessions.sh <keyword>...`: earlier session summaries mentioning every term, best match first (`--any` for either term, `--list` for all, `--limit <n>`).
+- `bash scripts/build_session_index.sh .`: rebuild the index table in `docs/sessions/README.md` from the entries (`--check` to fail when it is stale, without writing).
 - `bash scripts/check_session_summaries.sh .`: format and index check for `docs/sessions/` (`--strict` to enforce).
 
 ## Self-Governance (what CI runs against this repository)
