@@ -29,38 +29,34 @@ sole product being sold). Engagement slide covers diagnostic sprint,
 embedded FDE weeks, and retainer. Linked from README / demo / wiki.
 Summary: `docs/sessions/2026-11-14-pitch-deck.md`.
 
-Still on `release/v1.55.0` with uncommitted work; 1.55.0 release prep from
-earlier remains relevant.
+Committed and pushed to `origin/release/v1.55.0`
+(`eb5b2b3` — pitch deck + consulting positioning; includes prior 1.55.0
+release prep on the branch). Consulting positioning is in `docs/MEMORY.md`.
 
-**Known blockers:** none for copy. Contact method on the CTA still TBD.
-Consulting positioning preference recorded in `docs/MEMORY.md` (approved).
+**Known blockers:** contact method on the CTA still TBD. Local upstream
+tracking may need `git branch -u origin/release/v1.55.0` after the remote
+branch was recreated.
 
 **Context hints:** open `pitch-deck.html` — slides 1, 4, 10, 12 carry the
-consulting voice; 5–9 are the inspectable system evidence. Read
-`docs/MEMORY.md` consulting positioning before editing sales copy.
+consulting voice; 5–9 are the inspectable system evidence.
 
 ## Next Steps
 
-**Human action required:** steps 1, 2, 3, and 4.
+**Human action required:** steps 1, 2, and 3.
 
-1. [ ] **HUMAN** — Walk the reframed deck; confirm FDE / consulting voice
-   matches how you want to introduce yourself to leads.
-   - **Why a human:** personal brand and sales voice are the author's.
-   - **Done when:** approve as-is or list copy edits (name line, bio facts,
-     engagement shapes, pricing language).
-2. [ ] **HUMAN** — Provide a consulting contact for the CTA if desired
-   (email, calendar, LinkedIn) — or keep the demo/GitHub CTAs only.
-   - **Why a human:** public contact details are personal.
-   - **Done when:** a contact string is given for an agent edit, or you
-     explicitly keep the current CTA.
-3. [ ] **HUMAN** — Say whether to commit on `release/v1.55.0` or a separate
-   branch/PR.
-   - **Why a human:** branch strategy is the maintainer's call.
-   - **Done when:** the agent has an explicit commit/PR instruction.
-4. [ ] **HUMAN** — Finish 1.55.0 merge / tag / GitHub Release if still open
-   (see prior release handoff notes in `docs/sessions/2026-11-14-release-1-55-0.md`).
-   - **Why a human:** releases are the maintainer's.
-   - **Done when:** `v1.55.0` exists on the merge commit and is Latest.
-5. [ ] **AGENT** — After Pages publishes, confirm
-   `…/pitch-deck.html` loads _(blocked by steps 3–4)_
-6. [ ] **AGENT** — Fleet bump after the tag _(blocked by step 4)_
+1. [ ] **HUMAN** — Open or refresh the PR for `release/v1.55.0` and merge when
+   CI is green: https://github.com/esanacore/engineering-constitution/pull/new/release/v1.55.0
+   - **Why a human:** merge to main is the maintainer's decision.
+   - **Done when:** the PR is merged.
+2. [ ] **HUMAN** — Walk the deck; confirm voice / add a consulting contact on
+   the CTA if desired (email, calendar, LinkedIn).
+   - **Why a human:** personal brand and public contact details are the author's.
+   - **Done when:** approve as-is, or list edits / a contact string.
+3. [ ] **HUMAN** — Tag `v1.55.0` and publish the GitHub Release after merge
+   (see `docs/sessions/2026-11-14-release-1-55-0.md`).
+   - **Why a human:** tags and Releases are the maintainer's.
+   - **Done when:** `v1.55.0` is Latest on the merge commit.
+4. [ ] **AGENT** — After Pages publishes from `main`, confirm
+   `https://esanacore.github.io/engineering-constitution/pitch-deck.html` loads
+   _(blocked by step 1)_
+5. [ ] **AGENT** — Fleet bump after the tag _(blocked by step 3)_
