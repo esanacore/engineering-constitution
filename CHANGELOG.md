@@ -6,6 +6,12 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## 1.56.0 - 2026-11-14
+
+The session log's index is now generated from the entries instead of kept by
+hand, and the two questions 1.55.0 left open about the log are decided. The
+release also adds a consulting pitch deck.
+
 ### Added
 
 - **The session log's index is generated (`scripts/build_session_index.sh`).**
@@ -13,8 +19,10 @@ This project follows semantic versioning.
   date from the file name, title, and Topics line, newest first, same-day
   sessions in file-name order — instead of by hand, so it cannot drift from
   the entries. Two branches that each add an entry can still conflict in git
-  on the table; the resolution is to take either side and rerun the script. `--check` exits 1 when the index is stale and writes nothing; the
-  framework's own CI runs it. Only the table under `## Index` is rewritten.
+  on the table; the resolution is to take either side and rerun the script. `--check` exits 1 when the index is stale and writes
+  nothing; the framework's own CI runs it, and the adopter compliance
+  workflow template runs it in warn mode wherever `docs/sessions/` exists and
+  the pinned constitution ships the script. Only the table under `## Index` is rewritten.
   `AI_WORKFLOW.md`, `DOCUMENTATION.md`, the session-log README and template,
   and the `session-summary-writer` skill now say to rebuild the index rather
   than add a row. `scripts/test_build_session_index.sh` (12 cases).
@@ -25,6 +33,20 @@ This project follows semantic versioning.
   constitution as the inspectable system he installs on engagement
   (problem → thesis → features → embedded consulting model → CTA). Keyboard
   navigation and print-to-PDF. Linked from `README.md` and `demo.html`.
+
+### Changed
+
+- **`docs/sessions` stays in the recommended compliance tier, and summaries
+  need no separate approval (ADR-0007, decided by the maintainer).** Both
+  were open questions in 1.55.0. A summary records what happened and is
+  written without asking; the user can read, correct, or strike anything in
+  it. Nothing changes in behavior — the ADR now records these as decisions.
+- **`RELEASES.md` says what a new recommended file costs.** A new entry in
+  the recommended tier is MINOR, but it fails `check_compliance.sh --strict`
+  in any adopter that has not added the file yet: `docs/sessions` did that
+  to two adopters on the 1.55.0 fleet bump. "Cutting a Release" now tells
+  the releaser to add the file in the same fleet-bump pull request for
+  strict-mode adopters.
 
 ## 1.55.0 - 2026-11-14
 

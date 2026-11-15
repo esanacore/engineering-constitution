@@ -105,7 +105,22 @@ Negative / costs:
   against the code, memory, and ADRs.
 - Adopters running `check_compliance.sh --strict` see one new recommended
   gap until they add the directory (`bootstrap.sh` installs it). Strict mode
-  is the adopter's own opt-in to exactly that.
+  is the adopter's own opt-in to exactly that. This happened on the 1.55.0
+  fleet bump: two strict-mode adopters failed until the index and template
+  were added on their bump branches.
+
+## Decisions After Release (2026-11-14)
+
+The maintainer settled the two questions this ADR shipped with:
+
+- **`docs/sessions` stays in the recommended tier**, and the session log is
+  rolled out to every adopter rather than left opt-in.
+- **Summaries are not approval-gated.** Unlike `docs/MEMORY.md`, a summary
+  records what happened, not what should be durably believed, so an agent
+  writes it without asking; review happens in the pull request.
+
+The index is generated from the entries by `scripts/build_session_index.sh`
+as of 1.56.0, which replaces the hand-kept table this ADR first described.
 
 ## Alternatives Considered
 

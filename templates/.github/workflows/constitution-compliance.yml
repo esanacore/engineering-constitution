@@ -8,6 +8,7 @@ name: Constitution Compliance
 #   - check_next_steps.sh   — docs/AGENT_HANDOFF.md ends with a Next Steps procedure.
 #   - check_readme.sh       — README.md names its platforms and collapses correctly.
 #   - check_session_summaries.sh — docs/sessions/ summaries are well-formed and indexed.
+#   - build_session_index.sh --check — the generated session-log index is current.
 #
 # The traceability check runs only when the product-facing documents exist, so
 # non-product repositories are not forced to maintain them. Runs on every pull
@@ -98,6 +99,13 @@ jobs:
             fi
           else
             echo "::notice::No docs/sessions/ (or no session log checker in this constitution pin); skipping the session log check."
+          fi
+          # The index is generated from the entries (build_session_index.sh).
+          # Warn mode: a stale index is reported, not failed. Drop the
+          # "|| ..." to enforce it.
+          if [ -f docs/sessions/README.md ] && [ -e constitution/scripts/build_session_index.sh ]; then
+            bash constitution/scripts/build_session_index.sh --check . \
+              || echo "::warning::docs/sessions/README.md index is stale; run: bash constitution/scripts/build_session_index.sh ."
           fi
 
       - name: Verify requirements traceability (product-facing repositories)
