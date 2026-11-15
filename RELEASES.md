@@ -27,7 +27,11 @@ contract its adopters' CI depends on, so for *this* repository the terms mean
   exit code is PATCH-shaped.)
 - **MINOR** — a new standard, checker, template, workflow, or skill that
   warns by default; a new recommended file; a new Required Workflow step;
-  new advisory guidance.
+  new advisory guidance. A new recommended file still fails
+  `check_compliance.sh --strict` in an adopter that has not added it, so the
+  fleet bump for that release adds the file to every strict-mode adopter in
+  the same pull request as the pin (`docs/sessions` in 1.55.0 is the case
+  that taught this).
 - **PATCH** — a fix that changes no contract.
 
 **The deprecation window.** A MAJOR-shaped change may still ship as MINOR
