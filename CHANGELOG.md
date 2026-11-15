@@ -12,8 +12,8 @@ This project follows semantic versioning.
   The table in `docs/sessions/README.md` is now written from the entries —
   date from the file name, title, and Topics line, newest first, same-day
   sessions in file-name order — instead of by hand, so it cannot drift from
-  the entries and two sessions that finish together no longer both edit its
-  top row. `--check` exits 1 when the index is stale and writes nothing; the
+  the entries. Two branches that each add an entry can still conflict in git
+  on the table; the resolution is to take either side and rerun the script. `--check` exits 1 when the index is stale and writes nothing; the
   framework's own CI runs it. Only the table under `## Index` is rewritten.
   `AI_WORKFLOW.md`, `DOCUMENTATION.md`, the session-log README and template,
   and the `session-summary-writer` skill now say to rebuild the index rather

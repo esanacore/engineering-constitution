@@ -216,8 +216,8 @@ in:
 
 Then rebuild the index with `bash constitution/scripts/build_session_index.sh .`,
 which writes the table in `docs/sessions/README.md` from the entries' dates,
-titles, and Topics lines; rows are not edited by hand, so two sessions
-finishing together do not collide on the top row. A repository that has no
+titles, and Topics lines; rows are not edited by hand. Two branches that each add an entry can still
+conflict in git on that table; take either side and run the script again. A repository that has no
 `docs/sessions/` yet has nothing to consult; the first non-trivial session
 creates the directory by copying `README.md` and `TEMPLATE.md` from
 `constitution/templates/docs/sessions/`, and writes the first entry. The

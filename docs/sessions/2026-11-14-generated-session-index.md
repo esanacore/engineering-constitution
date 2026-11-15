@@ -38,7 +38,8 @@ made in a separate worktree rather than in the shared working tree.
 - **Same-day rows are in file-name order** — agent. The entries carry no
   time of day, and any order taken from git history would differ between
   clones. File-name order is the same for everyone, which is what stops
-  concurrent sessions conflicting.
+  concurrent sessions producing different tables. (Corrected the same day:
+  git can still conflict on adjacent rows; rerunning the script resolves it.)
 - **Index rows carry the entry's full Topics line** — agent. Hand-written
   rows had shortened it; a generated row that differed from the entry would
   need a second source of truth.
@@ -71,6 +72,11 @@ made in a separate worktree rather than in the shared working tree.
   for the framework and the sample project; both indexes rebuilt with it.
   Documentation, the session-log README and template, and the
   `session-summary-writer` skill now say to rebuild the index.
+- Follow-up, same day, from automated review of the merged pull request:
+  the script now stops instead of writing an empty table when the log
+  directory cannot be listed, keeps a CRLF README's line endings, and the
+  docs no longer claim it prevents git conflicts on the index (it makes
+  them trivial to resolve: take either side and rerun). Two more test cases.
 - Not done: the adopter workflow template does not run `--check` yet,
   because adopters do not have the script until the next release.
 
