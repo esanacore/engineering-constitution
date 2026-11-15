@@ -14,7 +14,9 @@ set -euo pipefail
 # file name, the title from its first "# " heading (a leading "Session:" is
 # dropped), and the topics from its **Topics:** line. Rows are newest first;
 # sessions on the same day are in file-name order, so the result is the same
-# no matter who builds it.
+# no matter who builds it. Two branches that each add an entry can still
+# conflict in git on this table; resolve it by taking either side and running
+# this script again.
 #
 # Exit status:
 #   0  index written, already current, or (--check) current
@@ -100,6 +102,16 @@ rows=$(mktemp)
 built=$(mktemp)
 trap 'rm -f "$rows" "$built"' EXIT
 
+# List the entries first, and stop if the directory cannot be read: an
+# enumeration that failed quietly would rewrite the index as an empty table.
+if ! listing=$(find "$log" -maxdepth 1 -type f -name '*.md' -exec basename {} \;); then
+  echo "Could not list $dir/; the index was left as it is." >&2
+  exit 2
+fi
+names=$(printf '%s\n' "$listing" \
+  | { grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9]+(-[a-z0-9]+)*\.md$' || true; } \
+  | LC_ALL=C sort -t- -k1,1nr -k2,2nr -k3,3nr -k4)
+
 count=0
 while IFS= read -r name; do
   [ -n "$name" ] || continue
@@ -108,35 +120,36 @@ while IFS= read -r name; do
   [ -n "$title" ] || title=${name%.md}
   printf '| %s | [%s](%s) | %s |\n' "${name:0:10}" "$title" "$name" "$(cell "$(topics_of "$f")")" >> "$rows"
   count=$((count + 1))
-done < <(find "$log" -maxdepth 1 -type f -name '*.md' -exec basename {} \; \
-          | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9]+(-[a-z0-9]+)*\.md$' \
-          | LC_ALL=C sort -t- -k1,1nr -k2,2nr -k3,3nr -k4 || true)
+done <<< "$names"
 
 # Copy README.md, replacing the first table after "## Index" (or, when there
 # is none yet, inserting one before the next heading or at end of file).
 awk -v rows="$rows" '
   function emit(   line) {
-    print "| Date | Session | Topics |"
-    print "| --- | --- | --- |"
-    while ((getline line < rows) > 0) print line
+    print "| Date | Session | Topics |" eol
+    print "| --- | --- | --- |" eol
+    while ((getline line < rows) > 0) print line eol
     close(rows)
     done = 1
   }
   {
-    sub(/\r$/, "")
+    # Match on a copy without the CR; print the line as it was, so a CRLF
+    # README keeps its line endings outside the table and gets them inside.
+    raw = $0; t = $0
+    if (sub(/\r$/, "", t)) { if (NR == 1) eol = "\r" }
     if (!done && state == 1) {
-      if ($0 ~ /^[ \t]*\|/) { state = 2; next }           # old table starts
-      if ($0 ~ /^#{1,6}[ \t]/) { emit(); print ""; state = 3 }
+      if (t ~ /^[ \t]*\|/) { state = 2; next }             # old table starts
+      if (t ~ /^#{1,6}[ \t]/) { emit(); print eol; state = 3 }
     } else if (state == 2) {
-      if ($0 ~ /^[ \t]*\|/) next                          # rest of old table
+      if (t ~ /^[ \t]*\|/) next                            # rest of old table
       emit(); state = 3
     }
-    if (state == 0 && $0 ~ /^##[ \t]+Index[ \t]*$/) state = 1
-    if (state == 1) { if ($0 ~ /^[ \t]*$/) { blank = 1 } else { blank = 0 } }
-    print
+    if (state == 0 && t ~ /^##[ \t]+Index[ \t]*$/) state = 1
+    if (state == 1) blank = (t ~ /^[ \t]*$/)
+    print raw
   }
   END {
-    if (!done) { if (state == 1 && !blank) print ""; emit() }
+    if (!done) { if (state == 1 && !blank) print eol; emit() }
   }
 ' "$index" > "$built"
 

@@ -142,4 +142,28 @@ entry 2026-06-01-alt.md "# Session: Alt" "- **Topics:** alt"
 grep -qF '[Alt](2026-06-01-alt.md)' "$log/README.md" || fail "--dir not honored"
 echo "PASS"
 
+echo "Test 13: a CRLF README keeps its line endings, inside and outside the table"
+log="$repo/docs/sessions"
+entry 2026-07-01-crlf.md "# Session: Crlf" "- **Topics:** endings"
+printf '# Session Log\r\n\r\nIntro.\r\n\r\n## Index\r\n\r\n| Date | Session | Topics |\r\n| --- | --- | --- |\r\n\r\nAfter.\r\n' > "$log/README.md"
+"$builder" "$repo" > /dev/null
+[ "$(grep -c $'\r$' "$log/README.md")" = "$(wc -l < "$log/README.md")" ] || { od -c "$log/README.md" | head -20; fail "line endings are mixed after a rebuild"; }
+grep -q $'^Intro\\.\r$' "$log/README.md" && grep -q $'^After\\.\r$' "$log/README.md" || fail "text outside the table changed"
+grep -qF '[Crlf](2026-07-01-crlf.md)' "$log/README.md" || fail "row missing in CRLF README"
+"$builder" --check "$repo" > /dev/null || fail "CRLF README not stable"
+echo "PASS"
+
+echo "Test 14: an unreadable log directory is an error, not an empty index"
+if [ "$(id -u)" != 0 ]; then
+  before=$(cksum < "$log/README.md")
+  chmod 300 "$log"
+  status=0; "$builder" "$repo" > /dev/null 2>&1 || status=$?
+  chmod 700 "$log"
+  [ "$status" = 2 ] || fail "unreadable directory exited $status, expected 2"
+  [ "$(cksum < "$log/README.md")" = "$before" ] || fail "index rewritten after a failed listing"
+  echo "PASS"
+else
+  echo "SKIP (running as root; permissions are not enforced)"
+fi
+
 echo "All build_session_index.sh tests passed."

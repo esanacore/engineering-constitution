@@ -28,6 +28,8 @@ first, same day in file-name order). `--check` fails on a stale index and CI
 runs it for the framework and the sample project. The documentation, the
 session-log README and template, and the `session-summary-writer` skill say
 to rebuild the index instead of adding a row. Full suite: 36 of 36.
+A follow-up fixes three automated-review findings on that change (failed
+directory listing, CRLF line endings, an overstated concurrency claim).
 Summary: `docs/sessions/2026-11-14-generated-session-index.md`.
 
 1.55.0 is tagged and released (with `v1.54.0` and the 1.53.0 and 1.54.0
@@ -54,7 +56,8 @@ expect the same class of failure in other adopters' own workflows.
 
 **Human action required:** steps 1, 2, 3, 4, and 5.
 
-1. [ ] **HUMAN** — Review and merge this pull request when CI is green.
+1. [ ] **HUMAN** — Review and merge this pull request (review fixes for the
+   index generator) when CI is green.
    - **Why a human:** merging to `main` is the maintainer's decision.
    - **Done when:** the pull request is merged.
 2. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.55.0` pull
