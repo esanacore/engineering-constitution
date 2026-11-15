@@ -2,6 +2,8 @@
 
 Eric's Engineering Constitution is a reusable framework for AI-assisted software development standards. It gives teams a single source of truth for how humans and AI agents should work across repositories, then ships the scripts and templates needed to roll that standard into existing Git projects.
 
+For consulting and stakeholder conversations, open the [pitch deck](https://esanacore.github.io/engineering-constitution/pitch-deck.html) (Eric as AI-native FDE / harness expert; fullscreen slides) or the [interactive demo](https://esanacore.github.io/engineering-constitution/demo.html).
+
 ## What you get
 
 When a project adopts this constitution, it gains:

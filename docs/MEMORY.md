@@ -7,6 +7,7 @@ This file contains durable memories, codebase learnings, user preferences, and k
 
 ## User Preferences & Styling Choices
 
+- **Consulting positioning:** pitches and sales/stakeholder materials lead with Eric as an AI-native forward-deployed engineer and harness expert starting consulting work. The Engineering Constitution is proof of craft and the system he installs on engagement — not the only thing being sold. Primary artifact: `pitch-deck.html`.
 - Eric works through PR-based flows on every repository, including fan-outs across the adopter fleet: one branch + one PR per repo, merged on his say-so (he frequently asks the agent to merge batches after review). Never push directly to a default branch.
 - Releases are cut promptly once user-facing changes accumulate — do not let `Unreleased` sit. The full gate in `RELEASES.md` is followed every time: bump every version reference, date the CHANGELOG section, full test suite green, PR, then tag + GitHub Release after merge.
 - GitHub Releases are published by Eric through the web UI (remote agent sessions have no `gh` CLI and the MCP toolset has no create-release tool). The agent's job is to extract the version's CHANGELOG section into a paste-ready notes file and hand over the pre-filled `releases/new?tag=` link.

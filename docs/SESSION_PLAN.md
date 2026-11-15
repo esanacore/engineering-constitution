@@ -7,8 +7,6 @@ summary (`docs/sessions/`), `CHANGELOG.md`, or `docs/AGENT_HANDOFF.md`._
 
 ## Last completed
 
-Session summaries and a searchable session log (ADR-0007), on
-`feat/session-summaries`. The full record — request, context, decisions,
-discoveries, outcome, open questions — is
-`docs/sessions/2026-11-14-session-summaries.md`; what happens next is in
-`docs/AGENT_HANDOFF.md`.
+Consulting pitch deck reframed for AI-native FDE / harness-expert
+positioning. Full record: `docs/sessions/2026-11-14-pitch-deck.md`; next
+steps in `docs/AGENT_HANDOFF.md`.

@@ -11,7 +11,7 @@ Each project includes this repository as a `constitution/` Git submodule alongsi
 - A bootstrap script that installs those files into an existing Git repository
 
 [![Eric's Engineering Constitution Framework](assets/diagrams/constitution-infographic.svg)](https://esanacore.github.io/engineering-constitution/demo.html)
-*Click the infographic above or open [the interactive demo](https://esanacore.github.io/engineering-constitution/demo.html) to explore it.*
+*Click the infographic above or open [the interactive demo](https://esanacore.github.io/engineering-constitution/demo.html) to explore it. For consulting and stakeholder conversations, present the [pitch deck](pitch-deck.html) — Eric as AI-native FDE / harness expert (fullscreen slides; print to PDF).*
 
 ## Quick Start
 
@@ -116,6 +116,7 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `templates/docs/INCIDENT_POSTMORTEM.md`: Blameless postmortem template, copied per incident into `docs/incidents/`.
 - `templates/.github/pull_request_template.md` and `templates/.github/CODEOWNERS`: Installed by bootstrap so every pull request carries the Completion Checklist and the trivial-change declaration, and code ownership is a host-enforced setting rather than a memory.
 - `templates/demo.html`: Single-file demo-page scaffold installed into every adopter; product-facing repositories fill it in and publish it (see `DOCUMENTATION.md` "Demo Page" and `docs/adr/0002-demo-page-requirement.md`).
+- `pitch-deck.html`: Self-contained consulting pitch deck (fullscreen; print to PDF) — positions Eric as an AI-native forward-deployed engineer and harness expert, with the constitution as the system he installs on engagement.
 - `examples/sample-project/`: Example project layout.
 - `examples/OPERATIONS.example.md`: Fully worked `docs/OPERATIONS.md` runbook for a deployed service.
 - `scripts/bootstrap.sh`: Script to initialize an existing repository. Owns argument parsing, the `--agents` vendor selection, and the install manifest; the concerns that change for their own reasons live in `scripts/lib/` and are sourced at startup.
