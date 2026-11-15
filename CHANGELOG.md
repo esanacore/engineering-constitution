@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **Consulting pitch deck (`pitch-deck.html`).** A self-contained, fullscreen
+  slide deck for sales leads and stakeholders — positioned around Eric as an
+  AI-native forward-deployed engineer and harness expert, with the
+  constitution as the inspectable system he installs on engagement
+  (problem → thesis → features → embedded consulting model → CTA). Keyboard
+  navigation and print-to-PDF. Linked from `README.md` and `demo.html`.
+
 ## 1.55.0 - 2026-11-14
 
 Commits record what changed. Until now nothing recorded what was asked, what

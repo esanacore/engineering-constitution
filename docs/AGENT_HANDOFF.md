@@ -20,67 +20,47 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (Release 1.55.0 prepared)
+### Session: 2026-11-14 (Consulting pitch deck reframed)
 
-The session log (ADR-0007, pull requests 109 and 110) is merged. This push
-prepares release 1.55.0: every version reference is bumped, the changelog
-section is dated 2026-11-14 with an empty `Unreleased` above it, and
-`docs/OTS_SOFTWARE.md` OTS-001 is re-reviewed (no open Dependabot alerts,
-`npm audit` clean). The release also carries product discovery (ADR-0006)
-and the demo-page overhaul. MINOR: nothing required, no default flipped.
+`pitch-deck.html` now leads with Eric as an **AI-native forward-deployed
+engineer and harness expert** starting consulting work. The constitution is
+framed as proof of craft and the system installed on engagement (not the
+sole product being sold). Engagement slide covers diagnostic sprint,
+embedded FDE weeks, and retainer. Linked from README / demo / wiki.
+Summary: `docs/sessions/2026-11-14-pitch-deck.md`.
 
-Verified: `bash scripts/run_all_tests.sh` — 35 suites, zero failures;
-`test_release_docs.sh` and `test_mcp_resources.sh` agree on 1.55.0; secrets
-sweep clean. No tag was pushed and no GitHub Release published.
+Still on `release/v1.55.0` with uncommitted work; 1.55.0 release prep from
+earlier remains relevant.
 
-**Found while preparing it:** `v1.54.0` was never tagged (newest tag is
-`v1.53.0`) and neither 1.53.0 nor 1.54.0 has a GitHub Release (newest is
-`v1.52.0`). Adopter version gates have been comparing against 1.53.0.
+**Known blockers:** none for copy. Contact method on the CTA still TBD.
+Consulting positioning preference recorded in `docs/MEMORY.md` (approved).
 
-Read first: `docs/sessions/2026-11-14-release-1-55-0.md`.
-
-**Known blockers:** none.
+**Context hints:** open `pitch-deck.html` — slides 1, 4, 10, 12 carry the
+consulting voice; 5–9 are the inspectable system evidence. Read
+`docs/MEMORY.md` consulting positioning before editing sales copy.
 
 ## Next Steps
 
-**Human action required:** steps 1, 2, 3, and 6.
+**Human action required:** steps 1, 2, 3, and 4.
 
-1. [ ] **HUMAN** — Review and merge the 1.55.0 release pull request
-   - **Why a human:** cutting a release is the maintainer's decision.
-   - **Done when:** the pull request shows as merged with CI green.
-2. [ ] **HUMAN** — Tag `v1.55.0` on the release merge commit and publish the
-   GitHub Release _(blocked by step 1)_
-   - **Why a human:** tags and published releases are the maintainer's.
-   - **You need:** a local clone with `gh` signed in.
-   - **Procedure:**
-     1. `git checkout main && git pull`, then confirm `cat VERSION` prints
-        `1.55.0` and note the merge commit: `git rev-parse HEAD`.
-     2. `git tag -a v1.55.0 <that SHA> -m "v1.55.0"` and
-        `git push origin v1.55.0`.
-     3. `bash scripts/check_release_tag_alignment.sh .`
-     4. Publish the Release from the `## 1.55.0` section of `CHANGELOG.md`,
-        marked Latest.
-   - **Done when:** `git show v1.55.0^{commit}:VERSION` prints `1.55.0` and
-     the Release is marked Latest.
-3. [ ] **HUMAN** — Decide whether to backfill the missing `v1.54.0` tag and
-   the 1.53.0 and 1.54.0 GitHub Releases
-   - **Why a human:** rewriting the public release history is the
-     maintainer's call; 1.55.0 supersedes both either way.
-   - **You need:** the 1.54.0 commit, `2a7ec3c` (`git show 2a7ec3c:VERSION`
-     prints `1.54.0`). Tag it **before** `v1.55.0` if you backfill, so the
-     newest tag is never the older version.
-   - **Done when:** either `v1.54.0` exists on `2a7ec3c`, or you have
-     decided to leave the gap and said so.
-4. [ ] **AGENT** — Roll the fleet: `bump_adopters.sh --sha <release commit>`
-   for all adopters, plus the session-log index, template, and
-   instruction-file line in each _(blocked by step 2)_
-5. [ ] **AUTOMATED** — `release-tag-alignment.yml` runs when the tag lands;
-   watch for a red run.
-6. [ ] **HUMAN** — Choose an authorized pilot participant, a real bounded
-   request, and a product decision owner for the discovery pilot.
-   - **Why a human:** participation, business priorities, and data-sharing
-     consent belong to the people who own them.
-   - **Done when:** the participant and owner agree on a request and the
-     permitted material.
-7. [ ] **AGENT** _(suggestion)_ — Generate the session-log index from the
-   entries so concurrent sessions stop conflicting on its top row.
+1. [ ] **HUMAN** — Walk the reframed deck; confirm FDE / consulting voice
+   matches how you want to introduce yourself to leads.
+   - **Why a human:** personal brand and sales voice are the author's.
+   - **Done when:** approve as-is or list copy edits (name line, bio facts,
+     engagement shapes, pricing language).
+2. [ ] **HUMAN** — Provide a consulting contact for the CTA if desired
+   (email, calendar, LinkedIn) — or keep the demo/GitHub CTAs only.
+   - **Why a human:** public contact details are personal.
+   - **Done when:** a contact string is given for an agent edit, or you
+     explicitly keep the current CTA.
+3. [ ] **HUMAN** — Say whether to commit on `release/v1.55.0` or a separate
+   branch/PR.
+   - **Why a human:** branch strategy is the maintainer's call.
+   - **Done when:** the agent has an explicit commit/PR instruction.
+4. [ ] **HUMAN** — Finish 1.55.0 merge / tag / GitHub Release if still open
+   (see prior release handoff notes in `docs/sessions/2026-11-14-release-1-55-0.md`).
+   - **Why a human:** releases are the maintainer's.
+   - **Done when:** `v1.55.0` exists on the merge commit and is Latest.
+5. [ ] **AGENT** — After Pages publishes, confirm
+   `…/pitch-deck.html` loads _(blocked by steps 3–4)_
+6. [ ] **AGENT** — Fleet bump after the tag _(blocked by step 4)_

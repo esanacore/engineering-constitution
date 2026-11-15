@@ -30,5 +30,6 @@ Newest first.
 
 | Date | Session | Topics |
 | --- | --- | --- |
+| 2026-11-14 | [Sales pitch deck for the engineering constitution](2026-11-14-pitch-deck.md) | pitch-deck.html, consulting, AI-native FDE, harness expert, sales, demo.html |
 | 2026-11-14 | [Prepare the 1.55.0 release](2026-11-14-release-1-55-0.md) | release, 1.55.0, missing v1.54.0 tag, GitHub Releases backlog, OTS inventory, fleet bump |
 | 2026-11-14 | [Add session summaries and a searchable session log](2026-11-14-session-summaries.md) | session log, docs/sessions, find_sessions.sh, check_session_summaries.sh, workflow steps 9/10/27, ADR-0007 |
