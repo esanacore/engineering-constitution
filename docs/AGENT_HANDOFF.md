@@ -44,8 +44,8 @@ consulting voice; 5–9 are the inspectable system evidence.
 
 **Human action required:** steps 1, 2, and 3.
 
-1. [ ] **HUMAN** — Open or refresh the PR for `release/v1.55.0` and merge when
-   CI is green: https://github.com/esanacore/engineering-constitution/pull/new/release/v1.55.0
+1. [ ] **HUMAN** — Review and merge PR #112 when CI is green:
+   https://github.com/esanacore/engineering-constitution/pull/112
    - **Why a human:** merge to main is the maintainer's decision.
    - **Done when:** the PR is merged.
 2. [ ] **HUMAN** — Walk the deck; confirm voice / add a consulting contact on
