@@ -20,64 +20,59 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (Release 1.56.0 prepared)
+### Session: 2026-11-14 (1.56.0 released; session log rolled out to the fleet)
 
-1.56.0 is prepared on `release/v1.56.0`: the generated session-log index
-(`scripts/build_session_index.sh`, now also checked in warn mode by the
-adopter compliance workflow template), the pitch deck, and the two
-ADR-0007 decisions the maintainer made — `docs/sessions` stays in the
-recommended tier, and summaries need no separate approval. `RELEASES.md`
-now says a new recommended file must be added to strict-mode adopters on
-the fleet bump. Three approved learnings are in `docs/MEMORY.md`.
+`v1.56.0` is tagged on merge commit `7615a92` and published as the Latest
+GitHub Release; `release-tag-alignment` passed. All 18 adopters have a
+`constitution/bump-v1.56.0` pull request that also adopts the session log:
+`docs/sessions/README.md` and `TEMPLATE.md`, plus the session-log rule in
+the instruction files. The three CI fixes from the 1.55.0 branches were
+carried over, and the 18 superseded 1.55.0 pull requests are closed.
 Summary: `docs/sessions/2026-11-14-release-1-56-0.md`.
 
-**Known blockers:** none for the release. The 18 open
-`constitution/bump-v1.55.0` pull requests are superseded by the 1.56.0 bump;
-four of them carry extra commits (session-log files on `patients-served`
-and `MultiplatformTestApp`; `ubuntu-24.04` pins on `SSH_DeviceManager` and
-`AI-Process-Engineer`; a JDK 17 step on `MultiplatformTestApp`) that must be
-carried onto the new branches before the old ones are closed.
+**Known blockers:**
+
+- `patients-served`'s `validate-docs` is red on its bump (archive baseline
+  drift), as on every constitution bump until that repository's next archive
+  rebuild.
+- Six older-style adopters got the session-log rule in `AGENTS.md` and
+  `CLAUDE.md` only, and no adopter's `.aider.conf.yml` or
+  `.continue/config.json` was changed (see `TODO.md`).
 
 **Context hints:** `ubuntu-latest` is now Ubuntu 26.04 (no Python 3.8/3.9
-for `actions/setup-python`, default JDK 25, `webkit2gtk-driver` renamed).
-`patients-served`'s `validate-docs` is red on every constitution bump until
-that repository's next archive rebuild.
+for `actions/setup-python`, default JDK 25, `webkit2gtk-driver` renamed);
+three adopters are pinned around it on their bump branches.
 
 ## Next Steps
 
-**Human action required:** steps 1, 4, 5, and 6.
+**Human action required:** steps 1, 2, 3, and 4.
 
-1. [ ] **HUMAN** — Review and merge the 1.56.0 release pull request when CI
-   is green.
-   - **Why a human:** merging a release to `main` is the maintainer's
-     decision.
-   - **Done when:** the pull request is merged.
-2. [ ] **AGENT** — Tag `v1.56.0` on the merge commit, publish the GitHub
-   Release from the `## 1.56.0` changelog section, and confirm
-   `release-tag-alignment` passes. The maintainer delegated this for 1.56.0
-   _(blocked by step 1)_
-3. [ ] **AGENT** — Run the 1.56.0 fleet bump; on each bump branch add the
-   session-log index, template, and instruction-file line, and carry over
-   the four 1.55.0 branches' extra commits; then close the 18 superseded
-   1.55.0 pull requests _(blocked by step 2)_
-4. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.56.0` pull
+1. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.56.0` pull
    requests.
    - **Why a human:** merging into each adopter's default branch is the
-     maintainer's decision.
-   - **Done when:** every adopter's `constitution/` gitlink is the 1.56.0
-     release commit.
-5. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
+     maintainer's decision. Each pull request changes instruction files as
+     well as the pin, so read one template-shaped and one older-style
+     repository before merging the rest.
+   - **You need:** `gh search prs "constitution: bump to v1.56.0" --owner esanacore --state open`
+   - **Done when:** every adopter's `constitution/` gitlink is `7615a92`.
+2. [ ] **HUMAN** — Review and merge this handoff pull request.
+   - **Why a human:** merging to `main` is the maintainer's decision.
+   - **Done when:** the pull request is merged.
+3. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
    give a consulting contact for the call to action if you want one.
    - **Why a human:** personal brand and public contact details are the
      author's.
    - **Done when:** the deck is approved as-is, or edits and a contact string
      are given.
-6. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
+4. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
    product decision owner for the discovery pilot.
    - **Why a human:** participation, business priorities, and data-sharing
      consent belong to the people who own them.
    - **Done when:** participant and owner agree on a request and the
      permitted material.
-7. [ ] **AGENT** _(suggestion)_ — Move `AI-Process-Engineer`'s e2e job to
+5. [ ] **AGENT** _(suggestion)_ — Hand-merge the session-log rule into
+   adopters' `.aider.conf.yml` and `.continue/config.json`, and bring the six
+   older-style adopters' instruction files up to the current templates.
+6. [ ] **AGENT** _(suggestion)_ — Move `AI-Process-Engineer`'s e2e job to
    `webkitgtk-webdriver` and `MultiplatformTestApp` to a Gradle that runs on
    current JDKs, so the runner pins can come off.
