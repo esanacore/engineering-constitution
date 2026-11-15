@@ -15,7 +15,7 @@ Use this skill twice in every non-trivial session (`AI_WORKFLOW.md`, "Session Su
 - **Decisions**: what, who decided, why, and what was rejected.
 - **Discoveries**, **Outcome**, **Open Questions**.
 
-Then add a row at the top of the index and run `bash constitution/scripts/check_session_summaries.sh .`.
+Then rebuild the index with `bash constitution/scripts/build_session_index.sh .` (the table is generated from the entries; do not edit rows by hand) and run `bash constitution/scripts/check_session_summaries.sh .`.
 
 Write a summary, not a transcript. Never record secrets, credentials, personal data, customer data, or anything the user asked to keep off the record (`SECURITY.md`, "Session Summaries Are Published Artifacts"). Summaries are append-only: correct with a dated note, and record a change of direction in a new summary. Durable learnings are still proposed for `docs/MEMORY.md` separately, with the user's approval.
 

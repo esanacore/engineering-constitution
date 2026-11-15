@@ -20,72 +20,72 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (1.55.0 tagged, released, and rolled to the fleet)
+### Session: 2026-11-14 (generated session-log index; fleet bump CI fixes)
 
-`v1.55.0` is tagged on merge commit `111769c` and published as the Latest
-GitHub Release. On the maintainer's decision the history gap was closed too:
-`v1.54.0` is tagged on `2a7ec3c`, and Releases now exist for 1.53.0 and
-1.54.0. `release-tag-alignment` passed on the new tag.
+`scripts/build_session_index.sh` now writes the table in
+`docs/sessions/README.md` from the entries (date, title, Topics; newest
+first, same day in file-name order). `--check` fails on a stale index and CI
+runs it for the framework and the sample project. The documentation, the
+session-log README and template, and the `session-summary-writer` skill say
+to rebuild the index instead of adding a row. Full suite: 36 of 36.
+Summary: `docs/sessions/2026-11-14-generated-session-index.md`.
 
-`bump_adopters.sh` opened a `constitution/bump-v1.55.0` pull request in all
-18 adopters (18 bumped, 0 failed). Fourteen are green. The consulting pitch
-deck (`pitch-deck.html`, PR #112) is merged; its summary is
-`docs/sessions/2026-11-14-pitch-deck.md`.
+1.55.0 is tagged and released (with `v1.54.0` and the 1.53.0 and 1.54.0
+Releases backfilled), and all 18 adopters have a `constitution/bump-v1.55.0`
+pull request. Fixes pushed to four of those branches: the session-log index
+and template on `patients-served` and `MultiplatformTestApp` (both run
+`check_compliance.sh --strict`), an `ubuntu-24.04` runner pin on
+`SSH_DeviceManager` and on `AI-Process-Engineer`'s e2e job, and a JDK 17
+step on `MultiplatformTestApp`'s test runner.
 
 **Known blockers:**
 
-- 1.55.0 put `docs/sessions` in the recommended compliance tier, which fails
-  any adopter running `check_compliance.sh --strict`. Two do
-  (`patients-served`, `MultiplatformTestApp`); their bump branches now carry
-  the session-log index and template, and the compliance gate passes.
-- Remaining red checks on four bump pull requests are the adopters' own:
-  `SSH_DeviceManager` (Python 3.8/3.9 missing from the Ubuntu 26.04 runner),
-  `MultiplatformTestApp` (Gradle fails on the runner's JDK 25),
-  `AI-Process-Engineer` (`Desktop CI / e2e`, also red on October pull
-  requests), `patients-served` (`validate-docs` baseline drift, red on the
-  merged 1.52.0 bump as well).
+- `patients-served`'s `validate-docs` is red on the bump (baseline drift on
+  `CLAUDE.md` and `CONSTITUTION_VERSION`). It was red on the merged 1.52.0
+  bump too and clears at that repository's next archive rebuild.
+- The adopter workflow template does not run `build_session_index.sh
+  --check` yet: adopters get the script only with the next release.
 
-**Context hints:** `docs/sessions/2026-11-14-release-1-55-0.md` (release
-decisions and the follow-up), `docs/sessions/2026-11-14-session-summaries.md`
-(the feature and its two open design questions).
+**Context hints:** `ubuntu-latest` is now Ubuntu 26.04 (no Python 3.8/3.9
+for `actions/setup-python`, default JDK 25, `webkit2gtk-driver` renamed);
+expect the same class of failure in other adopters' own workflows.
 
 ## Next Steps
 
-**Human action required:** steps 1, 2, 3, and 4.
+**Human action required:** steps 1, 2, 3, 4, and 5.
 
-1. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.55.0` pull
+1. [ ] **HUMAN** — Review and merge this pull request when CI is green.
+   - **Why a human:** merging to `main` is the maintainer's decision.
+   - **Done when:** the pull request is merged.
+2. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.55.0` pull
    requests.
    - **Why a human:** merging into each adopter's default branch is the
-     maintainer's decision.
-   - **You need:** `gh pr list --search "constitution: bump to v1.55.0 user:esanacore"`
-     lists them. Four have red checks unrelated to the pin (see Known
-     blockers); decide per repository whether to merge past them.
+     maintainer's decision; four carry extra commits to read (see above).
+   - **You need:** `gh search prs "constitution: bump to v1.55.0" --owner esanacore --state open`
    - **Done when:** every adopter's `constitution/` gitlink is `111769c`.
-2. [ ] **HUMAN** — Decide whether `docs/sessions` stays in the recommended
+3. [ ] **HUMAN** — Decide whether `docs/sessions` stays in the recommended
    compliance tier, and whether session summaries need approval before they
    are committed, as `docs/MEMORY.md` does.
    - **Why a human:** both set policy for every adopter; the first already
      broke two strict-mode repositories on this bump.
    - **Done when:** the decision is stated; an agent records it in ADR-0007.
-3. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
+4. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
    give a consulting contact for the call to action if you want one.
    - **Why a human:** personal brand and public contact details are the
      author's.
    - **Done when:** the deck is approved as-is, or edits and a contact string
      are given.
-4. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
+5. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
    product decision owner for the discovery pilot.
    - **Why a human:** participation, business priorities, and data-sharing
      consent belong to the people who own them.
    - **Done when:** participant and owner agree on a request and the
      permitted material.
-5. [ ] **AGENT** — Add the session-log index, template, and instruction-file
-   line to the 16 adopters that do not have them yet _(blocked by step 2)_
-6. [ ] **AGENT** — Confirm
-   `https://esanacore.github.io/engineering-constitution/pitch-deck.html`
-   loads from Pages.
-7. [ ] **AGENT** _(suggestion)_ — Fix the adopter CI drift the bump exposed:
-   Python 3.8/3.9 on `SSH_DeviceManager`, the JDK pin on
-   `MultiplatformTestApp`.
-8. [ ] **AGENT** _(suggestion)_ — Generate the session-log index from the
-   entries instead of maintaining it by hand.
+6. [ ] **AGENT** — Add the session-log index, template, and instruction-file
+   line to the 16 adopters that do not have them yet _(blocked by step 3)_
+7. [ ] **AGENT** — At the next release, add a warn-mode
+   `build_session_index.sh --check` step to the adopter compliance workflow
+   template _(blocked by step 1)_
+8. [ ] **AGENT** _(suggestion)_ — Move `AI-Process-Engineer`'s e2e job to
+   `webkitgtk-webdriver` and `MultiplatformTestApp` to a Gradle that runs on
+   current JDKs, so the runner pins can come off.

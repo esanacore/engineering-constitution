@@ -214,7 +214,10 @@ in:
 - **Open Questions** — what is unresolved, and the reasoning behind the
   handoff's Next Steps.
 
-Then add a row at the top of the index. A repository that has no
+Then rebuild the index with `bash constitution/scripts/build_session_index.sh .`,
+which writes the table in `docs/sessions/README.md` from the entries' dates,
+titles, and Topics lines; rows are not edited by hand, so two sessions
+finishing together do not collide on the top row. A repository that has no
 `docs/sessions/` yet has nothing to consult; the first non-trivial session
 creates the directory by copying `README.md` and `TEMPLATE.md` from
 `constitution/templates/docs/sessions/`, and writes the first entry. The
@@ -241,7 +244,8 @@ rules:
 
 `scripts/check_session_summaries.sh` verifies the mechanical half (names,
 fields, sections, the index; `--base <ref>` also notes a diff that carries no
-summary). In Claude Code, the `Stop` hook described below asks for the
+summary), and `scripts/build_session_index.sh --check` fails when the index
+is not what the entries produce. In Claude Code, the `Stop` hook described below asks for the
 summary at the same moment it asks for the Next Steps procedure, in any
 repository that has a `docs/sessions/` directory.
 

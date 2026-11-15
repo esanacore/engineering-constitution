@@ -16,7 +16,9 @@ The scripts are bash and the commands are the same on every platform: Linux
 and macOS run them as written; on Windows, run them from Git Bash or WSL.
 
 **Before completing non-trivial work**, copy `TEMPLATE.md` to `YYYY-MM-DD-<slug>.md`, fill
-it in, and add a row at the top of the table. Summaries are append-only:
+it in, and rebuild the table below with
+`bash constitution/scripts/build_session_index.sh .` (it is generated from the entries; do not
+edit rows by hand). Summaries are append-only:
 correct a mistake with a dated note, and record a change of direction in a
 new summary that links the old one. A summary is not a transcript and never
 carries secrets, credentials, personal data, or customer data.
@@ -30,4 +32,4 @@ Newest first.
 
 | Date | Session | Topics |
 | --- | --- | --- |
-| 2026-01-12 | [Adopt the engineering constitution](2026-01-12-adopt-constitution.md) | bootstrap, constitution submodule, AGENTS.md, vendor instruction files |
+| 2026-01-12 | [Adopt the engineering constitution](2026-01-12-adopt-constitution.md) | bootstrap, constitution submodule, AGENTS.md, vendor instruction files, CLAUDE.md, Copilot, Cursor |
