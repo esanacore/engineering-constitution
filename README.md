@@ -111,6 +111,7 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `templates/docs/MVP_BACKLOG.md`: Optional milestone backlog template for early-stage products.
 - `templates/docs/SESSION_PLAN.md`: Session planning template for crash-recovery documentation.
 - `templates/docs/sessions/`: The session log's index (`README.md`) and per-session `TEMPLATE.md`, installed into every adopter. Each session leaves a summary there — request, conversational context, decisions and reasoning, discoveries, outcome — and each session searches it before planning (see `DOCUMENTATION.md` "Session Summaries" and `docs/adr/0007-session-summaries.md`).
+- `templates/docs/CONSTITUTION_IMPACT.md`: Constitution Impact Report template — an adopter's evidence-based record of what adoption changed: a generated Adoption Snapshot plus hand-written What Changed, Catches, What It Cost, and Not Yet Adopted sections, every claim citing a commit, pull request, or CI run (see `DOCUMENTATION.md` "Constitution Impact Report").
 - `templates/docs/OTS_SOFTWARE.md`: OTS software inventory template (FDA OTS / IEC 62304 SOUP-informed third-party dependency register).
 - `templates/wiki/Home.md`: Wiki landing-page scaffold installed into every adopter as the required `wiki/Home.md` (see `docs/adr/0001-wiki-subsystem.md`).
 - `templates/docs/INCIDENT_POSTMORTEM.md`: Blameless postmortem template, copied per incident into `docs/incidents/`.
@@ -130,6 +131,7 @@ workflow), and `INTEGRATION.md` (adopting it in a project). The roadmap is
 - `scripts/check_session_summaries.sh`: Reference checker for the session log — every `docs/sessions/YYYY-MM-DD-<slug>.md` carries a title, a matching `**Date:**`, a non-empty `**Topics:**` line, and non-empty Request/Context/Decisions/Discoveries/Outcome/Open Questions sections, has no unanswered template prompt, and is linked from the index; `--base <ref>` also notes a diff that carries no summary. Warn by default, `--strict` to enforce.
 - `scripts/find_sessions.sh`: Search helper for the session log — `find_sessions.sh <keyword>...` prints the summaries that mention every term (title and Topics matches first, then newest), so an agent can read what was asked, decided, and learned last time before planning.
 - `scripts/build_session_index.sh`: Rebuilds the session log's index table (`docs/sessions/README.md`, "## Index") from the entries — date, title, and Topics line, newest first — so the index is generated, not hand-kept. `--check` fails when it is stale. Tested by `scripts/test_build_session_index.sh`.
+- `scripts/build_impact_report.sh`: Creates an adopter's `docs/CONSTITUTION_IMPACT.md` from the template on first run and rewrites only its Adoption Snapshot block from measured repository facts — pinned version, adoption date, governance files per compliance tier, installed `constitution-*.yml` workflows, declared test command, traced requirements, OTS components, ADRs, session summaries, releases, TODO counts. `--print` shows the snapshot without writing. A meter, not a gate.
 - `scripts/check_skills.sh`: Reference checker that validates every `skills/*/SKILL.md` (front-matter name matches its directory, description present, referenced scripts exist).
 - `scripts/test_checker_contract.sh`: Meta-test holding every `check_*.sh` to the shared checker contract (`--help`, exit `2` on a bad option, `--strict` where documented, executable bit, a paired negative-case suite, CI annotations). Every checker sources `scripts/lib/ci_annotations.sh` and emits `::warning::` / `::error::` under GitHub Actions.
 - `scripts/bump_adopters.sh`: Fleet bump for step 9 of cutting a release — re-pins every adopter's `constitution/` submodule to the release commit, one branch and pull request per repository, idempotently.
@@ -176,7 +178,7 @@ engineering-constitution/
 ├── AGENTS.md, CLAUDE.md, COPILOT_INSTRUCTIONS.md, ...  ← This repo's own agent instructions
 │
 ├── templates/                            ← Files scripts/bootstrap.sh copies into adopting projects
-│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, sessions/, ADR, ...)
+│   ├── docs/                             ← docs/ templates (ARCHITECTURE, SETUP, TEST_PLAN, SESSION_PLAN, sessions/, CONSTITUTION_IMPACT, ...)
 │   ├── .claude/settings.json             ← Claude Code hooks (freshness at start, Next Steps + session summary at stop) + permissions deny list
 │   └── .github/
 │       ├── workflows/                    ← CI gate templates (version, compliance, tests, doc-freshness, wiki, ...), SHA-pinned

@@ -17,6 +17,10 @@ fail, `--help` for usage, exit `2` on a usage error.
 - `bash scripts/build_session_index.sh .`: rebuild the index table in `docs/sessions/README.md` from the entries (`--check` to fail when it is stale, without writing).
 - `bash scripts/check_session_summaries.sh .`: format and index check for `docs/sessions/` (`--strict` to enforce).
 
+## Impact Report (for adopters)
+
+- `bash scripts/build_impact_report.sh <adopter-root>`: create the adopter's `docs/CONSTITUTION_IMPACT.md` from the template, or refresh its generated Adoption Snapshot block (`--print` to show the snapshot without writing; `--date`, `--file`, `--constitution-dir` to override the defaults).
+
 ## Self-Governance (what CI runs against this repository)
 
 - `bash scripts/check_secrets.sh --strict .`

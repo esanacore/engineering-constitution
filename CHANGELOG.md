@@ -6,6 +6,29 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Added
+
+- **Constitution Impact Report for adopters (`docs/CONSTITUTION_IMPACT.md`).**
+  An adopting repository can now show what the constitution did for it, with
+  evidence. The report has a generated half and a written half.
+  `scripts/build_impact_report.sh` creates the file from
+  `templates/docs/CONSTITUTION_IMPACT.md` on first run and rewrites only its
+  Adoption Snapshot block: pinned version, adoption date, governance files per
+  compliance tier, installed `constitution-*.yml` workflows, the declared test
+  command, traced and verified requirements, OTS components, ADRs, session
+  summaries, releases, and TODO counts. The adopter writes Summary, What
+  Changed, Catches, What It Cost, and Not Yet Adopted, and every claim cites a
+  commit, pull request, or CI run. `DOCUMENTATION.md` ("Constitution Impact
+  Report") sets the rules: evidence or nothing, costs beside benefits, no
+  reconstructed baseline. The report is opt-in: it is listed under "Strongly
+  Encouraged", sits in no `check_compliance.sh` tier, is not installed by
+  `bootstrap.sh`, and changes no workflow step, so no adopter's CI changes.
+  `--print` shows the snapshot without writing; a rerun that would change only
+  the date leaves the file alone; a shallow clone keeps a recorded adoption
+  date. `scripts/test_build_impact_report.sh` (14 cases), a worked example in
+  `examples/sample-project/docs/CONSTITUTION_IMPACT.md`, and an
+  `INTEGRATION.md` section ("Showing What Adoption Changed").
+
 ## 1.56.0 - 2026-11-14
 
 The session log's index is now generated from the entries instead of kept by

@@ -7,6 +7,7 @@ summary (`docs/sessions/`), `CHANGELOG.md`, or `docs/AGENT_HANDOFF.md`._
 
 ## Last completed
 
-Consulting pitch deck reframed for AI-native FDE / harness-expert
-positioning. Full record: `docs/sessions/2026-11-14-pitch-deck.md`; next
-steps in `docs/AGENT_HANDOFF.md`.
+Constitution Impact Report for adopters (`docs/CONSTITUTION_IMPACT.md`,
+`scripts/build_impact_report.sh`). Full record:
+`docs/sessions/2026-11-16-constitution-impact-report.md`; next steps in
+`docs/AGENT_HANDOFF.md`.

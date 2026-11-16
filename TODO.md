@@ -2,6 +2,14 @@
 
 ## Features
 
+- [x] Constitution Impact Report for adopters: `templates/docs/CONSTITUTION_IMPACT.md`, `scripts/build_impact_report.sh` (generated Adoption Snapshot; hand-written sections untouched) with `scripts/test_build_impact_report.sh`, `DOCUMENTATION.md` "Constitution Impact Report", `INTEGRATION.md` "Showing What Adoption Changed", and a worked example in `examples/sample-project`. Opt-in: no compliance tier, no bootstrap install, no workflow step. Follow-ups:
+  - [ ] Pilot the report on one real adopter (a public one with history, for example `SSH_DeviceManager`) before rolling it wider: run the script on a full clone, write the hand-written half from real pull requests and CI runs, and feed what was awkward back into the template.
+  - [ ] Add `check_impact_report.sh` (warn by default, `--strict`): every What Changed and Catches row has a non-empty Evidence cell, no template placeholder remains, both snapshot markers are present. Today "evidence or nothing" is a review question only.
+  - [ ] Capture a baseline at adoption: have `bootstrap.sh` (or a `--baseline` mode of the script) record the pre-adoption snapshot, so "Before" is measured instead of "not recorded". Existing adopters have no baseline and should say so.
+  - [ ] Add an `impact-report-writer` skill that drafts Catches rows from failed-then-fixed `constitution-*.yml` runs and session summaries, for the agent to verify before committing.
+  - [ ] Add a fleet roll-up: aggregate each adopter's snapshot block (via `audit_adopters.sh`'s repository list) into one table, for the pitch deck's credibility slide. Private adopters' numbers stay out of this public repository.
+  - [ ] Decide whether the snapshot should count gate outcomes (failed `constitution-*.yml` runs later fixed) from the GitHub API; it needs `gh` and a token, so it cannot be part of the offline script.
+
 - [x] Session summaries in a searchable session log (ADR-0007): `docs/sessions/` (one file per session, index, template), Required Workflow steps 9–10 (consult) and 27 (write), `scripts/check_session_summaries.sh`, `scripts/find_sessions.sh`, the rule in every agent instruction file, the `Stop` hook, bootstrap, the compliance recommended tier, and `SECURITY.md`'s privacy rules. Follow-ups:
   - [~] Roll the session log across the adopter fleet (index and template added to the two `--strict` adopters, `patients-served` and `MultiplatformTestApp`, on their 1.55.0 bump branches; 16 remain): `docs/sessions/README.md` + `TEMPLATE.md` and the instruction-file line in each adopter (bootstrap never overwrites existing instruction files, so the line is a hand-merge or a scripted append).
   - [ ] Make `docs/sessions` a default anchor of `check_instruction_templates.sh` after a `Deprecation` notice (ADR-0003), alongside the "Next Steps procedure" anchor item below.

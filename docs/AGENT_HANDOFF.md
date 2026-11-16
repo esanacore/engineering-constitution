@@ -20,64 +20,72 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-### Session: 2026-11-14 (Release 1.56.0 prepared)
+### Session: 2026-11-16 (Constitution Impact Report added)
 
-1.56.0 is prepared on `release/v1.56.0`: the generated session-log index
-(`scripts/build_session_index.sh`, now also checked in warn mode by the
-adopter compliance workflow template), the pitch deck, and the two
-ADR-0007 decisions the maintainer made — `docs/sessions` stays in the
-recommended tier, and summaries need no separate approval. `RELEASES.md`
-now says a new recommended file must be added to strict-mode adopters on
-the fleet bump. Three approved learnings are in `docs/MEMORY.md`.
-Summary: `docs/sessions/2026-11-14-release-1-56-0.md`.
+Adopters can now keep `docs/CONSTITUTION_IMPACT.md`, an evidence-based record
+of what adopting the constitution changed. `scripts/build_impact_report.sh`
+creates it from `templates/docs/CONSTITUTION_IMPACT.md` and rewrites only its
+generated Adoption Snapshot block; the What Changed, Catches, What It Cost,
+and Not Yet Adopted sections are hand-written and must cite evidence
+(`DOCUMENTATION.md`, "Constitution Impact Report"). It is opt-in: no
+compliance tier, no bootstrap install, no workflow step, so no adopter's CI
+changes. The work is on `claude/blissful-allen-ix6z3j`, pushed, with no pull
+request opened. Summary: `docs/sessions/2026-11-16-constitution-impact-report.md`.
 
-**Known blockers:** none for the release. The 18 open
-`constitution/bump-v1.55.0` pull requests are superseded by the 1.56.0 bump;
-four of them carry extra commits (session-log files on `patients-served`
-and `MultiplatformTestApp`; `ubuntu-24.04` pins on `SSH_DeviceManager` and
-`AI-Process-Engineer`; a JDK 17 step on `MultiplatformTestApp`) that must be
-carried onto the new branches before the old ones are closed.
+**Known blockers:** none. `Unreleased` holds this one addition; no release
+was cut (a remote session cannot tag, and a pilot may change the template).
 
-**Context hints:** `ubuntu-latest` is now Ubuntu 26.04 (no Python 3.8/3.9
-for `actions/setup-python`, default JDK 25, `webkit2gtk-driver` renamed).
-`patients-served`'s `validate-docs` is red on every constitution bump until
-that repository's next archive rebuild.
+**Context hints:** the snapshot's adoption date comes from git history, so
+the first run in an adopter must be on a full clone; shallow runs keep a
+date already recorded. The 1.56.0 release steps from the previous handoff
+(tag, GitHub Release, fleet bump, the 18 bump pull requests) were not
+checked this session and are carried below as they stood.
 
 ## Next Steps
 
-**Human action required:** steps 1, 4, 5, and 6.
+**Human action required:** steps 1, 2, 5, 7, and 8.
 
-1. [ ] **HUMAN** — Review and merge the 1.56.0 release pull request when CI
-   is green.
-   - **Why a human:** merging a release to `main` is the maintainer's
-     decision.
-   - **Done when:** the pull request is merged.
-2. [ ] **AGENT** — Tag `v1.56.0` on the merge commit, publish the GitHub
-   Release from the `## 1.56.0` changelog section, and confirm
-   `release-tag-alignment` passes. The maintainer delegated this for 1.56.0
-   _(blocked by step 1)_
-3. [ ] **AGENT** — Run the 1.56.0 fleet bump; on each bump branch add the
-   session-log index, template, and instruction-file line, and carry over
-   the four 1.55.0 branches' extra commits; then close the 18 superseded
-   1.55.0 pull requests _(blocked by step 2)_
-4. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.56.0` pull
-   requests.
+1. [ ] **HUMAN** — Review the Constitution Impact Report branch and say
+   whether to open a pull request.
+   - **Why a human:** the name, the four rules, and the opt-in rollout were
+     the agent's choices; accepting them, and merging, are the maintainer's.
+   - **You need:** the branch `claude/blissful-allen-ix6z3j`.
+   - **Procedure:**
+     1. Read `templates/docs/CONSTITUTION_IMPACT.md` and the worked example
+        in `examples/sample-project/docs/CONSTITUTION_IMPACT.md`.
+     2. Read the "Constitution Impact Report" section of `DOCUMENTATION.md`.
+     3. Ask an agent to open the pull request, or list the changes you want.
+   - **Done when:** a pull request is open, or edits have been requested.
+2. [ ] **HUMAN** — Pick one adopter to pilot the report on (a public one
+   with history, such as `SSH_DeviceManager`).
+   - **Why a human:** which project's record becomes public evidence is the
+     owner's call.
+   - **Done when:** a repository is named.
+3. [ ] **AGENT** — Run `bash constitution/scripts/build_impact_report.sh .`
+   on a full clone of the pilot adopter, write the hand-written sections
+   from its real pull requests and CI runs, and feed what was awkward back
+   into the template _(blocked by steps 1 and 2)_
+4. [ ] **AGENT** — Confirm the 1.56.0 release state (tag `v1.56.0`, GitHub
+   Release, `release-tag-alignment`) and finish whatever of the previous
+   handoff's tagging and fleet-bump steps is still open.
+5. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.56.0` pull
+   requests once they exist.
    - **Why a human:** merging into each adopter's default branch is the
      maintainer's decision.
    - **Done when:** every adopter's `constitution/` gitlink is the 1.56.0
      release commit.
-5. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
+6. [ ] **AGENT** _(suggestion)_ — Add `check_impact_report.sh` so "evidence
+   or nothing" is checked mechanically: non-empty Evidence cells, no
+   template placeholder, both markers present (`TODO.md`).
+7. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
    give a consulting contact for the call to action if you want one.
    - **Why a human:** personal brand and public contact details are the
      author's.
    - **Done when:** the deck is approved as-is, or edits and a contact string
      are given.
-6. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
+8. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
    product decision owner for the discovery pilot.
    - **Why a human:** participation, business priorities, and data-sharing
      consent belong to the people who own them.
    - **Done when:** participant and owner agree on a request and the
      permitted material.
-7. [ ] **AGENT** _(suggestion)_ — Move `AI-Process-Engineer`'s e2e job to
-   `webkitgtk-webdriver` and `MultiplatformTestApp` to a Gradle that runs on
-   current JDKs, so the runner pins can come off.

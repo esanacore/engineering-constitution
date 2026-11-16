@@ -856,6 +856,36 @@ pull requests, pushes to the default branch, and a daily schedule. This is the
 CI gate that turns the two checkers from on-demand tools into enforced ones,
 alongside the version gate described above.
 
+## Showing What Adoption Changed
+
+Compliance says the files are there. It does not say what the constitution
+did for the project. `scripts/build_impact_report.sh` creates and refreshes
+`docs/CONSTITUTION_IMPACT.md`, the adopter's evidence-based record of that
+(`DOCUMENTATION.md`, "Constitution Impact Report"). Run it from the adopting
+repository's root, in bash (Git Bash or WSL on Windows):
+
+```bash
+# First run: creates the report from the template and writes its snapshot.
+# Later runs: rewrite only the snapshot block between the two markers.
+bash constitution/scripts/build_impact_report.sh .
+
+# Look without writing:
+bash constitution/scripts/build_impact_report.sh --print .
+```
+
+The snapshot is measured: pinned version, adoption date, governance files per
+compliance tier, installed `constitution-*.yml` workflows, the declared test
+command, traced requirements, inventoried dependencies, ADRs, session
+summaries, releases, and TODO counts. The sections around it (what changed,
+what a gate caught, what it cost, what is not yet adopted) are yours to
+write, each claim with a commit, pull request, or CI run behind it.
+
+Run it on a full clone the first time: the adoption date comes from git
+history, and a shallow clone (the default in CI) reports "unknown" until a
+full-clone run has recorded the date, after which shallow runs keep it.
+`bootstrap.sh` does not install the report and no checker asks for it; the
+first run of the script is the opt-in.
+
 ## Running the Adopter's Own Tests and Catching Doc Drift
 
 Two more CI gates round out the enforcement layer, both installed by

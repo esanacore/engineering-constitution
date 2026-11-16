@@ -39,6 +39,13 @@ repository. Notable groups:
   deletion, and refuses to read credential-shaped files. It is a
   prefix-matched floor, not a guarantee; see `SECURITY.md`, "Agent Runtime
   Security".
+- **Constitution Impact Report** — `templates/docs/CONSTITUTION_IMPACT.md`,
+  an adopter's evidence-based record of what adoption changed. It is not
+  installed by bootstrap: `scripts/build_impact_report.sh` creates it on first
+  run and keeps its Adoption Snapshot block current, and the adopter writes
+  the What Changed, Catches, What It Cost, and Not Yet Adopted sections with
+  a commit, pull request, or CI run behind every claim (`DOCUMENTATION.md`,
+  "Constitution Impact Report").
 - **Incident postmortems** — `templates/docs/INCIDENT_POSTMORTEM.md`, copied
   per incident into `docs/incidents/`, with corrective actions that become
   `TODO.md` items (`OPERATIONS.md`, "Incident Response").

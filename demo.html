@@ -607,6 +607,19 @@ docs/sessions/<span class="s">2026-01-08-auth-refactor.md</span>
   8-hour session, because shared kiosks stay signed in.</pre>
           <p class="code-caption">Illustrative output. A summary is never a transcript and never carries a secret.</p>
 
+          <h4>Each adopter can show what adoption changed</h4>
+          <p class="section-lead" style="margin-bottom:0.75rem;">The Constitution Impact Report (<code>docs/CONSTITUTION_IMPACT.md</code>) is an adopter's evidence-based record: a snapshot measured by <code>build_impact_report.sh</code>, then what changed, what a gate caught, and what it cost, each claim with a commit, pull request, or CI run behind it. Opt-in; no CI gate asks for it.</p>
+<pre class="code"><span class="p">$</span> bash constitution/scripts/<span class="fn">build_impact_report.sh</span> --print .
+| Measure | Value | Source |
+| --- | --- | --- |
+| Constitution version | <span class="n">1.56.0</span> | <span class="s">constitution/VERSION</span> |
+| Adopted since | <span class="n">2026-01-12</span> | first commit touching <span class="s">constitution/</span> |
+| Governance files | <span class="n">9</span> of <span class="n">9</span> required, <span class="n">13</span> of <span class="n">15</span> recommended | <span class="s">check_compliance.sh</span> |
+| Constitution CI workflows | <span class="n">5</span>: compliance, doc-freshness, ots, secrets, tests | <span class="s">.github/workflows/</span> |
+| OTS components inventoried | <span class="n">14</span> | <span class="s">docs/OTS_SOFTWARE.md</span> |
+| Session summaries | <span class="n">23</span> | <span class="s">docs/sessions/</span> |</pre>
+          <p class="code-caption">Illustrative excerpt.</p>
+
           <details class="more">
             <summary>Why Solarized Dark, specifically</summary>
             <div class="more-body">

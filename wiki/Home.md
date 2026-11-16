@@ -95,7 +95,7 @@ The repository tests the bootstrap and checker scripts with shell-based regressi
 - `scripts/test_audit_adopters.sh`
 - `scripts/test_release_docs.sh`
 - `scripts/test_checker_contract.sh` (the contract every checker must honor)
-- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_check_session_summaries.sh`, `scripts/test_find_sessions.sh`, `scripts/test_build_session_index.sh`, `scripts/test_check_readme.sh`, `scripts/test_next_steps_hook.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`, `scripts/test_workflow_templates.sh` (adopter workflow templates call checkers through `constitution/`)
+- `scripts/test_run_all_tests.sh`, `scripts/test_check_instruction_templates.sh`, `scripts/test_check_skills.sh`, `scripts/test_check_demo_page.sh`, `scripts/test_check_next_steps.sh`, `scripts/test_check_session_summaries.sh`, `scripts/test_find_sessions.sh`, `scripts/test_build_session_index.sh`, `scripts/test_build_impact_report.sh`, `scripts/test_check_readme.sh`, `scripts/test_next_steps_hook.sh`, `scripts/test_mcp_resources.sh`, `scripts/test_version_analyzer.sh`, `scripts/test_bump_adopters.sh`, `scripts/test_workflow_templates.sh` (adopter workflow templates call checkers through `constitution/`)
 
 The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.md` and run in CI by `.github/workflows/tests.yml`.
 
@@ -106,7 +106,7 @@ The full suite is `bash scripts/run_all_tests.sh`, declared in `docs/TEST_PLAN.m
 
 - Agent bridge files such as `.agent-instructions.md`, `.openhands_instructions`, `.goosehints`, `.project-rules.md`, and `SYSTEM_PROMPT.md`
 - Project governance files such as `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `HELP.md`, `README.md`, `SECURITY.md`, `TODO.md`, `CHANGELOG.md`, and `VERSION`
-- Documentation scaffolds under `templates/docs/`, including `SETUP.md`, `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`, `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`, `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md`, and `MVP_BACKLOG.md`
+- Documentation scaffolds under `templates/docs/`, including `SETUP.md`, `COMMAND_REFERENCE.md`, `TROUBLESHOOTING.md`, `ARCHITECTURE.md`, `OPERATIONS.md`, `TEST_PLAN.md`, `PRODUCT_REQUIREMENTS.md`, `REQUIREMENTS_TRACEABILITY.md`, `OTS_SOFTWARE.md`, `CONSTITUTION_IMPACT.md`, and `MVP_BACKLOG.md`
 - GitHub automation under `templates/.github/`, including Copilot instructions, Dependabot configuration, and workflow templates
 
 ### Example project

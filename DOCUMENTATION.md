@@ -75,6 +75,7 @@ Repositories should also include:
 - docs/SESSION_PLAN.md for crash-recovery session planning
 - docs/MEMORY.md for user-discretionary project memory (learnings, preferences, decisions)
 - docs/sessions/ for the session log (one summary per session: request, context, decisions, discoveries, outcome)
+- docs/CONSTITUTION_IMPACT.md for repositories that adopted this constitution (what adoption changed, with evidence)
 - API documentation
 - Wiki content when appropriate
 
@@ -161,6 +162,62 @@ dates, titles, and Topics lines, so it is generated rather than hand-kept;
 and `constitution-compliance.yml` runs the checker in warn mode wherever the
 directory exists. Whether a summary is honest and complete remains a review
 question.
+
+## Constitution Impact Report
+
+A repository that adopted this constitution can show what adoption did for
+it. `docs/CONSTITUTION_IMPACT.md` is that record: for the maintainer deciding
+whether the overhead is worth it, for a stakeholder asking what the process
+buys, and for the next project weighing adoption. It is strongly encouraged,
+not required, and it sits in no `check_compliance.sh` tier.
+
+The report is useful only if a skeptical reader believes it, so it follows
+four rules:
+
+- **Evidence or nothing.** Every claim cites something the reader can open: a
+  commit, a pull request, a CI run, a session summary, a file path. A claim
+  with no evidence is left out. "Faster" and "better" are not claims; "the
+  secrets sweep stopped a committed `.env` in pull request 41" is.
+- **Costs beside benefits.** False positives, CI minutes, session-start
+  reading cost, a rule that did not fit: these are recorded as carefully as
+  the wins, with what was done about each. A report with no costs reads as
+  marketing.
+- **No reconstructed baseline.** "Before" is the state at adoption as it was
+  recorded then. When nobody wrote it down, the cell says "not recorded".
+- **Measured where it can be.** The numbers are generated, not typed.
+
+The file has two halves (template: `templates/docs/CONSTITUTION_IMPACT.md`):
+
+- **Adoption Snapshot**, written by `scripts/build_impact_report.sh` between
+  two marker comments: the pinned constitution version, the adoption date
+  (first commit touching `constitution/`), governance files present per
+  compliance tier, the `constitution-*.yml` workflows installed, the declared
+  test command, requirements traced and verified, OTS components inventoried,
+  ADRs, session summaries, releases recorded, and open and completed TODO
+  items. A missing source reads "not present" rather than zero.
+- **Summary**, **What Changed** (practice, before, now, evidence), **Catches**
+  (what a gate or workflow step stopped before it shipped, dated, with the
+  pull request or CI run), **What It Cost**, and **Not Yet Adopted**, written
+  by a person or an agent. The script never touches them.
+
+```bash
+bash constitution/scripts/build_impact_report.sh .          # create, or refresh the snapshot
+bash constitution/scripts/build_impact_report.sh --print .  # show the snapshot, write nothing
+```
+
+The first run creates the file from the template; run it at adoption so the
+starting numbers are on record. Refresh the snapshot after each constitution
+version bump and before each release of the project, and add a **Catches**
+row in the same pull request in which a gate caught something: the row
+written that day cites a real run, and the one reconstructed a quarter later
+does not. A rerun that would change only the date leaves the file alone.
+
+The report is committed, and in a public repository it is published. The
+rules for session summaries apply (`SECURITY.md`, "Session Summaries Are
+Published Artifacts"): no secrets, credentials, personal data, customer data,
+or private hostnames, and a caught secret is described, never quoted. The
+script is a meter, not a gate: it never fails because a number is low, and
+whether the hand-written half is honest remains a review question.
 
 ## Wiki
 
