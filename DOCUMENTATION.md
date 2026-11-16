@@ -194,7 +194,8 @@ The file has two halves (template: `templates/docs/CONSTITUTION_IMPACT.md`):
   compliance tier, the `constitution-*.yml` workflows installed, the declared
   test command, requirements traced and verified, OTS components inventoried,
   ADRs, session summaries, releases recorded, and open and completed TODO
-  items. A missing source reads "not present" rather than zero.
+  items. A missing source says so ("not present", "not found", "none",
+  "not declared") rather than reading as zero.
 - **Summary**, **What Changed** (practice, before, now, evidence), **Catches**
   (what a gate or workflow step stopped before it shipped, dated, with the
   pull request or CI run), **What It Cost**, and **Not Yet Adopted**, written

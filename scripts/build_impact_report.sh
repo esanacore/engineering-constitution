@@ -97,9 +97,18 @@ if [ -z "$file" ] || [ -z "$cdir" ]; then
   echo "--file and --constitution-dir need a non-empty value." >&2
   exit 2
 fi
+# Both stay inside the root: this script writes one file and must not be
+# talked into writing somewhere else.
+for rel in "$file" "$cdir"; do
+  case "/$rel/" in
+    //*|*/../*)
+      echo "--file and --constitution-dir must be relative paths inside the root: $rel" >&2
+      exit 2 ;;
+  esac
+done
 
 stamp=${stamp:-$(date +%Y-%m-%d)}
-if ! printf '%s' "$stamp" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+if ! printf '%s' "$stamp" | grep -qE '^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$'; then
   echo "--date must look like YYYY-MM-DD: $stamp" >&2
   exit 2
 fi
@@ -116,7 +125,14 @@ cell() { printf '%s' "$1" | tr -d '\r' | tr '\n' ' ' | sed -e 's/[[:space:]]\{1,
 count_files() {
   local d=$1 pattern=$2
   [ -d "$d" ] || { echo 0; return; }
-  find "$d" -maxdepth 1 -type f -exec basename {} \; | { grep -cE "$pattern" || true; }
+  # The trailing slash makes find look inside a symlinked directory.
+  find "$d/" -maxdepth 1 -type f -exec basename {} \; | { grep -cE "$pattern" || true; }
+}
+
+# A Markdown file without its fenced code blocks, so an example heading,
+# table row, or checkbox inside a fence is not counted as a real one.
+unfenced() {
+  awk '/^[ \t]*(```|~~~)/ { fence = !fence; next } !fence' "$1"
 }
 
 # --- The measures. Each sets a value for one row of the snapshot. ----------
@@ -175,7 +191,7 @@ measure_compliance() {
 measure_workflows() {
   local d="$root/.github/workflows" names count
   [ -d "$d" ] || { echo "none"; return; }
-  names=$(find "$d" -maxdepth 1 -type f -exec basename {} \; \
+  names=$(find "$d/" -maxdepth 1 -type f -exec basename {} \; \
     | { grep -E '^constitution-.+\.ya?ml$' || true; } \
     | sed -E -e 's/^constitution-//' -e 's/\.ya?ml$//' | LC_ALL=C sort)
   [ -n "$names" ] || { echo "none"; return; }
@@ -184,15 +200,21 @@ measure_workflows() {
 }
 
 # Rows of a Markdown table whose first cell is an identifier matching <regex>,
-# skipping template placeholder rows (a cell still holding `<...>`).
+# skipping template placeholder rows: a row where some whole cell is still
+# `<...>`. A real cell that merely mentions `<form>` does not count as one.
 id_rows() {
   local f=$1 regex=$2
   [ -f "$f" ] || return 0
-  awk -v re="$regex" -F'|' '
+  unfenced "$f" | awk -v re="$regex" -F'|' '
     /^[ \t]*\|/ {
       id = $2; gsub(/^[ \t`*]+|[ \t`*\r]+$/, "", id)
-      if (id ~ ("^" re "$") && $0 !~ /`</) print
-    }' "$f"
+      if (id !~ ("^" re "$")) next
+      for (i = 2; i <= NF; i++) {
+        c = $i; gsub(/^[ \t]+|[ \t\r]+$/, "", c)
+        if (c ~ /^`<[^`]*>`$/) next
+      }
+      print
+    }'
 }
 
 measure_requirements() {
@@ -200,7 +222,16 @@ measure_requirements() {
   [ -f "$f" ] || { echo "not present"; return; }
   rows=$(id_rows "$f" '[A-Z][A-Z0-9]*(-[A-Z0-9]+)*-[0-9]+')
   total=$(printf '%s' "$rows" | grep -c . || true)
-  verified=$(printf '%s' "$rows" | grep -cE '\|[[:space:]]*Verified[[:space:]]*\|[[:space:]]*$' || true)
+  # Verified = some cell that, with emphasis and symbols removed, is exactly
+  # "Verified", wherever the Status column sits.
+  verified=$(printf '%s\n' "$rows" | awk -F'|' '
+    {
+      for (i = 2; i <= NF; i++) {
+        c = $i; gsub(/[^A-Za-z]/, "", c)
+        if (c == "Verified") { n++; break }
+      }
+    }
+    END { print n + 0 }')
   echo "$total traced, $verified verified"
 }
 
@@ -213,7 +244,7 @@ measure_ots() {
 measure_releases() {
   local f="$root/CHANGELOG.md"
   [ -f "$f" ] || { echo "not present"; return; }
-  grep -cE '^##[[:space:]]+\[?v?[0-9]+\.[0-9]+\.[0-9]+' "$f" || true
+  unfenced "$f" | grep -cE '^##[[:space:]]+\[?v?[0-9]+\.[0-9]+\.[0-9]+' || true
 }
 
 measure_tests() {
@@ -222,7 +253,7 @@ measure_tests() {
   line=$(grep -E '^-[[:space:]]*Full suite:' "$f" | head -n 1 || true)
   cmd=$(printf '%s' "$line" | sed -nE 's/^-[[:space:]]*Full suite:[[:space:]]*`([^`]*)`.*/\1/p')
   case "$cmd" in
-    ""|*"<"*) echo "not declared" ;;
+    ""|"<"*">") echo "not declared" ;;   # empty, or the template placeholder
     *) printf '`%s`' "$cmd" ;;
   esac
 }
@@ -230,8 +261,8 @@ measure_tests() {
 measure_todo() {
   local f="$root/TODO.md" open done_count
   [ -f "$f" ] || { echo "not present"; return; }
-  open=$(grep -cE '^[[:space:]]*[-*][[:space:]]+\[[ ~]\]' "$f" || true)
-  done_count=$(grep -cE '^[[:space:]]*[-*][[:space:]]+\[[xX]\]' "$f" || true)
+  open=$(unfenced "$f" | grep -cE '^[[:space:]]*[-*][[:space:]]+\[[ ~]\]' || true)
+  done_count=$(unfenced "$f" | grep -cE '^[[:space:]]*[-*][[:space:]]+\[[xX]\]' || true)
   echo "$open open, $done_count done"
 }
 

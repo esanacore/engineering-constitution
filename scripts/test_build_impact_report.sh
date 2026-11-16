@@ -211,4 +211,57 @@ odd="$tmp/a&b|c"; mkdir -p "$odd"
 [ "$(head -n 1 "$odd/docs/CONSTITUTION_IMPACT.md")" = "# Constitution Impact: a&b|c" ] || fail "title: $(head -n 1 "$odd/docs/CONSTITUTION_IMPACT.md")"
 echo "PASS"
 
+echo "Test 15: symlinked directories are counted"
+sym="$tmp/sym"; mkdir -p "$sym/docs" "$sym/.github" "$tmp/real_sessions" "$tmp/real_wf"
+printf '# S\n' > "$tmp/real_sessions/2026-01-01-one.md"
+: > "$tmp/real_wf/constitution-tests.yml"
+ln -s "$tmp/real_sessions" "$sym/docs/sessions"
+ln -s "$tmp/real_wf" "$sym/.github/workflows"
+"$builder" --print "$sym" > "$bare"
+[ "$(value_of 'Session summaries' "$bare")" = "1" ] || fail "sessions: $(value_of 'Session summaries' "$bare")"
+[ "$(value_of 'Constitution CI workflows' "$bare")" = "1: tests" ] || fail "workflows: $(value_of 'Constitution CI workflows' "$bare")"
+echo "PASS"
+
+echo "Test 16: real rows that mention <...>, Status variants, and fenced examples are measured correctly"
+odd2="$tmp/odd2"; mkdir -p "$odd2/docs"
+cat > "$odd2/docs/REQUIREMENTS_TRACEABILITY.md" <<'DOC'
+| Requirement ID | Description | Status | Notes |
+| --- | --- | --- | --- |
+| FR-001 | The `<form>` element validates | Verified | none |
+| FR-002 | Bold status | **Verified** | |
+| FR-003 | Marked status | ✅ Verified | |
+| FR-004 | Not there yet | Not Verified yet | |
+| FR-005 | `<requirement description>` | Not Started | |
+
+```text
+| FR-900 | An example row in a fence | Verified | |
+```
+DOC
+printf -- '- Full suite: `sort < in.txt | diff - out.txt`\n' > "$odd2/docs/TEST_PLAN.md"
+printf '# Changelog\n\n## 1.0.0\n\n```\n## 9.9.9\n```\n' > "$odd2/CHANGELOG.md"
+printf '# TODO\n\n- [ ] real\n\n~~~\n- [ ] example\n- [x] example\n~~~\n' > "$odd2/TODO.md"
+"$builder" --print "$odd2" > "$bare"
+[ "$(value_of 'Requirements' "$bare")" = "4 traced, 3 verified" ] || fail "requirements: $(value_of 'Requirements' "$bare")"
+[ "$(value_of 'Declared test command' "$bare")" = '`sort < in.txt \| diff - out.txt`' ] || fail "tests: $(value_of 'Declared test command' "$bare")"
+[ "$(value_of 'Releases recorded' "$bare")" = "1" ] || fail "releases: $(value_of 'Releases recorded' "$bare")"
+[ "$(value_of 'TODO items' "$bare")" = "1 open, 0 done" ] || fail "todo: $(value_of 'TODO items' "$bare")"
+echo "PASS"
+
+echo "Test 17: --file and --constitution-dir cannot leave the root; impossible dates are refused"
+for args in "--file ../escaped.md" "--file /abs/x.md" "--file docs/../../x.md" "--constitution-dir ../other" "--date 2026-13-99"; do
+  status=0
+  # shellcheck disable=SC2086
+  "$builder" $args "$tmp/fresh" > /dev/null 2>&1 || status=$?
+  [ "$status" = 2 ] || fail "'$args' exited $status, expected 2"
+done
+[ ! -e "$tmp/escaped.md" ] && [ ! -e "$tmp/fresh/abs" ] || fail "a file was written outside the report path"
+echo "PASS"
+
+echo "Test 18: the --opt=value forms work, and a root with a space in its path"
+sp="$tmp/my project"; mkdir -p "$sp/ec"; printf '3.0.0\n' > "$sp/ec/VERSION"
+"$builder" --file=docs/R.md --constitution-dir=ec --date=2026-11-16 "$sp" > /dev/null
+[ "$(head -n 1 "$sp/docs/R.md")" = "# Constitution Impact: my project" ] || fail "title: $(head -n 1 "$sp/docs/R.md")"
+[ "$(value_of 'Constitution version' "$sp/docs/R.md")" = "3.0.0" ] || fail "version with --opt=value forms"
+echo "PASS"
+
 echo "All build_impact_report tests passed."

@@ -99,8 +99,20 @@ All by the agent, on the maintainer's behalf, and open to revision.
 - Verified: the full declared suite (37 suites) and the self-governance
   checkers pass locally.
 - An independent review of the diff (a fresh agent given the diff, not the
-  conversation) was run before the push; its findings and what was done
-  about them are listed below.
+  conversation) found no loss of hand-written content but several wrong
+  measurements. It finished after the first push, so the fixes are a second
+  commit, with regression tests (the suite went from 14 to 18 cases):
+  symlinked `docs/sessions` or workflow directories counted as empty; a real
+  table row mentioning `<form>` was dropped as a placeholder; `**Verified**`,
+  a marked status, or a trailing Notes column was not counted as verified; a
+  test command containing `<` read "not declared"; headings and checkboxes
+  inside code fences were counted; `--file` and `--constitution-dir` could
+  point outside the root; impossible dates were accepted; the template told
+  the writer to delete every comment, markers included.
+- Review findings not acted on, recorded in `TODO.md`: the write is not
+  atomic, a CRLF report gets LF snapshot lines, and a report with no final
+  newline gains one. Left as is: a shallow clone trusts the adoption date
+  already in the report, which is the intended behavior.
 - Left out on purpose, all in `TODO.md`: a format checker for the evidence
   cells, a baseline captured at adoption, a writer skill, a fleet roll-up,
   and gate outcomes from the GitHub API.

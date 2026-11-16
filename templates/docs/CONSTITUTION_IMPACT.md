@@ -15,8 +15,9 @@ report with no costs reads as marketing and proves nothing.
 Never record secrets, credentials, personal data, or customer data here: the
 file is committed, and in a public repository it is published (constitution
 DOCUMENTATION.md, "Constitution Impact Report"). Delete every comment once the
-section under it is filled in. Write "None yet." under a heading rather than
-deleting it.
+section under it is filled in, except the two impact:snapshot markers: the
+script needs them to find the block it rewrites. Write "None yet." under a
+heading rather than deleting it.
 -->
 
 ## Summary

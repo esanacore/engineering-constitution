@@ -25,7 +25,7 @@ This project follows semantic versioning.
   `bootstrap.sh`, and changes no workflow step, so no adopter's CI changes.
   `--print` shows the snapshot without writing; a rerun that would change only
   the date leaves the file alone; a shallow clone keeps a recorded adoption
-  date. `scripts/test_build_impact_report.sh` (14 cases), a worked example in
+  date. `scripts/test_build_impact_report.sh` (18 cases), a worked example in
   `examples/sample-project/docs/CONSTITUTION_IMPACT.md`, and an
   `INTEGRATION.md` section ("Showing What Adoption Changed").
 
