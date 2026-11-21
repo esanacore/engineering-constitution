@@ -152,6 +152,8 @@ generate_adoption_report() {
     status_line "docs/MEMORY.md"
     status_line "docs/sessions/README.md"
     status_line "docs/sessions/TEMPLATE.md"
+    status_line "docs/drawings/README.md"
+    status_line "docs/drawings/plate.svg"
     status_line "docs/ARCHITECTURE.md"
     echo
     echo "## Files Written"

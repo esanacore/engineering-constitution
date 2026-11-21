@@ -8,4 +8,6 @@ Check `docs/SESSION_PLAN.md` for a previous interrupted session and write your o
 
 Keep the demo page current — when a change alters user-facing behavior and the repository has a `demo.html`, update it in the same change; a demo still showing the old behavior is an incomplete change (`constitution/DOCUMENTATION.md`, "Demo Page").
 
+Keep the drawings current — every repository carries a patent-style plate (`docs/drawings/plate.svg`) with a numbered key in `docs/drawings/README.md`, and a repository with a physical component also carries a dimensioned drawing set generated from its CAD; when a change alters what they show, update them in the same change (`constitution/DOCUMENTATION.md`, "Drawings").
+
 Consult and extend the session log — before planning, read the newest rows of `docs/sessions/README.md` and search `docs/sessions/` for earlier sessions on the same topic (`bash constitution/scripts/find_sessions.sh <keyword>`), reading the ones that match; before completing non-trivial work, add this session's summary there (request, context, decisions, discoveries, outcome — a summary, never a transcript, and never a secret) and list it in the index (`constitution/AI_WORKFLOW.md`, "Session Summaries").

@@ -59,6 +59,7 @@ Implementation is only part of the change. Depending on impact, the same work ma
 - operations/runbook documentation;
 - README capabilities;
 - the demo page (`demo.html`), when user-facing behavior changed;
+- the drawings (`docs/drawings/`), when the change alters what the plate or the drawing set shows;
 - TODO roadmap;
 - changelog and version information.
 

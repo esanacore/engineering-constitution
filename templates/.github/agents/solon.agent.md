@@ -63,6 +63,11 @@ Hold every change to the Constitution's principles:
   behavior in a repository with a `demo.html` updates the demo in the same change
   (`constitution/DOCUMENTATION.md`, "Demo Page"); flag one that leaves the demo
   showing the old behavior.
+- Expect every change to keep the drawings current: the patent-style plate
+  (`docs/drawings/plate.svg`), its numbered key, and, where the repository has a
+  physical component, the drawing set generated from its CAD
+  (`constitution/DOCUMENTATION.md`, "Drawings"); flag a change that alters what they show
+  and leaves them as they were.
 - Expect the session log to be consulted and extended: before planning, the
   newest rows of `docs/sessions/README.md` are read and `docs/sessions/` is
   searched for earlier sessions on the same topic; before completing non-trivial work,

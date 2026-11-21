@@ -2,6 +2,8 @@
 
 ## Features
 
+- [ ] Draw a plate for each of the 18 adopters on the fleet bump that carries the drawings standard (ADR-0008); strict-mode adopters need it in the same pull request.
+
 - [x] Session summaries in a searchable session log (ADR-0007): `docs/sessions/` (one file per session, index, template), Required Workflow steps 9–10 (consult) and 27 (write), `scripts/check_session_summaries.sh`, `scripts/find_sessions.sh`, the rule in every agent instruction file, the `Stop` hook, bootstrap, the compliance recommended tier, and `SECURITY.md`'s privacy rules. Follow-ups:
   - [x] Roll the session log across the adopter fleet. Done on the 1.56.0 bump branches (2026-11-14): index and template in all 18; the session-log rule in every Markdown instruction file of the 12 template-shaped adopters, and in `AGENTS.md`/`CLAUDE.md` of the six older-style ones.
   - [ ] Add the session-log rule to adopters' `.aider.conf.yml` and `.continue/config.json` (10 repositories each), and bring the six older-style adopters' other instruction files up to the current templates — both are hand-merges.

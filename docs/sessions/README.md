@@ -32,6 +32,7 @@ Newest first.
 
 | Date | Session | Topics |
 | --- | --- | --- |
+| 2026-11-20 | [Drawings standard: a plate for every repository, a drawing set for hardware](2026-11-20-drawings-and-the-plate.md) | drawings, plate, patent-style drawing, exploded view, docs/drawings, check_drawings.sh, mechanical drawings, CAD, drawing set, ADR-0008, recommended tier, deprecation window |
 | 2026-11-14 | [Tag and roll out 1.55.0, then generate the session-log index](2026-11-14-generated-session-index.md) | build_session_index.sh, session log index, docs/sessions/README.md, fleet bump, bump_adopters.sh, check_compliance.sh --strict, recommended tier, ubuntu-latest, Python 3.8, JDK 25, v1.54.0 backfill |
 | 2026-11-14 | [Sales pitch deck for the engineering constitution](2026-11-14-pitch-deck.md) | pitch-deck.html, consulting, AI-native FDE, harness expert, sales, marketing, demo.html, stakeholder presentation |
 | 2026-11-14 | [Prepare the 1.55.0 release](2026-11-14-release-1-55-0.md) | release, 1.55.0, version references, CHANGELOG, missing tag, v1.54.0, v1.53.0, GitHub Release, OTS inventory, Dependabot, fleet bump |

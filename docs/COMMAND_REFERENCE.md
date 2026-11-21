@@ -20,12 +20,13 @@ fail, `--help` for usage, exit `2` on a usage error.
 ## Self-Governance (what CI runs against this repository)
 
 - `bash scripts/check_secrets.sh --strict .`
-- `bash scripts/check_instruction_templates.sh --strict --anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" --anchor "demo page current" --anchor "docs/sessions" .` (also `templates` and `examples/sample-project`; CI passes the Next Steps anchor explicitly)
+- `bash scripts/check_instruction_templates.sh --strict --anchor SESSION_PLAN --anchor MEMORY.md --anchor "Next Steps procedure" --anchor "demo page current" --anchor "docs/sessions" --anchor "drawings current" .` (also `templates` and `examples/sample-project`; CI passes the Next Steps anchor explicitly)
 - `bash scripts/check_readme.sh --strict .` (also `--file templates/README.md` and `--file templates/docs/SETUP.md`)
 - `bash scripts/check_next_steps.sh --strict .` (or `--file -` to check a pull request body piped on standard input)
 - `bash scripts/check_session_summaries.sh --strict .` (also `examples/sample-project`; `--base <ref>` adds the no-summary tripwire)
 - `bash scripts/check_skills.sh --strict .`
 - `bash scripts/check_demo_page.sh --strict .`
+- `bash scripts/check_drawings.sh --strict .` (also `examples/sample-project`)
 - `bash scripts/check_wiki_links.sh --strict .`
 - `bash scripts/check_ots_inventory.sh --strict --manifest-dir mcp-server .`
 - `bash scripts/test_release_docs.sh`

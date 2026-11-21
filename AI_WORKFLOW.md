@@ -126,6 +126,7 @@ Agents must verify:
 - The Environment Contract (`docs/ENV_VARS.md`) is updated if this work touched environment variables (`bash constitution/scripts/check_env_vars.sh .` agrees).
 - Documentation impact has been evaluated, including whether README.md's current features/capabilities list still answers "what can it do today?" — not just whether the task was doc-focused.
 - If user-facing behavior changed and the repository has a `demo.html`, the demo page shows the new behavior — keep the demo page current (DOCUMENTATION.md, "Demo Page").
+- If the change alters what the drawings show (a part added, removed, renamed, or resized), the plate, its key, and any drawing set show the new state — keep the drawings current (DOCUMENTATION.md, "Drawings").
 - TODO.md reflects newly discovered or completed work.
 - CHANGELOG.md includes user-facing changes when appropriate.
 - Release discipline has been evaluated: either a release was cut for accumulated user-facing changes (see RELEASES.md), or there is a clear, stated reason not to. `CHANGELOG.md`'s `Unreleased` section must not be allowed to grow indefinitely without a release ever being cut.

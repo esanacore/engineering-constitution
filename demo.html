@@ -591,6 +591,10 @@ resolving imports against the declared layer table ...
 <span class="n">3.</span> [ ] <span class="k">AUTOMATED</span> — tests.yml runs the suite + self-governance on the PR</pre>
           <p class="code-caption">Illustrative excerpt.</p>
 
+          <h4>Every repository draws what it is made of</h4>
+          <p class="section-lead" style="margin-bottom:0.75rem;">Each adopter carries a plate in <code>docs/drawings/</code> (ADR-0008): its parts drawn in the manner of an antique patent drawing, numbered, with a key. A repository with a physical component also carries a dimensioned drawing set generated from its CAD. <code>check_drawings.sh</code> checks that the plate is filled in, keyed, self-contained, and linked. This is the framework's own plate; it is decorative and is not a patent.</p>
+          <p style="text-align:center;margin:0 0 1.25rem;"><a href="docs/drawings/README.md"><img src="docs/drawings/plate.svg" alt="The Engineering Constitution drawn as an apparatus, in the manner of an antique patent plate. Fig. 1 shows one repository: the constitution, instruction files, the workflow as gears, checkers as gates on a belt, documents, and the session log. Fig. 2 shows many repositories pinned to one constitution." style="max-width:420px;width:100%;height:auto;border-radius:6px;"></a></p>
+
           <h4>Every session leaves a summary the next agent can find</h4>
           <p class="section-lead" style="margin-bottom:0.75rem;">Commits record what changed. The session log (<code>docs/sessions/</code>, ADR-0007) records what was asked, what the conversation established, and why each decision went the way it did — and every agent searches it before planning. <code>check_session_summaries.sh</code> verifies its shape.</p>
 <pre class="code"><span class="p">$</span> bash constitution/scripts/<span class="fn">find_sessions.sh</span> login timeout

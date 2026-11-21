@@ -57,6 +57,8 @@ Creates or installs:
   - docs/MEMORY.md
   - docs/sessions/README.md
   - docs/sessions/TEMPLATE.md
+  - docs/drawings/README.md
+  - docs/drawings/plate.svg
   - docs/ARCHITECTURE.md
   - demo.html
   - wiki/Home.md
@@ -403,6 +405,11 @@ copy_file "$template_dir/docs/MEMORY.md" "$project_path/docs/MEMORY.md"
 # an index and a template. Summaries themselves are written by sessions.
 copy_file "$template_dir/docs/sessions/README.md" "$project_path/docs/sessions/README.md"
 copy_file "$template_dir/docs/sessions/TEMPLATE.md" "$project_path/docs/sessions/TEMPLATE.md"
+# The plate (constitution DOCUMENTATION.md "Drawings", ADR-0008): a patent-style
+# drawing of the project's parts and its key. The scaffold carries a marker
+# that check_drawings.sh reports until the figure is replaced.
+copy_file "$template_dir/docs/drawings/README.md" "$project_path/docs/drawings/README.md"
+copy_file "$template_dir/docs/drawings/plate.svg" "$project_path/docs/drawings/plate.svg"
 copy_file "$template_dir/docs/ARCHITECTURE.md" "$project_path/docs/ARCHITECTURE.md"
 
 # A product-facing repository shows its product, not only describes it

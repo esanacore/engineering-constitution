@@ -75,6 +75,7 @@ Repositories should also include:
 - docs/SESSION_PLAN.md for crash-recovery session planning
 - docs/MEMORY.md for user-discretionary project memory (learnings, preferences, decisions)
 - docs/sessions/ for the session log (one summary per session: request, context, decisions, discoveries, outcome)
+- docs/drawings/ for the plate (every repository) and the drawing set (repositories with a physical component); see "Drawings" below
 - API documentation
 - Wiki content when appropriate
 
@@ -220,6 +221,7 @@ For each meaningful change, review whether updates are needed for:
 - Product requirements
 - Requirements traceability matrix
 - Demo page (`demo.html`) for product-facing repositories
+- Drawings (`docs/drawings/`): the plate and its key, and the drawing set where there is a physical component
 - Test plan and coverage records
 - OTS software inventory (when dependencies were added, removed, or upgraded)
 - Environment contract (when environment variables were added or removed)
@@ -506,6 +508,104 @@ exists; pass `--strict` to make it blocking. Honest labeling and currency with
 the product remain review questions — no checker can tell a simulation that
 says so from one that does not.
 
+## Drawings
+
+A README says what a project is. A demo page shows it working. A drawing shows
+what it is made of. Every adopting repository carries a **plate**: one page
+that draws the project's parts and how they connect. A repository with a
+physical component also carries a **drawing set**: dimensioned drawings
+someone could build from. Both live under `docs/drawings/`, and ADR-0008
+records why.
+
+### The Plate
+
+The plate is a single page, `docs/drawings/plate.svg`, drawn in the manner of
+an antique patent drawing: ink line work on paper, parts picked out by
+reference numerals on leader lines, figures captioned "Fig. 1", "Fig. 2", and
+no explanatory text on the figures themselves.
+
+That form is chosen because it constrains. A patent figure has no room for
+prose, so every part must be drawn as a thing and given a number, and the
+reader gets the whole system in one look. It is also the one diagram a
+non-technical stakeholder will stop and read.
+
+- **Physical projects draw an exploded view.** The assembly pulled apart
+  along its axes, every made and bought part numbered.
+- **Software and ideas draw a simplified apparatus.** The system's main
+  parts, and what moves between them, drawn as objects: a store as a
+  cabinet, a queue as a belt, a check as a gate. Five to fifteen numerals is
+  the right size. This is not the architecture diagram (`ARCHITECTURE.md`,
+  "Visual Architecture"), which stays precise and complete; the plate is the
+  one-look summary and may leave things out.
+- **Numerals are explained in a key.** `docs/drawings/README.md` carries a
+  table under a `Key` heading: one row per numeral, saying what the part is.
+  Every numeral in the key appears on the plate. Number in twos (10, 12, 14)
+  so a part can be added without renumbering.
+- **It says it is not a patent.** A page in the style of a patent drawing,
+  with a person's name across the top, can be mistaken for a filing. The
+  plate carries a line saying it is decorative and is not a patent or a
+  patent application.
+- **Draw what exists.** A part that is planned and not built is drawn dashed
+  and marked as planned in the key, or left off. The demo page's honesty rule
+  applies to a drawing too.
+- **One self-contained SVG.** No remote fonts, images, or scripts, so it
+  renders from a clone and on a hosted Git view alike. The hand-drawn look
+  comes from filters inside the file; `templates/docs/drawings/plate.svg`
+  carries them and a starting figure to replace. Commit a raster preview only
+  where a target client cannot render the SVG (see "Binary Assets and
+  Images").
+- **One click from the front door.** `README.md` shows or links the plate.
+- **Current with the project.** The plate is on the Documentation Review
+  Checklist. A change that adds, removes, or renames a part the plate shows
+  updates the plate and its key in the same change.
+- **Public-artifact safety rules apply.** A plate in a public repository is
+  world-readable and shows nothing the project keeps private.
+
+### The Drawing Set
+
+A repository with a physical component (printed, machined, moulded, or
+assembled parts) also carries a drawing set, complete enough that a
+mechanical engineer could review the design from it.
+
+- **Generated from the CAD, never drawn by hand.** A script in the repository
+  reads the model and writes the sheets, so a dimension on a sheet cannot
+  disagree with the model. `docs/drawings/README.md` names the script and the
+  command under a `Drawing set` heading, and links every sheet. The sheets
+  may live beside the CAD instead of under `docs/drawings/`.
+- **One sheet per made part**, with orthographic views (the projection
+  convention stated), sections wherever the inside matters, overall and
+  feature dimensions, and notes for material, process, and general
+  tolerance.
+- **An assembly sheet**: an exploded view with balloons, a parts list that
+  includes bought parts, and assembly notes.
+- **A dimension table** when the design has variants, so each variant's
+  values are on paper without a sheet per variant.
+- **A title block on every sheet**: project, part and drawing number,
+  revision, scale, units, date, and status. The revision is the model's
+  revision, and a test or check fails when the set falls behind the model.
+- **Honest about status.** A prototype set says "prototype, unreleased" and
+  gives model values, not inspection limits. Tolerances nobody has measured
+  are not invented. Bought parts drawn as stand-in shapes are labelled so.
+- **SVG per sheet and one PDF** of the whole set, for printing.
+
+### Checking and Rollout
+
+`scripts/check_drawings.sh` checks the mechanical half: the plate exists, is
+filled in, says it is not a patent, and loads nothing from the network; the
+key lists at least three numerals and every one is on the plate; `README.md`
+points at `docs/drawings/`; and a repository that holds CAD links a drawing
+set that exists. Whether the figure is true, and whether a drawing set is
+complete, stays with human review.
+
+The drawings belong to the documentation workflow, not to a gate. They are
+on the Documentation Review Checklist and in every agent's instructions, and
+`docs/drawings` sits in the recommended tier of `check_compliance.sh`, so its
+absence is a warning. There is no plan to make it a required entry.
+
+The framework's own plate (`docs/drawings/plate.svg`) and the sample
+project's (`examples/sample-project/docs/drawings/`) are the worked examples
+for a repository with no physical component.
+
 ## Code Snippets in Rendered Documentation
 
 A rendered-HTML documentation artifact that shows source code — the demo page,
@@ -688,7 +788,7 @@ a "major design change" for every adopter at once and gets an ADR in
 
 ADR-0001 (the wiki), ADR-0002 (the demo page), ADR-0003 (compatibility
 policy), ADR-0004 (the proportionate workflow), ADR-0005 (the Next Steps
-procedure), and ADR-0007 (session summaries) are the worked examples. Earlier decisions of this
+procedure), ADR-0007 (session summaries), and ADR-0008 (drawings) are the worked examples. Earlier decisions of this
 kind — the root relocation in 1.38.0, the required critique pass in 1.45.0,
 the reading-order scoping in 1.46.0 — shipped without one, which is the
 reason this rule now exists.
