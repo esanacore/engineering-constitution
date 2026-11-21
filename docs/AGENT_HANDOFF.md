@@ -22,7 +22,9 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ### Session: 2026-11-20 (Drawings standard, ADR-0008)
 
-On `feat/drawings-and-plate`: every adopter is asked for a patent-style
+Merged as pull request #118, with a follow-up on `feat/drawing-set-floor`
+(the drawing set's floor, drawings as a record, formal figures, and the
+maintainer's full name on the plate): every adopter is asked for a patent-style
 plate in `docs/drawings/` (numbered parts, a key, a line saying it is not a
 patent), and every adopter with a physical component for a dimensioned
 drawing set generated from its CAD. Shipped with it: `DOCUMENTATION.md`
@@ -46,7 +48,8 @@ adopter belongs in this repository.
 
 **Human action required:** step 1.
 
-1. [ ] **HUMAN** — Review the pull request and merge it when CI is green.
+1. [ ] **HUMAN** — Review the follow-up pull request (`feat/drawing-set-floor`)
+   and merge it when CI is green.
    - **Why a human:** a new standard for every adopter is the maintainer's
      to approve.
    - **Done when:** the pull request is merged, or changes are requested.

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-11-20
 - **Agent:** Claude (Fable 5.2), remote session
-- **Branch / PR:** feat/drawings-and-plate
+- **Branch / PR:** feat/drawings-and-plate (#118, merged); feat/drawing-set-floor
 - **Topics:** drawings, plate, patent-style drawing, exploded view, docs/drawings, check_drawings.sh, mechanical drawings, CAD, drawing set, ADR-0008, recommended tier, deprecation window
 - **Related:** ADR-0008, ADR-0002, ADR-0003; `DOCUMENTATION.md` "Drawings"
 
