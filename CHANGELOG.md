@@ -22,15 +22,27 @@ physical component (ADR-0008).
   sections, an assembly sheet with an exploded view and parts list, a
   dimension table for variants, and a title block whose revision tracks the
   model. The plate must say it is not a patent.
+- **A floor on drawing-set detail, and drawings as a record.** The standard
+  lists the least a drawing set carries (views, sections, dimensions, notes,
+  a pictorial, an assembly sheet with a parts list, a title block on every
+  sheet) and asks each repository to hold that floor in its own tests so the
+  set can gain detail and cannot quietly lose it. Sheets are attributed,
+  dated, tied to their model by a hash, and listed in a committed manifest.
+  A repository may add formal figures laid out to patent-office form
+  (37 CFR 1.84). The standard states what such a record is and is not worth,
+  and warns that a drawing in a public repository is a public disclosure
+  that can affect patent rights. It is not legal advice.
 - **`scripts/check_drawings.sh`.** Checks the mechanical half: the plate
   exists, is no longer the template, says it is not a patent, and loads
   nothing from the network; the key lists at least three numerals and each is
   on the plate; `README.md` points at `docs/drawings/`; and a repository
-  holding CAD links a drawing set that exists. Warn by default, `--strict`
+  holding CAD links a drawing set that exists, whose SVG sheets each carry a
+  title block and which together show a section, a parts list, and material,
+  tolerance, and projection notes. Warn by default, `--strict`
   to enforce. The framework's own CI runs it strictly on this repository and
   the sample project; the adopter compliance workflow template runs it in
   warn mode wherever `docs/drawings/` exists and the pinned constitution
-  ships the script. `scripts/test_check_drawings.sh` (14 cases).
+  ships the script. `scripts/test_check_drawings.sh` (15 cases).
 - **Plate scaffold (`templates/docs/drawings/`).** `plate.svg` carries the
   paper, the hand-drawn line filter, and a starting figure to replace;
   `README.md` carries the key. `bootstrap.sh` installs both. The scaffold

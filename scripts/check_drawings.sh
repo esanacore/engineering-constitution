@@ -32,6 +32,12 @@ fi
 #                .FCStd, .f3d, .sldprt, .sldasm, .ipt, .iam) but
 #                docs/drawings/README.md has no "Drawing set" section linking
 #                at least one drawing file (.svg or .pdf) that exists.
+#   titleblock   A linked SVG sheet of the drawing set has no title-block
+#                field for revision, scale, units, date, or sheet number.
+#   detail       The linked SVG sheets, taken together, show no section view,
+#                no parts list (a QTY column), no material note, no tolerance
+#                note, or no projection convention. This is the floor on
+#                detail; the plate and formal figure sheets are not inspected.
 #
 # The judgement half -- whether the figure shows the real system, whether a
 # drawing set is complete enough to build from, whether both are current --
@@ -56,7 +62,9 @@ Description:
   not a patent, and loads nothing from the network; a numbered key in
   docs/drawings/README.md whose numerals all appear on the plate; a pointer
   from README.md; and, where the repository holds CAD, a "Drawing set"
-  section linking drawing files that exist. A repository without
+  section linking drawing files that exist, each SVG sheet carrying a title
+  block and the set carrying a section, a parts list, and material, tolerance
+  and projection notes. A repository without
   docs/drawings has nothing to verify (whether it needs one is
   check_compliance.sh's question).
 
@@ -189,6 +197,7 @@ cad=$(find "$root" \
 if [ -n "$cad" ]; then
   cad_rel=${cad#"$root"/}
   set_ok=false
+  sheets=()
   if [ -f "$key" ]; then
     # Links inside the "Drawing set" section (any heading level), up to the
     # next heading of the same or a higher level.
@@ -215,13 +224,55 @@ if [ -n "$cad" ]; then
           case "$target" in
             http://*|https://*) continue ;;
           esac
-          if [ -f "$dir/$target" ]; then set_ok=true; break; fi
+          if [ -f "$dir/$target" ]; then
+            set_ok=true
+            case "$target" in
+              *.svg|*.SVG) sheets+=("$target") ;;
+            esac
+          fi
           ;;
       esac
     done <<< "$links"
   fi
   if [ "$set_ok" = "false" ]; then
     report physical "CAD found ($cad_rel) but docs/drawings/README.md has no \"Drawing set\" section linking a drawing file (.svg or .pdf) that exists"
+  fi
+
+  # The floor on detail. SVG sheets are text, so the words a complete set must
+  # carry can be looked for. Formal figure sheets and the plate are figures
+  # only and are skipped. A set linked only as PDF cannot be inspected here.
+  inspected=0
+  all_text=""
+  for sheet in ${sheets[@]+"${sheets[@]}"}; do
+    case "$(basename "$sheet" | tr 'A-Z' 'a-z')" in
+      *plate*|*formal*|*fig*) continue ;;
+    esac
+    inspected=$((inspected + 1))
+    body=$(tr 'A-Z' 'a-z' < "$dir/$sheet")
+    all_text="$all_text $body"
+    missing=""
+    for field in revision scale units date sheet; do
+      case "$body" in
+        *"$field"*) ;;
+        *) missing="$missing $field" ;;
+      esac
+    done
+    if [ -n "$missing" ]; then
+      report titleblock "$sheet has no title-block field for:$missing"
+    fi
+  done
+  if [ "$inspected" -gt 0 ]; then
+    missing=""
+    for need in "section:a section view" "qty:a parts list" "material:a material note" "tolerance:a tolerance note" "projection:the projection convention"; do
+      word=${need%%:*}
+      case "$all_text" in
+        *"$word"*) ;;
+        *) missing="$missing ${need#*:};" ;;
+      esac
+    done
+    if [ -n "$missing" ]; then
+      report detail "the drawing set is missing:${missing%;}"
+    fi
   fi
 fi
 

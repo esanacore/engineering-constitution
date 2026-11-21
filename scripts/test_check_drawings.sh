@@ -168,12 +168,55 @@ make_repo "$tmp/cadok" "" "$good_key
 | 1 | [Base](sheets/base.svg) |
 | all | [PDF](../../hardware/cad/drawings/set.pdf \"the set\") |"
 mkdir -p "$tmp/cadok/hardware/cad/drawings" "$tmp/cadok/docs/drawings/sheets"
-: > "$tmp/cadok/hardware/case.scad"; : > "$tmp/cadok/docs/drawings/sheets/base.svg"
+: > "$tmp/cadok/hardware/case.scad"
+printf '<svg xmlns="http://www.w3.org/2000/svg"><text>REVISION SCALE UNITS DATE SHEET 1 OF 1</text><text>THIRD-ANGLE PROJECTION</text><text>SECTION A-A</text><text>ITEM QTY</text><text>MATERIAL PETG</text><text>GENERAL TOLERANCE</text></svg>\n' > "$tmp/cadok/docs/drawings/sheets/base.svg"
 out=$("$checker" --strict "$tmp/cadok") || { echo "$out"; fail "a real drawing set failed --strict"; }
 grep -q 'a drawing set for the physical component' <<< "$out" || { echo "$out"; fail "expected the drawing-set OK line"; }
 # Only the PDF elsewhere in the repository exists.
 rm "$tmp/cadok/docs/drawings/sheets/base.svg"; : > "$tmp/cadok/hardware/cad/drawings/set.pdf"
 out=$("$checker" --strict "$tmp/cadok") || { echo "$out"; fail "a drawing set stored outside docs/drawings failed --strict"; }
+echo "PASS"
+
+echo "Test 9b: the floor on detail for a drawing set's SVG sheets"
+full_sheet='<svg xmlns="http://www.w3.org/2000/svg"><text>PART P1</text><text>REVISION</text><text>v1</text><text>SCALE</text><text>2:1</text>
+<text>UNITS</text><text>mm</text><text>DATE</text><text>2026-01-01</text><text>SHEET</text><text>1 OF 2</text>
+<text>THIRD-ANGLE PROJECTION</text><text>SECTION A-A</text><text>MATERIAL: PETG</text><text>GENERAL TOLERANCE +/-0.2</text></svg>'
+asm_sheet='<svg xmlns="http://www.w3.org/2000/svg"><text>ASSEMBLY</text><text>REVISION</text><text>SCALE</text><text>UNITS</text><text>DATE</text><text>SHEET</text>
+<text>ITEM</text><text>QTY</text></svg>'
+set_key="$good_key
+
+## Drawing set
+
+- [Part](sheet1.svg)
+- [Assembly](sheet2.svg)
+- [Formal figures](formal-fig1.svg)"
+make_floor() {
+  make_repo "$1" "" "$set_key"
+  mkdir -p "$1/hardware"; : > "$1/hardware/case.scad"
+  printf '%s\n' "$full_sheet" > "$1/docs/drawings/sheet1.svg"
+  printf '%s\n' "$asm_sheet" > "$1/docs/drawings/sheet2.svg"
+  printf '<svg xmlns="http://www.w3.org/2000/svg"><text>FIG. 1</text><text>10</text></svg>\n' > "$1/docs/drawings/formal-fig1.svg"
+}
+make_floor "$tmp/floor"
+out=$("$checker" --strict "$tmp/floor") || { echo "$out"; fail "a complete drawing set failed --strict"; }
+make_floor "$tmp/notitle"
+printf '<svg xmlns="http://www.w3.org/2000/svg"><text>ASSEMBLY</text><text>ITEM</text><text>QTY</text><text>SCALE</text><text>SHEET</text></svg>\n' > "$tmp/notitle/docs/drawings/sheet2.svg"
+expect_finding "$tmp/notitle" "titleblock: sheet2.svg has no title-block field for: revision units date" "sheet with an incomplete title block"
+out=$("$checker" "$tmp/notitle"); grep -q 'titleblock: formal-fig1.svg' <<< "$out" && { echo "$out"; fail "formal figure sheets must not be held to the title-block rule"; }
+make_floor "$tmp/noparts"
+printf '%s\n' "${asm_sheet//QTY/COUNT}" > "$tmp/noparts/docs/drawings/sheet2.svg"
+expect_finding "$tmp/noparts" "detail: the drawing set is missing: a parts list" "set with no parts list"
+make_floor "$tmp/thin"
+printf '<svg xmlns="http://www.w3.org/2000/svg"><text>REVISION</text><text>SCALE</text><text>UNITS</text><text>DATE</text><text>SHEET</text></svg>\n' > "$tmp/thin/docs/drawings/sheet1.svg"
+expect_finding "$tmp/thin" "detail: the drawing set is missing: a section view; a material note; a tolerance note; the projection convention" "outline-only sheet"
+# A set linked only as PDF cannot be inspected and is not failed for it.
+make_repo "$tmp/pdfonly" "" "$good_key
+
+## Drawing set
+
+- [The set](set.pdf)"
+mkdir -p "$tmp/pdfonly/hardware"; : > "$tmp/pdfonly/hardware/case.scad"; : > "$tmp/pdfonly/docs/drawings/set.pdf"
+out=$("$checker" --strict "$tmp/pdfonly") || { echo "$out"; fail "a PDF-only drawing set failed --strict"; }
 echo "PASS"
 
 echo "Test 10: CAD under vendored or generated trees is not the repository's own"

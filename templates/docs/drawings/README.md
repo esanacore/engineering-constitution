@@ -27,4 +27,4 @@ bash constitution/scripts/check_drawings.sh .
 
 ## Drawing set
 
-Only for a repository with a physical component: link every sheet of the dimensioned drawing set here (SVG or PDF), with the command that regenerates it from the CAD. Delete this section if the project has nothing physical.
+Only for a repository with a physical component: link every sheet of the dimensioned drawing set here (SVG or PDF), with the command that regenerates it from the CAD. The least a set carries is listed in `constitution/DOCUMENTATION.md`, "The Drawing Set"; hold that floor in a test. Delete this section if the project has nothing physical.
