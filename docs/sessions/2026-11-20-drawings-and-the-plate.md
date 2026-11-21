@@ -43,6 +43,9 @@ in this change comes from an adopter.
 - **The plate is a hand-maintained SVG, with no generator shipped** (the
   agent's call): the framework's scripts are Bash, and a plate for a software
   project is drawn, not derived.
+- **The inventor line carries the maintainer's name** (the maintainer's
+  decision): "E. SANACORE." on the framework's plate, and on the plates of
+  all his projects. The scaffold says "YOUR NAME." for everyone else.
 - **Key numerals are read only from the table under a `Key` heading**, so a
   numbered sheet list in the same file is not mistaken for reference
   numerals.
@@ -74,5 +77,4 @@ and the adopters' plates.
 
 ## Open Questions
 
-- Is the plate's inventor line ("E. SANACORE.") right for the framework's own
-  plate, and what should adopters owned by other people put there?
+None.

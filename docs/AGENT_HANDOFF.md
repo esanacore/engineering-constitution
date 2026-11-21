@@ -46,10 +46,9 @@ adopter belongs in this repository.
 
 **Human action required:** step 1.
 
-1. [ ] **HUMAN** — Review the pull request, including the framework's own
-   plate and its inventor line, and merge it when CI is green.
-   - **Why a human:** a new standard for every adopter, and a drawing with
-     the maintainer's name on it, are the maintainer's to approve.
+1. [ ] **HUMAN** — Review the pull request and merge it when CI is green.
+   - **Why a human:** a new standard for every adopter is the maintainer's
+     to approve.
    - **Done when:** the pull request is merged, or changes are requested.
 2. [ ] **AGENT** — Cut the release that carries this (the next MINOR after
    the latest tag; check the tag first) _(blocked by step 1)_
