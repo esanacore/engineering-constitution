@@ -9,15 +9,12 @@ Date: 2026-11-20 (requested and accepted)
 - Extends: ADR-0002 (the demo page shows the product working; the plate
   shows what it is made of)
 - Supersedes: none
-- Related: ADR-0003 (the rollout follows its warn-first rule and its
-  deprecation window), `DOCUMENTATION.md` ("Drawings"), `ARCHITECTURE.md`
+- Related: ADR-0003 (the rollout follows its warn-first rule), `DOCUMENTATION.md` ("Drawings"), `ARCHITECTURE.md`
   ("Visual Architecture")
 
 ## Promotion Criteria (met at acceptance)
 
-Requested by the framework maintainer (Eric) on 2026-11-20, after a private
-hardware adopter gained a mechanical drawing set generated from its CAD and
-an exploded view drawn like an antique patent plate: "let's actually go ahead
+Requested by the framework maintainer (Eric) on 2026-11-20: "let's actually go ahead
 and make this a requirement of all adopters of the engineering-constitution
 (where it applies) even if it is only another simplified patent-application
 style visual for software/ideas when there is no physical component." A
@@ -33,13 +30,11 @@ None of them answers "what is this thing made of?" in one look.
 
 For a physical product the gap is larger. A repository can hold CAD and
 ready-to-print files and still have no drawing a mechanical engineer could
-review: no dimensions on paper, no sections, no parts list. The hardware
-adopter that prompted this had exactly that gap until its drawings were
-generated from the model.
+review: no dimensions on paper, no sections, no parts list.
 
-That adopter's exploded plate also turned out to be the most readable
-picture in the repository. The patent-drawing form forces every part to be
-drawn as an object and given a number, with no prose to hide behind.
+The patent-drawing form suits the one-look picture because it constrains:
+every part must be drawn as an object and given a number, with no prose to
+hide behind.
 
 ## Decision
 
@@ -57,10 +52,11 @@ drawn as an object and given a number, with no prose to hide behind.
 4. **`scripts/check_drawings.sh` checks the mechanical half**, warn by
    default with `--strict`, and the adopter compliance workflow runs it in
    warn mode wherever `docs/drawings/` exists.
-5. **Rollout is warn-first.** `docs/drawings` enters the recommended tier of
-   `check_compliance.sh` in 1.57.0. The maintainer's intent is a
-   requirement, so 1.57.0 announces that it will move to the required tier,
-   and that move lands no sooner than the next MINOR release (ADR-0003).
+5. **It is part of the documentation workflow, not a gate.** The maintainer's
+   direction: "it needs to be something that is part of documentation
+   workflows, not necessarily CI." `docs/drawings` enters the recommended
+   tier of `check_compliance.sh`, where its absence is a warning, and there
+   is no plan to move it to the required tier.
 6. **Every agent instruction file, the Solon reviewer, and both pull
    request templates carry the rule** to keep the drawings current.
 
@@ -68,12 +64,11 @@ drawn as an object and given a number, with no prose to hide behind.
 
 - Every adopter owes a plate. Drawing one is an hour of work for a small
   system, and the template ships the paper, the hand-drawn filter, and a
-  starting figure. Strict-mode adopters need it in the same fleet-bump pull
-  request that moves them to 1.57.0 (`RELEASES.md`, "Cutting a Release").
-- Hardware adopters owe a generator, which is real work: the reference
-  implementation is a hidden-line renderer plus a sheet layout script of a
-  few hundred lines. The framework does not ship one yet, because it depends
-  on the CAD tool. Until it does, a hardware adopter writes its own.
+  starting figure. Adopters that run `check_compliance.sh --strict` need it
+  in the same fleet-bump pull request (`RELEASES.md`, "Cutting a Release").
+- Hardware adopters owe a generator, which is real work. The framework does
+  not ship one, because it depends on the CAD tool; each hardware adopter
+  writes its own.
 - The plate overlaps the architecture diagram. They are kept apart by
   purpose: the diagram is precise and complete, the plate is a one-look
   summary that may leave things out.
@@ -91,9 +86,9 @@ drawn as an object and given a number, with no prose to hide behind.
   maintainer: the plate is wanted everywhere, in simplified form.
 - **Let the architecture diagram stand in for the plate.** Rejected: a
   Mermaid flowchart is exact and unread. The two do different jobs.
-- **Make `docs/drawings` required in 1.57.0.** Rejected: it would turn every
-  adopter's compliance gate red on the fleet bump, which is the MAJOR-shaped
-  change ADR-0003 exists to prevent.
-- **Ship the hardware drawing generator in the framework now.** Deferred:
-  the only implementation reads OpenSCAD and belongs to a private adopter.
-  Tracked in `TODO.md`.
+- **Make `docs/drawings` a required entry.** Rejected by the maintainer:
+  this is a documentation habit, and a red compliance gate is the wrong tool
+  for it.
+- **Ship a drawing-set generator in the framework.** Not done: a generator is
+  tied to one CAD tool, and adopters do not contribute their own work back
+  to the framework.

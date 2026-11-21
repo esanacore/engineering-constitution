@@ -43,11 +43,10 @@ physical component (ADR-0008).
 ### Changed
 
 - **`docs/drawings` joins the recommended tier of `check_compliance.sh`.**
-  Its absence is a warning, and a failure under `--strict`: strict-mode
+  Its absence is a warning, and a failure only under `--strict`: strict-mode
   adopters need the plate in the same fleet-bump pull request (`RELEASES.md`,
-  "Cutting a Release"). **Deprecation notice (ADR-0003):** `docs/drawings` is
-  intended to move to the required tier, no sooner than the release after
-  this one.
+  "Cutting a Release"). The drawings are a documentation-workflow
+  expectation; there is no plan to make them a required entry.
 - **Every agent instruction file, the Solon reviewer, both pull request
   templates, and `AI_WORKFLOW.md`'s completion checks** carry a rule to keep
   the drawings current. CI holds the instruction files to the new

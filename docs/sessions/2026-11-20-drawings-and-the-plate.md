@@ -8,43 +8,41 @@
 
 ## Request
 
-While working on a private hardware adopter, the maintainer asked for
-complete mechanical CAD drawings and an exploded view "in more of a vintage,
-hand-drawn look (like antique patent drawings)". On seeing them: "let's
-actually go ahead and make this a requirement of all adopters of the
+The maintainer asked that drawings become an expectation of every adopter:
+"let's actually go ahead and make this a requirement of all adopters of the
 engineering-constitution (where it applies) even if it is only another
 simplified patent-application style visual for software/ideas when there is
-no physical component."
+no physical component." He later clarified the weight: "Warn first, I mean it
+needs to be something that is part of documentation workflows not
+necessarily CI or something."
 
 ## Context
 
-The hardware adopter had CAD and ready-to-print files but no drawing a
-mechanical engineer could review. A six-sheet set was generated from its
-model (dimensioned part sheets with sections, an assembly sheet with a parts
-list, a dimension table, and the patent-style exploded plate). That adopter
-is private, so none of its drawings or its generator appear in this public
-repository.
-
 "Where it applies" was read as: the plate applies to every adopter; the
 dimensioned drawing set applies only where there is a physical component.
+
+The maintainer also restated a standing rule while reviewing this work:
+adopters never provide information back to the framework or publicly. Nothing
+in this change comes from an adopter.
 
 ## Decisions
 
 - **A plate for every adopter, a drawing set for physical ones** (the
   maintainer's decision; ADR-0008).
-- **Warn-first rollout, not an immediate required-tier entry** (the agent's
-  call, following ADR-0003): the maintainer said "requirement", but a new
-  required file turns every adopter's compliance gate red on the fleet bump.
-  `docs/drawings` enters the recommended tier with a deprecation notice that
-  it will become required no sooner than the following release. The
-  maintainer can overrule this before merging.
+- **A documentation-workflow expectation, not a gate** (the maintainer's
+  decision): `docs/drawings` sits in the recommended compliance tier, where
+  its absence is a warning, with no plan to make it required. The first
+  draft announced a later move to the required tier; the maintainer removed
+  that.
+- **The framework ships no drawing-set generator** (the maintainer's
+  decision): a generator is tied to one CAD tool, and adopters do not
+  contribute their work back. Each hardware adopter writes its own.
 - **The plate must say it is not a patent** (the agent's call): a page styled
   as a patent plate with a person's name across the top can be mistaken for
   a filing. The checker enforces the line.
 - **The plate is a hand-maintained SVG, with no generator shipped** (the
   agent's call): the framework's scripts are Bash, and a plate for a software
-  project is drawn, not derived. The hardware drawing-set generator is not
-  shipped either; see Open Questions.
+  project is drawn, not derived.
 - **Key numerals are read only from the table under a `Key` heading**, so a
   numbered sheet list in the same file is not mistaken for reference
   numerals.
@@ -76,9 +74,5 @@ and the adopters' plates.
 
 ## Open Questions
 
-- Should `docs/drawings` go straight to the required tier (a MAJOR-shaped
-  change) instead of serving the deprecation window?
-- Should the framework ship a reference drawing-set generator for hardware
-  adopters? The only one reads OpenSCAD and belongs to a private repository.
 - Is the plate's inventor line ("E. SANACORE.") right for the framework's own
   plate, and what should adopters owned by other people put there?

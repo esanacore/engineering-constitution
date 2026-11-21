@@ -597,10 +597,10 @@ points at `docs/drawings/`; and a repository that holds CAD links a drawing
 set that exists. Whether the figure is true, and whether a drawing set is
 complete, stays with human review.
 
-`docs/drawings` is in the recommended tier of `check_compliance.sh` as of
-1.57.0, so its absence is a warning. It is intended to become a required
-entry, and under ADR-0003's deprecation window that change lands no sooner
-than the release after 1.57.0. Add the plate now.
+The drawings belong to the documentation workflow, not to a gate. They are
+on the Documentation Review Checklist and in every agent's instructions, and
+`docs/drawings` sits in the recommended tier of `check_compliance.sh`, so its
+absence is a warning. There is no plan to make it a required entry.
 
 The framework's own plate (`docs/drawings/plate.svg`) and the sample
 project's (`examples/sample-project/docs/drawings/`) are the worked examples
