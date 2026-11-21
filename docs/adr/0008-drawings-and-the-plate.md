@@ -49,6 +49,17 @@ hide behind.
    dimension table where there are variants, and a title block whose
    revision tracks the model.
 3. **The plate says it is not a patent.**
+3a. **The drawing set has a floor.** `DOCUMENTATION.md` lists the least a set
+   carries; the maintainer's direction is that drawings are "always at least
+   this detailed and ideally legally strong." The checker looks for a title
+   block on every sheet and for a section, a parts list, and material,
+   tolerance, and projection notes across the set; each repository holds the
+   finer floor (named views, minimum dimension counts) in its own tests.
+3b. **Drawings are kept as a record**: attributed, dated, tied to the model
+   by a hash, and listed in a committed manifest. A repository may add
+   formal figures laid out to patent-office form. The standard says plainly
+   what such a record is and is not worth, and that a public drawing is a
+   public disclosure.
 4. **`scripts/check_drawings.sh` checks the mechanical half**, warn by
    default with `--strict`, and the adopter compliance workflow runs it in
    warn mode wherever `docs/drawings/` exists.
@@ -79,6 +90,9 @@ hide behind.
   earns its place, and because drawing the parts as objects exposes a design
   nobody can name the parts of.
 - Instruction files grow by one rule each.
+- The standard now touches patent law. It states general facts, cites the
+  regulation, says it is not legal advice, and sends the reader to a patent
+  practitioner. It does not tell anyone what to file.
 
 ## Alternatives Considered
 

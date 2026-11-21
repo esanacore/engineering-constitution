@@ -43,8 +43,16 @@ in this change comes from an adopter.
 - **The plate is a hand-maintained SVG, with no generator shipped** (the
   agent's call): the framework's scripts are Bash, and a plate for a software
   project is drawn, not derived.
-- **The inventor line carries the maintainer's name** (the maintainer's
-  decision): "E. SANACORE." on the framework's plate, and on the plates of
+- **The drawing set has a floor and is kept as a record** (the maintainer's
+  decision: "always at least this detailed and ideally legally strong"). The
+  standard lists the floor, the checker looks for its markers, and each
+  repository holds the finer floor in its own tests. Sheets are attributed,
+  dated, hashed to their model, and listed in a manifest; formal figures to
+  37 CFR 1.84 form are optional. The agent added the plain statement of what
+  that record is worth and the public-disclosure warning, with the
+  regulation checked against its published text; it is not legal advice.
+- **The inventor line carries the maintainer's full name** (the maintainer's
+  decision): "ERIC SANACORE." on the framework's plate, and on the plates of
   all his projects. The scaffold says "YOUR NAME." for everyone else.
 - **Key numerals are read only from the table under a `Key` heading**, so a
   numbered sheet list in the same file is not mistaken for reference
@@ -66,7 +74,7 @@ in this change comes from an adopter.
 ## Outcome
 
 On `feat/drawings-and-plate`: the "Drawings" section of `DOCUMENTATION.md`,
-ADR-0008, `scripts/check_drawings.sh` with 14 test cases, the plate scaffold
+ADR-0008, `scripts/check_drawings.sh` with 15 test cases, the plate scaffold
 in `templates/docs/drawings/` installed by `bootstrap.sh`, `docs/drawings` in
 the recommended compliance tier, the rule in every agent instruction file,
 the Solon reviewer and both pull request templates, the framework's own plate
@@ -77,4 +85,7 @@ and the adopters' plates.
 
 ## Open Questions
 
-None.
+- The maintainer offered to try the hardware drawing set on one of his
+  public repositories and use it as the framework's worked example. Not
+  started; which repository, and whether its generator may be public, are
+  his to say.

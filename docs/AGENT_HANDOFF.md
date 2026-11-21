@@ -26,7 +26,7 @@ On `feat/drawings-and-plate`: every adopter is asked for a patent-style
 plate in `docs/drawings/` (numbered parts, a key, a line saying it is not a
 patent), and every adopter with a physical component for a dimensioned
 drawing set generated from its CAD. Shipped with it: `DOCUMENTATION.md`
-"Drawings", ADR-0008, `scripts/check_drawings.sh` (14 test cases), the
+"Drawings", ADR-0008, `scripts/check_drawings.sh` (15 test cases), the
 scaffold in `templates/docs/drawings/`, `docs/drawings` in the recommended
 compliance tier, the rule in every instruction file, and the framework's own
 plate in `README.md` and `demo.html`. Summary:
@@ -55,5 +55,9 @@ adopter belongs in this repository.
 3. [ ] **AGENT** — On the fleet bump, draw a plate for each adopter and add
    the instruction-file line; hardware adopters also link their drawing set
    _(blocked by step 2)_
-4. [ ] **AUTOMATED** — `tests.yml` runs the suite and the self-governance
+4. [ ] **AGENT** — Build a drawing set in one of the maintainer's public
+   hardware repositories and link it from `DOCUMENTATION.md` as the worked
+   example for a physical component _(waiting on the maintainer naming the
+   repository)_
+5. [ ] **AUTOMATED** — `tests.yml` runs the suite and the self-governance
    checks, including `check_drawings.sh --strict`, on the pull request.

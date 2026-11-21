@@ -567,26 +567,92 @@ A repository with a physical component (printed, machined, moulded, or
 assembled parts) also carries a drawing set, complete enough that a
 mechanical engineer could review the design from it.
 
-- **Generated from the CAD, never drawn by hand.** A script in the repository
-  reads the model and writes the sheets, so a dimension on a sheet cannot
-  disagree with the model. `docs/drawings/README.md` names the script and the
-  command under a `Drawing set` heading, and links every sheet. The sheets
-  may live beside the CAD instead of under `docs/drawings/`.
-- **One sheet per made part**, with orthographic views (the projection
-  convention stated), sections wherever the inside matters, overall and
-  feature dimensions, and notes for material, process, and general
-  tolerance.
-- **An assembly sheet**: an exploded view with balloons, a parts list that
-  includes bought parts, and assembly notes.
-- **A dimension table** when the design has variants, so each variant's
-  values are on paper without a sheet per variant.
-- **A title block on every sheet**: project, part and drawing number,
-  revision, scale, units, date, and status. The revision is the model's
-  revision, and a test or check fails when the set falls behind the model.
-- **Honest about status.** A prototype set says "prototype, unreleased" and
-  gives model values, not inspection limits. Tolerances nobody has measured
-  are not invented. Bought parts drawn as stand-in shapes are labelled so.
-- **SVG per sheet and one PDF** of the whole set, for printing.
+**Generated from the CAD, never drawn by hand.** A script in the repository
+reads the model and writes the sheets, so a dimension on a sheet cannot
+disagree with the model. `docs/drawings/README.md` names the script and the
+command under a `Drawing set` heading, and links every sheet. The sheets may
+live beside the CAD instead of under `docs/drawings/`.
+
+**The floor.** Every drawing set carries at least the following. A set may
+carry more; it never carries less, and a change that removes any of it is an
+incomplete change.
+
+1. **One sheet per made part**, drawn as it is made, with enough
+   orthographic views to fix every feature (plan, elevation, and end views
+   as needed) and the projection convention stated.
+2. **Sections wherever the inside matters**, hatched, with the cutting
+   planes marked on the parent view.
+3. **Dimensions**: overall size, the position and size of every functional
+   feature, and diameters of bores and channels. Hidden edges are shown
+   dashed.
+4. **Notes** for material, process, general tolerance, and finish.
+5. **A pictorial view** of each part.
+6. **An assembly sheet**: an exploded view with balloons, a parts list that
+   includes bought parts (item, reference, description, material or value,
+   quantity), a section through the assembled product where parts interact,
+   and assembly notes.
+7. **A dimension table** when the design has variants, so each variant's
+   values are on paper without a sheet per variant.
+8. **A title block on every sheet**: project, part and drawing number,
+   revision, scale, units, date, sheet number, status, and who designed it.
+9. **SVG per sheet and one PDF** of the whole set, for printing.
+
+**The repository holds the floor in a test.** `check_drawings.sh` can only
+look for the words a complete set carries. The repository's own tests name
+the views, sections, notes, title-block fields, and parts-list rows each
+sheet must keep, and the smallest number of dimensions it may show, so the
+set can gain detail and cannot quietly lose it. Raise those numbers when
+detail is added; never lower them to make a change pass.
+
+**Honest about status.** A prototype set says "prototype, unreleased" and
+gives model values, not inspection limits. Tolerances nobody has measured are
+not invented. Bought parts drawn as stand-in shapes are labelled so.
+
+### Drawings as a Record
+
+A drawing set is also evidence of what existed and when, and it is worth
+making that evidence good.
+
+- **Attributed and dated.** Every sheet names the designer and carries its
+  date and revision.
+- **Tied to its model.** Every sheet prints a hash of the CAD source it was
+  generated from, and the revision in the title block is the model's
+  revision. A test fails when the set falls behind the model.
+- **Tamper-evident.** A manifest beside the sheets lists a hash of the model
+  and of every generated file, and is committed with them. Version control
+  then dates each change.
+- **Marked.** A proprietary design says so on every sheet, with a copyright
+  line.
+
+What this is worth, in general terms and not as legal advice: it supports
+copyright in the drawings and helps show independent development. It does
+not establish patent priority. In the United States a patent goes to the
+first inventor to file, so the filing date is what counts, not the date on a
+drawing.
+
+### Formal Figures for a Filing
+
+Where patent protection may be sought, a repository may also carry formal
+figures: black-and-white sheets laid out to the form a patent office asks
+for, so a practitioner starts from correct figures. For the United States
+that form is 37 CFR 1.84, which among other things asks for A4 or US letter
+sheets, margins of at least 2.5 cm at the top and left, 1.5 cm at the right
+and 1.0 cm at the bottom, no frame, solid black lines, figures numbered in
+order, reference numerals at least 0.32 cm tall on lead lines, and sheets
+numbered as n/N in figures larger than the numerals. The plate is not a
+formal figure: it is decorative and says so.
+
+Formal figures are a head start, not a filing. A registered patent attorney
+or agent prepares and checks what is filed, and the written description and
+claims are what the figures serve.
+
+**A drawing in a public repository is a public disclosure.** Publishing a
+design can start the one-year period within which a United States
+application must be filed, and can end the chance of a patent in countries
+with no grace period, which includes most of Europe. Decide whether to file
+before a plate or drawing set of something patentable goes public, and get
+advice from a patent practitioner first. None of this section is legal
+advice.
 
 ### Checking and Rollout
 
@@ -594,8 +660,10 @@ mechanical engineer could review the design from it.
 filled in, says it is not a patent, and loads nothing from the network; the
 key lists at least three numerals and every one is on the plate; `README.md`
 points at `docs/drawings/`; and a repository that holds CAD links a drawing
-set that exists. Whether the figure is true, and whether a drawing set is
-complete, stays with human review.
+set that exists, whose SVG sheets each carry a title block and which, taken
+together, show a section, a parts list, and material, tolerance, and
+projection notes. Whether the figure is true stays with human review, and
+the finer floor on detail stays with the repository's own tests.
 
 The drawings belong to the documentation workflow, not to a gate. They are
 on the Documentation Review Checklist and in every agent's instructions, and
