@@ -8,6 +8,7 @@ name: Constitution Compliance
 #   - check_next_steps.sh   — docs/AGENT_HANDOFF.md ends with a Next Steps procedure.
 #   - check_readme.sh       — README.md names its platforms and collapses correctly.
 #   - check_session_summaries.sh — docs/sessions/ summaries are well-formed and indexed.
+#   - check_drawings.sh     — docs/drawings/ holds a filled-in plate, its key, and (with CAD) a drawing set.
 #   - build_session_index.sh --check — the generated session-log index is current.
 #
 # The traceability check runs only when the product-facing documents exist, so
@@ -106,6 +107,17 @@ jobs:
           if [ -f docs/sessions/README.md ] && [ -e constitution/scripts/build_session_index.sh ]; then
             bash constitution/scripts/build_session_index.sh --check . \
               || echo "::warning::docs/sessions/README.md index is stale; run: bash constitution/scripts/build_session_index.sh ."
+          fi
+
+      - name: Verify the drawings (when present)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Older constitution pins predate the drawings checker. Warn mode.
+          if [ -d docs/drawings ] && [ -e constitution/scripts/check_drawings.sh ]; then
+            bash constitution/scripts/check_drawings.sh .
+          else
+            echo "::notice::No docs/drawings/ (or no drawings checker in this constitution pin); skipping the drawings check."
           fi
 
       - name: Verify requirements traceability (product-facing repositories)

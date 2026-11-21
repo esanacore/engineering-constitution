@@ -44,6 +44,7 @@ bash scripts/check_readme.sh --strict .
 bash scripts/check_next_steps.sh --strict .
 bash scripts/check_skills.sh --strict .
 bash scripts/check_demo_page.sh --strict .
+bash scripts/check_drawings.sh --strict .
 bash scripts/check_wiki_links.sh --strict .
 ```
 

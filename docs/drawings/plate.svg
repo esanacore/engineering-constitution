@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.0 300.0" width="216.0mm" height="300.0mm" font-family="'IM Fell English', 'Libre Caslon Text', Baskerville, 'Times New Roman', 'DejaVu Serif', serif">
+<defs>
+<filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 -0.55 0.34"/></filter>
+<filter id="hand" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="11" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter>
+<radialGradient id="age" cx="50%" cy="48%" r="75%"><stop offset="60%" stop-color="#f3e9d2"/><stop offset="100%" stop-color="#dcc9a2"/></radialGradient>
+<pattern id="hatch" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="1.1" height="1.1" fill="#f1e6cd"/><line x1="0" y1="0" x2="0" y2="1.1" stroke="#231a12" stroke-width="0.16"/></pattern>
+<pattern id="paperfill" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#f1e6cd"/></pattern>
+</defs>
+<rect width="216.0" height="300.0" fill="url(#age)"/><rect width="216.0" height="300.0" filter="url(#paper)" opacity="0.5"/>
+<rect x="9" y="9" width="198.0" height="282.0" fill="none" stroke="#231a12" stroke-width="0.45"/><rect x="10.6" y="10.6" width="194.8" height="278.8" fill="none" stroke="#231a12" stroke-width="0.14"/>
+<g filter="url(#hand)">
+<rect x="22.00" y="58.00" width="172.00" height="112.00" rx="0" stroke="#231a12" stroke-width="0.5" fill="none"/>
+<circle cx="22.00" cy="58.00" r="1.30" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<circle cx="194.00" cy="58.00" r="1.30" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<circle cx="22.00" cy="170.00" r="1.30" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<circle cx="194.00" cy="170.00" r="1.30" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<path d="M30.00 112.00L30.00 118.00L62.00 118.00L62.00 112.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linejoin="round"/>
+<path d="M30.00 118.00L26.00 124.00" stroke="#231a12" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+<path d="M62.00 118.00L66.00 124.00" stroke="#231a12" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+<path d="M24.00 124.00L68.00 124.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linecap="round"/>
+<path d="M34.00 82.00L56.00 82.00L56.00 112.00L34.00 112.00Z" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M34.00 82.00L39.00 79.00L61.00 79.00L56.00 82.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M56.00 82.00L61.00 79.00L61.00 109.00L56.00 112.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#hatch)" stroke-linejoin="round"/>
+<path d="M36.64 82.00L36.64 112.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M57.25 82.25L57.25 110.25" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M58.50 81.50L58.50 109.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M59.75 80.75L59.75 108.75" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<rect x="40.60" y="88.60" width="11.00" height="6.00" rx="0" stroke="#231a12" stroke-width="0.25" fill="none"/>
+<path d="M70.00 84.00L80.00 84.00L83.00 87.00L83.00 101.00L70.00 101.00Z" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M80.00 84.00L80.00 87.00L83.00 87.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linejoin="round"/>
+<path d="M72.00 89.00L80.50 89.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M72.00 93.50L80.50 93.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M72.00 98.00L80.50 98.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M73.00 80.00L83.00 80.00L86.00 83.00L86.00 97.00L73.00 97.00Z" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M83.00 80.00L83.00 83.00L86.00 83.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linejoin="round"/>
+<path d="M75.00 85.00L83.50 85.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M75.00 89.50L83.50 89.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M75.00 94.00L83.50 94.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M76.00 76.00L86.00 76.00L89.00 79.00L89.00 93.00L76.00 93.00Z" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M86.00 76.00L86.00 79.00L89.00 79.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linejoin="round"/>
+<path d="M78.00 81.00L86.50 81.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M78.00 85.50L86.50 85.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M78.00 90.00L86.50 90.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M61.00 92.00L69.00 92.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M69.00 92.00L66.94 93.24" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M69.00 92.00L66.94 90.76" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M113.35 96.94L115.41 98.09L114.99 99.70L112.64 99.71L112.02 100.90L113.38 102.83L112.30 104.10L110.18 103.09L109.10 103.90L109.48 106.22L107.96 106.90L106.49 105.06L105.17 105.33L104.51 107.59L102.84 107.54L102.31 105.25L101.00 104.91L99.43 106.66L97.95 105.90L98.47 103.60L97.43 102.73L95.25 103.62L94.25 102.29L95.72 100.44L95.17 99.21L92.81 99.07L92.49 97.44L94.61 96.41L94.65 95.06L92.59 93.91L93.01 92.30L95.36 92.29L95.98 91.10L94.62 89.17L95.70 87.90L97.82 88.91L98.90 88.10L98.52 85.78L100.04 85.10L101.51 86.94L102.83 86.67L103.49 84.41L105.16 84.46L105.69 86.75L107.00 87.09L108.57 85.34L110.05 86.10L109.53 88.40L110.57 89.27L112.75 88.38L113.75 89.71L112.28 91.56L112.83 92.79L115.19 92.93L115.51 94.56L113.39 95.59Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<circle cx="104.00" cy="96.00" r="2.80" stroke="#231a12" stroke-width="0.35" fill="none"/>
+<circle cx="104.00" cy="96.00" r="0.70" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<path d="M106.46 97.34L111.20 99.93" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M102.66 98.46L100.07 103.20" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M101.54 94.66L96.80 92.07" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M105.34 93.54L107.93 88.80" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M131.26 94.02L132.82 95.79L131.81 97.23L129.61 96.35L128.55 97.19L128.91 99.53L127.28 100.19L125.91 98.27L124.56 98.40L123.59 100.56L121.87 100.23L121.76 97.87L120.55 97.26L118.57 98.55L117.30 97.35L118.48 95.30L117.79 94.13L115.43 94.15L115.01 92.45L117.11 91.36L117.17 90.01L115.17 88.74L115.73 87.09L118.09 87.31L118.87 86.20L117.87 84.06L119.24 82.97L121.10 84.43L122.36 83.92L122.68 81.57L124.42 81.40L125.20 83.63L126.53 83.88L128.06 82.08L129.62 82.88L129.07 85.18L130.05 86.11L132.32 85.43L133.20 86.94L131.49 88.57L131.82 89.89L134.09 90.54L134.01 92.29L131.69 92.74Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<circle cx="124.50" cy="91.00" r="2.24" stroke="#231a12" stroke-width="0.35" fill="none"/>
+<circle cx="124.50" cy="91.00" r="0.70" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<path d="M126.03 92.64L128.73 95.53" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M122.86 92.53L119.97 95.23" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M122.97 89.36L120.27 86.47" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M126.14 89.47L129.03 86.77" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M147.39 100.32L149.49 101.40L149.04 103.06L146.68 102.94L145.98 104.02L147.04 106.12L145.70 107.20L143.87 105.72L142.67 106.18L142.29 108.50L140.57 108.59L139.96 106.32L138.72 105.98L137.05 107.64L135.60 106.70L136.45 104.50L135.64 103.50L133.31 103.86L132.70 102.25L134.67 100.96L134.61 99.68L132.51 98.60L132.96 96.94L135.32 97.06L136.02 95.98L134.96 93.88L136.30 92.80L138.13 94.28L139.33 93.82L139.71 91.50L141.43 91.41L142.04 93.68L143.28 94.02L144.95 92.36L146.40 93.30L145.55 95.50L146.36 96.50L148.69 96.14L149.30 97.75L147.33 99.04Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<circle cx="141.00" cy="100.00" r="1.96" stroke="#231a12" stroke-width="0.35" fill="none"/>
+<circle cx="141.00" cy="100.00" r="0.70" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<path d="M142.76 100.85L145.68 102.26" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M140.15 101.76L138.74 104.68" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M139.24 99.15L136.32 97.74" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M141.85 98.24L143.26 95.32" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M90.00 90.00L94.00 92.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M94.00 92.00L91.61 92.19" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M94.00 92.00L92.71 89.97" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M104.00 96.00L104.00 128.00" stroke="#231a12" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<path d="M141.00 100.00L141.00 128.00" stroke="#231a12" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+<circle cx="40.00" cy="140.00" r="6.00" stroke="#231a12" stroke-width="0.45" fill="url(#hatch)"/>
+<circle cx="176.00" cy="140.00" r="6.00" stroke="#231a12" stroke-width="0.45" fill="url(#hatch)"/>
+<circle cx="40.00" cy="140.00" r="1.00" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<circle cx="176.00" cy="140.00" r="1.00" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<path d="M40.00 134.00L176.00 134.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linecap="round"/>
+<path d="M40.00 146.00L176.00 146.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linecap="round"/>
+<rect x="52.00" y="126.00" width="9.00" height="8.00" rx="0" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)"/>
+<path d="M52.00 130.00L61.00 130.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M56.50 126.00L56.50 134.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<rect x="116.00" y="126.00" width="9.00" height="8.00" rx="0" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)"/>
+<path d="M116.00 130.00L125.00 130.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M120.50 126.00L120.50 134.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<rect x="158.00" y="126.00" width="9.00" height="8.00" rx="0" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)"/>
+<path d="M158.00 130.00L167.00 130.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M162.50 126.00L162.50 134.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M74.00 134.00L74.00 118.00L77.00 114.00L85.00 114.00L88.00 118.00L88.00 134.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linejoin="round"/>
+<path d="M77.00 134.00L77.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M85.00 134.00L85.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M81.00 114.00L81.00 110.00" stroke="#231a12" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+<circle cx="81.00" cy="108.60" r="1.40" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<path d="M96.00 134.00L96.00 118.00L99.00 114.00L107.00 114.00L110.00 118.00L110.00 134.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linejoin="round"/>
+<path d="M99.00 134.00L99.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M107.00 134.00L107.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M103.00 114.00L103.00 110.00" stroke="#231a12" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+<circle cx="103.00" cy="108.60" r="1.40" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<path d="M136.00 134.00L136.00 118.00L139.00 114.00L147.00 114.00L150.00 118.00L150.00 134.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linejoin="round"/>
+<path d="M139.00 134.00L139.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M147.00 134.00L147.00 119.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M143.00 114.00L143.00 110.00" stroke="#231a12" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+<circle cx="143.00" cy="108.60" r="1.40" stroke="#231a12" stroke-width="0.3" fill="url(#paperfill)"/>
+<path d="M34.00 146.00L31.00 162.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linecap="round"/>
+<path d="M46.00 146.00L43.00 162.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linecap="round"/>
+<path d="M170.00 146.00L173.00 162.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linecap="round"/>
+<path d="M182.00 146.00L185.00 162.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linecap="round"/>
+<path d="M28.00 162.00L52.00 162.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linecap="round"/>
+<path d="M164.00 162.00L188.00 162.00" stroke="#231a12" stroke-width="0.45" fill="none" stroke-linecap="round"/>
+<rect x="160.00" y="70.00" width="24.00" height="3.60" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="159.20" y="74.20" width="24.00" height="3.60" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="158.40" y="78.40" width="24.00" height="3.60" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="157.60" y="82.60" width="24.00" height="3.60" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="160.00" y="92.00" width="24.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="163.00" y="95.00" width="18.00" height="10.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="none"/>
+<circle cx="172.00" cy="100.00" r="1.20" stroke="#231a12" stroke-width="0.3" fill="none"/>
+<path d="M165.00 92.00L165.00 89.50" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M168.40 92.00L168.40 89.50" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M171.80 92.00L171.80 89.50" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M175.20 92.00L175.20 89.50" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M178.60 92.00L178.60 89.50" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M176.00 128.00L174.00 110.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M174.00 110.00L175.46 111.91" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M174.00 110.00L173.00 112.18" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M45.00 97.00Q26.26 87.22 14.00 70.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="12.80" y="71.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">10</text>
+<path d="M64.00 118.00Q38.28 121.00 14.00 112.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="12.80" y="113.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">28</text>
+<path d="M80.00 82.00Q73.40 67.72 74.00 52.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="72.80" y="53.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">12</text>
+<path d="M104.00 86.00Q99.68 68.00 104.00 50.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="102.80" y="51.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">16</text>
+<path d="M128.00 84.00Q126.92 66.28 134.00 50.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="135.20" y="51.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">16</text>
+<path d="M81.00 114.00Q81.42 148.80 66.00 180.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="64.80" y="181.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">18</text>
+<path d="M143.00 114.00Q143.66 149.80 128.00 182.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="126.80" y="183.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">18</text>
+<path d="M120.00 128.00Q116.72 158.40 100.00 184.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="98.80" y="185.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">20</text>
+<path d="M110.00 146.00Q134.32 159.20 150.00 182.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="151.20" y="183.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">22</text>
+<path d="M172.00 72.00Q186.80 63.16 204.00 62.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="205.20" y="63.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">24</text>
+<path d="M180.00 104.00Q191.04 97.12 204.00 96.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="205.20" y="97.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">30</text>
+<path d="M192.00 160.00Q196.80 153.56 204.00 150.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="205.20" y="151.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">26</text>
+<text x="108" y="196" font-size="7" text-anchor="middle" font-style="italic" fill="#231a12">Fig. 1.</text>
+<path d="M98.00 224.00L114.00 224.00L114.00 246.00L98.00 246.00Z" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M98.00 224.00L102.00 221.60L118.00 221.60L114.00 224.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M114.00 224.00L118.00 221.60L118.00 243.60L114.00 246.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#hatch)" stroke-linejoin="round"/>
+<path d="M99.92 224.00L99.92 246.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M115.00 224.40L115.00 244.40" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M116.00 223.80L116.00 243.80" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M117.00 223.20L117.00 243.20" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<rect x="102.80" y="228.84" width="8.00" height="4.40" rx="0" stroke="#231a12" stroke-width="0.25" fill="none"/>
+<circle cx="124.00" cy="222.00" r="5.20" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)"/>
+<circle cx="124.00" cy="222.00" r="3.60" stroke="#231a12" stroke-width="0.25" fill="none"/>
+<path d="M127.60 222.00L129.20 222.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M126.55 224.55L127.68 225.68" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M124.00 225.60L124.00 227.20" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M121.45 224.55L120.32 225.68" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M120.40 222.00L118.80 222.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M121.45 219.45L120.32 218.32" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M124.00 218.40L124.00 216.80" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M126.55 219.45L127.68 218.32" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<rect x="23.00" y="206.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="26.00" y="209.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M35.00 210.00L42.00 210.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M35.00 213.00L42.00 213.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M35.00 216.00L40.00 216.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M98.00 236.00L45.00 214.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<rect x="23.00" y="242.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="26.00" y="245.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M35.00 246.00L42.00 246.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M35.00 249.00L42.00 249.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M35.00 252.00L40.00 252.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M98.00 236.00L45.00 250.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<rect x="61.00" y="258.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="64.00" y="261.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M73.00 262.00L80.00 262.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M73.00 265.00L80.00 265.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M73.00 268.00L78.00 268.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M98.00 236.00L83.00 266.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<rect x="133.00" y="258.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="136.00" y="261.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M145.00 262.00L152.00 262.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M145.00 265.00L152.00 265.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M145.00 268.00L150.00 268.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M118.00 236.00L133.00 266.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<rect x="171.00" y="242.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="174.00" y="245.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M183.00 246.00L190.00 246.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M183.00 249.00L190.00 249.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M183.00 252.00L188.00 252.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M118.00 236.00L171.00 250.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<rect x="171.00" y="206.00" width="22.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="174.00" y="209.00" width="6.00" height="9.00" rx="0" stroke="#231a12" stroke-width="0.3" fill="url(#hatch)"/>
+<path d="M183.00 210.00L190.00 210.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M183.00 213.00L190.00 213.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M183.00 216.00L188.00 216.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M118.00 236.00L171.00 214.00" stroke="#231a12" stroke-width="0.25" stroke-dasharray="2.2 1.4" fill="none" stroke-linecap="round"/>
+<path d="M102.00 244.00Q100.84 261.20 92.00 276.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="90.80" y="277.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">10</text>
+<path d="M128.00 219.00Q137.68 210.86 150.00 208.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="151.20" y="209.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">32</text>
+<path d="M34.00 206.00Q27.28 204.44 22.00 200.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="20.80" y="201.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">34</text>
+<path d="M29.00 250.00Q24.94 257.32 18.00 262.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="16.80" y="263.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">36</text>
+<text x="108" y="281" font-size="7" text-anchor="middle" font-style="italic" fill="#231a12">Fig. 2.</text>
+<text x="108" y="20" font-size="6.2" text-anchor="middle" letter-spacing="0.8" fill="#231a12">E. SANACORE.</text><text x="108" y="29" font-size="5.2" text-anchor="middle" letter-spacing="1.4" fill="#231a12">ENGINEERING CONSTITUTION.</text><text x="16" y="38" font-size="3.6" fill="#231a12">Plate I. Apparatus for governing work done by agents.</text><text x="200" y="38" font-size="3.6" text-anchor="end" fill="#231a12">Drawn November 2026.</text><line x1="16" y1="40.5" x2="200" y2="40.5" stroke="#231a12" stroke-width="0.3"/><line x1="16" y1="41.5" x2="200" y2="41.5" stroke="#231a12" stroke-width="0.12"/>
+<text x="108" y="287.6" font-size="2.9" text-anchor="middle" font-style="italic" fill="#231a12">A decorative plate in the manner of an antique patent drawing. It is not a patent or a patent application.</text>
+</g>
+</svg>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.0 300.0" width="216.0mm" height="300.0mm" font-family="'IM Fell English', 'Libre Caslon Text', Baskerville, 'Times New Roman', 'DejaVu Serif', serif">
+<defs>
+<filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 -0.55 0.34"/></filter>
+<filter id="hand" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="11" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter>
+<radialGradient id="age" cx="50%" cy="48%" r="75%"><stop offset="60%" stop-color="#f3e9d2"/><stop offset="100%" stop-color="#dcc9a2"/></radialGradient>
+<pattern id="hatch" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="1.1" height="1.1" fill="#f1e6cd"/><line x1="0" y1="0" x2="0" y2="1.1" stroke="#231a12" stroke-width="0.16"/></pattern>
+<pattern id="paperfill" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#f1e6cd"/></pattern>
+</defs>
+<rect width="216.0" height="300.0" fill="url(#age)"/><rect width="216.0" height="300.0" filter="url(#paper)" opacity="0.5"/>
+<rect x="9" y="9" width="198.0" height="282.0" fill="none" stroke="#231a12" stroke-width="0.45"/><rect x="10.6" y="10.6" width="194.8" height="278.8" fill="none" stroke="#231a12" stroke-width="0.14"/>
+<g filter="url(#hand)">
+<rect x="26.00" y="70.00" width="164.00" height="96.00" rx="0" stroke="#231a12" stroke-width="0.5" fill="none"/>
+<path d="M36.00 96.00L56.00 96.00L56.00 124.00L36.00 124.00Z" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M36.00 96.00L41.00 93.00L61.00 93.00L56.00 96.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M56.00 96.00L61.00 93.00L61.00 121.00L56.00 124.00Z" stroke="#231a12" stroke-width="0.4" fill="url(#hatch)" stroke-linejoin="round"/>
+<path d="M38.40 96.00L38.40 124.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M57.25 96.25L57.25 122.25" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M58.50 95.50L58.50 121.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M59.75 94.75L59.75 120.75" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<rect x="42.00" y="102.16" width="10.00" height="5.60" rx="0" stroke="#231a12" stroke-width="0.25" fill="none"/>
+<path d="M32.00 124.00L32.00 130.00L62.00 130.00L62.00 124.00" stroke="#231a12" stroke-width="0.4" fill="none" stroke-linejoin="round"/>
+<path d="M72.00 98.00L82.00 98.00L85.00 101.00L85.00 115.00L72.00 115.00Z" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M82.00 98.00L82.00 101.00L85.00 101.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linejoin="round"/>
+<path d="M74.00 103.00L82.50 103.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M74.00 107.50L82.50 107.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M74.00 112.00L82.50 112.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M75.00 94.00L85.00 94.00L88.00 97.00L88.00 111.00L75.00 111.00Z" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)" stroke-linejoin="round"/>
+<path d="M85.00 94.00L85.00 97.00L88.00 97.00" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linejoin="round"/>
+<path d="M77.00 99.00L85.50 99.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M77.00 103.50L85.50 103.50" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M77.00 108.00L85.50 108.00" stroke="#231a12" stroke-width="0.15" fill="none" stroke-linecap="round"/>
+<path d="M61.00 108.00L71.00 108.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M71.00 108.00L68.94 109.24" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M71.00 108.00L68.94 106.76" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<rect x="104.00" y="92.00" width="34.00" height="40.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<path d="M108.00 100.00L134.00 100.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M108.00 108.00L134.00 108.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M108.00 116.00L134.00 116.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M108.00 124.00L134.00 124.00" stroke="#231a12" stroke-width="0.2" fill="none" stroke-linecap="round"/>
+<path d="M88.00 108.00L103.00 108.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M103.00 108.00L100.94 109.24" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M103.00 108.00L100.94 106.76" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<rect x="152.00" y="96.00" width="26.00" height="4.20" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="151.20" y="101.00" width="26.00" height="4.20" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="150.40" y="106.00" width="26.00" height="4.20" rx="0" stroke="#231a12" stroke-width="0.35" fill="url(#paperfill)"/>
+<rect x="152.00" y="114.00" width="26.00" height="16.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<circle cx="165.00" cy="122.00" r="1.20" stroke="#231a12" stroke-width="0.3" fill="none"/>
+<path d="M138.00 112.00L151.00 108.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M151.00 108.00L149.40 109.79" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M151.00 108.00L148.67 107.42" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M46.00 104.00Q29.60 97.36 18.00 84.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="16.80" y="85.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">10</text>
+<path d="M62.00 130.00Q41.92 143.28 18.00 146.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="16.80" y="147.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">12</text>
+<path d="M80.00 96.00Q77.68 77.52 84.00 60.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="85.20" y="61.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">14</text>
+<path d="M121.00 94.00Q116.68 76.00 121.00 58.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="119.80" y="59.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">16</text>
+<path d="M166.00 98.00Q180.32 87.16 198.00 84.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="199.20" y="85.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">18</text>
+<path d="M172.00 124.00Q186.68 127.88 198.00 138.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="199.20" y="139.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">20</text>
+<path d="M184.00 160.00Q192.20 163.32 198.00 170.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="199.20" y="171.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">22</text>
+<text x="108" y="184" font-size="7" text-anchor="middle" font-style="italic" fill="#231a12">Fig. 1.</text>
+<text x="108" y="20" font-size="6.2" text-anchor="middle" letter-spacing="0.8" fill="#231a12">A. N. ADOPTER.</text><text x="108" y="29" font-size="5.2" text-anchor="middle" letter-spacing="1.4" fill="#231a12">SAMPLE PROJECT.</text><text x="16" y="38" font-size="3.6" fill="#231a12">Plate I. A repository after adopting the constitution.</text><text x="200" y="38" font-size="3.6" text-anchor="end" fill="#231a12">Drawn for sample v0.1.</text><line x1="16" y1="40.5" x2="200" y2="40.5" stroke="#231a12" stroke-width="0.3"/><line x1="16" y1="41.5" x2="200" y2="41.5" stroke="#231a12" stroke-width="0.12"/>
+<text x="108" y="287.6" font-size="2.9" text-anchor="middle" font-style="italic" fill="#231a12">A decorative plate in the manner of an antique patent drawing. It is not a patent or a patent application.</text>
+</g>
+</svg>

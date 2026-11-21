@@ -22,6 +22,10 @@ repository. Notable groups:
   column), `ENV_VARS.md`, `MEMORY.md`, `SESSION_PLAN.md`, `sessions/` (the session
   log's index and per-session template), `AGENT_HANDOFF.md`,
   `INCIDENT_POSTMORTEM.md`, and `MVP_BACKLOG.md`.
+- **Plate** — `templates/docs/drawings/plate.svg` and its key
+  (`templates/docs/drawings/README.md`): a patent-style drawing scaffold every
+  adopter fills in with its own parts. See `DOCUMENTATION.md`'s "Drawings" and
+  ADR-0008. The framework's own plate is `docs/drawings/plate.svg`.
 - **Demo page** — `templates/demo.html`, a working single-file page (inline
   styles and scripts, no build, no backend, no network) that product-facing
   repositories fill in and publish. See `DOCUMENTATION.md`'s "Demo Page" and

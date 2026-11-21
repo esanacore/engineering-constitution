@@ -23,6 +23,8 @@ Before beginning implementation, agents write or update `docs/SESSION_PLAN.md` w
 
 Before planning, agents also consult the **session log** in `docs/sessions/`: they read the newest rows of its index and search it for the task's topic (`bash constitution/scripts/find_sessions.sh <keyword>...`), so that what an earlier session was asked, decided, and learned is found rather than rediscovered. Before completing, they add their own summary — request, conversational context, decisions and reasoning, discoveries, outcome — and list it in the index. Summaries are never transcripts and never carry secrets. See `DOCUMENTATION.md`'s "Session Summaries" section and `AI_WORKFLOW.md`'s section of the same name.
 
+Every adopting repository also carries a **plate** in `docs/drawings/`: its parts drawn in the manner of an antique patent drawing, with a numbered key. Bootstrap installs a scaffold (`plate.svg`, `README.md`) to fill in. A repository with a physical component also carries a dimensioned drawing set generated from its CAD. See `DOCUMENTATION.md`, "Drawings"; `bash constitution/scripts/check_drawings.sh .` checks the mechanical half.
+
 ## Using the Constitution in Your IDE
 
 Most developers apply the constitution from inside an IDE — Visual Studio, VS
