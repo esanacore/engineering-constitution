@@ -17,6 +17,7 @@
 - [ ] Templates updated when a standard changed; the sample project updated when templates changed.
 - [ ] Documentation updated: README contents and tree, TESTING.md checker list, wiki.
 - [ ] `demo.html` updated if user-facing behavior changed and the repository has one (DOCUMENTATION.md, "Demo Page").
+- [ ] Drawings updated if this change alters what the plate or the drawing set shows (DOCUMENTATION.md, "Drawings").
 - [ ] `TODO.md` updated with discovered or completed work.
 - [ ] `CHANGELOG.md` updated for user-facing changes.
 - [ ] Security impact considered; `bash scripts/check_secrets.sh .` run.

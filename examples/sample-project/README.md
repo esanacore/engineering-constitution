@@ -21,6 +21,7 @@ This sample shows the expected project structure after integrating Eric's Engine
 - `docs/OPERATIONS.md`
 - `docs/adr/`
 - `docs/sessions/` — recommended, not required: the session log, with one synthetic summary as a worked example
+- `docs/drawings/` — recommended: the plate (`plate.svg`) and its numbered key. See [the sample plate](docs/drawings/README.md).
 - `src/`
 
 ## Test

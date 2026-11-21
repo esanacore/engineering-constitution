@@ -17,3 +17,4 @@ Engineering Constitution Framework, per `CONSTITUTION.md` Principle 6 and
 | [0005](0005-next-steps-procedure.md) | A Next Steps Procedure at the End of Every Push | Accepted |
 | [0006](0006-optional-product-discovery.md) | Optional Guided Product Discovery | Accepted |
 | [0007](0007-session-summaries.md) | Session Summaries in a Searchable Session Log | Accepted |
+| [0008](0008-drawings-and-the-plate.md) | A Plate for Every Repository, a Drawing Set for Every Physical One | Accepted |

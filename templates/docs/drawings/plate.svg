@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.0 300.0" width="216.0mm" height="300.0mm" font-family="'IM Fell English', 'Libre Caslon Text', Baskerville, 'Times New Roman', 'DejaVu Serif', serif">
+<!-- constitution-plate-template-placeholder: remove this comment once the figure shows your project -->
+<defs>
+<filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 -0.55 0.34"/></filter>
+<filter id="hand" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="11" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter>
+<radialGradient id="age" cx="50%" cy="48%" r="75%"><stop offset="60%" stop-color="#f3e9d2"/><stop offset="100%" stop-color="#dcc9a2"/></radialGradient>
+<pattern id="hatch" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="1.1" height="1.1" fill="#f1e6cd"/><line x1="0" y1="0" x2="0" y2="1.1" stroke="#231a12" stroke-width="0.16"/></pattern>
+<pattern id="paperfill" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#f1e6cd"/></pattern>
+</defs>
+<rect width="216.0" height="300.0" fill="url(#age)"/><rect width="216.0" height="300.0" filter="url(#paper)" opacity="0.5"/>
+<rect x="9" y="9" width="198.0" height="282.0" fill="none" stroke="#231a12" stroke-width="0.45"/><rect x="10.6" y="10.6" width="194.8" height="278.8" fill="none" stroke="#231a12" stroke-width="0.14"/>
+<g filter="url(#hand)">
+<rect x="30.00" y="90.00" width="40.00" height="50.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="88.00" y="100.00" width="40.00" height="30.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<rect x="146.00" y="90.00" width="40.00" height="50.00" rx="0" stroke="#231a12" stroke-width="0.45" fill="url(#paperfill)"/>
+<path d="M70.00 115.00L87.00 115.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M87.00 115.00L84.94 116.24" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M87.00 115.00L84.94 113.76" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M128.00 115.00L145.00 115.00" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M145.00 115.00L142.94 116.24" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M145.00 115.00L142.94 113.76" stroke="#231a12" stroke-width="0.3" fill="none" stroke-linecap="round"/>
+<path d="M115.25 116.47L117.16 117.86L116.49 119.48L114.16 119.11L113.31 120.16L114.16 122.36L112.72 123.36L110.96 121.78L109.68 122.21L109.20 124.52L107.45 124.58L106.82 122.31L105.51 121.97L103.86 123.66L102.36 122.77L103.06 120.51L102.14 119.52L99.84 120.05L99.05 118.48L100.86 116.96L100.63 115.63L98.40 114.83L98.59 113.09L100.94 112.79L101.46 111.55L100.01 109.67L101.12 108.31L103.25 109.32L104.36 108.56L104.16 106.20L105.83 105.65L107.07 107.66L108.42 107.61L109.53 105.52L111.23 105.96L111.19 108.32L112.35 109.01L114.41 107.85L115.60 109.14L114.29 111.11L114.90 112.32L117.26 112.45L117.56 114.18L115.40 115.13Z" stroke="#231a12" stroke-width="0.4" fill="url(#paperfill)" stroke-linejoin="round"/>
+<circle cx="108.00" cy="115.00" r="2.24" stroke="#231a12" stroke-width="0.35" fill="none"/>
+<circle cx="108.00" cy="115.00" r="0.70" stroke="#231a12" stroke-width="0.3" fill="#231a12"/>
+<path d="M109.85 116.26L113.12 118.50" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M106.74 116.85L104.50 120.12" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M106.15 113.74L102.88 111.50" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M109.26 113.15L111.50 109.88" stroke="#231a12" stroke-width="0.25" fill="none" stroke-linecap="round"/>
+<path d="M40.00 92.00Q29.36 82.92 24.00 70.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="22.80" y="71.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">10</text>
+<path d="M108.00 104.00Q103.44 85.00 108.00 66.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="106.80" y="67.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">12</text>
+<path d="M176.00 92.00Q183.36 78.60 196.00 70.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="197.20" y="71.60" font-size="5" font-style="italic" text-anchor="start" fill="#231a12">14</text>
+<path d="M78.00 115.00Q83.40 137.50 78.00 160.00" stroke="#231a12" stroke-width="0.2" fill="none"/>
+<text x="76.80" y="161.60" font-size="5" font-style="italic" text-anchor="end" fill="#231a12">16</text>
+<text x="108" y="176" font-size="5" text-anchor="middle"  letter-spacing="1.2" fill="#231a12">REPLACE THIS FIGURE</text>
+<text x="108" y="184" font-size="3.2" text-anchor="middle" font-style="italic" letter-spacing="0" fill="#231a12">Draw the main parts of the system and how they connect. Numbers only; the key lives in README.md.</text>
+<text x="108" y="200" font-size="7" text-anchor="middle" font-style="italic" fill="#231a12">Fig. 1.</text>
+<text x="108" y="20" font-size="6.2" text-anchor="middle" letter-spacing="0.8" fill="#231a12">YOUR NAME.</text><text x="108" y="29" font-size="5.2" text-anchor="middle" letter-spacing="1.4" fill="#231a12">TITLE OF THE THING.</text><text x="16" y="38" font-size="3.6" fill="#231a12">Plate I. One line saying what the figure shows.</text><text x="200" y="38" font-size="3.6" text-anchor="end" fill="#231a12">Drawn for version 0.0.0.</text><line x1="16" y1="40.5" x2="200" y2="40.5" stroke="#231a12" stroke-width="0.3"/><line x1="16" y1="41.5" x2="200" y2="41.5" stroke="#231a12" stroke-width="0.12"/>
+<text x="108" y="287.6" font-size="2.9" text-anchor="middle" font-style="italic" fill="#231a12">A decorative plate in the manner of an antique patent drawing. It is not a patent or a patent application.</text>
+</g>
+</svg>

@@ -2,6 +2,8 @@
 
 ## Features
 
+- [ ] Draw a plate for each of the 18 adopters on the fleet bump that carries the drawings standard (ADR-0008); strict-mode adopters need it in the same pull request.
+
 - [x] Session summaries in a searchable session log (ADR-0007): `docs/sessions/` (one file per session, index, template), Required Workflow steps 9–10 (consult) and 27 (write), `scripts/check_session_summaries.sh`, `scripts/find_sessions.sh`, the rule in every agent instruction file, the `Stop` hook, bootstrap, the compliance recommended tier, and `SECURITY.md`'s privacy rules. Follow-ups:
   - [~] Roll the session log across the adopter fleet (index and template added to the two `--strict` adopters, `patients-served` and `MultiplatformTestApp`, on their 1.55.0 bump branches; 16 remain): `docs/sessions/README.md` + `TEMPLATE.md` and the instruction-file line in each adopter (bootstrap never overwrites existing instruction files, so the line is a hand-merge or a scripted append).
   - [ ] Make `docs/sessions` a default anchor of `check_instruction_templates.sh` after a `Deprecation` notice (ADR-0003), alongside the "Next Steps procedure" anchor item below.

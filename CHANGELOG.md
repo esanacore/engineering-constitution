@@ -6,6 +6,52 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+Every adopting repository now draws what it is made of. A patent-style plate
+is asked of all adopters, and a dimensioned drawing set of those with a
+physical component (ADR-0008).
+
+### Added
+
+- **Drawings standard (`DOCUMENTATION.md`, "Drawings"; ADR-0008).** Every
+  adopter carries a plate at `docs/drawings/plate.svg`: one self-contained
+  SVG in the manner of an antique patent drawing, parts numbered on leader
+  lines, with a key in `docs/drawings/README.md`. Physical projects draw an
+  exploded view; software and ideas draw a simplified apparatus of their
+  main parts. A repository with a physical component also carries a drawing
+  set generated from its CAD: a dimensioned sheet per made part with
+  sections, an assembly sheet with an exploded view and parts list, a
+  dimension table for variants, and a title block whose revision tracks the
+  model. The plate must say it is not a patent.
+- **`scripts/check_drawings.sh`.** Checks the mechanical half: the plate
+  exists, is no longer the template, says it is not a patent, and loads
+  nothing from the network; the key lists at least three numerals and each is
+  on the plate; `README.md` points at `docs/drawings/`; and a repository
+  holding CAD links a drawing set that exists. Warn by default, `--strict`
+  to enforce. The framework's own CI runs it strictly on this repository and
+  the sample project; the adopter compliance workflow template runs it in
+  warn mode wherever `docs/drawings/` exists and the pinned constitution
+  ships the script. `scripts/test_check_drawings.sh` (14 cases).
+- **Plate scaffold (`templates/docs/drawings/`).** `plate.svg` carries the
+  paper, the hand-drawn line filter, and a starting figure to replace;
+  `README.md` carries the key. `bootstrap.sh` installs both. The scaffold
+  holds a marker that `check_drawings.sh` reports until the figure is
+  replaced.
+- **The framework's own plate (`docs/drawings/plate.svg`)**: the constitution
+  drawn as a machine, shown in `README.md` and `demo.html`. The sample
+  project carries one too.
+
+### Changed
+
+- **`docs/drawings` joins the recommended tier of `check_compliance.sh`.**
+  Its absence is a warning, and a failure only under `--strict`: strict-mode
+  adopters need the plate in the same fleet-bump pull request (`RELEASES.md`,
+  "Cutting a Release"). The drawings are a documentation-workflow
+  expectation; there is no plan to make them a required entry.
+- **Every agent instruction file, the Solon reviewer, both pull request
+  templates, and `AI_WORKFLOW.md`'s completion checks** carry a rule to keep
+  the drawings current. CI holds the instruction files to the new
+  `drawings current` anchor.
+
 ## 1.56.0 - 2026-11-14
 
 The session log's index is now generated from the entries instead of kept by
