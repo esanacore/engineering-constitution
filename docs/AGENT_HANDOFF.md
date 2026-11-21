@@ -20,64 +20,6 @@ kept; history lives in `docs/sessions/`, `CHANGELOG.md`, and the commit log):
 
 ## Latest Handoff
 
-<<<<<<< HEAD
-### Session: 2026-11-14 (1.56.0 released; session log rolled out to the fleet)
-
-`v1.56.0` is tagged on merge commit `7615a92` and published as the Latest
-GitHub Release; `release-tag-alignment` passed. All 18 adopters have a
-`constitution/bump-v1.56.0` pull request that also adopts the session log:
-`docs/sessions/README.md` and `TEMPLATE.md`, plus the session-log rule in
-the instruction files. The three CI fixes from the 1.55.0 branches were
-carried over, and the 18 superseded 1.55.0 pull requests are closed.
-Summary: `docs/sessions/2026-11-14-release-1-56-0.md`.
-
-**Known blockers:**
-
-- `patients-served`'s `validate-docs` is red on its bump (archive baseline
-  drift), as on every constitution bump until that repository's next archive
-  rebuild.
-- Six older-style adopters got the session-log rule in `AGENTS.md` and
-  `CLAUDE.md` only, and no adopter's `.aider.conf.yml` or
-  `.continue/config.json` was changed (see `TODO.md`).
-
-**Context hints:** `ubuntu-latest` is now Ubuntu 26.04 (no Python 3.8/3.9
-for `actions/setup-python`, default JDK 25, `webkit2gtk-driver` renamed);
-three adopters are pinned around it on their bump branches.
-
-## Next Steps
-
-**Human action required:** steps 1, 2, 3, and 4.
-
-1. [ ] **HUMAN** — Review and merge the 18 `constitution/bump-v1.56.0` pull
-   requests.
-   - **Why a human:** merging into each adopter's default branch is the
-     maintainer's decision. Each pull request changes instruction files as
-     well as the pin, so read one template-shaped and one older-style
-     repository before merging the rest.
-   - **You need:** `gh search prs "constitution: bump to v1.56.0" --owner esanacore --state open`
-   - **Done when:** every adopter's `constitution/` gitlink is `7615a92`.
-2. [ ] **HUMAN** — Review and merge this handoff pull request.
-   - **Why a human:** merging to `main` is the maintainer's decision.
-   - **Done when:** the pull request is merged.
-3. [ ] **HUMAN** — Walk the pitch deck; approve the voice or list edits, and
-   give a consulting contact for the call to action if you want one.
-   - **Why a human:** personal brand and public contact details are the
-     author's.
-   - **Done when:** the deck is approved as-is, or edits and a contact string
-     are given.
-4. [ ] **HUMAN** — Choose a pilot participant, a real bounded request, and a
-   product decision owner for the discovery pilot.
-   - **Why a human:** participation, business priorities, and data-sharing
-     consent belong to the people who own them.
-   - **Done when:** participant and owner agree on a request and the
-     permitted material.
-5. [ ] **AGENT** _(suggestion)_ — Hand-merge the session-log rule into
-   adopters' `.aider.conf.yml` and `.continue/config.json`, and bring the six
-   older-style adopters' instruction files up to the current templates.
-6. [ ] **AGENT** _(suggestion)_ — Move `AI-Process-Engineer`'s e2e job to
-   `webkitgtk-webdriver` and `MultiplatformTestApp` to a Gradle that runs on
-   current JDKs, so the runner pins can come off.
-=======
 ### Session: 2026-11-20 (Drawings standard, ADR-0008)
 
 On `feat/drawings-and-plate`: every adopter is asked for a patent-style
@@ -115,4 +57,3 @@ adopter belongs in this repository.
    _(blocked by step 2)_
 4. [ ] **AUTOMATED** — `tests.yml` runs the suite and the self-governance
    checks, including `check_drawings.sh --strict`, on the pull request.
->>>>>>> origin/main
