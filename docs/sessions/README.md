@@ -32,6 +32,7 @@ Newest first.
 
 | Date | Session | Topics |
 | --- | --- | --- |
+| 2026-11-21 | [Resolve the handoff pull-request merge conflict](2026-11-21-resolve-handoff-conflict.md) | merge conflict, origin/main, AGENT_HANDOFF.md, git merge |
 | 2026-11-20 | [Drawings standard: a plate for every repository, a drawing set for hardware](2026-11-20-drawings-and-the-plate.md) | drawings, plate, patent-style drawing, exploded view, docs/drawings, check_drawings.sh, mechanical drawings, CAD, drawing set, ADR-0008, recommended tier, deprecation window |
 | 2026-11-14 | [Tag and roll out 1.55.0, then generate the session-log index](2026-11-14-generated-session-index.md) | build_session_index.sh, session log index, docs/sessions/README.md, fleet bump, bump_adopters.sh, check_compliance.sh --strict, recommended tier, ubuntu-latest, Python 3.8, JDK 25, v1.54.0 backfill |
 | 2026-11-14 | [Sales pitch deck for the engineering constitution](2026-11-14-pitch-deck.md) | pitch-deck.html, consulting, AI-native FDE, harness expert, sales, marketing, demo.html, stakeholder presentation |
